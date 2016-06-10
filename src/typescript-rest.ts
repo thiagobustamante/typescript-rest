@@ -79,6 +79,20 @@ export function FormParam(name: string) {
 	}
 }
 
+export class Context {
+	static Request(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_request, null);
+	}
+
+	static Response(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_response, null);
+	}
+
+	static Next(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_next, null);
+	}
+}
+
 export enum HttpMethod {
 	GET,
 	POST,
@@ -248,7 +262,10 @@ enum ParamType {
 	header,
 	cookie,
 	form,
-	body
+	body,
+	context_request,
+	context_response,
+	context_next
 }
 
 class InternalServer {
@@ -297,8 +314,8 @@ class InternalServer {
 	}
 
 	buildService(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
-		let handler = (req, res) => {
-			this.callTargetEndPoint(serviceClass, serviceMethod, req, res)
+		let handler = (req, res, next) => {
+			this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
 		};
 
 		if (!serviceMethod.resolvedPath) {
@@ -360,9 +377,9 @@ class InternalServer {
 	}
 
 	private callTargetEndPoint(serviceClass: ServiceClass, serviceMethod: ServiceMethod, 
-		req: express.Request, res: express.Response) {
+		req: express.Request, res: express.Response, next: express.NextFunction) {
 		let serviceObject = Object.create(serviceClass.targetClass);
-		let args = this.buildArgumentsList(serviceMethod, req);
+		let args = this.buildArgumentsList(serviceMethod, req, res, next);
 		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
 
 		if (serviceMethod.returnType) {
@@ -407,7 +424,8 @@ class InternalServer {
 		}
 	}
 
-	private buildArgumentsList(serviceMethod: ServiceMethod, req: express.Request) {
+	private buildArgumentsList(serviceMethod: ServiceMethod, req: express.Request, 
+		res: express.Response, next: express.NextFunction) {
 		let result: Array<any> = new Array<any>();
 
 		serviceMethod.parameters.forEach(param => {
@@ -431,6 +449,15 @@ class InternalServer {
 				case ParamType.form:
 					result.push(this.convertType(req.body[param.name], param.type));
 					break;
+				case ParamType.context_request:
+					result.push(req);
+					break;
+				case ParamType.context_response:
+					result.push(res);
+					break;
+				case ParamType.context_next:
+					result.push(next);
+					break;
 				default:
 					throw Error("Invalid parameter type");
 			}
@@ -453,12 +480,11 @@ class InternalServer {
 
 //TODO: montar lista de parametros
 // service Logs customizavel
-// Passar um COntext para o servico (request, response, next, etc.... o que tiver mais no express)
 //Parametros do tipo DTO (@BeanParam). separar este arquivo em 3. usar esquema de re-exportar
 // criar uma anotacao para arquivos e tipo de retorno para donwload???
 // controlar cache
 // compressao gzip
-
+// Suportar um procesador de cabecalhos
 	static resolveAllPaths() {
 		if (!InternalServer.pathsResolved) {
 			InternalServer.paths.clear();
