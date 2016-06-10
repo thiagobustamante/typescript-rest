@@ -422,7 +422,7 @@ class InternalServer {
 					result.push(this.convertType(req.header(param.name), param.type));
 					break;
 				case ParamType.cookie:
-					result.push(this.convertType(req.cookies[param.name], param.type));//TODO validate
+					result.push(this.convertType(req.cookies[param.name], param.type));
 					break;
 				case ParamType.body:
 					result.push(this.convertType(req.body, param.type));
@@ -486,7 +486,7 @@ class InternalServer {
 
 	private static resolvePath(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
 		let classPath: string = serviceClass.path ? serviceClass.path.trim() : "";
-				let resolvedPath = classPath.startsWith('/') ? classPath : '/' + classPath;
+		let resolvedPath = classPath.startsWith('/') ? classPath : '/' + classPath;
 		if (resolvedPath.endsWith('/')) {
 			resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
 		}
