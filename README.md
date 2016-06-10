@@ -41,7 +41,7 @@ Typescript-rest requires the following TypeScript compilation options in your ts
 
 ```typescript
 import * as express from "express";
-import {Server, Path, GET, PathParam} from "../typescript-rest";
+import {Server, Path, GET, PathParam} from "typescript-rest";
 
 @Path("/hello")
 class PersonService {
