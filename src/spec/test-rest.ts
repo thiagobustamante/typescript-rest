@@ -4,7 +4,7 @@ import * as express from "express";
 import * as request from 'request';
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
-		FormParam} from "../typescript-rest";
+		FormParam, Context} from "../typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -53,12 +53,30 @@ class TestParams {
 		return "cookie: " + cookie + "|header: "+header;
 	}
 
+	@GET
+	@Path("context")
+	testContext( @QueryParam('q') q: string,
+		@Context.Request request: express.Request,
+		@Context.Response response: express.Response,
+		@Context.Next next: express.NextFunction): void {
+
+		if (request && response && next) {
+			response.status(201);
+			if (q === "123") {
+				response.send(true);
+			}
+			else{
+				response.send(false);
+			}
+		}
+	}
 }
 
 describe("Server", () => {
 	it("should provide a catalog containing the exposed paths", () => {
 		expect(Server.getPaths().has("/person/:id")).toEqual(true);
 		expect(Server.getPaths().has("/headers")).toEqual(true);
+		expect(Server.getPaths().has("/context")).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
 	});
@@ -106,6 +124,16 @@ app.listen(3000, function() {
 				url: "http://localhost:3000/headers"				
 			}, function(error, response, body) {
 				expect(body).toEqual("cookie: cookie value|header: header value");
+				done();
+			});
+		});
+
+		it("should accept Context parameters", (done) => {
+			request({
+				url: "http://localhost:3000/context?q=123"
+			}, function(error, response, body) {
+				expect(body).toEqual("true");
+				expect(response.statusCode).toEqual(201);
 				done();
 			});
 		});
