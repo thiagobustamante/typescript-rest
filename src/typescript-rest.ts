@@ -49,6 +49,11 @@ export function OPTIONS(target: any, propertyKey: string,
     processHttpVerb(target, propertyKey, HttpMethod.OPTIONS);
 }
 
+export function PATCH(target: any, propertyKey: string,
+	descriptor: PropertyDescriptor) {
+    processHttpVerb(target, propertyKey, HttpMethod.PATCH);
+}
+
 export function PathParam(name: string) {
     return function(target: Object, propertyKey: string, parameterIndex: number) {
 		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.path, name);
@@ -99,7 +104,8 @@ export enum HttpMethod {
 	PUT,
 	DELETE,
 	HEAD,
-	OPTIONS
+	OPTIONS,
+	PATCH
 }
 
 export abstract class Server {
@@ -345,6 +351,9 @@ class InternalServer {
 			case HttpMethod.OPTIONS:
 				this.router.options.apply(this.router, args);
 			break;
+			case HttpMethod.PATCH:
+				this.router.patch.apply(this.router, args);
+			break;
 
 		 	default:
 				throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");
@@ -485,6 +494,7 @@ class InternalServer {
 // controlar cache
 // compressao gzip
 // Suportar um procesador de cabecalhos
+// conditional requests
 	static resolveAllPaths() {
 		if (!InternalServer.pathsResolved) {
 			InternalServer.paths.clear();
