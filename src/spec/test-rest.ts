@@ -61,6 +61,8 @@ class TestParams {
 		@Context.Next next: express.NextFunction): void {
 
 		if (request && response && next) {
+			console.log("Funcionou: o parametro recebido é: "+request.query["q"]);
+
 			response.status(201);
 			if (q === "123") {
 				response.send(true);
@@ -91,6 +93,8 @@ app.listen(3000, function() {
 	describe("PersonService", () => {
 		it("should return the person (123) for GET on path: /person/123", (done) => {
 			request("http://localhost:3000/person/123", function(error, response, body) {
+				console.log("Cliente");
+				console.log(body);
 				let result: Person = JSON.parse(body);
 				expect(result.id).toEqual(123);
 				done();
