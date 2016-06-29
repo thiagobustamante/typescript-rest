@@ -390,8 +390,11 @@ class InternalServer {
 		let serviceObject = Object.create(serviceClass.targetClass);
 		let args = this.buildArgumentsList(serviceMethod, req, res, next);
 		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+		console.log(result);
 
 		if (serviceMethod.returnType) {
+			console.log(serviceMethod.returnType.name);
+
 			let serializedType = serviceMethod.returnType.name;
 			switch (serializedType) {
 				case "String":
@@ -404,32 +407,60 @@ class InternalServer {
 					res.send(result.toString());
 					break;
 				case "Promise":
+					let self = this;
 					result.then(function(value) {
-						switch (typeof value) {
-							case "number":
-								res.send(result.toString());
-								break;
-							case "string":
-								res.send(result);
-								break;
-							case "boolean":
-								res.send(result.toString());
-								break;
-							default:
-								res.json(value);
-								break;
-						}
+						self.sendValue(value, res);
 					}).catch(function(e){
 						res.sendStatus(500);
 					});
 					break;
 				case "undefined":
-					res.send("");
+					res.sendStatus(204);
 					break;
 				default:
 					res.json(result);
 					break;
 			}
+		}
+		else {
+			this.sendValue(result, res);
+		}
+	}
+
+	private sendValue(value: any, res: express.Response) {
+		console.log("sendValue:");
+		console.log(value);
+		switch (typeof value) {
+			case "number":
+				res.send(value.toString());
+				break;
+			case "string":
+				res.send(value);
+				break;
+			case "boolean":
+				res.send(value.toString());
+				break;
+			case "undefined":
+				if (!res.headersSent) {
+					res.sendStatus(204);
+				}
+				break;
+			default:
+				console.log("AKKKIIII");
+				console.log(value);
+				if (value.constructor.name == "Promise") {
+					let self = this;
+					value.then(function(val) {
+						self.sendValue(val, res);
+					}).catch(function(e) {
+						if (!res.headersSent) {
+							res.sendStatus(500);
+						}
+					});
+				}
+				else {
+					res.json(value);
+				}
 		}
 	}
 
@@ -489,7 +520,7 @@ class InternalServer {
 
 //TODO: montar lista de parametros
 // service Logs customizavel
-//Parametros do tipo DTO (@BeanParam). separar este arquivo em 3. usar esquema de re-exportar
+//Parametros do tipo DTO (@BeanParam). 
 // criar uma anotacao para arquivos e tipo de retorno para donwload???
 // controlar cache
 // compressao gzip
