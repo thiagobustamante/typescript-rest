@@ -4,7 +4,7 @@ import * as express from "express";
 import * as request from 'request';
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
-		FormParam, Context} from "../typescript-rest";
+		FormParam, Context, AcceptLanguage} from "../typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -61,8 +61,6 @@ class TestParams {
 		@Context.Next next: express.NextFunction): void {
 
 		if (request && response && next) {
-			console.log("Funcionou: o parametro recebido é: "+request.query["q"]);
-
 			response.status(201);
 			if (q === "123") {
 				response.send(true);
@@ -74,6 +72,19 @@ class TestParams {
 	}
 }
 
+@Path("/accept")
+@AcceptLanguage("pt-BR", "en")
+class AcceptTest {
+
+	@GET
+	testHeaders(@Context.AcceptLanguage language: string): string {
+		if (language === 'en') {
+			return "accept";
+		}
+		return "aceito";
+	}
+}
+
 describe("Server", () => {
 	it("should provide a catalog containing the exposed paths", () => {
 		expect(Server.getPaths().has("/person/:id")).toEqual(true);
@@ -81,6 +92,7 @@ describe("Server", () => {
 		expect(Server.getPaths().has("/context")).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
+		expect(Server.getPaths().has("/accept")).toEqual(true);
 	});
 });
 
@@ -93,8 +105,6 @@ app.listen(3000, function() {
 	describe("PersonService", () => {
 		it("should return the person (123) for GET on path: /person/123", (done) => {
 			request("http://localhost:3000/person/123", function(error, response, body) {
-				console.log("Cliente");
-				console.log(body);
 				let result: Person = JSON.parse(body);
 				expect(result.id).toEqual(123);
 				done();
@@ -143,6 +153,27 @@ app.listen(3000, function() {
 		});
 	});
 
+	describe("AcceptTest", () => {
+		it("should choose language correctly", (done) => {
+			request({
+				headers: { 'Accept-Language': 'pt-BR' },
+				url: "http://localhost:3000/accept"				
+			}, function(error, response, body) {
+				expect(body).toEqual("aceito");
+				done();
+			});
+		});
+
+		it("should reject unacceptable languages", (done) => {
+			request({
+				headers: { 'Accept-Language': 'fr' },
+				url: "http://localhost:3000/accept"				
+			}, function(error, response, body) {
+				expect(response.statusCode).toEqual(406);
+				done();
+			});
+		});
+	});
 	// process.exit();
 });
 
