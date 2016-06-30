@@ -19,6 +19,19 @@ export function Path(path: string) {
 	}
 }
 
+export function AcceptLanguage(...languages: string[]) {
+    return function (...args: any[]) {
+	    if (args.length == 1) {
+	        return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
+	    }
+	    else if (args.length == 3 && typeof args[2] === "object") {
+	        return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
+	    }
+
+	    throw new Error("Invalid @Accept Decorator declaration.");
+	}
+}
+
 export function GET(target: any, propertyKey: string,
 	descriptor: PropertyDescriptor){
     processHttpVerb(target, propertyKey, HttpMethod.GET);
@@ -85,6 +98,11 @@ export function FormParam(name: string) {
 }
 
 export class Context {
+	language: string;
+	request: express.Request;
+	response: express.Response; 
+	next: express.NextFunction;
+
 	static Request(target: Object, propertyKey: string, parameterIndex: number) {
 		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_request, null);
 	}
@@ -96,6 +114,14 @@ export class Context {
 	static Next(target: Object, propertyKey: string, parameterIndex: number) {
 		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_next, null);
 	}
+
+	static AcceptLanguage(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_accept_language, null);
+	}
+}
+
+export function ServiceContext(target: Object, propertyKey: string, parameterIndex: number) {
+	processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context, null);
 }
 
 export enum HttpMethod {
@@ -130,6 +156,26 @@ export abstract class Server {
 		InternalServer.cookiesDecoder = decoder;
 	}
 }
+
+/**
+ * Decorator processor for [[Path]] decorator on classes
+ */
+function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
+	let classData: ServiceClass = InternalServer.registerServiceClass(target);
+	classData.languages = languages;
+}
+
+/**
+ * Decorator processor for [[Path]] decorator on methods
+ */
+function AcceptLanguageMethodDecorator(target: any, propertyKey: string, 
+			descriptor: PropertyDescriptor, languages: string[]) {
+	let serviceMethod: ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+    if (serviceMethod) { // does not intercept constructor
+		serviceMethod.languages = languages;
+    }
+}
+
 
 /**
  * Decorator processor for [[Path]] decorator on classes
@@ -230,6 +276,7 @@ class ServiceClass {
 	targetClass: Function;
 	path: string;
 	methods: Map<string, ServiceMethod>;
+	languages: string[];
 }
 
 /**
@@ -245,6 +292,8 @@ class ServiceMethod {
 	mustParseCookies: boolean = false;
 	mustParseBody: boolean = false;
 	mustParseForms: boolean = false;
+	languages: Array<string>;
+	resolvedLanguages: Array<string>;
 }
 
 /**
@@ -269,9 +318,11 @@ enum ParamType {
 	cookie,
 	form,
 	body,
+	context,
 	context_request,
 	context_response,
-	context_next
+	context_next, 
+	context_accept_language
 }
 
 class InternalServer {
@@ -325,7 +376,7 @@ class InternalServer {
 		};
 
 		if (!serviceMethod.resolvedPath) {
-			InternalServer.resolvePath(serviceClass, serviceMethod);
+			InternalServer.resolveProperties(serviceClass, serviceMethod);
 		}
 
 		let middleware: Array<express.RequestHandler> = this.buildServiceMiddleware(serviceMethod);
@@ -385,51 +436,78 @@ class InternalServer {
 		return result;
 	}
 
+	private acceptable(serviceMethod: ServiceMethod, context: Context) : boolean {
+		if (serviceMethod.resolvedLanguages) {
+			 let lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
+			 if (lang) {
+				 context.language = <string> lang;
+			 }
+		}
+		else {
+			 let languages: string[] = context.request.acceptsLanguages();
+			 if (languages && languages.length > 0) {
+				 context.language = languages[0];
+			 }
+		}
+
+		if (!context.language) {
+			return false;
+		}
+		return true;
+	}
+
 	private callTargetEndPoint(serviceClass: ServiceClass, serviceMethod: ServiceMethod, 
 		req: express.Request, res: express.Response, next: express.NextFunction) {
-		let serviceObject = Object.create(serviceClass.targetClass);
-		let args = this.buildArgumentsList(serviceMethod, req, res, next);
-		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
-		console.log(result);
+		let context: Context = new Context();
+		context.request = req;
+		context.response = res;
+		context.next = next;
 
-		if (serviceMethod.returnType) {
-			console.log(serviceMethod.returnType.name);
+		if (this.acceptable(serviceMethod, context)) {
+			let serviceObject = Object.create(serviceClass.targetClass);
+			let args = this.buildArgumentsList(serviceMethod, context);
+			let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
 
-			let serializedType = serviceMethod.returnType.name;
-			switch (serializedType) {
-				case "String":
-					res.send(result);
-					break;
-				case "Number":
-					res.send(result.toString());
-					break;
-				case "Boolean":
-					res.send(result.toString());
-					break;
-				case "Promise":
-					let self = this;
-					result.then(function(value) {
-						self.sendValue(value, res);
-					}).catch(function(e){
-						res.sendStatus(500);
-					});
-					break;
-				case "undefined":
-					res.sendStatus(204);
-					break;
-				default:
-					res.json(result);
-					break;
+			if (serviceMethod.returnType) {
+				let serializedType = serviceMethod.returnType.name;
+				switch (serializedType) {
+					case "String":
+						res.send(result);
+						break;
+					case "Number":
+						res.send(result.toString());
+						break;
+					case "Boolean":
+						res.send(result.toString());
+						break;
+					case "Promise":
+						let self = this;
+						result.then(function(value) {
+							self.sendValue(value, res);
+						}).catch(function(e){
+							if (!res.headersSent) {
+								res.sendStatus(500);
+							}
+						});
+						break;
+					case "undefined":
+						res.sendStatus(204);
+						break;
+					default:
+						res.json(result);
+						break;
+				}
+			}
+			else {
+				this.sendValue(result, res);
 			}
 		}
 		else {
-			this.sendValue(result, res);
+			res.sendStatus(406);
 		}
 	}
 
 	private sendValue(value: any, res: express.Response) {
-		console.log("sendValue:");
-		console.log(value);
 		switch (typeof value) {
 			case "number":
 				res.send(value.toString());
@@ -446,8 +524,6 @@ class InternalServer {
 				}
 				break;
 			default:
-				console.log("AKKKIIII");
-				console.log(value);
 				if (value.constructor.name == "Promise") {
 					let self = this;
 					value.then(function(val) {
@@ -464,39 +540,44 @@ class InternalServer {
 		}
 	}
 
-	private buildArgumentsList(serviceMethod: ServiceMethod, req: express.Request, 
-		res: express.Response, next: express.NextFunction) {
+	private buildArgumentsList(serviceMethod: ServiceMethod, context: Context) {
 		let result: Array<any> = new Array<any>();
 
 		serviceMethod.parameters.forEach(param => {
 			switch (param.paramType) {
 				case ParamType.path:
-					result.push(this.convertType(req.params[param.name], param.type));
+					result.push(this.convertType(context.request.params[param.name], param.type));
 					break;
 				case ParamType.query:
-					result.push(this.convertType(req.query[param.name], param.type));
+					result.push(this.convertType(context.request.query[param.name], param.type));
 					break;
 				case ParamType.header:
-					result.push(this.convertType(req.header(param.name), param.type));
+					result.push(this.convertType(context.request.header(param.name), param.type));
 					break;
 				case ParamType.cookie:
-					result.push(this.convertType(req.cookies[param.name], param.type));
+					result.push(this.convertType(context.request.cookies[param.name], param.type));
 					break;
 				case ParamType.body:
-					result.push(this.convertType(req.body, param.type));
+					result.push(this.convertType(context.request.body, param.type));
 					//TODO parser situacao onde tem arquivo mais outros campos, ver o multer
 					break;
 				case ParamType.form:
-					result.push(this.convertType(req.body[param.name], param.type));
+					result.push(this.convertType(context.request.body[param.name], param.type));
+					break;
+				case ParamType.context:
+					result.push(context);
 					break;
 				case ParamType.context_request:
-					result.push(req);
+					result.push(context.request);
 					break;
 				case ParamType.context_response:
-					result.push(res);
+					result.push(context.response);
 					break;
 				case ParamType.context_next:
-					result.push(next);
+					result.push(context.next);
+					break;
+				case ParamType.context_accept_language:
+					result.push(context.language);
 					break;
 				default:
 					throw Error("Invalid parameter type");
@@ -522,17 +603,22 @@ class InternalServer {
 // service Logs customizavel
 //Parametros do tipo DTO (@BeanParam). 
 // criar uma anotacao para arquivos e tipo de retorno para donwload???
+// Anotacoes para accepts / acceptCharset
+// Tratar accept-language / i18n (Context.Locale??)
 // controlar cache
 // compressao gzip
 // Suportar um procesador de cabecalhos
 // conditional requests
+// Aceitar as anotacoes de Context.* também em propriedades da classe REST
+// (cada chamada cria um objeto novo para tratar, logo não tem risco...)
+// Suportar content-type XML (input e output)
 	static resolveAllPaths() {
 		if (!InternalServer.pathsResolved) {
 			InternalServer.paths.clear();
 			InternalServer.serverClasses.forEach(classData => {
 				classData.methods.forEach(method => {
 					if (!method.resolvedPath) {
-						InternalServer.resolvePath(classData, method);
+						InternalServer.resolveProperties(classData, method);
 					}
 				});
 			});
@@ -551,7 +637,30 @@ class InternalServer {
 		return methods || new Set<HttpMethod>();
 	}
 
+	private static resolveLanguages(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
+		let resolvedLanguages = new Array<string>();
+		if (serviceClass.languages) {
+			serviceClass.languages.forEach(lang => {
+				resolvedLanguages.push(lang);
+			});
+		}
+		if (serviceMethod.languages) {
+			serviceMethod.languages.forEach(lang => {
+				resolvedLanguages.push(lang);
+			});
+		}
+		if (resolvedLanguages.length > 0) {
+			serviceMethod.resolvedLanguages = resolvedLanguages;
+		}
+	}
+
+	private static resolveProperties(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
+		InternalServer.resolveLanguages(serviceClass, serviceMethod);
+		InternalServer.resolvePath(serviceClass, serviceMethod);
+	}
+
 	private static resolvePath(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
+
 		let classPath: string = serviceClass.path ? serviceClass.path.trim() : "";
 		let resolvedPath = classPath.startsWith('/') ? classPath : '/' + classPath;
 		if (resolvedPath.endsWith('/')) {
