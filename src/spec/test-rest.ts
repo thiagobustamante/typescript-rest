@@ -73,7 +73,7 @@ class TestParams {
 }
 
 @Path("/accept")
-@AcceptLanguage("pt-BR", "en")
+@AcceptLanguage("en", "pt-BR")
 class AcceptTest {
 
 	@GET
@@ -173,6 +173,16 @@ app.listen(3000, function() {
 				done();
 			});
 		});
+
+		it("should use default language if none specified", (done) => {
+			request({
+				url: "http://localhost:3000/accept"				
+			}, function(error, response, body) {
+				expect(body).toEqual("accept");
+				done();
+			});
+		});
+
 	});
 	// process.exit();
 });
