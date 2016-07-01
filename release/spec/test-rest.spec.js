@@ -106,17 +106,52 @@ var TestParams = function () {
         value: function testHeaders(header, cookie) {
             return "cookie: " + cookie + "|header: " + header;
         }
+    }, {
+        key: "testContext",
+        value: function testContext(q, request, response, next) {
+            console.log(this.context);
+            if (request && response && next) {
+                response.status(201);
+                if (q === "123") {
+                    response.send(true);
+                } else {
+                    response.send(false);
+                }
+            }
+        }
     }]);
     return TestParams;
 }();
 
+__decorate([typescript_rest_1.Context, __metadata('design:type', typescript_rest_1.ServiceContext)], TestParams.prototype, "context", void 0);
 __decorate([typescript_rest_1.GET, typescript_rest_1.Path("headers"), __param(0, typescript_rest_1.HeaderParam('my-header')), __param(1, typescript_rest_1.CookieParam('my-cookie')), __metadata('design:type', Function), __metadata('design:paramtypes', [String, String]), __metadata('design:returntype', String)], TestParams.prototype, "testHeaders", null);
+__decorate([typescript_rest_1.GET, typescript_rest_1.Path("context"), __param(0, typescript_rest_1.QueryParam('q')), __param(1, typescript_rest_1.ContextRequest), __param(2, typescript_rest_1.ContextResponse), __param(3, typescript_rest_1.ContextNext), __metadata('design:type', Function), __metadata('design:paramtypes', [String, Object, Object, Function]), __metadata('design:returntype', void 0)], TestParams.prototype, "testContext", null);
+var AcceptTest = function () {
+    function AcceptTest() {
+        (0, _classCallCheck3.default)(this, AcceptTest);
+    }
+
+    (0, _createClass3.default)(AcceptTest, [{
+        key: "testHeaders",
+        value: function testHeaders(language) {
+            if (language === 'en') {
+                return "accept";
+            }
+            return "aceito";
+        }
+    }]);
+    return AcceptTest;
+}();
+__decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testHeaders", null);
+AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);
 describe("Server", function () {
     it("should provide a catalog containing the exposed paths", function () {
         expect(typescript_rest_1.Server.getPaths().has("/person/:id")).toEqual(true);
         expect(typescript_rest_1.Server.getPaths().has("/headers")).toEqual(true);
+        expect(typescript_rest_1.Server.getPaths().has("/context")).toEqual(true);
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
+        expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
     });
 });
 var app = express();
@@ -156,6 +191,43 @@ app.listen(3000, function () {
                 url: "http://localhost:3000/headers"
             }, function (error, response, body) {
                 expect(body).toEqual("cookie: cookie value|header: header value");
+                done();
+            });
+        });
+        it("should accept Context parameters", function (done) {
+            request({
+                url: "http://localhost:3000/context?q=123"
+            }, function (error, response, body) {
+                expect(body).toEqual("true");
+                expect(response.statusCode).toEqual(201);
+                done();
+            });
+        });
+    });
+    describe("AcceptTest", function () {
+        it("should choose language correctly", function (done) {
+            request({
+                headers: { 'Accept-Language': 'pt-BR' },
+                url: "http://localhost:3000/accept"
+            }, function (error, response, body) {
+                expect(body).toEqual("aceito");
+                done();
+            });
+        });
+        it("should reject unacceptable languages", function (done) {
+            request({
+                headers: { 'Accept-Language': 'fr' },
+                url: "http://localhost:3000/accept"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(406);
+                done();
+            });
+        });
+        it("should use default language if none specified", function (done) {
+            request({
+                url: "http://localhost:3000/accept"
+            }, function (error, response, body) {
+                expect(body).toEqual("accept");
                 done();
             });
         });

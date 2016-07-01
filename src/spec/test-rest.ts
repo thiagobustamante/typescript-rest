@@ -4,7 +4,9 @@ import * as express from "express";
 import * as request from 'request';
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
-		FormParam, Context, AcceptLanguage} from "../typescript-rest";
+		FormParam, Context, ServiceContext, ContextRequest, 
+		ContextResponse, ContextLanguage, ContextNext, 
+		AcceptLanguage} from "../typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -46,6 +48,10 @@ class PersonService {
 }
 
 class TestParams {
+	
+	@Context
+	context: ServiceContext;
+
 	@GET
 	@Path("headers")
 	testHeaders( @HeaderParam('my-header') header: string,
@@ -56,9 +62,9 @@ class TestParams {
 	@GET
 	@Path("context")
 	testContext( @QueryParam('q') q: string,
-		@Context.Request request: express.Request,
-		@Context.Response response: express.Response,
-		@Context.Next next: express.NextFunction): void {
+		@ContextRequest request: express.Request,
+		@ContextResponse response: express.Response,
+		@ContextNext next: express.NextFunction): void {
 
 		if (request && response && next) {
 			response.status(201);
@@ -77,7 +83,7 @@ class TestParams {
 class AcceptTest {
 
 	@GET
-	testHeaders(@Context.AcceptLanguage language: string): string {
+	testHeaders(@ContextLanguage language: string): string {
 		if (language === 'en') {
 			return "accept";
 		}

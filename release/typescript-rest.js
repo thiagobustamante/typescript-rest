@@ -16,13 +16,13 @@ var _getMetadata = require("babel-runtime/core-js/reflect/get-metadata");
 
 var _getMetadata2 = _interopRequireDefault(_getMetadata);
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
 var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
 var _typeof2 = require("babel-runtime/helpers/typeof");
 
@@ -44,6 +44,96 @@ function Path(path) {
     };
 }
 exports.Path = Path;
+function AcceptLanguage() {
+    for (var _len = arguments.length, languages = Array(_len), _key = 0; _key < _len; _key++) {
+        languages[_key] = arguments[_key];
+    }
+
+    return function () {
+        if (arguments.length == 1) {
+            return AcceptLanguageTypeDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], languages]);
+        } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
+            return AcceptLanguageMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], languages]);
+        }
+        throw new Error("Invalid @Accept Decorator declaration.");
+    };
+}
+exports.AcceptLanguage = AcceptLanguage;
+function Context() {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs = args.concat([ParamType.context, null]);
+        return processDecoratedParameter.apply(this, _newArgs);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.Context = Context;
+function ContextRequest() {
+    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context_request]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs2 = args.concat([ParamType.context_request, null]);
+        return processDecoratedParameter.apply(this, _newArgs2);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.ContextRequest = ContextRequest;
+function ContextResponse() {
+    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context_response]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs3 = args.concat([ParamType.context_response, null]);
+        return processDecoratedParameter.apply(this, _newArgs3);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.ContextResponse = ContextResponse;
+function ContextNext() {
+    for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context_next]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs4 = args.concat([ParamType.context_next, null]);
+        return processDecoratedParameter.apply(this, _newArgs4);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.ContextNext = ContextNext;
+function ContextLanguage() {
+    for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        args[_key6] = arguments[_key6];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context_accept_language]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs5 = args.concat([ParamType.context_accept_language, null]);
+        return processDecoratedParameter.apply(this, _newArgs5);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.ContextLanguage = ContextLanguage;
 function GET(target, propertyKey, descriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.GET);
 }
@@ -68,6 +158,10 @@ function OPTIONS(target, propertyKey, descriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.OPTIONS);
 }
 exports.OPTIONS = OPTIONS;
+function PATCH(target, propertyKey, descriptor) {
+    processHttpVerb(target, propertyKey, HttpMethod.PATCH);
+}
+exports.PATCH = PATCH;
 function PathParam(name) {
     return function (target, propertyKey, parameterIndex) {
         processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.path, name);
@@ -98,6 +192,12 @@ function FormParam(name) {
     };
 }
 exports.FormParam = FormParam;
+
+var ServiceContext = function ServiceContext() {
+    (0, _classCallCheck3.default)(this, ServiceContext);
+};
+
+exports.ServiceContext = ServiceContext;
 (function (HttpMethod) {
     HttpMethod[HttpMethod["GET"] = 0] = "GET";
     HttpMethod[HttpMethod["POST"] = 1] = "POST";
@@ -105,6 +205,7 @@ exports.FormParam = FormParam;
     HttpMethod[HttpMethod["DELETE"] = 3] = "DELETE";
     HttpMethod[HttpMethod["HEAD"] = 4] = "HEAD";
     HttpMethod[HttpMethod["OPTIONS"] = 5] = "OPTIONS";
+    HttpMethod[HttpMethod["PATCH"] = 6] = "PATCH";
 })(exports.HttpMethod || (exports.HttpMethod = {}));
 var HttpMethod = exports.HttpMethod;
 
@@ -144,6 +245,16 @@ var Server = function () {
 }();
 
 exports.Server = Server;
+function AcceptLanguageTypeDecorator(target, languages) {
+    var classData = InternalServer.registerServiceClass(target);
+    classData.languages = languages;
+}
+function AcceptLanguageMethodDecorator(target, propertyKey, descriptor, languages) {
+    var serviceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+    if (serviceMethod) {
+        serviceMethod.languages = languages;
+    }
+}
 function PathTypeDecorator(target, path) {
     var classData = InternalServer.registerServiceClass(target);
     classData.path = path;
@@ -154,15 +265,19 @@ function PathMethodDecorator(target, propertyKey, descriptor, path) {
         serviceMethod.path = path;
     }
 }
-function processDecoratedParameter(target, propertyKey, parameterIndex, paramtType, name) {
+function processDecoratedParameter(target, propertyKey, parameterIndex, paramType, name) {
     var serviceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         var paramTypes = (0, _getMetadata2.default)("design:paramtypes", target, propertyKey);
         while (serviceMethod.parameters.length < paramTypes.length) {
             serviceMethod.parameters.push(new MethodParam(null, paramTypes[serviceMethod.parameters.length], ParamType.body));
         }
-        serviceMethod.parameters[parameterIndex] = new MethodParam(name, paramTypes[parameterIndex], paramtType);
+        serviceMethod.parameters[parameterIndex] = new MethodParam(name, paramTypes[parameterIndex], paramType);
     }
+}
+function processDecoratedProperty(target, key, paramType) {
+    var classData = InternalServer.registerServiceClass(target.constructor);
+    classData.addProperty(key, paramType);
 }
 function processHttpVerb(target, propertyKey, httpMethod) {
     var serviceMethod = InternalServer.registerServiceMethod(target, propertyKey);
@@ -201,12 +316,30 @@ function processServiceMethod(target, propertyKey, serviceMethod) {
     });
 }
 
-var ServiceClass = function ServiceClass(targetClass) {
-    (0, _classCallCheck3.default)(this, ServiceClass);
+var ServiceClass = function () {
+    function ServiceClass(targetClass) {
+        (0, _classCallCheck3.default)(this, ServiceClass);
 
-    this.targetClass = targetClass;
-    this.methods = new _map2.default();
-};
+        this.targetClass = targetClass;
+        this.methods = new _map2.default();
+    }
+
+    (0, _createClass3.default)(ServiceClass, [{
+        key: "addProperty",
+        value: function addProperty(key, paramType) {
+            if (!this.hasProperties()) {
+                this.properties = new _map2.default();
+            }
+            this.properties.set(key, paramType);
+        }
+    }, {
+        key: "hasProperties",
+        value: function hasProperties() {
+            return this.properties && this.properties.size > 0;
+        }
+    }]);
+    return ServiceClass;
+}();
 
 var ServiceMethod = function ServiceMethod() {
     (0, _classCallCheck3.default)(this, ServiceMethod);
@@ -233,6 +366,11 @@ var ParamType;
     ParamType[ParamType["cookie"] = 3] = "cookie";
     ParamType[ParamType["form"] = 4] = "form";
     ParamType[ParamType["body"] = 5] = "body";
+    ParamType[ParamType["context"] = 6] = "context";
+    ParamType[ParamType["context_request"] = 7] = "context_request";
+    ParamType[ParamType["context_response"] = 8] = "context_response";
+    ParamType[ParamType["context_next"] = 9] = "context_next";
+    ParamType[ParamType["context_accept_language"] = 10] = "context_accept_language";
 })(ParamType || (ParamType = {}));
 
 var InternalServer = function () {
@@ -259,11 +397,11 @@ var InternalServer = function () {
         value: function buildService(serviceClass, serviceMethod) {
             var _this2 = this;
 
-            var handler = function handler(req, res) {
-                _this2.callTargetEndPoint(serviceClass, serviceMethod, req, res);
+            var handler = function handler(req, res, next) {
+                _this2.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
             };
             if (!serviceMethod.resolvedPath) {
-                InternalServer.resolvePath(serviceClass, serviceMethod);
+                InternalServer.resolveProperties(serviceClass, serviceMethod);
             }
             var middleware = this.buildServiceMiddleware(serviceMethod);
             var args = [serviceMethod.resolvedPath];
@@ -287,6 +425,9 @@ var InternalServer = function () {
                     break;
                 case HttpMethod.OPTIONS:
                     this.router.options.apply(this.router, args);
+                    break;
+                case HttpMethod.PATCH:
+                    this.router.patch.apply(this.router, args);
                     break;
                 default:
                     throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");
@@ -315,77 +456,177 @@ var InternalServer = function () {
             return result;
         }
     }, {
-        key: "callTargetEndPoint",
-        value: function callTargetEndPoint(serviceClass, serviceMethod, req, res) {
-            var serviceObject = (0, _create2.default)(serviceClass.targetClass);
-            var args = this.buildArgumentsList(serviceMethod, req);
-            var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
-            if (serviceMethod.returnType) {
-                var serializedType = serviceMethod.returnType.name;
-                switch (serializedType) {
-                    case "String":
-                        res.send(result);
-                        break;
-                    case "Number":
-                        res.send(result.toString());
-                        break;
-                    case "Boolean":
-                        res.send(result.toString());
-                        break;
-                    case "Promise":
-                        result.then(function (value) {
-                            switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
-                                case "number":
-                                    res.send(result.toString());
-                                    break;
-                                case "string":
-                                    res.send(result);
-                                    break;
-                                case "boolean":
-                                    res.send(result.toString());
-                                    break;
-                                default:
-                                    res.json(value);
-                                    break;
-                            }
-                        }).catch(function (e) {
-                            res.sendStatus(500);
-                        });
-                        break;
-                    case "undefined":
-                        res.send("");
-                        break;
-                    default:
-                        res.json(result);
-                        break;
+        key: "acceptable",
+        value: function acceptable(serviceMethod, context) {
+            if (serviceMethod.resolvedLanguages) {
+                var lang = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
+                if (lang) {
+                    context.language = lang;
                 }
+            } else {
+                var languages = context.request.acceptsLanguages();
+                if (languages && languages.length > 0) {
+                    context.language = languages[0];
+                }
+            }
+            if (!context.language) {
+                return false;
+            }
+            return true;
+        }
+    }, {
+        key: "createService",
+        value: function createService(serviceClass, context) {
+            var serviceObject = (0, _create2.default)(serviceClass.targetClass);
+            if (serviceClass.hasProperties()) {
+                serviceClass.properties.forEach(function (paramType, key) {
+                    switch (paramType) {
+                        case ParamType.context:
+                            serviceObject[key] = context;
+                            break;
+                        case ParamType.context_accept_language:
+                            serviceObject[key] = context.language;
+                            break;
+                        case ParamType.context_request:
+                            serviceObject[key] = context.request;
+                            break;
+                        case ParamType.context_response:
+                            serviceObject[key] = context.response;
+                            break;
+                        case ParamType.context_next:
+                            serviceObject[key] = context.next;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+            return serviceObject;
+        }
+    }, {
+        key: "callTargetEndPoint",
+        value: function callTargetEndPoint(serviceClass, serviceMethod, req, res, next) {
+            var context = new ServiceContext();
+            context.request = req;
+            context.response = res;
+            context.next = next;
+            if (this.acceptable(serviceMethod, context)) {
+                var serviceObject = this.createService(serviceClass, context);
+                var args = this.buildArgumentsList(serviceMethod, context);
+                var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+                if (serviceMethod.returnType) {
+                    var serializedType = serviceMethod.returnType.name;
+                    switch (serializedType) {
+                        case "String":
+                            res.send(result);
+                            break;
+                        case "Number":
+                            res.send(result.toString());
+                            break;
+                        case "Boolean":
+                            res.send(result.toString());
+                            break;
+                        case "Promise":
+                            var self = this;
+                            result.then(function (value) {
+                                self.sendValue(value, res);
+                            }).catch(function (e) {
+                                if (!res.headersSent) {
+                                    res.sendStatus(500);
+                                }
+                            });
+                            break;
+                        case "undefined":
+                            res.sendStatus(204);
+                            break;
+                        default:
+                            res.json(result);
+                            break;
+                    }
+                } else {
+                    this.sendValue(result, res);
+                }
+            } else {
+                res.sendStatus(406);
+            }
+        }
+    }, {
+        key: "sendValue",
+        value: function sendValue(value, res) {
+            var _this3 = this;
+
+            switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
+                case "number":
+                    res.send(value.toString());
+                    break;
+                case "string":
+                    res.send(value);
+                    break;
+                case "boolean":
+                    res.send(value.toString());
+                    break;
+                case "undefined":
+                    if (!res.headersSent) {
+                        res.sendStatus(204);
+                    }
+                    break;
+                default:
+                    if (value.constructor.name == "Promise") {
+                        (function () {
+                            var self = _this3;
+                            value.then(function (val) {
+                                self.sendValue(val, res);
+                            }).catch(function (e) {
+                                if (!res.headersSent) {
+                                    res.sendStatus(500);
+                                }
+                            });
+                        })();
+                    } else {
+                        res.json(value);
+                    }
             }
         }
     }, {
         key: "buildArgumentsList",
-        value: function buildArgumentsList(serviceMethod, req) {
-            var _this3 = this;
+        value: function buildArgumentsList(serviceMethod, context) {
+            var _this4 = this;
 
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case ParamType.path:
-                        result.push(_this3.convertType(req.params[param.name], param.type));
+                        result.push(_this4.convertType(context.request.params[param.name], param.type));
                         break;
                     case ParamType.query:
-                        result.push(_this3.convertType(req.query[param.name], param.type));
+                        result.push(_this4.convertType(context.request.query[param.name], param.type));
                         break;
                     case ParamType.header:
-                        result.push(_this3.convertType(req.header(param.name), param.type));
+                        result.push(_this4.convertType(context.request.header(param.name), param.type));
                         break;
                     case ParamType.cookie:
-                        result.push(_this3.convertType(req.cookies[param.name], param.type));
+                        result.push(_this4.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case ParamType.body:
-                        result.push(_this3.convertType(req.body, param.type));
+                        result.push(_this4.convertType(context.request.body, param.type));
                         break;
                     case ParamType.form:
-                        result.push(_this3.convertType(req.body[param.name], param.type));
+                        result.push(_this4.convertType(context.request.body[param.name], param.type));
+                        break;
+                    case ParamType.context:
+                        result.push(context);
+                        break;
+                    case ParamType.context_request:
+                        result.push(context.request);
+                        break;
+                    case ParamType.context_response:
+                        result.push(context.response);
+                        break;
+                    case ParamType.context_next:
+                        result.push(context.next);
+                        break;
+                    case ParamType.context_accept_language:
+                        result.push(context.language);
                         break;
                     default:
                         throw Error("Invalid parameter type");
@@ -439,7 +680,7 @@ var InternalServer = function () {
                 InternalServer.serverClasses.forEach(function (classData) {
                     classData.methods.forEach(function (method) {
                         if (!method.resolvedPath) {
-                            InternalServer.resolvePath(classData, method);
+                            InternalServer.resolveProperties(classData, method);
                         }
                     });
                 });
@@ -458,6 +699,30 @@ var InternalServer = function () {
             InternalServer.resolveAllPaths();
             var methods = InternalServer.paths.get(path);
             return methods || new _set2.default();
+        }
+    }, {
+        key: "resolveLanguages",
+        value: function resolveLanguages(serviceClass, serviceMethod) {
+            var resolvedLanguages = new Array();
+            if (serviceClass.languages) {
+                serviceClass.languages.forEach(function (lang) {
+                    resolvedLanguages.push(lang);
+                });
+            }
+            if (serviceMethod.languages) {
+                serviceMethod.languages.forEach(function (lang) {
+                    resolvedLanguages.push(lang);
+                });
+            }
+            if (resolvedLanguages.length > 0) {
+                serviceMethod.resolvedLanguages = resolvedLanguages;
+            }
+        }
+    }, {
+        key: "resolveProperties",
+        value: function resolveProperties(serviceClass, serviceMethod) {
+            InternalServer.resolveLanguages(serviceClass, serviceMethod);
+            InternalServer.resolvePath(serviceClass, serviceMethod);
         }
     }, {
         key: "resolvePath",

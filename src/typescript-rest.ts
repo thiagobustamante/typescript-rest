@@ -32,6 +32,72 @@ export function AcceptLanguage(...languages: string[]) {
 	}
 }
 
+export function Context(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
+
+export function ContextRequest(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context_request]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context_request, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
+
+export function ContextResponse(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context_response]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context_response, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
+
+export function ContextNext(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context_next]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context_next, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
+
+export function ContextLanguage(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context_accept_language]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context_accept_language, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
+
+
 export function GET(target: any, propertyKey: string,
 	descriptor: PropertyDescriptor){
     processHttpVerb(target, propertyKey, HttpMethod.GET);
@@ -97,31 +163,11 @@ export function FormParam(name: string) {
 	}
 }
 
-export class Context {
+export class ServiceContext {
 	language: string;
 	request: express.Request;
 	response: express.Response; 
 	next: express.NextFunction;
-
-	static Request(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_request, null);
-	}
-
-	static Response(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_response, null);
-	}
-
-	static Next(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_next, null);
-	}
-
-	static AcceptLanguage(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context_accept_language, null);
-	}
-}
-
-export function ServiceContext(target: Object, propertyKey: string, parameterIndex: number) {
-	processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.context, null);
 }
 
 export enum HttpMethod {
@@ -200,7 +246,7 @@ function PathMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for parameter annotations on methods
  */
 function processDecoratedParameter(target: Object, propertyKey: string, parameterIndex: number, 
-	paramtType: ParamType, name: string) {
+	paramType: ParamType, name: string) {
 	let serviceMethod: ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
 	if (serviceMethod) { // does not intercept constructor
 		let paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
@@ -209,9 +255,15 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
 			serviceMethod.parameters.push(new MethodParam(null, 
 						paramTypes[serviceMethod.parameters.length], ParamType.body));
 		}
-		serviceMethod.parameters[parameterIndex] = new MethodParam(name, paramTypes[parameterIndex], paramtType);
+		serviceMethod.parameters[parameterIndex] = new MethodParam(name, paramTypes[parameterIndex], paramType);
 	}
 }
+
+function processDecoratedProperty(target: Function, key: string, paramType: ParamType) {
+	let classData: ServiceClass = InternalServer.registerServiceClass(target.constructor);
+    classData.addProperty(key, paramType);
+}
+
 
 /**
  * Decorator processor for HTTP verb annotations on methods
@@ -276,7 +328,19 @@ class ServiceClass {
 	targetClass: Function;
 	path: string;
 	methods: Map<string, ServiceMethod>;
-	languages: string[];
+	languages: Array<string>;
+	properties: Map<string, ParamType>;
+	
+	addProperty(key: string, paramType: ParamType) {
+		if (!this.hasProperties()) {
+			this.properties = new Map<string, ParamType>();
+		}
+		this.properties.set(key, paramType);
+	}
+
+	hasProperties(): boolean {
+		return (this.properties && this.properties.size > 0);
+	}
 }
 
 /**
@@ -436,7 +500,7 @@ class InternalServer {
 		return result;
 	}
 
-	private acceptable(serviceMethod: ServiceMethod, context: Context) : boolean {
+	private acceptable(serviceMethod: ServiceMethod, context: ServiceContext) : boolean {
 		if (serviceMethod.resolvedLanguages) {
 			 let lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
 			 if (lang) {
@@ -456,15 +520,43 @@ class InternalServer {
 		return true;
 	}
 
+	private createService(serviceClass: ServiceClass, context: ServiceContext) {
+		let serviceObject = Object.create(serviceClass.targetClass);
+		if (serviceClass.hasProperties()) {
+			serviceClass.properties.forEach((paramType, key) => {
+				switch (paramType) {
+					case ParamType.context:
+						serviceObject[key] = context;
+						break;
+					case ParamType.context_accept_language:
+						serviceObject[key] = context.language;
+						break;
+					case ParamType.context_request:
+						serviceObject[key] = context.request;
+						break;
+					case ParamType.context_response:
+						serviceObject[key] = context.response;
+						break;
+					case ParamType.context_next:
+						serviceObject[key] = context.next;
+						break;
+					default:
+						break;
+				}
+			})
+		}
+		return serviceObject;
+	}
+
 	private callTargetEndPoint(serviceClass: ServiceClass, serviceMethod: ServiceMethod, 
 		req: express.Request, res: express.Response, next: express.NextFunction) {
-		let context: Context = new Context();
+		let context: ServiceContext = new ServiceContext();
 		context.request = req;
 		context.response = res;
 		context.next = next;
 
 		if (this.acceptable(serviceMethod, context)) {
-			let serviceObject = Object.create(serviceClass.targetClass);
+			let serviceObject = this.createService(serviceClass, context);
 			let args = this.buildArgumentsList(serviceMethod, context);
 			let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
 
@@ -540,7 +632,7 @@ class InternalServer {
 		}
 	}
 
-	private buildArgumentsList(serviceMethod: ServiceMethod, context: Context) {
+	private buildArgumentsList(serviceMethod: ServiceMethod, context: ServiceContext) {
 		let result: Array<any> = new Array<any>();
 
 		serviceMethod.parameters.forEach(param => {
