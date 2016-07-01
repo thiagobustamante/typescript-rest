@@ -456,6 +456,16 @@ var InternalServer = function () {
             return result;
         }
     }, {
+        key: "processResponseHeaders",
+        value: function processResponseHeaders(serviceMethod, context) {
+            if (serviceMethod.resolvedLanguages) {
+                if (serviceMethod.httpMethod === HttpMethod.GET) {
+                    context.response.vary("Accept-Language");
+                }
+                context.response.set("Content-Language", context.language);
+            }
+        }
+    }, {
         key: "acceptable",
         value: function acceptable(serviceMethod, context) {
             if (serviceMethod.resolvedLanguages) {
@@ -514,6 +524,7 @@ var InternalServer = function () {
                 var serviceObject = this.createService(serviceClass, context);
                 var args = this.buildArgumentsList(serviceMethod, context);
                 var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+                this.processResponseHeaders(serviceMethod, context);
                 if (serviceMethod.returnType) {
                     var serializedType = serviceMethod.returnType.name;
                     switch (serializedType) {

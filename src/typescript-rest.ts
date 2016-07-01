@@ -500,6 +500,15 @@ class InternalServer {
 		return result;
 	}
 
+	private processResponseHeaders(serviceMethod: ServiceMethod, context: ServiceContext) {
+		if (serviceMethod.resolvedLanguages) {
+			if (serviceMethod.httpMethod === HttpMethod.GET) {
+				context.response.vary("Accept-Language");
+			}
+			context.response.set("Content-Language", context.language);
+		}
+	}
+
 	private acceptable(serviceMethod: ServiceMethod, context: ServiceContext) : boolean {
 		if (serviceMethod.resolvedLanguages) {
 			 let lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
@@ -559,6 +568,8 @@ class InternalServer {
 			let serviceObject = this.createService(serviceClass, context);
 			let args = this.buildArgumentsList(serviceMethod, context);
 			let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+
+			this.processResponseHeaders(serviceMethod, context);
 
 			if (serviceMethod.returnType) {
 				let serializedType = serviceMethod.returnType.name;
@@ -691,18 +702,15 @@ class InternalServer {
 		}
 	}
 
-//TODO: montar lista de parametros
+//TODO: 
 // service Logs customizavel
 //Parametros do tipo DTO (@BeanParam). 
 // criar uma anotacao para arquivos e tipo de retorno para donwload???
 // Anotacoes para accepts / acceptCharset
-// Tratar accept-language / i18n (Context.Locale??)
 // controlar cache
 // compressao gzip
 // Suportar um procesador de cabecalhos
 // conditional requests
-// Aceitar as anotacoes de Context.* também em propriedades da classe REST
-// (cada chamada cria um objeto novo para tratar, logo não tem risco...)
 // Suportar content-type XML (input e output)
 	static resolveAllPaths() {
 		if (!InternalServer.pathsResolved) {
@@ -752,7 +760,6 @@ class InternalServer {
 	}
 
 	private static resolvePath(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
-
 		let classPath: string = serviceClass.path ? serviceClass.path.trim() : "";
 		let resolvedPath = classPath.startsWith('/') ? classPath : '/' + classPath;
 		if (resolvedPath.endsWith('/')) {

@@ -109,7 +109,6 @@ var TestParams = function () {
     }, {
         key: "testContext",
         value: function testContext(q, request, response, next) {
-            console.log(this.context);
             if (request && response && next) {
                 response.status(201);
                 if (q === "123") {
