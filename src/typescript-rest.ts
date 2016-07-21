@@ -6,6 +6,9 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import "reflect-metadata"
 
+/**
+ * 
+ */
 export function Path(path: string) {
     return function (...args: any[]) {
 	    if (args.length == 1) {

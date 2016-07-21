@@ -1,6 +1,9 @@
- .DS_Store
- .jshintrc
- .sublime-project
- .tern-project
- /node_modules
- 
+.DS_Store
+.jshintrc
+.sublime-project
+.tern-project
+/node_modules
+/.project
+/package.sublime-workspace
+/typescript-rest.sublime-project
+/typescript-rest.sublime-workspace
