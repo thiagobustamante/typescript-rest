@@ -5,8 +5,8 @@ import * as request from 'request';
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
-		ContextResponse, ContextLanguage, ContextNext, 
-		AcceptLanguage} from "../typescript-rest";
+		ContextResponse, ContextLanguage, ContextAccepts, 
+		ContextNext, AcceptLanguage, Accept} from "../typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -83,11 +83,21 @@ class TestParams {
 class AcceptTest {
 
 	@GET
-	testHeaders(@ContextLanguage language: string): string {
+	testLanguage(@ContextLanguage language: string): string {
 		if (language === 'en') {
-			return "accept";
+			return "accepted";
 		}
 		return "aceito";
+	}
+
+	@GET
+	@Path("types")
+	@Accept("application/json")
+	testAccepts(@ContextAccepts type: string): string {
+		if (type === 'application/json') {
+			return "accepted";
+		}
+		return "not accepted"
 	}
 }
 
@@ -184,7 +194,25 @@ app.listen(3000, function() {
 			request({
 				url: "http://localhost:3000/accept"				
 			}, function(error, response, body) {
-				expect(body).toEqual("accept");
+				expect(body).toEqual("accepted");
+				done();
+			});
+		});
+
+		it("should use default media type if none specified", (done) => {
+			request({
+				url: "http://localhost:3000/accept/types"				
+			}, function(error, response, body) {
+				expect(body).toEqual("accepted");
+				done();
+			});
+		});
+		it("should reject unacceptable media types", (done) => {
+			request({
+				headers: { 'Accept': 'text/html' },
+				url: "http://localhost:3000/accept/types"				
+			}, function(error, response, body) {
+				expect(response.statusCode).toEqual(406);
 				done();
 			});
 		});

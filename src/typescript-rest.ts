@@ -28,6 +28,19 @@ export function AcceptLanguage(...languages: string[]) {
 	        return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
 	    }
 
+	    throw new Error("Invalid @AcceptLanguage Decorator declaration.");
+	}
+}
+
+export function Accept(...accepts: string[]) {
+    return function (...args: any[]) {
+	    if (args.length == 1) {
+	        return AcceptTypeDecorator.apply(this, [args[0], accepts]);
+	    }
+	    else if (args.length == 3 && typeof args[2] === "object") {
+	        return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
+	    }
+
 	    throw new Error("Invalid @Accept Decorator declaration.");
 	}
 }
@@ -97,6 +110,18 @@ export function ContextLanguage(...args: any[]) {
     throw new Error("Invalid @Context Decorator declaration.");	
 }
 
+export function ContextAccepts(...args: any[]) {
+    if (args.length == 2) {
+    	let newArgs = args.concat([ParamType.context_accept]);
+        return processDecoratedProperty.apply(this, newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+    	let newArgs = args.concat([ParamType.context_accept, null]);
+        return processDecoratedParameter.apply(this, newArgs);
+    }
+
+    throw new Error("Invalid @Context Decorator declaration.");	
+}
 
 export function GET(target: any, propertyKey: string,
 	descriptor: PropertyDescriptor){
@@ -165,6 +190,7 @@ export function FormParam(name: string) {
 
 export class ServiceContext {
 	language: string;
+	preferredMedia: string;
 	request: express.Request;
 	response: express.Response; 
 	next: express.NextFunction;
@@ -222,6 +248,24 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
     }
 }
 
+/**
+ * Decorator processor for [[Path]] decorator on classes
+ */
+function AcceptTypeDecorator(target: Function, accepts: string[]) {
+	let classData: ServiceClass = InternalServer.registerServiceClass(target);
+	classData.accepts = accepts;
+}
+
+/**
+ * Decorator processor for [[Path]] decorator on methods
+ */
+function AcceptMethodDecorator(target: any, propertyKey: string, 
+			descriptor: PropertyDescriptor, accepts: string[]) {
+	let serviceMethod: ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+    if (serviceMethod) { // does not intercept constructor
+		serviceMethod.accepts = accepts;
+    }
+}
 
 /**
  * Decorator processor for [[Path]] decorator on classes
@@ -329,6 +373,7 @@ class ServiceClass {
 	path: string;
 	methods: Map<string, ServiceMethod>;
 	languages: Array<string>;
+	accepts: Array<string>;
 	properties: Map<string, ParamType>;
 	
 	addProperty(key: string, paramType: ParamType) {
@@ -357,7 +402,9 @@ class ServiceMethod {
 	mustParseBody: boolean = false;
 	mustParseForms: boolean = false;
 	languages: Array<string>;
+	accepts: Array<string>;
 	resolvedLanguages: Array<string>;
+	resolvedAccepts: Array<string>;
 }
 
 /**
@@ -386,6 +433,7 @@ enum ParamType {
 	context_request,
 	context_response,
 	context_next, 
+	context_accept,
 	context_accept_language
 }
 
@@ -507,6 +555,9 @@ class InternalServer {
 			}
 			context.response.set("Content-Language", context.language);
 		}
+		if (serviceMethod.resolvedAccepts) {
+			context.response.vary("Accept");
+		}
 	}
 
 	private acceptable(serviceMethod: ServiceMethod, context: ServiceContext) : boolean {
@@ -520,6 +571,16 @@ class InternalServer {
 			 let languages: string[] = context.request.acceptsLanguages();
 			 if (languages && languages.length > 0) {
 				 context.language = languages[0];
+			 }
+		}
+
+		if (serviceMethod.resolvedAccepts) {
+			 let accept: any = context.request.accepts(serviceMethod.resolvedAccepts);
+			 if (accept) {
+				 context.preferredMedia = <string> accept;
+			 }
+			 else {
+			 	return false;
 			 }
 		}
 
@@ -539,6 +600,9 @@ class InternalServer {
 						break;
 					case ParamType.context_accept_language:
 						serviceObject[key] = context.language;
+						break;
+					case ParamType.context_accept:
+						serviceObject[key] = context.preferredMedia;
 						break;
 					case ParamType.context_request:
 						serviceObject[key] = context.request;
@@ -679,6 +743,9 @@ class InternalServer {
 				case ParamType.context_next:
 					result.push(context.next);
 					break;
+				case ParamType.context_accept:
+					result.push(context.preferredMedia);
+					break;
 				case ParamType.context_accept_language:
 					result.push(context.language);
 					break;
@@ -704,9 +771,8 @@ class InternalServer {
 
 //TODO: 
 // service Logs customizavel
-//Parametros do tipo DTO (@BeanParam). 
+// Parametros do tipo DTO (@BeanParam). 
 // criar uma anotacao para arquivos e tipo de retorno para donwload???
-// Anotacoes para accepts / acceptCharset
 // controlar cache
 // compressao gzip
 // Suportar um procesador de cabecalhos
@@ -754,8 +820,26 @@ class InternalServer {
 		}
 	}
 
+	private static resolveAccepts(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
+		let resolvedAccepts = new Array<string>();
+		if (serviceClass.accepts) {
+			serviceClass.accepts.forEach(accept => {
+				resolvedAccepts.push(accept);
+			});
+		}
+		if (serviceMethod.accepts) {
+			serviceMethod.accepts.forEach(accept => {
+				resolvedAccepts.push(accept);
+			});
+		}
+		if (resolvedAccepts.length > 0) {
+			serviceMethod.resolvedAccepts = resolvedAccepts;
+		}
+	}
+
 	private static resolveProperties(serviceClass: ServiceClass, serviceMethod: ServiceMethod) : void {
 		InternalServer.resolveLanguages(serviceClass, serviceMethod);
+		InternalServer.resolveAccepts(serviceClass, serviceMethod);		
 		InternalServer.resolvePath(serviceClass, serviceMethod);
 	}
 

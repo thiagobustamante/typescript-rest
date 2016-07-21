@@ -3,11 +3,13 @@ import * as express from "express";
 import "reflect-metadata";
 export declare function Path(path: string): (...args: any[]) => any;
 export declare function AcceptLanguage(...languages: string[]): (...args: any[]) => any;
+export declare function Accept(...accepts: string[]): (...args: any[]) => any;
 export declare function Context(...args: any[]): any;
 export declare function ContextRequest(...args: any[]): any;
 export declare function ContextResponse(...args: any[]): any;
 export declare function ContextNext(...args: any[]): any;
 export declare function ContextLanguage(...args: any[]): any;
+export declare function ContextAccepts(...args: any[]): any;
 export declare function GET(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function POST(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function PUT(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
@@ -22,6 +24,7 @@ export declare function CookieParam(name: string): (target: Object, propertyKey:
 export declare function FormParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare class ServiceContext {
     language: string;
+    preferredMedia: string;
     request: express.Request;
     response: express.Response;
     next: express.NextFunction;

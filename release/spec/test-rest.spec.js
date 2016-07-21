@@ -131,17 +131,26 @@ var AcceptTest = function () {
     }
 
     (0, _createClass3.default)(AcceptTest, [{
-        key: "testHeaders",
-        value: function testHeaders(language) {
+        key: "testLanguage",
+        value: function testLanguage(language) {
             if (language === 'en') {
-                return "accept";
+                return "accepted";
             }
             return "aceito";
+        }
+    }, {
+        key: "testAccepts",
+        value: function testAccepts(type) {
+            if (type === 'application/json') {
+                return "accepted";
+            }
+            return "not accepted";
         }
     }]);
     return AcceptTest;
 }();
-__decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testHeaders", null);
+__decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testLanguage", null);
+__decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_rest_1.Accept("application/json"), __param(0, typescript_rest_1.ContextAccepts), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testAccepts", null);
 AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);
 describe("Server", function () {
     it("should provide a catalog containing the exposed paths", function () {
@@ -226,7 +235,24 @@ app.listen(3000, function () {
             request({
                 url: "http://localhost:3000/accept"
             }, function (error, response, body) {
-                expect(body).toEqual("accept");
+                expect(body).toEqual("accepted");
+                done();
+            });
+        });
+        it("should use default media type if none specified", function (done) {
+            request({
+                url: "http://localhost:3000/accept/types"
+            }, function (error, response, body) {
+                expect(body).toEqual("accepted");
+                done();
+            });
+        });
+        it("should reject unacceptable media types", function (done) {
+            request({
+                headers: { 'Accept': 'text/html' },
+                url: "http://localhost:3000/accept/types"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(406);
                 done();
             });
         });

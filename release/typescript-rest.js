@@ -55,13 +55,28 @@ function AcceptLanguage() {
         } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
             return AcceptLanguageMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], languages]);
         }
-        throw new Error("Invalid @Accept Decorator declaration.");
+        throw new Error("Invalid @AcceptLanguage Decorator declaration.");
     };
 }
 exports.AcceptLanguage = AcceptLanguage;
+function Accept() {
+    for (var _len2 = arguments.length, accepts = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        accepts[_key2] = arguments[_key2];
+    }
+
+    return function () {
+        if (arguments.length == 1) {
+            return AcceptTypeDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], accepts]);
+        } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
+            return AcceptMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], accepts]);
+        }
+        throw new Error("Invalid @Accept Decorator declaration.");
+    };
+}
+exports.Accept = Accept;
 function Context() {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
     }
 
     if (args.length == 2) {
@@ -75,8 +90,8 @@ function Context() {
 }
 exports.Context = Context;
 function ContextRequest() {
-    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
     }
 
     if (args.length == 2) {
@@ -90,8 +105,8 @@ function ContextRequest() {
 }
 exports.ContextRequest = ContextRequest;
 function ContextResponse() {
-    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+    for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
     }
 
     if (args.length == 2) {
@@ -105,8 +120,8 @@ function ContextResponse() {
 }
 exports.ContextResponse = ContextResponse;
 function ContextNext() {
-    for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+    for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        args[_key6] = arguments[_key6];
     }
 
     if (args.length == 2) {
@@ -120,8 +135,8 @@ function ContextNext() {
 }
 exports.ContextNext = ContextNext;
 function ContextLanguage() {
-    for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        args[_key6] = arguments[_key6];
+    for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+        args[_key7] = arguments[_key7];
     }
 
     if (args.length == 2) {
@@ -134,6 +149,21 @@ function ContextLanguage() {
     throw new Error("Invalid @Context Decorator declaration.");
 }
 exports.ContextLanguage = ContextLanguage;
+function ContextAccepts() {
+    for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+        args[_key8] = arguments[_key8];
+    }
+
+    if (args.length == 2) {
+        var newArgs = args.concat([ParamType.context_accept]);
+        return processDecoratedProperty.apply(this, newArgs);
+    } else if (args.length == 3 && typeof args[2] === "number") {
+        var _newArgs6 = args.concat([ParamType.context_accept, null]);
+        return processDecoratedParameter.apply(this, _newArgs6);
+    }
+    throw new Error("Invalid @Context Decorator declaration.");
+}
+exports.ContextAccepts = ContextAccepts;
 function GET(target, propertyKey, descriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.GET);
 }
@@ -255,6 +285,16 @@ function AcceptLanguageMethodDecorator(target, propertyKey, descriptor, language
         serviceMethod.languages = languages;
     }
 }
+function AcceptTypeDecorator(target, accepts) {
+    var classData = InternalServer.registerServiceClass(target);
+    classData.accepts = accepts;
+}
+function AcceptMethodDecorator(target, propertyKey, descriptor, accepts) {
+    var serviceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+    if (serviceMethod) {
+        serviceMethod.accepts = accepts;
+    }
+}
 function PathTypeDecorator(target, path) {
     var classData = InternalServer.registerServiceClass(target);
     classData.path = path;
@@ -370,7 +410,8 @@ var ParamType;
     ParamType[ParamType["context_request"] = 7] = "context_request";
     ParamType[ParamType["context_response"] = 8] = "context_response";
     ParamType[ParamType["context_next"] = 9] = "context_next";
-    ParamType[ParamType["context_accept_language"] = 10] = "context_accept_language";
+    ParamType[ParamType["context_accept"] = 10] = "context_accept";
+    ParamType[ParamType["context_accept_language"] = 11] = "context_accept_language";
 })(ParamType || (ParamType = {}));
 
 var InternalServer = function () {
@@ -464,6 +505,9 @@ var InternalServer = function () {
                 }
                 context.response.set("Content-Language", context.language);
             }
+            if (serviceMethod.resolvedAccepts) {
+                context.response.vary("Accept");
+            }
         }
     }, {
         key: "acceptable",
@@ -477,6 +521,14 @@ var InternalServer = function () {
                 var languages = context.request.acceptsLanguages();
                 if (languages && languages.length > 0) {
                     context.language = languages[0];
+                }
+            }
+            if (serviceMethod.resolvedAccepts) {
+                var accept = context.request.accepts(serviceMethod.resolvedAccepts);
+                if (accept) {
+                    context.preferredMedia = accept;
+                } else {
+                    return false;
                 }
             }
             if (!context.language) {
@@ -496,6 +548,9 @@ var InternalServer = function () {
                             break;
                         case ParamType.context_accept_language:
                             serviceObject[key] = context.language;
+                            break;
+                        case ParamType.context_accept:
+                            serviceObject[key] = context.preferredMedia;
                             break;
                         case ParamType.context_request:
                             serviceObject[key] = context.request;
@@ -636,6 +691,9 @@ var InternalServer = function () {
                     case ParamType.context_next:
                         result.push(context.next);
                         break;
+                    case ParamType.context_accept:
+                        result.push(context.preferredMedia);
+                        break;
                     case ParamType.context_accept_language:
                         result.push(context.language);
                         break;
@@ -730,9 +788,28 @@ var InternalServer = function () {
             }
         }
     }, {
+        key: "resolveAccepts",
+        value: function resolveAccepts(serviceClass, serviceMethod) {
+            var resolvedAccepts = new Array();
+            if (serviceClass.accepts) {
+                serviceClass.accepts.forEach(function (accept) {
+                    resolvedAccepts.push(accept);
+                });
+            }
+            if (serviceMethod.accepts) {
+                serviceMethod.accepts.forEach(function (accept) {
+                    resolvedAccepts.push(accept);
+                });
+            }
+            if (resolvedAccepts.length > 0) {
+                serviceMethod.resolvedAccepts = resolvedAccepts;
+            }
+        }
+    }, {
         key: "resolveProperties",
         value: function resolveProperties(serviceClass, serviceMethod) {
             InternalServer.resolveLanguages(serviceClass, serviceMethod);
+            InternalServer.resolveAccepts(serviceClass, serviceMethod);
             InternalServer.resolvePath(serviceClass, serviceMethod);
         }
     }, {
