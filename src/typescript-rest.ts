@@ -230,7 +230,7 @@ export abstract class Server {
 }
 
 /**
- * Decorator processor for [[Path]] decorator on classes
+ * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
 	let classData: ServiceClass = InternalServer.registerServiceClass(target);
@@ -238,7 +238,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
 }
 
 /**
- * Decorator processor for [[Path]] decorator on methods
+ * Decorator processor for [[AcceptLanguage]] decorator on methods
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string, 
 			descriptor: PropertyDescriptor, languages: string[]) {
@@ -249,7 +249,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
 }
 
 /**
- * Decorator processor for [[Path]] decorator on classes
+ * Decorator processor for [[Accept]] decorator on classes
  */
 function AcceptTypeDecorator(target: Function, accepts: string[]) {
 	let classData: ServiceClass = InternalServer.registerServiceClass(target);
@@ -257,7 +257,7 @@ function AcceptTypeDecorator(target: Function, accepts: string[]) {
 }
 
 /**
- * Decorator processor for [[Path]] decorator on methods
+ * Decorator processor for [[Accept]] decorator on methods
  */
 function AcceptMethodDecorator(target: any, propertyKey: string, 
 			descriptor: PropertyDescriptor, accepts: string[]) {
@@ -303,6 +303,9 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
 	}
 }
 
+/**
+ * Decorator processor for annotations on properties
+ */
 function processDecoratedProperty(target: Function, key: string, paramType: ParamType) {
 	let classData: ServiceClass = InternalServer.registerServiceClass(target.constructor);
     classData.addProperty(key, paramType);
@@ -422,6 +425,9 @@ class MethodParam {
 	paramType: ParamType;
 }
 
+/**
+ * Enumeration of accepted parameter types
+ */
 enum ParamType {
 	path,
 	query,
