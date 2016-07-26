@@ -4,10 +4,39 @@
 import * as express from "express"; 
 import * as bodyParser from "body-parser"; 
 import * as cookieParser from "cookie-parser";
+import * as multer from "multer";
+
 import "reflect-metadata"
 
 /**
+ * A decorator to tell the [[Server]] that a class or a method 
+ * should be bound to a given path.
  * 
+ * For example:
+ *
+ * ```
+ * @ Path("people")
+ * class PeopleService {
+ *   @ PUT
+ *   @ Path(":id")
+ *   savePerson(person:Person) {
+ *      // ...
+ *   }
+ * 
+ *   @ GET
+ *   @ Path(":id")
+ *   getPerson():Person {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create services that listen for requests like:
+ *
+ * ```
+ * PUT http://mydomain/people/123 or
+ * GET http://mydomain/people/123 
+ * ```
  */
 export function Path(path: string) {
     return function (...args: any[]) {
@@ -167,6 +196,18 @@ export function PathParam(name: string) {
 	}
 }
 
+export function FileParam(name: string) {
+    return function(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.file, name);
+	}
+}
+
+export function FilesParam(name: string) {
+    return function(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.files, name);
+	}
+}
+
 export function QueryParam(name: string) {
     return function(target: Object, propertyKey: string, parameterIndex: number) {
 		processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.query, name);
@@ -215,20 +256,68 @@ export abstract class Server {
 		iternalServer.buildServices();
 	}
 
+	/**
+	 * Return all paths accepted by the Server
+	 */
 	static getPaths(): Set<string> {
 		return InternalServer.getPaths();
 	}
 
+	/**
+	 * Return the set oh HTTP verbs configured for the given path
+	 * @param path The path to search HTTP verbs
+	 */
 	static getHttpMethods(path: string): Set<HttpMethod> {
 		return InternalServer.getHttpMethods(path);
 	}
 
+	/**
+	 * A string used for signing cookies. This is optional and if not specified, 
+	 * will not parse signed cookies.
+	 * @param secret the secret used to sign
+	 */
 	static setCookiesSecret(secret: string) {
 		InternalServer.cookiesSecret = secret;
 	}
 
-	static setCookiesDecoder(decoder: Function) {
+	/**
+	 * Specifies a function that will be used to decode a cookie's value. 
+	 * This function can be used to decode a previously-encoded cookie value 
+	 * into a JavaScript string.
+	 * The default function is the global decodeURIComponent, which will decode 
+	 * any URL-encoded sequences into their byte representations.
+	 * 
+	 * NOTE: if an error is thrown from this function, the original, non-decoded 
+	 * cookie value will be returned as the cookie's value.
+	 * @param decoder The decoder function
+	 */
+	static setCookiesDecoder(decoder: (val: string) => string) {
 		InternalServer.cookiesDecoder = decoder;
+	}
+
+	/**
+	 * Set where to store the uploaded files
+	 * @param dest Destination folder
+	 */
+	static setFileDest(dest: string) {
+		InternalServer.fileDest = dest;
+	}
+
+	/**
+	 * Set a Function to control which files are accepted to upload
+	 * @param filter The filter function
+	 */
+	static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File, 
+					callback: (error: Error, acceptFile: boolean) => void) => void) {
+		InternalServer.fileFilter = filter;
+	}
+
+	/**
+	 * Set the limits of uploaded data
+	 * @param limit The data limit
+	 */
+	static setFileLimits(limit: number) {
+		InternalServer.fileLimits = limit;
 	}
 }
 
@@ -333,7 +422,7 @@ function processHttpVerb(target: any, propertyKey: string,
 }
 
 /**
- * extract metadata for rest methods
+ * Extract metadata for rest methods
  */
 function processServiceMethod(target: any, propertyKey: string, serviceMethod: ServiceMethod) {
 	serviceMethod.name = propertyKey;
@@ -347,6 +436,12 @@ function processServiceMethod(target: any, propertyKey: string, serviceMethod: S
 	serviceMethod.parameters.forEach(param => {
 		if (param.paramType == ParamType.cookie) {
 			serviceMethod.mustParseCookies = true;
+		}
+		else if (param.paramType == ParamType.file) {
+			serviceMethod.files.push(new FileParamData(param.name, true));
+		}
+		else if (param.paramType == ParamType.files) {
+			serviceMethod.files.push(new FileParamData(param.name, false));
 		}
 		else if (param.paramType == ParamType.form) {
 			if (serviceMethod.mustParseBody) {
@@ -405,12 +500,26 @@ class ServiceMethod {
 	returnType: Function;
 	parameters: Array<MethodParam> = new Array<MethodParam>();
 	mustParseCookies: boolean = false;
+	files: Array<FileParamData> = new Array<FileParamData>();
 	mustParseBody: boolean = false;
 	mustParseForms: boolean = false;
 	languages: Array<string>;
 	accepts: Array<string>;
 	resolvedLanguages: Array<string>;
 	resolvedAccepts: Array<string>;
+}
+
+/**
+ * Metadata for File parameters on REST methods
+ */
+class FileParamData {
+	constructor(name: string, singleFile: boolean) {
+		this.name = name;
+		this.singleFile = singleFile;
+	}
+
+	name: string;
+	singleFile: boolean;
 }
 
 /**
@@ -438,6 +547,8 @@ enum ParamType {
 	cookie,
 	form,
 	body,
+	file, 
+	files, 
 	context,
 	context_request,
 	context_response,
@@ -451,9 +562,13 @@ class InternalServer {
 	static paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
 	static pathsResolved: boolean = false;
 	static cookiesSecret: string;
-	static cookiesDecoder: Function;
+	static cookiesDecoder: (val: string) => string;
+	static fileDest: string;
+	static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
+	static fileLimits: number;
 
 	router: express.Router;
+	upload: multer.Instance; 
 
 	constructor(router: express.Router) {
 		this.router = router;
@@ -532,6 +647,28 @@ class InternalServer {
 		 }
 	}
 
+	private getUploader(): multer.Instance {
+		if (!this.upload) {
+			let options : multer.Options= {};
+			if (InternalServer.fileDest) {
+				options.dest = InternalServer.fileDest;
+			}
+			if (InternalServer.fileFilter) {
+				options.fileFilter = InternalServer.fileFilter;
+			}
+			if (InternalServer.fileLimits) {
+				options.limits = InternalServer.fileLimits;
+			}
+			if (options.dest) {
+				this.upload = multer(options);
+			}
+			else {
+				this.upload = multer();
+			}
+		}
+		return this.upload;
+	} 
+
 	private buildServiceMiddleware(serviceMethod: ServiceMethod): Array<express.RequestHandler> {
 		let result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
@@ -551,7 +688,18 @@ class InternalServer {
 		}
 		if (serviceMethod.mustParseForms) {
 			result.push(bodyParser.urlencoded({ extended: true }));
-			//TODO adicionar o multer para parsing arquivos
+		}
+		if (serviceMethod.files.length > 0) {
+			let options: Array<multer.Field> = new Array<multer.Field>();
+			serviceMethod.files.forEach(fileData => {
+				if (fileData.singleFile) {
+					options.push({"name": fileData.name,  "maxCount": 1});
+				}
+				else {
+					options.push({"name": fileData.name});
+				}
+			});
+			result.push(this.getUploader().fields(options));
 		}
 
 		return result;
@@ -735,7 +883,15 @@ class InternalServer {
 					break;
 				case ParamType.body:
 					result.push(this.convertType(context.request.body, param.type));
-					//TODO parser situacao onde tem arquivo mais outros campos, ver o multer
+					break;
+				case ParamType.file:
+					let files : Array<Express.Multer.File> = context.request.files[param.name];
+					if (files && files.length > 0) {
+						result.push(files[0]);
+					}
+					break;
+				case ParamType.files:
+					result.push(context.request.files[param.name]);
 					break;
 				case ParamType.form:
 					result.push(this.convertType(context.request.body[param.name], param.type));
@@ -779,13 +935,11 @@ class InternalServer {
 	}
 
 //TODO: 
-// service Logs customizavel
 // Parametros do tipo DTO (@BeanParam). 
-// criar uma anotacao para arquivos e tipo de retorno para donwload???
+// criar tipo de retorno para donwload???
 // controlar cache
-// compressao gzip
-// Suportar um procesador de cabecalhos
 // conditional requests
+// Adicionar anotações para Coleções de recursos e para operações 
 // Suportar content-type XML (input e output)
 	static resolveAllPaths() {
 		if (!InternalServer.pathsResolved) {

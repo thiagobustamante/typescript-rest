@@ -32,6 +32,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
+var multer = require("multer");
 require("reflect-metadata");
 function Path(path) {
     return function () {
@@ -198,6 +199,18 @@ function PathParam(name) {
     };
 }
 exports.PathParam = PathParam;
+function FileParam(name) {
+    return function (target, propertyKey, parameterIndex) {
+        processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.file, name);
+    };
+}
+exports.FileParam = FileParam;
+function FilesParam(name) {
+    return function (target, propertyKey, parameterIndex) {
+        processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.files, name);
+    };
+}
+exports.FilesParam = FilesParam;
 function QueryParam(name) {
     return function (target, propertyKey, parameterIndex) {
         processDecoratedParameter(target, propertyKey, parameterIndex, ParamType.query, name);
@@ -270,6 +283,21 @@ var Server = function () {
         value: function setCookiesDecoder(decoder) {
             InternalServer.cookiesDecoder = decoder;
         }
+    }, {
+        key: "setFileDest",
+        value: function setFileDest(dest) {
+            InternalServer.fileDest = dest;
+        }
+    }, {
+        key: "setFileFilter",
+        value: function setFileFilter(filter) {
+            InternalServer.fileFilter = filter;
+        }
+    }, {
+        key: "setFileLimits",
+        value: function setFileLimits(limit) {
+            InternalServer.fileLimits = limit;
+        }
     }]);
     return Server;
 }();
@@ -339,6 +367,10 @@ function processServiceMethod(target, propertyKey, serviceMethod) {
     serviceMethod.parameters.forEach(function (param) {
         if (param.paramType == ParamType.cookie) {
             serviceMethod.mustParseCookies = true;
+        } else if (param.paramType == ParamType.file) {
+            serviceMethod.files.push(new FileParamData(param.name, true));
+        } else if (param.paramType == ParamType.files) {
+            serviceMethod.files.push(new FileParamData(param.name, false));
         } else if (param.paramType == ParamType.form) {
             if (serviceMethod.mustParseBody) {
                 throw Error("Can not use form parameters with a body parameter on the same method.");
@@ -386,8 +418,16 @@ var ServiceMethod = function ServiceMethod() {
 
     this.parameters = new Array();
     this.mustParseCookies = false;
+    this.files = new Array();
     this.mustParseBody = false;
     this.mustParseForms = false;
+};
+
+var FileParamData = function FileParamData(name, singleFile) {
+    (0, _classCallCheck3.default)(this, FileParamData);
+
+    this.name = name;
+    this.singleFile = singleFile;
 };
 
 var MethodParam = function MethodParam(name, type, paramType) {
@@ -406,12 +446,14 @@ var ParamType;
     ParamType[ParamType["cookie"] = 3] = "cookie";
     ParamType[ParamType["form"] = 4] = "form";
     ParamType[ParamType["body"] = 5] = "body";
-    ParamType[ParamType["context"] = 6] = "context";
-    ParamType[ParamType["context_request"] = 7] = "context_request";
-    ParamType[ParamType["context_response"] = 8] = "context_response";
-    ParamType[ParamType["context_next"] = 9] = "context_next";
-    ParamType[ParamType["context_accept"] = 10] = "context_accept";
-    ParamType[ParamType["context_accept_language"] = 11] = "context_accept_language";
+    ParamType[ParamType["file"] = 6] = "file";
+    ParamType[ParamType["files"] = 7] = "files";
+    ParamType[ParamType["context"] = 8] = "context";
+    ParamType[ParamType["context_request"] = 9] = "context_request";
+    ParamType[ParamType["context_response"] = 10] = "context_response";
+    ParamType[ParamType["context_next"] = 11] = "context_next";
+    ParamType[ParamType["context_accept"] = 12] = "context_accept";
+    ParamType[ParamType["context_accept_language"] = 13] = "context_accept_language";
 })(ParamType || (ParamType = {}));
 
 var InternalServer = function () {
@@ -475,8 +517,32 @@ var InternalServer = function () {
             }
         }
     }, {
+        key: "getUploader",
+        value: function getUploader() {
+            if (!this.upload) {
+                var options = {};
+                if (InternalServer.fileDest) {
+                    options.dest = InternalServer.fileDest;
+                }
+                if (InternalServer.fileFilter) {
+                    options.fileFilter = InternalServer.fileFilter;
+                }
+                if (InternalServer.fileLimits) {
+                    options.limits = InternalServer.fileLimits;
+                }
+                if (options.dest) {
+                    this.upload = multer(options);
+                } else {
+                    this.upload = multer();
+                }
+            }
+            return this.upload;
+        }
+    }, {
         key: "buildServiceMiddleware",
         value: function buildServiceMiddleware(serviceMethod) {
+            var _this3 = this;
+
             var result = new Array();
             if (serviceMethod.mustParseCookies) {
                 var args = [];
@@ -493,6 +559,19 @@ var InternalServer = function () {
             }
             if (serviceMethod.mustParseForms) {
                 result.push(bodyParser.urlencoded({ extended: true }));
+            }
+            if (serviceMethod.files.length > 0) {
+                (function () {
+                    var options = new Array();
+                    serviceMethod.files.forEach(function (fileData) {
+                        if (fileData.singleFile) {
+                            options.push({ "name": fileData.name, "maxCount": 1 });
+                        } else {
+                            options.push({ "name": fileData.name });
+                        }
+                    });
+                    result.push(_this3.getUploader().fields(options));
+                })();
             }
             return result;
         }
@@ -619,7 +698,7 @@ var InternalServer = function () {
     }, {
         key: "sendValue",
         value: function sendValue(value, res) {
-            var _this3 = this;
+            var _this4 = this;
 
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
                 case "number":
@@ -639,7 +718,7 @@ var InternalServer = function () {
                 default:
                     if (value.constructor.name == "Promise") {
                         (function () {
-                            var self = _this3;
+                            var self = _this4;
                             value.then(function (val) {
                                 self.sendValue(val, res);
                             }).catch(function (e) {
@@ -656,28 +735,37 @@ var InternalServer = function () {
     }, {
         key: "buildArgumentsList",
         value: function buildArgumentsList(serviceMethod, context) {
-            var _this4 = this;
+            var _this5 = this;
 
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case ParamType.path:
-                        result.push(_this4.convertType(context.request.params[param.name], param.type));
+                        result.push(_this5.convertType(context.request.params[param.name], param.type));
                         break;
                     case ParamType.query:
-                        result.push(_this4.convertType(context.request.query[param.name], param.type));
+                        result.push(_this5.convertType(context.request.query[param.name], param.type));
                         break;
                     case ParamType.header:
-                        result.push(_this4.convertType(context.request.header(param.name), param.type));
+                        result.push(_this5.convertType(context.request.header(param.name), param.type));
                         break;
                     case ParamType.cookie:
-                        result.push(_this4.convertType(context.request.cookies[param.name], param.type));
+                        result.push(_this5.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case ParamType.body:
-                        result.push(_this4.convertType(context.request.body, param.type));
+                        result.push(_this5.convertType(context.request.body, param.type));
+                        break;
+                    case ParamType.file:
+                        var files = context.request.files[param.name];
+                        if (files && files.length > 0) {
+                            result.push(files[0]);
+                        }
+                        break;
+                    case ParamType.files:
+                        result.push(context.request.files[param.name]);
                         break;
                     case ParamType.form:
-                        result.push(_this4.convertType(context.request.body[param.name], param.type));
+                        result.push(_this5.convertType(context.request.body[param.name], param.type));
                         break;
                     case ParamType.context:
                         result.push(context);

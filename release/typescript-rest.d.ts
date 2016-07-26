@@ -18,6 +18,8 @@ export declare function HEAD(target: any, propertyKey: string, descriptor: Prope
 export declare function OPTIONS(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function PATCH(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function PathParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
+export declare function FileParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
+export declare function FilesParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare function QueryParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare function HeaderParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare function CookieParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
@@ -43,5 +45,8 @@ export declare abstract class Server {
     static getPaths(): Set<string>;
     static getHttpMethods(path: string): Set<HttpMethod>;
     static setCookiesSecret(secret: string): void;
-    static setCookiesDecoder(decoder: Function): void;
+    static setCookiesDecoder(decoder: (val: string) => string): void;
+    static setFileDest(dest: string): void;
+    static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void): void;
+    static setFileLimits(limit: number): void;
 }

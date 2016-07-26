@@ -2,11 +2,13 @@
 
 import * as express from "express";
 import * as request from 'request';
+import * as fs from "fs";
+
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccepts, 
-		ContextNext, AcceptLanguage, Accept} from "../typescript-rest";
+		ContextNext, AcceptLanguage, Accept, FileParam} from "../typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -76,6 +78,15 @@ class TestParams {
 			}
 		}
 	}
+
+	@POST
+	@Path("upload")
+	testUploadFile( @FileParam("myFile") file: Express.Multer.File, 
+					@FormParam("myField") myField: string): boolean {
+		return (file 
+		 && (file.buffer.toString().startsWith('"use strict";')) 
+	     && (myField === "my_value"));
+	}
 }
 
 @Path("/accept")
@@ -106,6 +117,7 @@ describe("Server", () => {
 		expect(Server.getPaths().has("/person/:id")).toEqual(true);
 		expect(Server.getPaths().has("/headers")).toEqual(true);
 		expect(Server.getPaths().has("/context")).toEqual(true);
+		expect(Server.getPaths().has("/upload")).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
 		expect(Server.getPaths().has("/accept")).toEqual(true);
@@ -166,6 +178,17 @@ app.listen(3000, function() {
 				expect(response.statusCode).toEqual(201);
 				done();
 			});
+		});
+
+		it("should accept file parameters", (done) => {
+			let req = request.post("http://localhost:3000/upload", function(error, response, body) {
+				expect(body).toEqual("true");
+				expect(response.statusCode).toEqual(200);
+				done();
+			});
+			let form: FormData = req.form();
+			form.append('myField', 'my_value');
+			form.append('myFile', fs.createReadStream(__dirname + '/test-rest.spec.js'), 'test-rest.spec.js');
 		});
 	});
 

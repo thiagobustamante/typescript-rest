@@ -6,6 +6,7 @@
 /// <reference path="globals/harmony-proxy/index.d.ts" />
 /// <reference path="globals/jasmine/index.d.ts" />
 /// <reference path="globals/mime/index.d.ts" />
+/// <reference path="globals/multer/index.d.ts" />
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/request/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />

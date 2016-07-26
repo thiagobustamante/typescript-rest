@@ -52,6 +52,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 };
 var express = require("express");
 var request = require('request');
+var fs = require("fs");
 var typescript_rest_1 = require("../typescript-rest");
 
 var Person = function Person(id, name, age) {
@@ -118,6 +119,11 @@ var TestParams = function () {
                 }
             }
         }
+    }, {
+        key: "testUploadFile",
+        value: function testUploadFile(file, myField) {
+            return file && file.buffer.toString().startsWith('"use strict";') && myField === "my_value";
+        }
     }]);
     return TestParams;
 }();
@@ -125,6 +131,7 @@ var TestParams = function () {
 __decorate([typescript_rest_1.Context, __metadata('design:type', typescript_rest_1.ServiceContext)], TestParams.prototype, "context", void 0);
 __decorate([typescript_rest_1.GET, typescript_rest_1.Path("headers"), __param(0, typescript_rest_1.HeaderParam('my-header')), __param(1, typescript_rest_1.CookieParam('my-cookie')), __metadata('design:type', Function), __metadata('design:paramtypes', [String, String]), __metadata('design:returntype', String)], TestParams.prototype, "testHeaders", null);
 __decorate([typescript_rest_1.GET, typescript_rest_1.Path("context"), __param(0, typescript_rest_1.QueryParam('q')), __param(1, typescript_rest_1.ContextRequest), __param(2, typescript_rest_1.ContextResponse), __param(3, typescript_rest_1.ContextNext), __metadata('design:type', Function), __metadata('design:paramtypes', [String, Object, Object, Function]), __metadata('design:returntype', void 0)], TestParams.prototype, "testContext", null);
+__decorate([typescript_rest_1.POST, typescript_rest_1.Path("upload"), __param(0, typescript_rest_1.FileParam("myFile")), __param(1, typescript_rest_1.FormParam("myField")), __metadata('design:type', Function), __metadata('design:paramtypes', [Object, String]), __metadata('design:returntype', Boolean)], TestParams.prototype, "testUploadFile", null);
 var AcceptTest = function () {
     function AcceptTest() {
         (0, _classCallCheck3.default)(this, AcceptTest);
@@ -157,6 +164,7 @@ describe("Server", function () {
         expect(typescript_rest_1.Server.getPaths().has("/person/:id")).toEqual(true);
         expect(typescript_rest_1.Server.getPaths().has("/headers")).toEqual(true);
         expect(typescript_rest_1.Server.getPaths().has("/context")).toEqual(true);
+        expect(typescript_rest_1.Server.getPaths().has("/upload")).toEqual(true);
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
         expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
@@ -210,6 +218,16 @@ app.listen(3000, function () {
                 expect(response.statusCode).toEqual(201);
                 done();
             });
+        });
+        it("should accept file parameters", function (done) {
+            var req = request.post("http://localhost:3000/upload", function (error, response, body) {
+                expect(body).toEqual("true");
+                expect(response.statusCode).toEqual(200);
+                done();
+            });
+            var form = req.form();
+            form.append('myField', 'my_value');
+            form.append('myFile', fs.createReadStream(__dirname + '/test-rest.spec.js'), 'test-rest.spec.js');
         });
     });
     describe("AcceptTest", function () {
