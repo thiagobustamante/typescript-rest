@@ -53,7 +53,7 @@ var __param = undefined && undefined.__param || function (paramIndex, decorator)
 var express = require("express");
 var request = require('request');
 var fs = require("fs");
-var typescript_rest_1 = require("../typescript-rest");
+var typescript_rest_1 = require("../lib/typescript-rest");
 
 var Person = function Person(id, name, age) {
     (0, _classCallCheck3.default)(this, Person);

@@ -8,7 +8,7 @@ import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccepts, 
-		ContextNext, AcceptLanguage, Accept, FileParam} from "../typescript-rest";
+		ContextNext, AcceptLanguage, Accept, FileParam} from "../lib/typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {

@@ -19,17 +19,14 @@ var tsProject = ts.createProject('tsconfig.json', {
 }, ts.reporter.fullReporter(true));
 
 gulp.task('compile', function() {
-	var tsResult = tsProject.src()
+ 	var tsResult = gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(ts(tsProject, {referencedFrom:['typescript-rest.ts']}));
+		.pipe(ts(tsProject));
  
 	return merge([
 		tsResult.dts.pipe(gulp.dest('release')),
 		
 		tsResult.js
-			// .pipe(babel({
-	  		//           optional: ["runtime"]
-	  		//       }));
 			.pipe(babel({
 				presets: ['es2015'],
 				plugins: ['transform-runtime']
@@ -79,7 +76,7 @@ gulp.task('test', function(done) {
 
 gulp.task("docs", ['docs-clean'], function() {
     return gulp
-        .src(["./src/typescript-rest.ts"])
+        .src(["./src/lib/*.ts"])
         .pipe(typedoc({
             module: "commonjs",
             target: "es6",

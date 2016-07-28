@@ -50,6 +50,6 @@
     "lib": "release",
     "doc": "doc"
   },
-  "main": "release/typescript-rest.js",
-  "typings": "release/typescript-rest.d.ts"
+  "main": "release/lib/typescript-rest.js",
+  "typings": "release/lib/typescript-rest.d.ts"
 }
