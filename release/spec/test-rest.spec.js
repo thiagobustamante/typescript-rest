@@ -153,11 +153,17 @@ var AcceptTest = function () {
             }
             return "not accepted";
         }
+    }, {
+        key: "testConflict",
+        value: function testConflict() {
+            throw new typescript_rest_1.Errors.ConflictError("test of conflict");
+        }
     }]);
     return AcceptTest;
 }();
 __decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testLanguage", null);
 __decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_rest_1.Accept("application/json"), __param(0, typescript_rest_1.ContextAccepts), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testAccepts", null);
+__decorate([typescript_rest_1.PUT, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', String)], AcceptTest.prototype, "testConflict", null);
 AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);
 describe("Server", function () {
     it("should provide a catalog containing the exposed paths", function () {
@@ -168,6 +174,7 @@ describe("Server", function () {
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
         expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
         expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
+        expect(typescript_rest_1.Server.getPaths().has("/accept/conflict")).toEqual(true);
     });
 });
 var app = express();
@@ -262,6 +269,15 @@ app.listen(3000, function () {
                 url: "http://localhost:3000/accept/types"
             }, function (error, response, body) {
                 expect(body).toEqual("accepted");
+                done();
+            });
+        });
+        it("should handle RestErrors", function (done) {
+            request.put({
+                headers: { 'Accept': 'text/html' },
+                url: "http://localhost:3000/accept/conflict"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(409);
                 done();
             });
         });

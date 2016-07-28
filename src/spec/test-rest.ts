@@ -8,7 +8,7 @@ import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccepts, 
-		ContextNext, AcceptLanguage, Accept, FileParam} from "../lib/typescript-rest";
+		ContextNext, AcceptLanguage, Accept, FileParam, Errors} from "../lib/typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -110,6 +110,13 @@ class AcceptTest {
 		}
 		return "not accepted"
 	}
+
+	@PUT
+	@Path("conflict")
+	testConflict(): string {
+		throw new Errors.ConflictError("test of conflict");
+	}
+
 }
 
 describe("Server", () => {
@@ -121,6 +128,7 @@ describe("Server", () => {
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
 		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
 		expect(Server.getPaths().has("/accept")).toEqual(true);
+		expect(Server.getPaths().has("/accept/conflict")).toEqual(true);
 	});
 });
 
@@ -227,6 +235,15 @@ app.listen(3000, function() {
 				url: "http://localhost:3000/accept/types"				
 			}, function(error, response, body) {
 				expect(body).toEqual("accepted");
+				done();
+			});
+		});
+		it("should handle RestErrors", (done) => {
+			request.put({
+				headers: { 'Accept': 'text/html' },
+				url: "http://localhost:3000/accept/conflict",				
+			}, function(error, response, body) {
+				expect(response.statusCode).toEqual(409);
 				done();
 			});
 		});

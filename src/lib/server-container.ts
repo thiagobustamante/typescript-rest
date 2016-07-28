@@ -6,6 +6,7 @@ import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as multer from "multer";
 import * as metadata from "./metadata";
+import * as Errors from "./server-errors";
 import {HttpMethod, ServiceContext} from "./server-types";
 
 export class InternalServer {
@@ -168,7 +169,7 @@ export class InternalServer {
 		}
 	}
 
-	private acceptable(serviceMethod: metadata.ServiceMethod, context: ServiceContext) : boolean {
+	private checkAcceptance(serviceMethod: metadata.ServiceMethod, context: ServiceContext): void{
 		if (serviceMethod.resolvedLanguages) {
 			 let lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
 			 if (lang) {
@@ -188,14 +189,13 @@ export class InternalServer {
 				 context.preferredMedia = <string> accept;
 			 }
 			 else {
-			 	return false;
+			 	throw new Errors.NotAcceptableError("Accept");
 			 }
 		}
 
 		if (!context.language) {
-			return false;
+		 	throw new Errors.NotAcceptableError("Accept-Language");
 		}
-		return true;
 	}
 
 	private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
@@ -236,49 +236,45 @@ export class InternalServer {
 		context.response = res;
 		context.next = next;
 
-		if (this.acceptable(serviceMethod, context)) {
-			let serviceObject = this.createService(serviceClass, context);
-			let args = this.buildArgumentsList(serviceMethod, context);
-			let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+		this.checkAcceptance(serviceMethod, context);
+		let serviceObject = this.createService(serviceClass, context);
+		let args = this.buildArgumentsList(serviceMethod, context);
+		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
 
-			this.processResponseHeaders(serviceMethod, context);
+		this.processResponseHeaders(serviceMethod, context);
 
-			if (serviceMethod.returnType) {
-				let serializedType = serviceMethod.returnType.name;
-				switch (serializedType) {
-					case "String":
-						res.send(result);
-						break;
-					case "Number":
-						res.send(result.toString());
-						break;
-					case "Boolean":
-						res.send(result.toString());
-						break;
-					case "Promise":
-						let self = this;
-						result.then(function(value) {
-							self.sendValue(value, res);
-						}).catch(function(e){
-							if (!res.headersSent) {
-								res.sendStatus(500);
-							}
-						});
-						break;
-					case "undefined":
-						res.sendStatus(204);
-						break;
-					default:
-						res.json(result);
-						break;
-				}
-			}
-			else {
-				this.sendValue(result, res);
+		if (serviceMethod.returnType) {
+			let serializedType = serviceMethod.returnType.name;
+			switch (serializedType) {
+				case "String":
+					res.send(result);
+					break;
+				case "Number":
+					res.send(result.toString());
+					break;
+				case "Boolean":
+					res.send(result.toString());
+					break;
+				case "Promise":
+					let self = this;
+					result.then(function(value) {
+						self.sendValue(value, res);
+					}).catch(function(e){
+						if (!res.headersSent) {
+							res.sendStatus(500);
+						}
+					});
+					break;
+				case "undefined":
+					res.sendStatus(204);
+					break;
+				default:
+					res.json(result);
+					break;
 			}
 		}
 		else {
-			res.sendStatus(406);
+			this.sendValue(result, res);
 		}
 	}
 

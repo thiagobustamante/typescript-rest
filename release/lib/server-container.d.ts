@@ -22,7 +22,7 @@ export declare class InternalServer {
     private getUploader();
     private buildServiceMiddleware(serviceMethod);
     private processResponseHeaders(serviceMethod, context);
-    private acceptable(serviceMethod, context);
+    private checkAcceptance(serviceMethod, context);
     private createService(serviceClass, context);
     private callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
     private sendValue(value, res);

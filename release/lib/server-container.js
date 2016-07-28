@@ -30,6 +30,7 @@ var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var multer = require("multer");
 var metadata = require("./metadata");
+var Errors = require("./server-errors");
 var server_types_1 = require("./server-types");
 
 var InternalServer = function () {
@@ -165,8 +166,8 @@ var InternalServer = function () {
             }
         }
     }, {
-        key: "acceptable",
-        value: function acceptable(serviceMethod, context) {
+        key: "checkAcceptance",
+        value: function checkAcceptance(serviceMethod, context) {
             if (serviceMethod.resolvedLanguages) {
                 var lang = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
                 if (lang) {
@@ -183,13 +184,12 @@ var InternalServer = function () {
                 if (accept) {
                     context.preferredMedia = accept;
                 } else {
-                    return false;
+                    throw new Errors.NotAcceptableError("Accept");
                 }
             }
             if (!context.language) {
-                return false;
+                throw new Errors.NotAcceptableError("Accept-Language");
             }
-            return true;
         }
     }, {
         key: "createService",
@@ -230,45 +230,42 @@ var InternalServer = function () {
             context.request = req;
             context.response = res;
             context.next = next;
-            if (this.acceptable(serviceMethod, context)) {
-                var serviceObject = this.createService(serviceClass, context);
-                var args = this.buildArgumentsList(serviceMethod, context);
-                var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
-                this.processResponseHeaders(serviceMethod, context);
-                if (serviceMethod.returnType) {
-                    var serializedType = serviceMethod.returnType.name;
-                    switch (serializedType) {
-                        case "String":
-                            res.send(result);
-                            break;
-                        case "Number":
-                            res.send(result.toString());
-                            break;
-                        case "Boolean":
-                            res.send(result.toString());
-                            break;
-                        case "Promise":
-                            var self = this;
-                            result.then(function (value) {
-                                self.sendValue(value, res);
-                            }).catch(function (e) {
-                                if (!res.headersSent) {
-                                    res.sendStatus(500);
-                                }
-                            });
-                            break;
-                        case "undefined":
-                            res.sendStatus(204);
-                            break;
-                        default:
-                            res.json(result);
-                            break;
-                    }
-                } else {
-                    this.sendValue(result, res);
+            this.checkAcceptance(serviceMethod, context);
+            var serviceObject = this.createService(serviceClass, context);
+            var args = this.buildArgumentsList(serviceMethod, context);
+            var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+            this.processResponseHeaders(serviceMethod, context);
+            if (serviceMethod.returnType) {
+                var serializedType = serviceMethod.returnType.name;
+                switch (serializedType) {
+                    case "String":
+                        res.send(result);
+                        break;
+                    case "Number":
+                        res.send(result.toString());
+                        break;
+                    case "Boolean":
+                        res.send(result.toString());
+                        break;
+                    case "Promise":
+                        var self = this;
+                        result.then(function (value) {
+                            self.sendValue(value, res);
+                        }).catch(function (e) {
+                            if (!res.headersSent) {
+                                res.sendStatus(500);
+                            }
+                        });
+                        break;
+                    case "undefined":
+                        res.sendStatus(204);
+                        break;
+                    default:
+                        res.json(result);
+                        break;
                 }
             } else {
-                res.sendStatus(406);
+                this.sendValue(result, res);
             }
         }
     }, {
