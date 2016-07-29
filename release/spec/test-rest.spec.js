@@ -158,12 +158,20 @@ var AcceptTest = function () {
         value: function testConflict() {
             throw new typescript_rest_1.Errors.ConflictError("test of conflict");
         }
+    }, {
+        key: "testConflictAsync",
+        value: function testConflictAsync() {
+            return new _promise2.default(function (resolve, reject) {
+                throw new typescript_rest_1.Errors.ConflictError("test of conflict");
+            });
+        }
     }]);
     return AcceptTest;
 }();
 __decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testLanguage", null);
 __decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_rest_1.Accept("application/json"), __param(0, typescript_rest_1.ContextAccepts), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testAccepts", null);
 __decorate([typescript_rest_1.PUT, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', String)], AcceptTest.prototype, "testConflict", null);
+__decorate([typescript_rest_1.POST, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', _promise2.default)], AcceptTest.prototype, "testConflictAsync", null);
 AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);
 describe("Server", function () {
     it("should provide a catalog containing the exposed paths", function () {
@@ -274,6 +282,15 @@ app.listen(3000, function () {
         });
         it("should handle RestErrors", function (done) {
             request.put({
+                headers: { 'Accept': 'text/html' },
+                url: "http://localhost:3000/accept/conflict"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(409);
+                done();
+            });
+        });
+        it("should handle RestErrors on Async calls", function (done) {
+            request.post({
                 headers: { 'Accept': 'text/html' },
                 url: "http://localhost:3000/accept/conflict"
             }, function (error, response, body) {

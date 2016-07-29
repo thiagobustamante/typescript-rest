@@ -250,11 +250,9 @@ var InternalServer = function () {
                     case "Promise":
                         var self = this;
                         result.then(function (value) {
-                            self.sendValue(value, res);
-                        }).catch(function (e) {
-                            if (!res.headersSent) {
-                                res.sendStatus(500);
-                            }
+                            self.sendValue(value, res, next);
+                        }).catch(function (err) {
+                            next(err);
                         });
                         break;
                     case "undefined":
@@ -265,12 +263,12 @@ var InternalServer = function () {
                         break;
                 }
             } else {
-                this.sendValue(result, res);
+                this.sendValue(result, res, next);
             }
         }
     }, {
         key: "sendValue",
-        value: function sendValue(value, res) {
+        value: function sendValue(value, res, next) {
             var _this4 = this;
 
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
@@ -293,11 +291,9 @@ var InternalServer = function () {
                         (function () {
                             var self = _this4;
                             value.then(function (val) {
-                                self.sendValue(val, res);
-                            }).catch(function (e) {
-                                if (!res.headersSent) {
-                                    res.sendStatus(500);
-                                }
+                                self.sendValue(val, res, next);
+                            }).catch(function (err) {
+                                next(err);
                             });
                         })();
                     } else {

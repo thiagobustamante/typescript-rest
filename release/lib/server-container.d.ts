@@ -25,7 +25,7 @@ export declare class InternalServer {
     private checkAcceptance(serviceMethod, context);
     private createService(serviceClass, context);
     private callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
-    private sendValue(value, res);
+    private sendValue(value, res, next);
     private buildArgumentsList(serviceMethod, context);
     private convertType(paramValue, paramType);
     static resolveAllPaths(): void;

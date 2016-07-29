@@ -117,6 +117,14 @@ class AcceptTest {
 		throw new Errors.ConflictError("test of conflict");
 	}
 
+
+	@POST
+	@Path("conflict")
+	testConflictAsync(): Promise<string> {
+		return new Promise<string>(function(resolve, reject){
+			throw new Errors.ConflictError("test of conflict");
+		});
+	}
 }
 
 describe("Server", () => {
@@ -240,6 +248,15 @@ app.listen(3000, function() {
 		});
 		it("should handle RestErrors", (done) => {
 			request.put({
+				headers: { 'Accept': 'text/html' },
+				url: "http://localhost:3000/accept/conflict",				
+			}, function(error, response, body) {
+				expect(response.statusCode).toEqual(409);
+				done();
+			});
+		});
+		it("should handle RestErrors on Async calls", (done) => {
+			request.post({
 				headers: { 'Accept': 'text/html' },
 				url: "http://localhost:3000/accept/conflict",				
 			}, function(error, response, body) {

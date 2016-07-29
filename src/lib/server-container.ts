@@ -258,11 +258,9 @@ export class InternalServer {
 				case "Promise":
 					let self = this;
 					result.then(function(value) {
-						self.sendValue(value, res);
-					}).catch(function(e){
-						if (!res.headersSent) {
-							res.sendStatus(500);
-						}
+						self.sendValue(value, res, next);
+					}).catch(function(err){
+						next(err);
 					});
 					break;
 				case "undefined":
@@ -274,11 +272,11 @@ export class InternalServer {
 			}
 		}
 		else {
-			this.sendValue(result, res);
+			this.sendValue(result, res, next);
 		}
 	}
 
-	private sendValue(value: any, res: express.Response) {
+	private sendValue(value: any, res: express.Response, next: express.NextFunction) {
 		switch (typeof value) {
 			case "number":
 				res.send(value.toString());
@@ -298,11 +296,9 @@ export class InternalServer {
 				if (value.constructor.name == "Promise") {
 					let self = this;
 					value.then(function(val) {
-						self.sendValue(val, res);
-					}).catch(function(e) {
-						if (!res.headersSent) {
-							res.sendStatus(500);
-						}
+						self.sendValue(val, res, next);
+					}).catch(function(err) {
+						next(err);
 					});
 				}
 				else {
