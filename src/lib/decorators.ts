@@ -2,7 +2,7 @@
 "use strict";
 
 import {InternalServer} from "./server-container"
-import {HttpMethod} from "./server-types"
+import {HttpMethod, ServiceContext} from "./server-types"
 import * as metadata from "./metadata"
 
 import "reflect-metadata"
@@ -50,6 +50,26 @@ export function Path(path: string) {
 	}
 }
 
+/**
+ * A decorator to tell the [[Server]] that a class or a method 
+ * should only accept requests from clients that accepts one of 
+ * the supported languages.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("accept")
+ * @ AcceptLanguage("en", "pt-BR")
+ * class TestAcceptService {
+ *      // ...
+ * }
+ * ```
+ *
+ * Will reject requests that only accepts languages that are not
+ * English or Brazilian portuguese
+ *
+ * If the language requested is not supported, a status code 406 returned
+ */
 export function AcceptLanguage(...languages: string[]) {
     return function (...args: any[]) {
 	    if (args.length == 1) {
@@ -63,6 +83,26 @@ export function AcceptLanguage(...languages: string[]) {
 	}
 }
 
+/**
+ * A decorator to tell the [[Server]] that a class or a method 
+ * should only accept requests from clients that accepts one of 
+ * the supported mime types.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("accept")
+ * @ Accept("application/json")
+ * class TestAcceptService {
+ *      // ...
+ * }
+ * ```
+ *
+ * Will reject requests that only accepts mime types that are not
+ * "application/json""
+ *
+ * If the mime type requested is not supported, a status code 406 returned
+ */
 export function Accept(...accepts: string[]) {
     return function (...args: any[]) {
 	    if (args.length == 1) {
@@ -76,6 +116,26 @@ export function Accept(...accepts: string[]) {
 	}
 }
 
+/**
+ * A decorator to used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * [[ServiceContext]] object associated to the current request.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("accept")
+ * @ Accept("application/json")
+ * class TestAcceptService {
+ *   @ Context
+	 context: ServiceContext;
+ *       // ...
+ * }
+ * ```
+ *
+ * The field context on the above class will point to the current 
+ * [[ServiceContext]] instance.
+ */
 export function Context(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context]);
@@ -89,6 +149,26 @@ export function Context(...args: any[]) {
     throw new Error("Invalid @Context Decorator declaration.");	
 }
 
+/**
+ * A decorator to used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * the current request.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("accept")
+ * @ Accept("application/json")
+ * class TestAcceptService {
+ *   @ ContextRequest
+	 request: express.Request;
+ *       // ...
+ * }
+ * ```
+ *
+ * The field request on the above class will point to the current 
+ * request.
+ */
 export function ContextRequest(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_request]);
@@ -99,9 +179,29 @@ export function ContextRequest(...args: any[]) {
         return processDecoratedParameter.apply(this, newArgs);
     }
 
-    throw new Error("Invalid @Context Decorator declaration.");	
+    throw new Error("Invalid @ContextRequest Decorator declaration.");	
 }
 
+/**
+ * A decorator to used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * the current response object.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("accept")
+ * @ Accept("application/json")
+ * class TestAcceptService {
+ *   @ ContextResponse
+	 response: express.Response;
+ *       // ...
+ * }
+ * ```
+ *
+ * The field response on the above class will point to the current 
+ * response object.
+ */
 export function ContextResponse(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_response]);
@@ -112,7 +212,7 @@ export function ContextResponse(...args: any[]) {
         return processDecoratedParameter.apply(this, newArgs);
     }
 
-    throw new Error("Invalid @Context Decorator declaration.");	
+    throw new Error("Invalid @ContextResponse Decorator declaration.");	
 }
 
 export function ContextNext(...args: any[]) {
@@ -125,7 +225,7 @@ export function ContextNext(...args: any[]) {
         return processDecoratedParameter.apply(this, newArgs);
     }
 
-    throw new Error("Invalid @Context Decorator declaration.");	
+    throw new Error("Invalid @ContextNext Decorator declaration.");	
 }
 
 export function ContextLanguage(...args: any[]) {
@@ -138,10 +238,10 @@ export function ContextLanguage(...args: any[]) {
         return processDecoratedParameter.apply(this, newArgs);
     }
 
-    throw new Error("Invalid @Context Decorator declaration.");	
+    throw new Error("Invalid @ContextLanguage Decorator declaration.");	
 }
 
-export function ContextAccepts(...args: any[]) {
+export function ContextAccept(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
@@ -151,7 +251,7 @@ export function ContextAccepts(...args: any[]) {
         return processDecoratedParameter.apply(this, newArgs);
     }
 
-    throw new Error("Invalid @Context Decorator declaration.");	
+    throw new Error("Invalid @ContextAccept Decorator declaration.");	
 }
 
 export function GET(target: any, propertyKey: string,

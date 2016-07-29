@@ -82,7 +82,7 @@ function ContextRequest() {
         var _newArgs2 = args.concat([metadata.ParamType.context_request, null]);
         return processDecoratedParameter.apply(this, _newArgs2);
     }
-    throw new Error("Invalid @Context Decorator declaration.");
+    throw new Error("Invalid @ContextRequest Decorator declaration.");
 }
 exports.ContextRequest = ContextRequest;
 function ContextResponse() {
@@ -97,7 +97,7 @@ function ContextResponse() {
         var _newArgs3 = args.concat([metadata.ParamType.context_response, null]);
         return processDecoratedParameter.apply(this, _newArgs3);
     }
-    throw new Error("Invalid @Context Decorator declaration.");
+    throw new Error("Invalid @ContextResponse Decorator declaration.");
 }
 exports.ContextResponse = ContextResponse;
 function ContextNext() {
@@ -112,7 +112,7 @@ function ContextNext() {
         var _newArgs4 = args.concat([metadata.ParamType.context_next, null]);
         return processDecoratedParameter.apply(this, _newArgs4);
     }
-    throw new Error("Invalid @Context Decorator declaration.");
+    throw new Error("Invalid @ContextNext Decorator declaration.");
 }
 exports.ContextNext = ContextNext;
 function ContextLanguage() {
@@ -127,10 +127,10 @@ function ContextLanguage() {
         var _newArgs5 = args.concat([metadata.ParamType.context_accept_language, null]);
         return processDecoratedParameter.apply(this, _newArgs5);
     }
-    throw new Error("Invalid @Context Decorator declaration.");
+    throw new Error("Invalid @ContextLanguage Decorator declaration.");
 }
 exports.ContextLanguage = ContextLanguage;
-function ContextAccepts() {
+function ContextAccept() {
     for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
         args[_key8] = arguments[_key8];
     }
@@ -142,9 +142,9 @@ function ContextAccepts() {
         var _newArgs6 = args.concat([metadata.ParamType.context_accept, null]);
         return processDecoratedParameter.apply(this, _newArgs6);
     }
-    throw new Error("Invalid @Context Decorator declaration.");
+    throw new Error("Invalid @ContextAccept Decorator declaration.");
 }
-exports.ContextAccepts = ContextAccepts;
+exports.ContextAccept = ContextAccept;
 function GET(target, propertyKey, descriptor) {
     processHttpVerb(target, propertyKey, server_types_1.HttpMethod.GET);
 }

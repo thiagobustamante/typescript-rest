@@ -8,7 +8,7 @@ export declare function ContextRequest(...args: any[]): any;
 export declare function ContextResponse(...args: any[]): any;
 export declare function ContextNext(...args: any[]): any;
 export declare function ContextLanguage(...args: any[]): any;
-export declare function ContextAccepts(...args: any[]): any;
+export declare function ContextAccept(...args: any[]): any;
 export declare function GET(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function POST(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare function PUT(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;

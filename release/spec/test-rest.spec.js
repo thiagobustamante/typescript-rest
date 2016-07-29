@@ -169,7 +169,7 @@ var AcceptTest = function () {
     return AcceptTest;
 }();
 __decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.ContextLanguage), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testLanguage", null);
-__decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_rest_1.Accept("application/json"), __param(0, typescript_rest_1.ContextAccepts), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testAccepts", null);
+__decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_rest_1.Accept("application/json"), __param(0, typescript_rest_1.ContextAccept), __metadata('design:type', Function), __metadata('design:paramtypes', [String]), __metadata('design:returntype', String)], AcceptTest.prototype, "testAccepts", null);
 __decorate([typescript_rest_1.PUT, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', String)], AcceptTest.prototype, "testConflict", null);
 __decorate([typescript_rest_1.POST, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', _promise2.default)], AcceptTest.prototype, "testConflictAsync", null);
 AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);

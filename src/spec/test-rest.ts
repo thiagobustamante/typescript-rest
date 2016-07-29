@@ -7,7 +7,7 @@ import * as fs from "fs";
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
-		ContextResponse, ContextLanguage, ContextAccepts, 
+		ContextResponse, ContextLanguage, ContextAccept, 
 		ContextNext, AcceptLanguage, Accept, FileParam, Errors} from "../lib/typescript-rest";
 
 class Person {
@@ -104,7 +104,7 @@ class AcceptTest {
 	@GET
 	@Path("types")
 	@Accept("application/json")
-	testAccepts(@ContextAccepts type: string): string {
+	testAccepts(@ContextAccept type: string): string {
 		if (type === 'application/json') {
 			return "accepted";
 		}
