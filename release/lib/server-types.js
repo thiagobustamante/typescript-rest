@@ -35,13 +35,13 @@ var ServiceContext = function ServiceContext() {
 
 exports.ServiceContext = ServiceContext;
 
-var RestError = function (_Error) {
-    (0, _inherits3.default)(RestError, _Error);
+var HttpError = function (_Error) {
+    (0, _inherits3.default)(HttpError, _Error);
 
-    function RestError(name, statusCode, message) {
-        (0, _classCallCheck3.default)(this, RestError);
+    function HttpError(name, statusCode, message) {
+        (0, _classCallCheck3.default)(this, HttpError);
 
-        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(RestError).call(this, message));
+        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(HttpError).call(this, message));
 
         _this.statusCode = statusCode;
         _this.message = message;
@@ -50,8 +50,8 @@ var RestError = function (_Error) {
         return _this;
     }
 
-    return RestError;
+    return HttpError;
 }(Error);
 
-exports.RestError = RestError;
+exports.HttpError = HttpError;
 //# sourceMappingURL=server-types.js.map

@@ -16,7 +16,7 @@ export declare class ServiceContext {
     response: express.Response;
     next: express.NextFunction;
 }
-export declare abstract class RestError extends Error {
+export declare abstract class HttpError extends Error {
     statusCode: number;
     message: string;
     constructor(name: string, statusCode: number, message?: string);

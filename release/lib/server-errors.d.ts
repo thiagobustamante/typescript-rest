@@ -1,29 +1,29 @@
 /// <reference path="../../typings/index.d.ts" />
-import { RestError } from "./server-types";
-export declare class BadRequestError extends RestError {
+import { HttpError } from "./server-types";
+export declare class BadRequestError extends HttpError {
     constructor(message?: string);
 }
-export declare class UnauthorizedError extends RestError {
+export declare class UnauthorizedError extends HttpError {
     constructor(message?: string);
 }
-export declare class ForbidenError extends RestError {
+export declare class ForbidenError extends HttpError {
     constructor(message?: string);
 }
-export declare class NotFoundError extends RestError {
+export declare class NotFoundError extends HttpError {
     constructor(message?: string);
 }
-export declare class MethodNotAllowedError extends RestError {
+export declare class MethodNotAllowedError extends HttpError {
     constructor(message?: string);
 }
-export declare class NotAcceptableError extends RestError {
+export declare class NotAcceptableError extends HttpError {
     constructor(message?: string);
 }
-export declare class ConflictError extends RestError {
+export declare class ConflictError extends HttpError {
     constructor(message?: string);
 }
-export declare class InternalServerError extends RestError {
+export declare class InternalServerError extends HttpError {
     constructor(message?: string);
 }
-export declare class NotImplementedError extends RestError {
+export declare class NotImplementedError extends HttpError {
     constructor(message?: string);
 }

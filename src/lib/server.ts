@@ -5,7 +5,13 @@ import * as express from "express";
 import {InternalServer} from "./server-container"; 
 import {HttpMethod} from "./server-types"; 
 
+/**
+ * The Http server main class. 
+ */
 export abstract class Server {
+	/**
+	 * Create the routes for all classes decorated with our decorators
+	 */
 	static buildServices(router: express.Router) {
 		let iternalServer: InternalServer = new InternalServer(router);
 		iternalServer.buildServices();

@@ -20,8 +20,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var server_types_1 = require("./server-types");
 
-var BadRequestError = function (_server_types_1$RestE) {
-    (0, _inherits3.default)(BadRequestError, _server_types_1$RestE);
+var BadRequestError = function (_server_types_1$HttpE) {
+    (0, _inherits3.default)(BadRequestError, _server_types_1$HttpE);
 
     function BadRequestError(message) {
         (0, _classCallCheck3.default)(this, BadRequestError);
@@ -29,12 +29,12 @@ var BadRequestError = function (_server_types_1$RestE) {
     }
 
     return BadRequestError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.BadRequestError = BadRequestError;
 
-var UnauthorizedError = function (_server_types_1$RestE2) {
-    (0, _inherits3.default)(UnauthorizedError, _server_types_1$RestE2);
+var UnauthorizedError = function (_server_types_1$HttpE2) {
+    (0, _inherits3.default)(UnauthorizedError, _server_types_1$HttpE2);
 
     function UnauthorizedError(message) {
         (0, _classCallCheck3.default)(this, UnauthorizedError);
@@ -42,12 +42,12 @@ var UnauthorizedError = function (_server_types_1$RestE2) {
     }
 
     return UnauthorizedError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.UnauthorizedError = UnauthorizedError;
 
-var ForbidenError = function (_server_types_1$RestE3) {
-    (0, _inherits3.default)(ForbidenError, _server_types_1$RestE3);
+var ForbidenError = function (_server_types_1$HttpE3) {
+    (0, _inherits3.default)(ForbidenError, _server_types_1$HttpE3);
 
     function ForbidenError(message) {
         (0, _classCallCheck3.default)(this, ForbidenError);
@@ -55,12 +55,12 @@ var ForbidenError = function (_server_types_1$RestE3) {
     }
 
     return ForbidenError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.ForbidenError = ForbidenError;
 
-var NotFoundError = function (_server_types_1$RestE4) {
-    (0, _inherits3.default)(NotFoundError, _server_types_1$RestE4);
+var NotFoundError = function (_server_types_1$HttpE4) {
+    (0, _inherits3.default)(NotFoundError, _server_types_1$HttpE4);
 
     function NotFoundError(message) {
         (0, _classCallCheck3.default)(this, NotFoundError);
@@ -68,12 +68,12 @@ var NotFoundError = function (_server_types_1$RestE4) {
     }
 
     return NotFoundError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.NotFoundError = NotFoundError;
 
-var MethodNotAllowedError = function (_server_types_1$RestE5) {
-    (0, _inherits3.default)(MethodNotAllowedError, _server_types_1$RestE5);
+var MethodNotAllowedError = function (_server_types_1$HttpE5) {
+    (0, _inherits3.default)(MethodNotAllowedError, _server_types_1$HttpE5);
 
     function MethodNotAllowedError(message) {
         (0, _classCallCheck3.default)(this, MethodNotAllowedError);
@@ -81,12 +81,12 @@ var MethodNotAllowedError = function (_server_types_1$RestE5) {
     }
 
     return MethodNotAllowedError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.MethodNotAllowedError = MethodNotAllowedError;
 
-var NotAcceptableError = function (_server_types_1$RestE6) {
-    (0, _inherits3.default)(NotAcceptableError, _server_types_1$RestE6);
+var NotAcceptableError = function (_server_types_1$HttpE6) {
+    (0, _inherits3.default)(NotAcceptableError, _server_types_1$HttpE6);
 
     function NotAcceptableError(message) {
         (0, _classCallCheck3.default)(this, NotAcceptableError);
@@ -94,12 +94,12 @@ var NotAcceptableError = function (_server_types_1$RestE6) {
     }
 
     return NotAcceptableError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.NotAcceptableError = NotAcceptableError;
 
-var ConflictError = function (_server_types_1$RestE7) {
-    (0, _inherits3.default)(ConflictError, _server_types_1$RestE7);
+var ConflictError = function (_server_types_1$HttpE7) {
+    (0, _inherits3.default)(ConflictError, _server_types_1$HttpE7);
 
     function ConflictError(message) {
         (0, _classCallCheck3.default)(this, ConflictError);
@@ -107,12 +107,12 @@ var ConflictError = function (_server_types_1$RestE7) {
     }
 
     return ConflictError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.ConflictError = ConflictError;
 
-var InternalServerError = function (_server_types_1$RestE8) {
-    (0, _inherits3.default)(InternalServerError, _server_types_1$RestE8);
+var InternalServerError = function (_server_types_1$HttpE8) {
+    (0, _inherits3.default)(InternalServerError, _server_types_1$HttpE8);
 
     function InternalServerError(message) {
         (0, _classCallCheck3.default)(this, InternalServerError);
@@ -120,12 +120,12 @@ var InternalServerError = function (_server_types_1$RestE8) {
     }
 
     return InternalServerError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.InternalServerError = InternalServerError;
 
-var NotImplementedError = function (_server_types_1$RestE9) {
-    (0, _inherits3.default)(NotImplementedError, _server_types_1$RestE9);
+var NotImplementedError = function (_server_types_1$HttpE9) {
+    (0, _inherits3.default)(NotImplementedError, _server_types_1$HttpE9);
 
     function NotImplementedError(message) {
         (0, _classCallCheck3.default)(this, NotImplementedError);
@@ -133,7 +133,7 @@ var NotImplementedError = function (_server_types_1$RestE9) {
     }
 
     return NotImplementedError;
-}(server_types_1.RestError);
+}(server_types_1.HttpError);
 
 exports.NotImplementedError = NotImplementedError;
 //# sourceMappingURL=server-errors.js.map

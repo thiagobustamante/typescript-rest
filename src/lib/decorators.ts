@@ -117,16 +117,15 @@ export function Accept(...accepts: string[]) {
 }
 
 /**
- * A decorator to used on class properties or on service method arguments
+ * A decorator to be used on class properties or on service method arguments
  * to inform that the decorated property or argument should be bound to the
  * [[ServiceContext]] object associated to the current request.
  * 
  * For example:
  *
  * ```
- * @ Path("accept")
- * @ Accept("application/json")
- * class TestAcceptService {
+ * @ Path("context")
+ * class TestService {
  *   @ Context
 	 context: ServiceContext;
  *       // ...
@@ -150,16 +149,15 @@ export function Context(...args: any[]) {
 }
 
 /**
- * A decorator to used on class properties or on service method arguments
+ * A decorator to be used on class properties or on service method arguments
  * to inform that the decorated property or argument should be bound to the
  * the current request.
  * 
  * For example:
  *
  * ```
- * @ Path("accept")
- * @ Accept("application/json")
- * class TestAcceptService {
+ * @ Path("context")
+ * class TestService {
  *   @ ContextRequest
 	 request: express.Request;
  *       // ...
@@ -183,16 +181,15 @@ export function ContextRequest(...args: any[]) {
 }
 
 /**
- * A decorator to used on class properties or on service method arguments
+ * A decorator to be used on class properties or on service method arguments
  * to inform that the decorated property or argument should be bound to the
  * the current response object.
  * 
  * For example:
  *
  * ```
- * @ Path("accept")
- * @ Accept("application/json")
- * class TestAcceptService {
+ * @ Path("context")
+ * class TestService {
  *   @ ContextResponse
 	 response: express.Response;
  *       // ...
@@ -215,6 +212,25 @@ export function ContextResponse(...args: any[]) {
     throw new Error("Invalid @ContextResponse Decorator declaration.");	
 }
 
+/**
+ * A decorator to be used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * the next function.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("context")
+ * class TestService {
+ *   @ ContextNext 
+ *   next: express.NextFunction
+ *       // ...
+ * }
+ * ```
+ *
+ * The next function can be used to delegate to the next registered 
+ * middleware the current request processing.
+ */
 export function ContextNext(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_next]);
@@ -228,6 +244,22 @@ export function ContextNext(...args: any[]) {
     throw new Error("Invalid @ContextNext Decorator declaration.");	
 }
 
+/**
+ * A decorator to be used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * the current context language.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("context")
+ * class TestService {
+ *   @ ContextLanguage 
+ *   language: string
+ *       // ...
+ * }
+ * ```
+ */
 export function ContextLanguage(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_accept_language]);
@@ -241,6 +273,22 @@ export function ContextLanguage(...args: any[]) {
     throw new Error("Invalid @ContextLanguage Decorator declaration.");	
 }
 
+/**
+ * A decorator to be used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
+ * the preferred media type for the current request.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("context")
+ * class TestService {
+ *   @ ContextAccept 
+ *   media: string
+ *       // ...
+ * }
+ * ```
+ */
 export function ContextAccept(...args: any[]) {
     if (args.length == 2) {
     	let newArgs = args.concat([metadata.ParamType.context_accept]);
