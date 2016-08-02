@@ -173,22 +173,29 @@ __decorate([typescript_rest_1.GET, typescript_rest_1.Path("types"), typescript_r
 __decorate([typescript_rest_1.PUT, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', String)], AcceptTest.prototype, "testConflict", null);
 __decorate([typescript_rest_1.POST, typescript_rest_1.Path("conflict"), __metadata('design:type', Function), __metadata('design:paramtypes', []), __metadata('design:returntype', _promise2.default)], AcceptTest.prototype, "testConflictAsync", null);
 AcceptTest = __decorate([typescript_rest_1.Path("/accept"), typescript_rest_1.AcceptLanguage("en", "pt-BR"), __metadata('design:paramtypes', [])], AcceptTest);
-describe("Server", function () {
-    it("should provide a catalog containing the exposed paths", function () {
-        expect(typescript_rest_1.Server.getPaths().has("/person/:id")).toEqual(true);
-        expect(typescript_rest_1.Server.getPaths().has("/headers")).toEqual(true);
-        expect(typescript_rest_1.Server.getPaths().has("/context")).toEqual(true);
-        expect(typescript_rest_1.Server.getPaths().has("/upload")).toEqual(true);
-        expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
-        expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
-        expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
-        expect(typescript_rest_1.Server.getPaths().has("/accept/conflict")).toEqual(true);
-    });
-});
 var app = express();
+app.set('env', 'test');
 typescript_rest_1.Server.buildServices(app);
-app.listen(3000, function () {
-    console.log('Test app listening on port 3000!');
+var server = void 0;
+describe("Server Tests", function () {
+    beforeAll(function () {
+        server = app.listen(3000);
+    });
+    afterAll(function () {
+        server.close();
+    });
+    describe("Server", function () {
+        it("should provide a catalog containing the exposed paths", function () {
+            expect(typescript_rest_1.Server.getPaths().has("/person/:id")).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().has("/headers")).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().has("/context")).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().has("/upload")).toEqual(true);
+            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
+            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().has("/accept/conflict")).toEqual(true);
+        });
+    });
     describe("PersonService", function () {
         it("should return the person (123) for GET on path: /person/123", function (done) {
             request("http://localhost:3000/person/123", function (error, response, body) {

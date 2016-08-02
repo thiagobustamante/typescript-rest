@@ -226,6 +226,8 @@ var InternalServer = function () {
     }, {
         key: "callTargetEndPoint",
         value: function callTargetEndPoint(serviceClass, serviceMethod, req, res, next) {
+            var _this4 = this;
+
             var context = new server_types_1.ServiceContext();
             context.request = req;
             context.response = res;
@@ -237,31 +239,34 @@ var InternalServer = function () {
             this.processResponseHeaders(serviceMethod, context);
             if (serviceMethod.returnType) {
                 var serializedType = serviceMethod.returnType.name;
-                switch (serializedType) {
-                    case "String":
-                        res.send(result);
-                        break;
-                    case "Number":
-                        res.send(result.toString());
-                        break;
-                    case "Boolean":
-                        res.send(result.toString());
-                        break;
-                    case "Promise":
-                        var self = this;
-                        result.then(function (value) {
-                            self.sendValue(value, res, next);
-                        }).catch(function (err) {
-                            next(err);
-                        });
-                        break;
-                    case "undefined":
-                        res.sendStatus(204);
-                        break;
-                    default:
-                        res.json(result);
-                        break;
-                }
+
+                (function () {
+                    switch (serializedType) {
+                        case "String":
+                            res.send(result);
+                            break;
+                        case "Number":
+                            res.send(result.toString());
+                            break;
+                        case "Boolean":
+                            res.send(result.toString());
+                            break;
+                        case "Promise":
+                            var self = _this4;
+                            result.then(function (value) {
+                                self.sendValue(value, res, next);
+                            }).catch(function (err) {
+                                next(err);
+                            });
+                            break;
+                        case "undefined":
+                            res.sendStatus(204);
+                            break;
+                        default:
+                            res.json(result);
+                            break;
+                    }
+                })();
             } else {
                 this.sendValue(result, res, next);
             }
@@ -269,7 +274,7 @@ var InternalServer = function () {
     }, {
         key: "sendValue",
         value: function sendValue(value, res, next) {
-            var _this4 = this;
+            var _this5 = this;
 
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
                 case "number":
@@ -289,7 +294,7 @@ var InternalServer = function () {
                 default:
                     if (value.constructor.name == "Promise") {
                         (function () {
-                            var self = _this4;
+                            var self = _this5;
                             value.then(function (val) {
                                 self.sendValue(val, res, next);
                             }).catch(function (err) {
@@ -304,25 +309,25 @@ var InternalServer = function () {
     }, {
         key: "buildArgumentsList",
         value: function buildArgumentsList(serviceMethod, context) {
-            var _this5 = this;
+            var _this6 = this;
 
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case metadata.ParamType.path:
-                        result.push(_this5.convertType(context.request.params[param.name], param.type));
+                        result.push(_this6.convertType(context.request.params[param.name], param.type));
                         break;
                     case metadata.ParamType.query:
-                        result.push(_this5.convertType(context.request.query[param.name], param.type));
+                        result.push(_this6.convertType(context.request.query[param.name], param.type));
                         break;
                     case metadata.ParamType.header:
-                        result.push(_this5.convertType(context.request.header(param.name), param.type));
+                        result.push(_this6.convertType(context.request.header(param.name), param.type));
                         break;
                     case metadata.ParamType.cookie:
-                        result.push(_this5.convertType(context.request.cookies[param.name], param.type));
+                        result.push(_this6.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case metadata.ParamType.body:
-                        result.push(_this5.convertType(context.request.body, param.type));
+                        result.push(_this6.convertType(context.request.body, param.type));
                         break;
                     case metadata.ParamType.file:
                         var files = context.request.files[param.name];
@@ -334,7 +339,7 @@ var InternalServer = function () {
                         result.push(context.request.files[param.name]);
                         break;
                     case metadata.ParamType.form:
-                        result.push(_this5.convertType(context.request.body[param.name], param.type));
+                        result.push(_this6.convertType(context.request.body[param.name], param.type));
                         break;
                     case metadata.ParamType.context:
                         result.push(context);

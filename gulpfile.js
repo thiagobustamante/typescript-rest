@@ -7,7 +7,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var runSequence = require('run-sequence');
 var del = require('del');
 var rename = require('gulp-rename');
-var jasmineNode = require('gulp-jasmine-node');
+var jasmine = require('gulp-jasmine');
+var JasmineConsoleReporter = require('jasmine-console-reporter');
 var typedoc = require("gulp-typedoc");
 var babel = require('gulp-babel');
 
@@ -60,10 +61,16 @@ gulp.task('test-compile', function(done) {
  
 gulp.task('test-run', function() {
 	return gulp.src('release/**/*.spec.js')
-		.pipe(jasmineNode({
+		.pipe(jasmine({
 	        timeout: 10000,
 	        includeStackTrace: false,
-	        color: true
+	        reporter: new JasmineConsoleReporter({
+				colors: 2,           // (0|false)|(1|true)|2 
+				cleanStack: 1,       // (0|false)|(1|true)|2|3 
+				verbosity: 4,        // (0|false)|1|2|(3|true)|4 
+				listStyle: 'indent', // "flat"|"indent" 
+				activity: false
+			})
 	    }));
 });
 

@@ -3,18 +3,18 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Typescript-rest</title>
+	<title>FileParam | Typescript-rest</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script src="assets/js/modernizr.js"></script>
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script src="../assets/js/modernizr.js"></script>
 </head>
 <body>
 <header>
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">Typescript-rest</a>
+					<a href="../index.html" class="title">Typescript-rest</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -52,101 +52,171 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="globals.html">Globals</a>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_metadata_.html">&quot;metadata&quot;</a>
+				</li>
+				<li>
+					<a href="_metadata_.fileparam.html">FileParam</a>
 				</li>
 			</ul>
-			<h1> Typescript-rest</h1>
+			<h1>Class FileParam</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<h1 id="rest-services-for-typescript">REST Services for Typescript</h1>
-				<p>This is a lightweight annotation-based expressjs extension for typescript.</p>
-				<p>It can be used to define your APIs using ES7 decorators.</p>
-				<p><strong>Table of Contents</strong> </p>
-				<ul>
-					<li><a href="#">REST Services for Typescript</a><ul>
-							<li><a href="#installation">Installation</a></li>
-							<li><a href="#configuration">Configuration</a></li>
-							<li><a href="#basic-usage">Basic Usage</a></li>
-						</ul>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Metadata for File parameters on REST methods</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">FileParam</span>
 					</li>
 				</ul>
-				<h2 id="installation">Installation</h2>
-				<p>This library only works with typescript. Ensure it is installed:</p>
-				<pre><code class="lang-bash">npm install typescript -g
-</code></pre>
-				<p>To install typescript-rest:</p>
-				<pre><code class="lang-bash">npm install typescript-rest --save
-</code></pre>
-				<h2 id="configuration">Configuration</h2>
-				<p>Typescript-rest requires the following TypeScript compilation options in your tsconfig.json file:</p>
-				<pre><code class="lang-typescript">{
-  <span class="hljs-string">"compilerOptions"</span>: {
-    <span class="hljs-string">"experimentalDecorators"</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-string">"emitDecoratorMetadata"</span>: <span class="hljs-literal">true</span>
-  }
-}
-</code></pre>
-				<h2 id="basic-usage">Basic Usage</h2>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * as express from <span class="hljs-string">"express"</span>;
-<span class="hljs-keyword">import</span> {Server, Path, GET, PathParam} from <span class="hljs-string">"typescript-rest"</span>;
-
-@Path(<span class="hljs-string">"/hello"</span>)
-<span class="hljs-keyword">class</span> PersonService {
-  @Path(<span class="hljs-string">":name"</span>)
-  @GET
-  sayHello( @PathParam(<span class="hljs-string">'name'</span>) name: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> {
-    <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello "</span> + name;
-  }
-}
-
-<span class="hljs-keyword">let</span> app: express.Application = express();
-Server.buildServices(app);
-
-app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Rest Server listening on port 3000!'</span>);
-});
-</code></pre>
-				<p>That&#39;s it. You can just call now:</p>
-				<pre><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/hello/joe</span>
-</code></pre>
-			</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_metadata_.fileparam.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_metadata_.fileparam.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_metadata_.fileparam.html#singlefile" class="tsd-kind-icon">single<wbr>File</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Param<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, singleFile<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_metadata_.fileparam.html" class="tsd-signature-type">FileParam</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/master/src/lib/metadata.ts#L57">metadata.ts:57</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>singleFile: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_metadata_.fileparam.html" class="tsd-signature-type">FileParam</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/master/src/lib/metadata.ts#L63">metadata.ts:63</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="singlefile" class="tsd-anchor"></a>
+					<h3>single<wbr>File</h3>
+					<div class="tsd-signature tsd-kind-icon">single<wbr>File<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/master/src/lib/metadata.ts#L64">metadata.ts:64</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_decorators_.html">"decorators"</a>
+						<a href="../modules/_decorators_.html">"decorators"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="../modules/_metadata_.html">"metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_metadata_.html">"metadata"</a>
+						<a href="../modules/_server_.html">"server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_server_.html">"server"</a>
+						<a href="../modules/_server_container_.html">"server-<wbr>container"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_server_container_.html">"server-<wbr>container"</a>
+						<a href="../modules/_server_errors_.html">"server-<wbr>errors"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_server_errors_.html">"server-<wbr>errors"</a>
+						<a href="../modules/_server_types_.html">"server-<wbr>types"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_server_types_.html">"server-<wbr>types"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_typescript_rest_.html">"typescript-<wbr>rest"</a>
+						<a href="../modules/_typescript_rest_.html">"typescript-<wbr>rest"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_metadata_.paramtype.html" class="tsd-kind-icon">Param<wbr>Type</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_metadata_.fileparam.html" class="tsd-kind-icon">File<wbr>Param</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_metadata_.fileparam.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_metadata_.fileparam.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_metadata_.fileparam.html#singlefile" class="tsd-kind-icon">single<wbr>File</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_metadata_.methodparam.html" class="tsd-kind-icon">Method<wbr>Param</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_metadata_.serviceclass.html" class="tsd-kind-icon">Service<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_metadata_.servicemethod.html" class="tsd-kind-icon">Service<wbr>Method</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -215,7 +285,7 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

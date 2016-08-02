@@ -127,24 +127,33 @@ class AcceptTest {
 	}
 }
 
-describe("Server", () => {
-	it("should provide a catalog containing the exposed paths", () => {
-		expect(Server.getPaths().has("/person/:id")).toEqual(true);
-		expect(Server.getPaths().has("/headers")).toEqual(true);
-		expect(Server.getPaths().has("/context")).toEqual(true);
-		expect(Server.getPaths().has("/upload")).toEqual(true);
-		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
-		expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
-		expect(Server.getPaths().has("/accept")).toEqual(true);
-		expect(Server.getPaths().has("/accept/conflict")).toEqual(true);
-	});
-});
-
 let app: express.Application = express();
+app.set('env', 'test');
 Server.buildServices(app);
 
-app.listen(3000, function() {
-	console.log('Test app listening on port 3000!');
+let server;
+describe("Server Tests", () => {
+
+	beforeAll(function(){
+		server = app.listen(3000);
+	});
+
+	afterAll(function(){
+		server.close();
+	});
+
+	describe("Server", () => {
+		it("should provide a catalog containing the exposed paths", () => {
+			expect(Server.getPaths().has("/person/:id")).toEqual(true);
+			expect(Server.getPaths().has("/headers")).toEqual(true);
+			expect(Server.getPaths().has("/context")).toEqual(true);
+			expect(Server.getPaths().has("/upload")).toEqual(true);
+			expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
+			expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
+			expect(Server.getPaths().has("/accept")).toEqual(true);
+			expect(Server.getPaths().has("/accept/conflict")).toEqual(true);
+		});
+	});
 
 	describe("PersonService", () => {
 		it("should return the person (123) for GET on path: /person/123", (done) => {
@@ -275,6 +284,5 @@ app.listen(3000, function() {
 		});
 
 	});
-	// process.exit();
 });
 
