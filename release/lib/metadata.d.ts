@@ -16,7 +16,6 @@ export declare class ServiceMethod {
     path: string;
     resolvedPath: string;
     httpMethod: HttpMethod;
-    returnType: Function;
     parameters: Array<MethodParam>;
     mustParseCookies: boolean;
     files: Array<FileParam>;

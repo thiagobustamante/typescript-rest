@@ -81,6 +81,11 @@ var PersonService = function () {
             return true;
         }
     }, {
+        key: "addPerson",
+        value: function addPerson(req, person) {
+            return new typescript_rest_1.Return.NewResource(req.url + "/" + person.id);
+        }
+    }, {
         key: "getAll",
         value: function getAll(start, size) {
             var result = new Array();
@@ -94,6 +99,7 @@ var PersonService = function () {
 }();
 __decorate([typescript_rest_1.Path(":id"), typescript_rest_1.GET, __param(0, typescript_rest_1.PathParam('id')), __metadata('design:type', Function), __metadata('design:paramtypes', [Number]), __metadata('design:returntype', _promise2.default)], PersonService.prototype, "getPerson", null);
 __decorate([typescript_rest_1.PUT, typescript_rest_1.Path("/:id"), __metadata('design:type', Function), __metadata('design:paramtypes', [Person]), __metadata('design:returntype', Boolean)], PersonService.prototype, "setPerson", null);
+__decorate([typescript_rest_1.POST, __param(0, typescript_rest_1.ContextRequest), __metadata('design:type', Function), __metadata('design:paramtypes', [Object, Person]), __metadata('design:returntype', typescript_rest_1.Return.NewResource)], PersonService.prototype, "addPerson", null);
 __decorate([typescript_rest_1.GET, __param(0, typescript_rest_1.QueryParam('start')), __param(1, typescript_rest_1.QueryParam('size')), __metadata('design:type', Function), __metadata('design:paramtypes', [Number, Number]), __metadata('design:returntype', Array)], PersonService.prototype, "getAll", null);
 PersonService = __decorate([typescript_rest_1.Path("/person"), __metadata('design:paramtypes', [])], PersonService);
 
@@ -211,6 +217,17 @@ describe("Server Tests", function () {
                 body: (0, _stringify2.default)(new Person(123, "Fulano de Tal número 123", 35))
             }, function (error, response, body) {
                 expect(body).toEqual("true");
+                done();
+            });
+        });
+        it("should return 201 for POST on path: /person", function (done) {
+            request.post({
+                headers: { 'content-type': 'application/json' },
+                url: "http://localhost:3000/person",
+                body: (0, _stringify2.default)(new Person(123, "Fulano de Tal número 123", 35))
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(201);
+                expect(response.headers['location']).toEqual("/person/123");
                 done();
             });
         });

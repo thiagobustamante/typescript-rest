@@ -792,7 +792,6 @@ function processHttpVerb(target: any, propertyKey: string,
  */
 function processServiceMethod(target: any, propertyKey: string, serviceMethod: metadata.ServiceMethod) {
 	serviceMethod.name = propertyKey;
-	serviceMethod.returnType = Reflect.getMetadata("design:returntype", target, propertyKey);
 	let paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
 	while (paramTypes.length > serviceMethod.parameters.length) {
 		serviceMethod.parameters.push(new metadata.MethodParam(null,

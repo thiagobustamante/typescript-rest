@@ -39,7 +39,6 @@ export class ServiceMethod {
 	path: string;
 	resolvedPath: string;
 	httpMethod: HttpMethod;
-	returnType: Function;
 	parameters: Array<MethodParam> = new Array<MethodParam>();
 	mustParseCookies: boolean = false;
 	files: Array<FileParam> = new Array<FileParam>();

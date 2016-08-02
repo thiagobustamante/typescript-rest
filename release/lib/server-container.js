@@ -8,6 +8,10 @@ var _set = require("babel-runtime/core-js/set");
 
 var _set2 = _interopRequireDefault(_set);
 
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _typeof2 = require("babel-runtime/helpers/typeof");
 
 var _typeof3 = _interopRequireDefault(_typeof2);
@@ -226,8 +230,6 @@ var InternalServer = function () {
     }, {
         key: "callTargetEndPoint",
         value: function callTargetEndPoint(serviceClass, serviceMethod, req, res, next) {
-            var _this4 = this;
-
             var context = new server_types_1.ServiceContext();
             context.request = req;
             context.response = res;
@@ -237,44 +239,12 @@ var InternalServer = function () {
             var args = this.buildArgumentsList(serviceMethod, context);
             var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
             this.processResponseHeaders(serviceMethod, context);
-            if (serviceMethod.returnType) {
-                var serializedType = serviceMethod.returnType.name;
-
-                (function () {
-                    switch (serializedType) {
-                        case "String":
-                            res.send(result);
-                            break;
-                        case "Number":
-                            res.send(result.toString());
-                            break;
-                        case "Boolean":
-                            res.send(result.toString());
-                            break;
-                        case "Promise":
-                            var self = _this4;
-                            result.then(function (value) {
-                                self.sendValue(value, res, next);
-                            }).catch(function (err) {
-                                next(err);
-                            });
-                            break;
-                        case "undefined":
-                            res.sendStatus(204);
-                            break;
-                        default:
-                            res.json(result);
-                            break;
-                    }
-                })();
-            } else {
-                this.sendValue(result, res, next);
-            }
+            this.sendValue(result, res, next);
         }
     }, {
         key: "sendValue",
         value: function sendValue(value, res, next) {
-            var _this5 = this;
+            var _this4 = this;
 
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
                 case "number":
@@ -292,9 +262,12 @@ var InternalServer = function () {
                     }
                     break;
                 default:
-                    if (value.constructor.name == "Promise") {
+                    if (value.location && value instanceof server_types_1.ReferencedResource) {
+                        res.set("Location", value.location);
+                        res.sendStatus(value.statusCode);
+                    } else if (value.then && value instanceof _promise2.default) {
                         (function () {
-                            var self = _this5;
+                            var self = _this4;
                             value.then(function (val) {
                                 self.sendValue(val, res, next);
                             }).catch(function (err) {
@@ -309,25 +282,25 @@ var InternalServer = function () {
     }, {
         key: "buildArgumentsList",
         value: function buildArgumentsList(serviceMethod, context) {
-            var _this6 = this;
+            var _this5 = this;
 
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case metadata.ParamType.path:
-                        result.push(_this6.convertType(context.request.params[param.name], param.type));
+                        result.push(_this5.convertType(context.request.params[param.name], param.type));
                         break;
                     case metadata.ParamType.query:
-                        result.push(_this6.convertType(context.request.query[param.name], param.type));
+                        result.push(_this5.convertType(context.request.query[param.name], param.type));
                         break;
                     case metadata.ParamType.header:
-                        result.push(_this6.convertType(context.request.header(param.name), param.type));
+                        result.push(_this5.convertType(context.request.header(param.name), param.type));
                         break;
                     case metadata.ParamType.cookie:
-                        result.push(_this6.convertType(context.request.cookies[param.name], param.type));
+                        result.push(_this5.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case metadata.ParamType.body:
-                        result.push(_this6.convertType(context.request.body, param.type));
+                        result.push(_this5.convertType(context.request.body, param.type));
                         break;
                     case metadata.ParamType.file:
                         var files = context.request.files[param.name];
@@ -339,7 +312,7 @@ var InternalServer = function () {
                         result.push(context.request.files[param.name]);
                         break;
                     case metadata.ParamType.form:
-                        result.push(_this6.convertType(context.request.body[param.name], param.type));
+                        result.push(_this5.convertType(context.request.body[param.name], param.type));
                         break;
                     case metadata.ParamType.context:
                         result.push(context);

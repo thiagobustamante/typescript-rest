@@ -7,7 +7,7 @@ import * as cookieParser from "cookie-parser";
 import * as multer from "multer";
 import * as metadata from "./metadata";
 import * as Errors from "./server-errors";
-import {HttpMethod, ServiceContext} from "./server-types";
+import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
 
 export class InternalServer {
 	static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
@@ -240,40 +240,8 @@ export class InternalServer {
 		let serviceObject = this.createService(serviceClass, context);
 		let args = this.buildArgumentsList(serviceMethod, context);
 		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
-
 		this.processResponseHeaders(serviceMethod, context);
-
-		if (serviceMethod.returnType) {
-			let serializedType = serviceMethod.returnType.name;
-			switch (serializedType) {
-				case "String":
-					res.send(result);
-					break;
-				case "Number":
-					res.send(result.toString());
-					break;
-				case "Boolean":
-					res.send(result.toString());
-					break;
-				case "Promise":
-					let self = this;
-					result.then(function(value) {
-						self.sendValue(value, res, next);
-					}).catch(function(err){
-						next(err);
-					});
-					break;
-				case "undefined":
-					res.sendStatus(204);
-					break;
-				default:
-					res.json(result);
-					break;
-			}
-		}
-		else {
-			this.sendValue(result, res, next);
-		}
+		this.sendValue(result, res, next);
 	}
 
 	private sendValue(value: any, res: express.Response, next: express.NextFunction) {
@@ -293,7 +261,11 @@ export class InternalServer {
 				}
 				break;
 			default:
-				if (value.constructor.name == "Promise") {
+				if (value.location && value instanceof ReferencedResource) {
+					res.set("Location", value.location);
+					res.sendStatus(value.statusCode);
+				}
+				else if (value.then && value instanceof Promise) {
 					let self = this;
 					value.then(function(val) {
 						self.sendValue(val, res, next);

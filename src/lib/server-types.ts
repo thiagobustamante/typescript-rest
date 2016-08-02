@@ -55,3 +55,15 @@ export abstract class HttpError extends Error {
     this.stack = (<any> new Error()).stack;
   }
 }
+
+/**
+ * Used to create a reference to a resource.
+ */
+export abstract class ReferencedResource {
+	/**
+	 * Constructor. Receives the location of the resource.
+	 * @param location To be added to the Location header on response
+	 * @param statusCode the response status code to be sent
+	 */
+	constructor(public location: string, public statusCode: number) {}
+}

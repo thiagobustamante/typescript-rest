@@ -8,7 +8,8 @@ import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
 		FormParam, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccept, 
-		ContextNext, AcceptLanguage, Accept, FileParam, Errors} from "../lib/typescript-rest";
+		ContextNext, AcceptLanguage, Accept, FileParam, 
+		Errors, Return} from "../lib/typescript-rest";
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -35,6 +36,11 @@ class PersonService {
 	@Path("/:id")
 	setPerson( person: Person): boolean {
 		return true;
+	}
+
+	@POST
+	addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource {
+		return new Return.NewResource(req.url + "/" + person.id);
 	}
 
 	@GET
@@ -171,6 +177,18 @@ describe("Server Tests", () => {
 				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
 			}, function(error, response, body) {
 				expect(body).toEqual("true");
+				done();
+			});
+		});
+
+		it("should return 201 for POST on path: /person", (done) => {
+			request.post({ 
+				headers: { 'content-type': 'application/json' },
+				url: "http://localhost:3000/person", 
+				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
+			}, function(error, response, body) {
+				expect(response.statusCode).toEqual(201);
+				expect(response.headers['location']).toEqual("/person/123");
 				done();
 			});
 		});

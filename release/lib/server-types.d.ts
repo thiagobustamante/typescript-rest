@@ -21,3 +21,8 @@ export declare abstract class HttpError extends Error {
     message: string;
     constructor(name: string, statusCode: number, message?: string);
 }
+export declare abstract class ReferencedResource {
+    location: string;
+    statusCode: number;
+    constructor(location: string, statusCode: number);
+}

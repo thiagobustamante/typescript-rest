@@ -54,4 +54,13 @@ var HttpError = function (_Error) {
 }(Error);
 
 exports.HttpError = HttpError;
+
+var ReferencedResource = function ReferencedResource(location, statusCode) {
+    (0, _classCallCheck3.default)(this, ReferencedResource);
+
+    this.location = location;
+    this.statusCode = statusCode;
+};
+
+exports.ReferencedResource = ReferencedResource;
 //# sourceMappingURL=server-types.js.map

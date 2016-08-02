@@ -271,7 +271,6 @@ function processHttpVerb(target, propertyKey, httpMethod) {
 }
 function processServiceMethod(target, propertyKey, serviceMethod) {
     serviceMethod.name = propertyKey;
-    serviceMethod.returnType = (0, _getMetadata2.default)("design:returntype", target, propertyKey);
     var paramTypes = (0, _getMetadata2.default)("design:paramtypes", target, propertyKey);
     while (paramTypes.length > serviceMethod.parameters.length) {
         serviceMethod.parameters.push(new metadata.MethodParam(null, paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
