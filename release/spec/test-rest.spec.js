@@ -214,7 +214,7 @@ describe("Server Tests", function () {
                 done();
             });
         });
-        it("should return the an array with 3 elements for GET on path: /person?start=0&size=3", function (done) {
+        it("should return an array with 3 elements for GET on path: /person?start=0&size=3", function (done) {
             request("http://localhost:3000/person?start=0&size=3", function (error, response, body) {
                 var result = JSON.parse(body);
                 expect(result.length).toEqual(3);

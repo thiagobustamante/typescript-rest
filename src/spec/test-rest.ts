@@ -175,7 +175,7 @@ describe("Server Tests", () => {
 			});
 		});
 
-		it("should return the an array with 3 elements for GET on path: /person?start=0&size=3", (done) => {
+		it("should return an array with 3 elements for GET on path: /person?start=0&size=3", (done) => {
 			request("http://localhost:3000/person?start=0&size=3", function(error, response, body) {
 				let result: Array<Person> = JSON.parse(body);
 				expect(result.length).toEqual(3);
