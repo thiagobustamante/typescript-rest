@@ -78,10 +78,10 @@ which requests can be made. Route paths can be strings, string patterns, or regu
 The characters ?, +, *, and () are subsets of their regular expression counterparts. 
 The hyphen (-) and the dot (.) are interpreted literally by string-based paths.
 
-```
-We use [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) for matching the 
-route paths; see the path-to-regexp documentation for all the possibilities in defining route paths.
-```
+
+*We use [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) for matching the 
+route paths; see the path-to-regexp documentation for all the possibilities in defining route paths.*
+
 
 Some examples:
 
