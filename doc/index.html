@@ -72,6 +72,10 @@
 							<li><a href="#installation">Installation</a></li>
 							<li><a href="#configuration">Configuration</a></li>
 							<li><a href="#basic-usage">Basic Usage</a></li>
+							<li><a href="#path-decorator">@Path Decorator</a><ul>
+									<li><a href="#path-parameters">Path Parameters</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -96,7 +100,7 @@
 <span class="hljs-keyword">import</span> {Server, Path, GET, PathParam} from <span class="hljs-string">"typescript-rest"</span>;
 
 @Path(<span class="hljs-string">"/hello"</span>)
-<span class="hljs-keyword">class</span> PersonService {
+<span class="hljs-keyword">class</span> HelloService {
   @Path(<span class="hljs-string">":name"</span>)
   @GET
   sayHello( @PathParam(<span class="hljs-string">'name'</span>) name: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> {
@@ -113,7 +117,50 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 </code></pre>
 				<p>That&#39;s it. You can just call now:</p>
 				<pre><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/hello/joe</span>
+</code></pre><h2 id="-path-decorator">@Path Decorator</h2>
+				<p>The @Path decorator allow us to define a router path for a given endpoint.
+					Route paths, in combination with a request method, define the endpoints at
+				which requests can be made. Route paths can be strings, string patterns, or regular expressions.</p>
+				<p>The characters ?, +, *, and () are subsets of their regular expression counterparts.
+				The hyphen (-) and the dot (.) are interpreted literally by string-based paths.</p>
+				<pre><code>We use [<span class="hljs-link_label">path-to-regexp</span>](<span class="hljs-link_url">https://www.npmjs.com/package/path-to-regexp</span>) for matching the
+route paths; see the path-to-regexp documentation for all the possibilities in defining route paths.
+</code></pre><p>Some examples:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/hello"</span>)
+<span class="hljs-keyword">class</span> HelloService {
+}
 </code></pre>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/test/hello"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<p>This route path will match acd and abcd:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"ab?cd"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<p>This route path will match abcd, abbcd, abbbcd, and so on:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"ab+cd"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<p>This route path will match abcd, abxcd, abRANDOMcd, ab123cd, and so on:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"ab*cd"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<p>This route path will match /abe and /abcde:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/ab(cd)?e"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<p>This route path will match butterfly and dragonfly, but not butterflyman, dragonfly man, and so on:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/.*fly$/"</span>)
+<span class="hljs-keyword">class</span> TestService {
+}
+</code></pre>
+				<h3 id="path-parameters">Path Parameters</h3>
+				<p>//TBD</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
