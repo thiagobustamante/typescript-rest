@@ -9,4 +9,4 @@ typings.json
 .tern-project
 release/spec
 package.sublime-workspace
- 
+.travis.yml
