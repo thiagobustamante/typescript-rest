@@ -112,6 +112,13 @@ gulp.task('release', function(done) {
     });
 });
 
+gulp.task('build', function(done) {
+    runSequence('clean', 'compile', 'test', function() {
+        console.log('Release deployed.');
+        done();
+    });
+});
+
 gulp.task('watch', ['compile'], function() {
     gulp.watch('src/**/*.ts', ['compile']);
 });
