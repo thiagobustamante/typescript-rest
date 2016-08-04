@@ -138,4 +138,38 @@ class TestService {
 ```
 ### Path Parameters
 
-//TBD
+Route parameters are named URL segments that are used to capture the values specified at their position in the URL. 
+The captured values are populated in the req.params object, with the name of the route parameter specified in 
+the path as their respective keys. They can be refered through @PathParam decorator on a service method argument.
+
+Some examples:
+
+```typescript
+class BookService {
+   @Path("/users/:userId/books/:bookId")
+   getBook(@PathParam("userId") serId: string, @PathParam("bookId") bookId: string,): Promise<Book> {
+      //...
+   }
+}
+```
+The requested URL http://localhost:3000/users/34/books/8989 would map the parameters as:
+
+```
+   userId: "34"
+   bookId: "8989"
+```
+
+Since the hyphen (-) and the dot (.) are interpreted literally, they can be used along with route 
+parameters for useful purposes.
+
+```
+Route path: /flights/:from-:to
+Request URL: http://localhost:3000/flights/LAX-SFO
+req.params: { "from": "LAX", "to": "SFO" }
+```
+
+```
+Route path: /plantae/:genus.:species
+Request URL: http://localhost:3000/plantae/Prunus.persica
+req.params: { "genus": "Prunus", "species": "persica" }
+```
