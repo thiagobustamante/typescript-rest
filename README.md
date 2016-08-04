@@ -303,7 +303,7 @@ An argument that has no decorator is handled as a json serialized entity in the 
 @Path("/sample")
 class Sample {
    @POST
-   test(user: User): Promise<Array<User>> {
+   test(user: User) {
       //...
       // POST http://domain/sample
       // body: a json representation of the User object

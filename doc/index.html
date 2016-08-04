@@ -321,7 +321,7 @@ req.<span class="hljs-string">params:</span> { <span class="hljs-string">"genus"
 				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/sample"</span>)
 <span class="hljs-keyword">class</span> Sample {
    @POST
-   test(user: User): Promise&lt;<span class="hljs-built_in">Array</span>&lt;User&gt;&gt; {
+   test(user: User) {
       <span class="hljs-comment">//...</span>
       <span class="hljs-comment">// POST http://domain/sample</span>
       <span class="hljs-comment">// body: a json representation of the User object</span>
