@@ -12,6 +12,7 @@ It can be used to define your APIs using ES7 decorators.
   - [@Path Decorator](#path-decorator)
     - [Path Parameters](#path-parameters)
   - [Http Methods](#http-methods)
+  - [Paramters](#paramters)
 
 ## Installation
 
@@ -198,20 +199,28 @@ Some examples:
 @Path("/users")
 class UserService {
    @GET
-   getUserBook(): Promise<Array<User>> {
+   getUsers(): Promise<Array<User>> {
       //...
    }
 
    @GET
    @Path(":userId")
-   getUserBook(@PathParam("userId")): Promise<User> {
+   getUser(@PathParam("userId")): Promise<User> {
       //...
    }
 
    @PUT
    @Path(":userId")
-   getUserBook(@PathParam("userId"), user: User): void {
+   saveUser(@PathParam("userId"), user: User): void {
       //...
    }
 }
 ```
+
+Only methods decorated with one of this HTTP method decorators are exposed as a handler for 
+requests on the server.
+
+A single method can only be decorated with one of those decorators at a time.
+
+## Parameters
+
