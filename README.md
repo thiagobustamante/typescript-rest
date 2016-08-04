@@ -1,5 +1,5 @@
 # REST Services for Typescript
-This is a lightweight annotation-based expressjs extension for typescript.
+This is a lightweight annotation-based [expressjs](http://expressjs.com/) extension for typescript.
 
 It can be used to define your APIs using ES7 decorators.
 
@@ -11,6 +11,7 @@ It can be used to define your APIs using ES7 decorators.
   - [Basic Usage](#basic-usage)
   - [@Path Decorator](#path-decorator)
     - [Path Parameters](#path-parameters)
+  - [Http Methods](#http-methods)
 
 ## Installation
 
@@ -145,9 +146,10 @@ the path as their respective keys. They can be refered through @PathParam decora
 Some examples:
 
 ```typescript
-class BookService {
-   @Path("/users/:userId/books/:bookId")
-   getBook(@PathParam("userId") serId: string, @PathParam("bookId") bookId: string,): Promise<Book> {
+@Path("/users")
+class UserService {
+   @Path("/:userId/books/:bookId")
+   getUserBook(@PathParam("userId") userId: number, @PathParam("bookId") bookId: number): Promise<Book> {
       //...
    }
 }
@@ -173,3 +175,5 @@ Route path: /plantae/:genus.:species
 Request URL: http://localhost:3000/plantae/Prunus.persica
 req.params: { "genus": "Prunus", "species": "persica" }
 ```
+
+## Http Methods
