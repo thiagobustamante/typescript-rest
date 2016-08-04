@@ -233,3 +233,14 @@ A single method can only be decorated with one of those decorators at a time.
 There are decorators to map parameters to arguments on service methods. Each decorator can map a
 differente kind of parameter on request.
 
+The following decorators are available:
+Decorator | Description
+--------- | -----------
+@PathParam | Parameter in requested URL path 
+@QueryParam | Parameter in the query string 
+@FormParam | Parameter in a HTML form 
+@HeaderParam | Parameter in the request header
+@CookieParam | Parameter in a cookie  
+@FileParam | A File Parameter in a multipart form  
+@FilesParam | An array of Files Parameter in a multipart form  
+ 
