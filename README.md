@@ -22,7 +22,7 @@ It can be used to define your APIs using ES7 decorators.
     - [Service Context](#service-context)
     - [Service Return](#service-return)
     - [Errors](#errors)
-    - [Types and langauges](#types-and-languages)
+    - [Types and languages](#types-and-languages)
 
 ## Installation
 
@@ -256,11 +256,66 @@ Decorator | Description
 @FileParam | A File in a multipart form  
 @FilesParam | An array of Files in a multipart form  
  
+Some examples:
+
+```typescript
+@Path("/sample")
+class Sample {
+   @GET
+   test(@QueryParam("limit") limit:number, @QueryParam("skip") skip:number): Promise<Array<User>> {
+      //...
+      // GET http://domain/sample?limit=5&skip=10
+   }
+
+   @POST
+   test(@FormParam("name") name:string): Promise<Array<User>> {
+      //...
+      // POST http://domain/sample
+      // body: name=joe
+   }
+
+   @POST
+   @Path("upload")
+   testUploadFile( @FileParam("myFile") file: Express.Multer.File, 
+                   @FormParam("myField") myField: string): boolean {
+      //...
+      /* POST http://domain/sample/upload
+      Content-Type: multipart/form-data; boundary=AaB03x
+
+      --AaB03x
+      Content-Disposition: form-data; name="myField"
+
+      Field Value
+      --AaB03x
+      Content-Disposition: form-data; name="myFile"; filename="file1.txt"
+      Content-Type: text/plain
+
+      ... contents of file1.txt ...
+      --AaB03x--
+      */
+   }
+}
+```
+
+An argument that has no decorator is handled as a json serialized entity in the request body 
+
+```typescript
+@Path("/sample")
+class Sample {
+   @POST
+   test(user: User): Promise<Array<User>> {
+      //...
+      // POST http://domain/sample
+      // body: a json representation of the User object
+   }
+}
+```
+
 ### Service Context
 
 ### Service Return
 
 ### Errors
 
-### Types and langauges
+### Types and languages
 
