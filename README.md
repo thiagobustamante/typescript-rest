@@ -149,6 +149,7 @@ Some examples:
 @Path("/users")
 class UserService {
    @Path("/:userId/books/:bookId")
+   @GET
    getUserBook(@PathParam("userId") userId: number, @PathParam("bookId") bookId: number): Promise<Book> {
       //...
    }
@@ -177,3 +178,40 @@ req.params: { "genus": "Prunus", "species": "persica" }
 ```
 
 ## Http Methods
+
+We have decorators for each HTTP method. Theses decorators are used on service methods already bound
+to a Path route to specify the endpoint at which requests can be made.
+
+The following decorators can be used:
+
+  - @GET 
+  - @POST
+  - @PUT
+  - @PATCH
+  - @DELETE
+  - @OPTIONS
+  - @HEAD
+
+Some examples:
+
+```typescript
+@Path("/users")
+class UserService {
+   @GET
+   getUserBook(): Promise<Array<User>> {
+      //...
+   }
+
+   @GET
+   @Path(":userId")
+   getUserBook(@PathParam("userId")): Promise<User> {
+      //...
+   }
+
+   @PUT
+   @Path(":userId")
+   getUserBook(@PathParam("userId"), user: User): void {
+      //...
+   }
+}
+```
