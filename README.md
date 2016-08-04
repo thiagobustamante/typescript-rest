@@ -234,6 +234,7 @@ There are decorators to map parameters to arguments on service methods. Each dec
 differente kind of parameter on request.
 
 The following decorators are available:
+
 Decorator | Description
 --------- | -----------
 @PathParam | Parameter in requested URL path 
