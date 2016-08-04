@@ -9,10 +9,11 @@ It can be used to define your APIs using ES7 decorators.
   - [Installation](#installation)
   - [Configuration](#configuration)
   - [Basic Usage](#basic-usage)
-  - [@Path Decorator](#path-decorator)
-    - [Path Parameters](#path-parameters)
-  - [Http Methods](#http-methods)
-  - [Paramters](#paramters)
+  - [Complete Guide](#complete-guide)
+    - [@Path Decorator](#path-decorator)
+      - [Path Parameters](#path-parameters)
+    - [Http Methods](#http-methods)
+    - [Parameters](#parameters)
 
 ## Installation
 
@@ -71,7 +72,12 @@ That's it. You can just call now:
 GET http://localhost:3000/hello/joe
 ```
 
-## @Path Decorator
+## Complete Guide
+
+This library allows you to use ES7 decorators to configure your services using 
+expressjs. 
+
+### @Path Decorator
 
 The @Path decorator allow us to define a router path for a given endpoint.
 Route paths, in combination with a request method, define the endpoints at 
@@ -138,7 +144,7 @@ This route path will match butterfly and dragonfly, but not butterflyman, dragon
 class TestService {
 }
 ```
-### Path Parameters
+#### Path Parameters
 
 Route parameters are named URL segments that are used to capture the values specified at their position in the URL. 
 The captured values are populated in the req.params object, with the name of the route parameter specified in 
@@ -178,7 +184,7 @@ Request URL: http://localhost:3000/plantae/Prunus.persica
 req.params: { "genus": "Prunus", "species": "persica" }
 ```
 
-## Http Methods
+### Http Methods
 
 We have decorators for each HTTP method. Theses decorators are used on service methods already bound
 to a Path route to specify the endpoint at which requests can be made.
@@ -217,10 +223,13 @@ class UserService {
 }
 ```
 
-Only methods decorated with one of this HTTP method decorators are exposed as a handler for 
+Only methods decorated with one of this HTTP method decorators are exposed as handlers for 
 requests on the server.
 
 A single method can only be decorated with one of those decorators at a time.
 
-## Parameters
+### Parameters
+
+There are decorators to map parameters to arguments on service methods. Each decorator can map a
+differente kind of parameter on request.
 
