@@ -63,8 +63,10 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
+				<p>It is an work in progress. We have no releases yet. We are finishing the library documentantion
+				to release our first beta release.</p>
 				<h1 id="rest-services-for-typescript">REST Services for Typescript</h1>
-				<p>This is a lightweight annotation-based expressjs extension for typescript.</p>
+				<p>This is a lightweight annotation-based <a href="http://expressjs.com/">expressjs</a> extension for typescript.</p>
 				<p>It can be used to define your APIs using ES7 decorators.</p>
 				<p><strong>Table of Contents</strong> </p>
 				<ul>
@@ -72,8 +74,18 @@
 							<li><a href="#installation">Installation</a></li>
 							<li><a href="#configuration">Configuration</a></li>
 							<li><a href="#basic-usage">Basic Usage</a></li>
-							<li><a href="#path-decorator">@Path Decorator</a><ul>
-									<li><a href="#path-parameters">Path Parameters</a></li>
+							<li><a href="#complete-guide">Complete Guide</a><ul>
+									<li><a href="#server">Server</a></li>
+									<li><a href="#path-decorator">@Path Decorator</a><ul>
+											<li><a href="#path-parameters">Path Parameters</a></li>
+										</ul>
+									</li>
+									<li><a href="#http-methods">Http Methods</a></li>
+									<li><a href="#parameters">Parameters</a></li>
+									<li><a href="#service-context">Service Context</a></li>
+									<li><a href="#service-return">Service Return</a></li>
+									<li><a href="#errors">Errors</a></li>
+									<li><a href="#types-and-languages">Types and languages</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -117,7 +129,11 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 </code></pre>
 				<p>That&#39;s it. You can just call now:</p>
 				<pre><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/hello/joe</span>
-</code></pre><h2 id="-path-decorator">@Path Decorator</h2>
+</code></pre><h2 id="complete-guide">Complete Guide</h2>
+				<p>This library allows you to use ES7 decorators to configure your services using
+				expressjs. </p>
+				<h3 id="server">Server</h3>
+				<h3 id="-path-decorator">@Path Decorator</h3>
 				<p>The @Path decorator allow us to define a router path for a given endpoint.
 					Route paths, in combination with a request method, define the endpoints at
 				which requests can be made. Route paths can be strings, string patterns, or regular expressions.</p>
@@ -159,8 +175,163 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 <span class="hljs-keyword">class</span> TestService {
 }
 </code></pre>
-				<h3 id="path-parameters">Path Parameters</h3>
-				<p>//TBD</p>
+				<h4 id="path-parameters">Path Parameters</h4>
+				<p>Route parameters are named URL segments that are used to capture the values specified at their position in the URL.
+					The captured values are populated in the req.params object, with the name of the route parameter specified in
+				the path as their respective keys. They can be refered through @PathParam decorator on a service method argument.</p>
+				<p>Some examples:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/users"</span>)
+<span class="hljs-keyword">class</span> UserService {
+   @Path(<span class="hljs-string">"/:userId/books/:bookId"</span>)
+   @GET
+   getUserBook(@PathParam(<span class="hljs-string">"userId"</span>) userId: <span class="hljs-built_in">number</span>, @PathParam(<span class="hljs-string">"bookId"</span>) bookId: <span class="hljs-built_in">number</span>): Promise&lt;Book&gt; {
+      <span class="hljs-comment">//...</span>
+   }
+}
+</code></pre>
+				<p>The requested URL <a href="http://localhost:3000/users/34/books/8989">http://localhost:3000/users/34/books/8989</a> would map the parameters as:</p>
+				<pre><code>   <span class="hljs-attribute">userId</span>: <span class="hljs-string">"34"</span>
+   <span class="hljs-attribute">bookId</span>: <span class="hljs-string">"8989"</span>
+</code></pre><p>Since the hyphen (-) and the dot (.) are interpreted literally, they can be used along with route 
+				parameters for useful purposes.</p>
+				<pre><code>Route <span class="hljs-string">path:</span> <span class="hljs-regexp">/flights/</span>:from-:to
+Request <span class="hljs-string">URL:</span> <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/flights/LAX-SFO</span>
+req.<span class="hljs-string">params:</span> { <span class="hljs-string">"from"</span>: <span class="hljs-string">"LAX"</span>, <span class="hljs-string">"to"</span>: <span class="hljs-string">"SFO"</span> }
+</code></pre><pre><code>Route <span class="hljs-string">path:</span> <span class="hljs-regexp">/plantae/</span>:genus.:species
+Request <span class="hljs-string">URL:</span> <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/plantae/Prunus.persica</span>
+req.<span class="hljs-string">params:</span> { <span class="hljs-string">"genus"</span>: <span class="hljs-string">"Prunus"</span>, <span class="hljs-string">"species"</span>: <span class="hljs-string">"persica"</span> }
+</code></pre><h3 id="http-methods">Http Methods</h3>
+				<p>We have decorators for each HTTP method. Theses decorators are used on service methods already bound
+				to a Path route to specify the endpoint at which requests can be made.</p>
+				<p>The following decorators can be used:</p>
+				<ul>
+					<li>@GET </li>
+					<li>@POST</li>
+					<li>@PUT</li>
+					<li>@PATCH</li>
+					<li>@DELETE</li>
+					<li>@OPTIONS</li>
+					<li>@HEAD</li>
+				</ul>
+				<p>Some examples:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/users"</span>)
+<span class="hljs-keyword">class</span> UserService {
+   @GET
+   getUsers(): Promise&lt;<span class="hljs-built_in">Array</span>&lt;User&gt;&gt; {
+      <span class="hljs-comment">//...</span>
+   }
+
+   @GET
+   @Path(<span class="hljs-string">":userId"</span>)
+   getUser(@PathParam(<span class="hljs-string">"userId"</span>)): Promise&lt;User&gt; {
+      <span class="hljs-comment">//...</span>
+   }
+
+   @PUT
+   @Path(<span class="hljs-string">":userId"</span>)
+   saveUser(@PathParam(<span class="hljs-string">"userId"</span>), user: User): <span class="hljs-built_in">void</span> {
+      <span class="hljs-comment">//...</span>
+   }
+}
+</code></pre>
+				<p>Only methods decorated with one of this HTTP method decorators are exposed as handlers for
+				requests on the server.</p>
+				<p>A single method can only be decorated with one of those decorators at a time.</p>
+				<h3 id="parameters">Parameters</h3>
+				<p>There are decorators to map parameters to arguments on service methods. Each decorator can map a
+				differente kind of parameter on request.</p>
+				<p>The following decorators are available:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Decorator</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>@PathParam</td>
+							<td>Parameter in requested URL path </td>
+						</tr>
+						<tr>
+							<td>@QueryParam</td>
+							<td>Parameter in the query string </td>
+						</tr>
+						<tr>
+							<td>@FormParam</td>
+							<td>Parameter in a HTML form </td>
+						</tr>
+						<tr>
+							<td>@HeaderParam</td>
+							<td>Parameter in the request header</td>
+						</tr>
+						<tr>
+							<td>@CookieParam</td>
+							<td>Parameter in a cookie  </td>
+						</tr>
+						<tr>
+							<td>@FileParam</td>
+							<td>A File in a multipart form  </td>
+						</tr>
+						<tr>
+							<td>@FilesParam</td>
+							<td>An array of Files in a multipart form  </td>
+						</tr>
+					</tbody>
+				</table>
+				<p>Some examples:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/sample"</span>)
+<span class="hljs-keyword">class</span> Sample {
+   @GET
+   test(@QueryParam(<span class="hljs-string">"limit"</span>) limit:<span class="hljs-built_in">number</span>, @QueryParam(<span class="hljs-string">"skip"</span>) skip:<span class="hljs-built_in">number</span>) {
+      <span class="hljs-comment">//...</span>
+      <span class="hljs-comment">// GET http://domain/sample?limit=5&amp;skip=10</span>
+   }
+
+   @POST
+   test(@FormParam(<span class="hljs-string">"name"</span>) name:<span class="hljs-built_in">string</span>) {
+      <span class="hljs-comment">//...</span>
+      <span class="hljs-comment">// POST http://domain/sample</span>
+      <span class="hljs-comment">// body: name=joe</span>
+   }
+
+   @POST
+   @Path(<span class="hljs-string">"upload"</span>)
+   testUploadFile( @FileParam(<span class="hljs-string">"myFile"</span>) file: Express.Multer.File, 
+                   @FormParam(<span class="hljs-string">"myField"</span>) myField: <span class="hljs-built_in">string</span>) {
+      <span class="hljs-comment">//...</span>
+      <span class="hljs-comment">/* POST http://domain/sample/upload
+      Content-Type: multipart/form-data; boundary=AaB03x
+
+      --AaB03x
+      Content-Disposition: form-data; name="myField"
+
+      Field Value
+      --AaB03x
+      Content-Disposition: form-data; name="myFile"; filename="file1.txt"
+      Content-Type: text/plain
+
+      ... contents of file1.txt ...
+      --AaB03x--
+      */</span>
+   }
+}
+</code></pre>
+				<p>An argument that has no decorator is handled as a json serialized entity in the request body </p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"/sample"</span>)
+<span class="hljs-keyword">class</span> Sample {
+   @POST
+   test(user: User): Promise&lt;<span class="hljs-built_in">Array</span>&lt;User&gt;&gt; {
+      <span class="hljs-comment">//...</span>
+      <span class="hljs-comment">// POST http://domain/sample</span>
+      <span class="hljs-comment">// body: a json representation of the User object</span>
+   }
+}
+</code></pre>
+				<h3 id="service-context">Service Context</h3>
+				<h3 id="service-return">Service Return</h3>
+				<h3 id="errors">Errors</h3>
+				<h3 id="types-and-languages">Types and languages</h3>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

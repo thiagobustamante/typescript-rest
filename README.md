@@ -262,13 +262,13 @@ Some examples:
 @Path("/sample")
 class Sample {
    @GET
-   test(@QueryParam("limit") limit:number, @QueryParam("skip") skip:number): Promise<Array<User>> {
+   test(@QueryParam("limit") limit:number, @QueryParam("skip") skip:number) {
       //...
       // GET http://domain/sample?limit=5&skip=10
    }
 
    @POST
-   test(@FormParam("name") name:string): Promise<Array<User>> {
+   test(@FormParam("name") name:string) {
       //...
       // POST http://domain/sample
       // body: name=joe
@@ -277,7 +277,7 @@ class Sample {
    @POST
    @Path("upload")
    testUploadFile( @FileParam("myFile") file: Express.Multer.File, 
-                   @FormParam("myField") myField: string): boolean {
+                   @FormParam("myField") myField: string) {
       //...
       /* POST http://domain/sample/upload
       Content-Type: multipart/form-data; boundary=AaB03x
