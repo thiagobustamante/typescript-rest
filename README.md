@@ -1,3 +1,7 @@
+It is an work in progress. We have no releases yet. We are finishing the library documentantion 
+to release our first beta release.
+
+
 # REST Services for Typescript
 This is a lightweight annotation-based [expressjs](http://expressjs.com/) extension for typescript.
 
@@ -10,10 +14,15 @@ It can be used to define your APIs using ES7 decorators.
   - [Configuration](#configuration)
   - [Basic Usage](#basic-usage)
   - [Complete Guide](#complete-guide)
+    - [Server](#server)
     - [@Path Decorator](#path-decorator)
       - [Path Parameters](#path-parameters)
     - [Http Methods](#http-methods)
     - [Parameters](#parameters)
+    - [Service Context](#service-context)
+    - [Service Return](#service-return)
+    - [Errors](#errors)
+    - [Types and langauges](#types-and-languages)
 
 ## Installation
 
@@ -76,6 +85,8 @@ GET http://localhost:3000/hello/joe
 
 This library allows you to use ES7 decorators to configure your services using 
 expressjs. 
+
+### Server
 
 ### @Path Decorator
 
@@ -242,6 +253,14 @@ Decorator | Description
 @FormParam | Parameter in a HTML form 
 @HeaderParam | Parameter in the request header
 @CookieParam | Parameter in a cookie  
-@FileParam | A File Parameter in a multipart form  
-@FilesParam | An array of Files Parameter in a multipart form  
+@FileParam | A File in a multipart form  
+@FilesParam | An array of Files in a multipart form  
  
+### Service Context
+
+### Service Return
+
+### Errors
+
+### Types and langauges
+
