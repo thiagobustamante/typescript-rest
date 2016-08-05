@@ -83,7 +83,10 @@
 									<li><a href="#http-methods">Http Methods</a></li>
 									<li><a href="#parameters">Parameters</a></li>
 									<li><a href="#service-context">Service Context</a></li>
-									<li><a href="#service-return">Service Return</a></li>
+									<li><a href="#service-return">Service Return</a><ul>
+											<li><a href="#asynchronous-services">Asynchronous services</a></li>
+										</ul>
+									</li>
 									<li><a href="#errors">Errors</a></li>
 									<li><a href="#types-and-languages">Types and languages</a></li>
 								</ul>
@@ -430,6 +433,102 @@ req.<span class="hljs-string">params:</span> { <span class="hljs-string">"genus"
  }
 </code></pre>
 				<h3 id="service-return">Service Return</h3>
+				<p>This library can receive the return of your service methods and handle the serialization of the response as long as
+				handle the correct content type of your results and the response status codes to be sent.</p>
+				<p>When a primitive type is returned by a service method, it is sent as a plain text into the response body.</p>
+				<pre><code class="lang-typescript">@GET
+sayHello(): <span class="hljs-built_in">string</span> {
+  <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+}
+</code></pre>
+				<p>The response will contains only the String <code>Hello</code> as a plain text </p>
+				<p>When an object is returned, it is sent as a json serialized string into the response body.</p>
+				<pre><code class="lang-typescript">@GET
+@Path(<span class="hljs-string">":id"</span>)
+getPerson(@PathParam(<span class="hljs-string">":id"</span>) id: <span class="hljs-built_in">number</span>): Person {
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Person(id);
+}
+</code></pre>
+				<p>The response will contains the person json serialization (ex: <code>{id: 123}</code>. The response
+				will have a <code>application/json</code> context type. </p>
+				<p>When the method returns nothing, an empty body is sent withh a <code>204</code> status code.</p>
+				<pre><code class="lang-typescript">@POST
+test(myObject: MyClass): <span class="hljs-built_in">void</span> {
+  <span class="hljs-comment">//...</span>
+}
+</code></pre>
+				<p>We provide also, some special types to inform that a reference to a resource is returned and
+				that the server should handle it properly.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>NewResource</td>
+							<td>Inform that a new resource was created. Server will add a Location header and set status to 201 </td>
+						</tr>
+						<tr>
+							<td>RequestAccepted</td>
+							<td>Inform that the request was accepted but is not completed. A Location header should inform the location where the user can monitor his request processing status. Server will set the status to 202 </td>
+						</tr>
+						<tr>
+							<td>MovedPermanently</td>
+							<td>Inform that the resource has permanently moved to a new location, and that future references should use a new URI with their requests. Server will set the status to 301 </td>
+						</tr>
+						<tr>
+							<td>MovedTemporarily</td>
+							<td>Inform that the resource has temporarily moved to another location, but that future references should still use the original URI to access the resource. Server will set the status to 302 </td>
+						</tr>
+					</tbody>
+				</table>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Return} from <span class="hljs-string">"typescript-rest"</span>;
+
+@Path(<span class="hljs-string">"test"</span>)
+<span class="hljs-keyword">class</span> TestService {
+   @POST
+   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource {
+      <span class="hljs-comment">//...</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Return.NewResource(req.url + <span class="hljs-string">"/"</span> + generatedId);
+   }
+}
+</code></pre>
+				<p>The server will return an empty body with a 201 status code and a Location header pointing to
+				the URL of the created resource. </p>
+				<h4 id="asynchronous-services">Asynchronous services</h4>
+				<p>The above section shows how the types returned are handled by the Server. However, all the previous examples are working
+				synchronously. The recommended way is to work assynchronously, for a better performance.</p>
+				<p>To work assynchronously, you can return a <code>Promise</code> on your service method. The above rules to handle return types
+				applies to the returned promise resolved value.</p>
+				<p>Some examples:</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Return} from <span class="hljs-string">"typescript-rest"</span>;
+
+@Path(<span class="hljs-string">"async"</span>)
+<span class="hljs-keyword">class</span> TestService {
+   @POST
+   test(myObject: MyClass, @ContextRequest request: express.Request): Promise&lt;Return.NewResource&gt; {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise&lt;Return.NewResource&gt;(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>)</span>{
+         <span class="hljs-comment">//...</span>
+               resolve(<span class="hljs-keyword">new</span> Return.NewResource(req.url + <span class="hljs-string">"/"</span> + generatedId));
+          });
+   }
+
+   @GET
+   testGet() {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise&lt;MyClass&gt;(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>)</span>{
+         <span class="hljs-comment">//...</span>
+               resolve(<span class="hljs-keyword">new</span> MyClass());
+          });
+   }
+}
+</code></pre>
+				<p>You can call reject on your promises passing any error defined on the <a href="#errors">Errors</a> section, or event
+				a simple error message.</p>
+				<p>An important point here to note is that you can inform your return type explicitly or not, as you can see
+				in the above example.  </p>
 				<h3 id="errors">Errors</h3>
 				<h3 id="types-and-languages">Types and languages</h3>
 			</div>

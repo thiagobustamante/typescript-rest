@@ -21,6 +21,7 @@ It can be used to define your APIs using ES7 decorators.
     - [Parameters](#parameters)
     - [Service Context](#service-context)
     - [Service Return](#service-return)
+      - [Asynchronous services](#asynchronous-services)
     - [Errors](#errors)
     - [Types and languages](#types-and-languages)
 
@@ -399,6 +400,107 @@ the Context property. It is a kind of suggar syntax.
 ```
 
 ### Service Return
+
+This library can receive the return of your service methods and handle the serialization of the response as long as
+handle the correct content type of your results and the response status codes to be sent.
+
+When a primitive type is returned by a service method, it is sent as a plain text into the response body.
+
+```typescript
+@GET
+sayHello(): string {
+  return "Hello";
+}
+```
+
+The response will contains only the String ``` Hello ``` as a plain text 
+
+When an object is returned, it is sent as a json serialized string into the response body.
+
+```typescript
+@GET
+@Path(":id")
+getPerson(@PathParam(":id") id: number): Person {
+  return new Person(id);
+}
+```
+
+The response will contains the person json serialization (ex: ``` {id: 123} ```. The response 
+will have a ```application/json``` context type. 
+
+When the method returns nothing, an empty body is sent withh a ```204``` status code.
+
+```typescript
+@POST
+test(myObject: MyClass): void {
+  //...
+}
+```
+
+We provide also, some special types to inform that a reference to a resource is returned and 
+that the server should handle it properly.
+
+Type | Description
+---- | -----------
+NewResource | Inform that a new resource was created. Server will add a Location header and set status to 201 
+RequestAccepted | Inform that the request was accepted but is not completed. A Location header should inform the location where the user can monitor his request processing status. Server will set the status to 202 
+MovedPermanently | Inform that the resource has permanently moved to a new location, and that future references should use a new URI with their requests. Server will set the status to 301 
+MovedTemporarily | Inform that the resource has temporarily moved to another location, but that future references should still use the original URI to access the resource. Server will set the status to 302 
+
+```typescript
+import {Return} from "typescript-rest";
+
+@Path("test")
+class TestService {
+   @POST
+   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource {
+      //...
+      return new Return.NewResource(req.url + "/" + generatedId);
+   }
+}
+```
+
+The server will return an empty body with a 201 status code and a Location header pointing to 
+the URL of the created resource. 
+
+#### Asynchronous services
+
+The above section shows how the types returned are handled by the Server. However, all the previous examples are working
+synchronously. The recommended way is to work assynchronously, for a better performance.
+
+To work assynchronously, you can return a ```Promise``` on your service method. The above rules to handle return types 
+applies to the returned promise resolved value.
+
+Some examples:
+
+```typescript
+import {Return} from "typescript-rest";
+
+@Path("async")
+class TestService {
+   @POST
+   test(myObject: MyClass, @ContextRequest request: express.Request): Promise<Return.NewResource> {
+      return new Promise<Return.NewResource>(function(resolve, reject){
+         //...
+			   resolve(new Return.NewResource(req.url + "/" + generatedId));
+		  });
+   }
+
+   @GET
+   testGet() {
+      return new Promise<MyClass>(function(resolve, reject){
+         //...
+			   resolve(new MyClass());
+		  });
+   }
+}
+```
+
+You can call reject on your promises passing any error defined on the [Errors](#errors) section, or event
+a simple error message.
+
+An important point here to note is that you can inform your return type explicitly or not, as you can see 
+in the above example.  
 
 ### Errors
 
