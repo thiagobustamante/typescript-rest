@@ -496,10 +496,76 @@ class TestService {
 }
 ```
 
-An important point here to note is that you can inform your return type explicitly or not, as you can see 
+It is important to observe that you can inform your return type explicitly or not, as you can see 
 in the above example.  
 
 ### Errors
+
+This library provide some Error classes to map the problems that you may want to report to your clients.
+
+
+Type | Description
+---- | -----------
+BadRequestError | Used to report errors with status code 400. 
+UnauthorizedError | Used to report errors with status code 401. 
+ForbidenError | Used to report errors with status code 403. 
+NotFoundError | Used to report errors with status code 404. 
+MethodNotAllowedError | Used to report errors with status code 405. 
+NotAcceptableError | Used to report errors with status code 406. 
+ConflictError | Used to report errors with status code 409. 
+InternalServerError | Used to report errors with status code 500. 
+NotImplementedError | Used to report errors with status code 501. 
+
+If you throw any of these errors on a service method, the server you log the 
+problem and send a response with the appropriate status code an the error message on its body.
+
+```typescript
+import {Errors} from "typescript-rest";
+
+@Path("async")
+class TestService {
+   @GET
+   @Path("test1")
+   testGet() {
+      return new Promise<MyClass>(function(resolve, reject){
+         //...
+			   throw new Errors.NotImplementedError("This operation s not available yet");
+		  });
+   }
+
+   @GET
+   @Path("test2")
+   testGet2() {
+      return new Promise<MyClass>(function(resolve, reject){
+         //...
+			   reject(new Errors.NotImplementedError("This operation s not available yet"));
+		  });
+   }
+
+   @GET
+   @Path("test3")
+   testGet3() {
+			throw new Errors.NotImplementedError("This operation s not available yet");
+   }
+}
+```
+
+All the three operations above will return a response with status code ```501``` and a message on the body
+```This operation s not available yet```
+
+If you want to create a custom error that report your own status code, just extend the base class
+```HttpError```
+
+```typescript
+import {HttpError} from "typescript-rest";
+
+class MyOwnError extends HttpError {
+	static myNoSenseStatusCode: number = 999;
+  constructor(message?: string) {
+		super("MyOwnError", MyOwnError.myNoSenseStatusCode, message);
+	}
+}
+```
 
 ### Types and languages
 
