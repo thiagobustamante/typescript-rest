@@ -529,7 +529,7 @@ class TestService {
    testGet() {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   throw new Errors.NotImplementedError("This operation s not available yet");
+			   throw new Errors.NotImplementedError("This operation is not available yet");
 		  });
    }
 
@@ -538,23 +538,23 @@ class TestService {
    testGet2() {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   reject(new Errors.NotImplementedError("This operation s not available yet"));
+			   reject(new Errors.NotImplementedError("This operation is not available yet"));
 		  });
    }
 
    @GET
    @Path("test3")
    testGet3() {
-			throw new Errors.NotImplementedError("This operation s not available yet");
+			throw new Errors.NotImplementedError("This operation is not available yet");
    }
 }
 ```
 
 All the three operations above will return a response with status code ```501``` and a message on the body
-```This operation s not available yet```
+```This operation is not available yet```
 
-If you want to create a custom error that report your own status code, just extend the base class
-```HttpError```
+If you want to create a custom error that report your own status code, just extend the base class ```HttpError```.
+
 
 ```typescript
 import {HttpError} from "typescript-rest";
