@@ -570,4 +570,71 @@ class MyOwnError extends HttpError {
 ```
 
 ### Types and languages
-TBD
+
+It is possible to use decorators to inform the server which languages or mime types are supported by each service method.
+
+These decorators can be used on the service class or on a service method (or both).
+
+The following decorators are available:
+
+Decorator | Description
+--------- | -----------
+AcceptLanguage | Tell the [[Server]] that a class or a method should only accept requests from clients that accepts one of the supported languages. 
+Accept | Tell the [[Server]] that a class or a method should only accept requests from clients that accepts one of the supported mime types. 
+ 
+See some examples:
+
+```typescript
+@Path("test")
+@AcceptLanguage("en", "pt-BR")
+class TestAcceptService {
+	@GET
+	testLanguage(@ContextLanguage language: string): string {
+		if (language === 'en') {
+			return "accepted";
+		}
+		return "aceito";
+	}
+}
+```
+
+In the above example, we declare that only ```English``` and ```Brazilian Portuguese``` are supported. 
+The order here is important. That declaration says that our first language is ```English```. So, if nothing
+was specified by the request, or if these two languages has the same weight on the 
+resquest ```Accept-Language``` header, ```English``` will be the choice.  
+
+If the request specifies an ```Accept-Language``` header, we will choose the language that best fit the
+header value, considering the list of possible values declared on ```@AcceptLanguage``` decorator.
+
+If none of our possibilities is good for the ```Accept-Language``` header in the request, the server 
+throws a ```NotAcceptableError``` and returns a ```406``` status code for the client.
+
+You can decorate methods too, like:
+
+```typescript
+@Path("test")
+@AcceptLanguage("en", "pt-BR")
+class TestAcceptService {
+	@GET
+  @AcceptLanguage("fr")
+	testLanguage(@ContextLanguage language: string): string {
+    // ...
+	}
+}
+```
+
+On the above example, the list of accepted languages will be ```["en", "pt-BR", "fr"]```, in that order.
+
+The ```@Accept``` decorator works exaclty like ```@AcceptLanguage```, but it inform the server about the mime type
+that a service can provide. It uses the ```Accept``` header in the request to decide about the preferred media to use.
+
+```typescript
+@Path("test")
+@Accept("application/json")
+class TestAcceptService {
+	@GET
+	testType(@ContextAccept accept: string): string {
+     //...
+	}
+}
+```
