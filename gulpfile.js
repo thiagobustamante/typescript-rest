@@ -129,13 +129,6 @@ gulp.task('release', function(done) {
     });
 });
 
-gulp.task('clean-test', function(done) {
-    runSequence('clean', 'test',  function() {
-        console.log('End of Tests.');
-        done();
-    });
-});
-
 gulp.task('watch', ['compile'], function() {
     gulp.watch('src/**/*.ts', ['compile']);
 });
