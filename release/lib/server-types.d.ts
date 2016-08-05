@@ -11,7 +11,7 @@ export declare enum HttpMethod {
 }
 export declare class ServiceContext {
     language: string;
-    preferredMedia: string;
+    accept: string;
     request: express.Request;
     response: express.Response;
     next: express.NextFunction;

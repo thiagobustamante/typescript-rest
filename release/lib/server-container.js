@@ -186,7 +186,7 @@ var InternalServer = function () {
             if (serviceMethod.resolvedAccepts) {
                 var accept = context.request.accepts(serviceMethod.resolvedAccepts);
                 if (accept) {
-                    context.preferredMedia = accept;
+                    context.accept = accept;
                 } else {
                     throw new Errors.NotAcceptableError("Accept");
                 }
@@ -209,7 +209,7 @@ var InternalServer = function () {
                             serviceObject[key] = context.language;
                             break;
                         case metadata.ParamType.context_accept:
-                            serviceObject[key] = context.preferredMedia;
+                            serviceObject[key] = context.accept;
                             break;
                         case metadata.ParamType.context_request:
                             serviceObject[key] = context.request;
@@ -327,7 +327,7 @@ var InternalServer = function () {
                         result.push(context.next);
                         break;
                     case metadata.ParamType.context_accept:
-                        result.push(context.preferredMedia);
+                        result.push(context.accept);
                         break;
                     case metadata.ParamType.context_accept_language:
                         result.push(context.language);

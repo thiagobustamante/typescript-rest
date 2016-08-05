@@ -329,6 +329,106 @@ req.<span class="hljs-string">params:</span> { <span class="hljs-string">"genus"
 }
 </code></pre>
 				<h3 id="service-context">Service Context</h3>
+				<p>A Context object is created to group informations about the current request being handled.
+				This Context can be accessed by service methods.</p>
+				<p>The Context is represented by the <code>ServiceContext</code> class and has the following properties:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>request</td>
+							<td>express.Request</td>
+							<td>The request object </td>
+						</tr>
+						<tr>
+							<td>response</td>
+							<td>express.Response</td>
+							<td>The response object </td>
+						</tr>
+						<tr>
+							<td>language</td>
+							<td>string</td>
+							<td>The resolved language to be used to handle the current request.  </td>
+						</tr>
+						<tr>
+							<td>accept</td>
+							<td>string</td>
+							<td>The preferred media type to be used to respond the current request. </td>
+						</tr>
+						<tr>
+							<td>next</td>
+							<td>express.NextFunction</td>
+							<td>The next function. It can be used to delegate to the next middleware registered the processing of the current request. </td>
+						</tr>
+					</tbody>
+				</table>
+				<p>See <a href="#types-and-languages">Types and languages</a> to know how the language and preferredMedia fields are calculated.</p>
+				<p>The <code>@Context</code> decorator can be used on service method&#39;s arguments or on service class properties to bind
+				the argument or the property to the current context object.  </p>
+				<p>A Context usage example:</p>
+				<pre><code class="lang-typescript"> @Path(<span class="hljs-string">"context"</span>)
+ <span class="hljs-keyword">class</span> TestService {
+   @Context
+   context: ServiceContext;
+
+   @GET
+   sayHello() {
+      <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">this</span>.context.language) {
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"en"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"pt"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Olá"</span>;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+   }
+ }
+</code></pre>
+				<p>We can use the decorator on method arguments too:</p>
+				<pre><code class="lang-typescript"> @Path(<span class="hljs-string">"context"</span>)
+ <span class="hljs-keyword">class</span> TestService {
+
+   @GET
+   sayHello(@Context context: ServiceContext) {
+      <span class="hljs-keyword">switch</span> (context.language) {
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"en"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"pt"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Olá"</span>;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+   }
+ }
+</code></pre>
+				<p>You can use, also, one of the other decorators to access directly one of
+				the Context property. It is a kind of suggar syntax.</p>
+				<ul>
+					<li>@ContextRequest: To access ServiceContext.request</li>
+					<li>@ContextResponse: To access ServiceContext.response</li>
+					<li>@ContextNext: To access ServiceContext.next</li>
+					<li>@ContextLanguage: To access ServiceContext.language</li>
+					<li>@ContextAccept: To access ServiceContext.accept</li>
+				</ul>
+				<pre><code class="lang-typescript"> @Path(<span class="hljs-string">"context"</span>)
+ <span class="hljs-keyword">class</span> TestService {
+
+   @GET
+   sayHello(@ContextLanguage language: <span class="hljs-built_in">string</span>) {
+      <span class="hljs-keyword">switch</span> (language) {
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"en"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+         <span class="hljs-keyword">case</span> <span class="hljs-string">"pt"</span>:
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Olá"</span>;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-string">"Hello"</span>;
+   }
+ }
+</code></pre>
 				<h3 id="service-return">Service Return</h3>
 				<h3 id="errors">Errors</h3>
 				<h3 id="types-and-languages">Types and languages</h3>

@@ -323,7 +323,7 @@ Property | Type | Description
 request | express.Request | The request object 
 response | express.Response | The response object 
 language | string | The resolved language to be used to handle the current request.  
-preferredMedia | string | The preferred media type to be used to respond the current request. 
+accept | string | The preferred media type to be used to respond the current request. 
 next | express.NextFunction | The next function. It can be used to delegate to the next middleware registered the processing of the current request. 
 
 
@@ -353,7 +353,7 @@ A Context usage example:
  }
 ```
 
-We can use the decorator on methdo arguments too:
+We can use the decorator on method arguments too:
 
 ```typescript
  @Path("context")
@@ -379,7 +379,7 @@ the Context property. It is a kind of suggar syntax.
   - @ContextResponse: To access ServiceContext.response
   - @ContextNext: To access ServiceContext.next
   - @ContextLanguage: To access ServiceContext.language
-  - @ContextAccept: To access ServiceContext.preferredMedia
+  - @ContextAccept: To access ServiceContext.accept
 
 ```typescript
  @Path("context")

@@ -27,7 +27,7 @@ export class ServiceContext {
 	/**
 	 * The preferred media type to be used in the current request handling. 
 	 */
-	preferredMedia: string;
+	accept: string;
 	/**
 	 * The request object. 
 	 */

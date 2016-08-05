@@ -186,7 +186,7 @@ export class InternalServer {
 		if (serviceMethod.resolvedAccepts) {
 			 let accept: any = context.request.accepts(serviceMethod.resolvedAccepts);
 			 if (accept) {
-				 context.preferredMedia = <string> accept;
+				 context.accept = <string> accept;
 			 }
 			 else {
 			 	throw new Errors.NotAcceptableError("Accept");
@@ -210,7 +210,7 @@ export class InternalServer {
 						serviceObject[key] = context.language;
 						break;
 					case metadata.ParamType.context_accept:
-						serviceObject[key] = context.preferredMedia;
+						serviceObject[key] = context.accept;
 						break;
 					case metadata.ParamType.context_request:
 						serviceObject[key] = context.request;
@@ -324,7 +324,7 @@ export class InternalServer {
 					result.push(context.next);
 					break;
 				case metadata.ParamType.context_accept:
-					result.push(context.preferredMedia);
+					result.push(context.accept);
 					break;
 				case metadata.ParamType.context_accept_language:
 					result.push(context.language);
