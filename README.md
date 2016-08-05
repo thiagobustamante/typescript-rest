@@ -313,6 +313,91 @@ class Sample {
 
 ### Service Context
 
+A Context object is created to group informations about the current request being handled.
+This Context can be accessed by service methods.
+
+The Context is represented by the ``` ServiceContext ``` class and has the following properties:
+
+Property | Type | Description
+-------- | ---- | -----------
+request | express.Request | The request object 
+response | express.Response | The response object 
+language | string | The resolved language to be used to handle the current request.  
+preferredMedia | string | The preferred media type to be used to respond the current request. 
+next | express.NextFunction | The next function. It can be used to delegate to the next middleware registered the processing of the current request. 
+
+
+See [Types and languages](#types-and-languages) to know how the language and preferredMedia fields are calculated.
+
+The ``` @Context ``` decorator can be used on service method's arguments or on service class properties to bind 
+the argument or the property to the current context object.  
+
+A Context usage example:
+
+```typescript
+ @Path("context")
+ class TestService {
+   @Context
+   context: ServiceContext;
+
+   @GET
+   sayHello() {
+      switch (this.context.language) {
+         case "en":
+            return "Hello";
+         case "pt":
+            return "Olá";
+      }
+      return "Hello";
+   }
+ }
+```
+
+We can use the decorator on methdo arguments too:
+
+```typescript
+ @Path("context")
+ class TestService {
+
+   @GET
+   sayHello(@Context context: ServiceContext) {
+      switch (context.language) {
+         case "en":
+            return "Hello";
+         case "pt":
+            return "Olá";
+      }
+      return "Hello";
+   }
+ }
+```
+
+You can use, also, one of the other decorators to access directly one of 
+the Context property. It is a kind of suggar syntax.
+
+  - @ContextRequest: To access ServiceContext.request
+  - @ContextResponse: To access ServiceContext.response
+  - @ContextNext: To access ServiceContext.next
+  - @ContextLanguage: To access ServiceContext.language
+  - @ContextAccept: To access ServiceContext.preferredMedia
+
+```typescript
+ @Path("context")
+ class TestService {
+
+   @GET
+   sayHello(@ContextLanguage language: string) {
+      switch (language) {
+         case "en":
+            return "Hello";
+         case "pt":
+            return "Olá";
+      }
+      return "Hello";
+   }
+ }
+```
+
 ### Service Return
 
 ### Errors
