@@ -401,8 +401,8 @@ the Context property. It is a kind of suggar syntax.
 
 ### Service Return
 
-This library can receive the return of your service methods and handle the serialization of the response as long as
-handle the correct content type of your results and the response status codes to be sent.
+This library can receive the return of your service method and handle the serialization of the response as long as
+handle the correct content type of your result and the response status codes to be sent.
 
 When a primitive type is returned by a service method, it is sent as a plain text into the response body.
 
@@ -460,7 +460,7 @@ class TestService {
 }
 ```
 
-The server will return an empty body with a 201 status code and a Location header pointing to 
+The server will return an empty body with a ```201``` status code and a ```Location``` header pointing to 
 the URL of the created resource. 
 
 #### Asynchronous services
@@ -495,9 +495,6 @@ class TestService {
    }
 }
 ```
-
-You can call reject on your promises passing any error defined on the [Errors](#errors) section, or event
-a simple error message.
 
 An important point here to note is that you can inform your return type explicitly or not, as you can see 
 in the above example.  

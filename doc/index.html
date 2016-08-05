@@ -433,8 +433,8 @@ req.<span class="hljs-string">params:</span> { <span class="hljs-string">"genus"
  }
 </code></pre>
 				<h3 id="service-return">Service Return</h3>
-				<p>This library can receive the return of your service methods and handle the serialization of the response as long as
-				handle the correct content type of your results and the response status codes to be sent.</p>
+				<p>This library can receive the return of your service method and handle the serialization of the response as long as
+				handle the correct content type of your result and the response status codes to be sent.</p>
 				<p>When a primitive type is returned by a service method, it is sent as a plain text into the response body.</p>
 				<pre><code class="lang-typescript">@GET
 sayHello(): <span class="hljs-built_in">string</span> {
@@ -496,7 +496,7 @@ test(myObject: MyClass): <span class="hljs-built_in">void</span> {
    }
 }
 </code></pre>
-				<p>The server will return an empty body with a 201 status code and a Location header pointing to
+				<p>The server will return an empty body with a <code>201</code> status code and a <code>Location</code> header pointing to
 				the URL of the created resource. </p>
 				<h4 id="asynchronous-services">Asynchronous services</h4>
 				<p>The above section shows how the types returned are handled by the Server. However, all the previous examples are working
@@ -525,8 +525,6 @@ test(myObject: MyClass): <span class="hljs-built_in">void</span> {
    }
 }
 </code></pre>
-				<p>You can call reject on your promises passing any error defined on the <a href="#errors">Errors</a> section, or event
-				a simple error message.</p>
 				<p>An important point here to note is that you can inform your return type explicitly or not, as you can see
 				in the above example.  </p>
 				<h3 id="errors">Errors</h3>
