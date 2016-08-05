@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for lib/server-return.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">lib/</a> server-return.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">84.62% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>33/39</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>3/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>6/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">84.21% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>32/38</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+&nbsp;
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+&nbsp;
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+&nbsp;
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+&nbsp;
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+&nbsp;
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+&nbsp;
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+&nbsp;
+var _inherits2 = require("babel-runtime/helpers/inherits");
+&nbsp;
+var _inherits3 = _interopRequireDefault(_inherits2);
+&nbsp;
+function _interopRequireDefault(obj) { return obj &amp;&amp; obj.__esModule ? obj : <span class="branch-1 cbranch-no" title="branch not covered" >{ default: obj };</span> }
+&nbsp;
+var server_types_1 = require("./server-types");
+&nbsp;
+var NewResource = function (_server_types_1$Refer) {
+    (0, _inherits3.default)(NewResource, _server_types_1$Refer);
+&nbsp;
+    function NewResource(location) {
+        (0, _classCallCheck3.default)(this, NewResource);
+        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(NewResource).call(this, location, 201));
+    }
+&nbsp;
+    return NewResource;
+}(server_types_1.ReferencedResource);
+&nbsp;
+exports.NewResource = NewResource;
+&nbsp;
+var RequestAccepted = function (_server_types_1$Refer2) {
+    (0, _inherits3.default)(RequestAccepted, _server_types_1$Refer2);
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function RequestAccepted(location) {</span>
+<span class="cstat-no" title="statement not covered" >        (0, _classCallCheck3.default)(this, RequestAccepted);</span>
+<span class="cstat-no" title="statement not covered" >        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(RequestAccepted).call(this, location, 202));</span>
+    }
+&nbsp;
+    return RequestAccepted;
+}(server_types_1.ReferencedResource);
+&nbsp;
+exports.RequestAccepted = RequestAccepted;
+&nbsp;
+var MovedPermanently = function (_server_types_1$Refer3) {
+    (0, _inherits3.default)(MovedPermanently, _server_types_1$Refer3);
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function MovedPermanently(location) {</span>
+<span class="cstat-no" title="statement not covered" >        (0, _classCallCheck3.default)(this, MovedPermanently);</span>
+<span class="cstat-no" title="statement not covered" >        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MovedPermanently).call(this, location, 301));</span>
+    }
+&nbsp;
+    return MovedPermanently;
+}(server_types_1.ReferencedResource);
+&nbsp;
+exports.MovedPermanently = MovedPermanently;
+&nbsp;
+var MovedTemporarily = function (_server_types_1$Refer4) {
+    (0, _inherits3.default)(MovedTemporarily, _server_types_1$Refer4);
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function MovedTemporarily(location) {</span>
+<span class="cstat-no" title="statement not covered" >        (0, _classCallCheck3.default)(this, MovedTemporarily);</span>
+<span class="cstat-no" title="statement not covered" >        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MovedTemporarily).call(this, location, 302));</span>
+    }
+&nbsp;
+    return MovedTemporarily;
+}(server_types_1.ReferencedResource);
+&nbsp;
+exports.MovedTemporarily = MovedTemporarily;
+//# sourceMappingURL=server-return.js.map
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 05 2016 19:06:22 GMT-0300 (BRT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

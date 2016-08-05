@@ -1,7 +1,7 @@
 /// <reference path="../../typings/index.d.ts" />
 import * as express from "express";
 import { HttpMethod } from "./server-types";
-export declare abstract class Server {
+export declare class Server {
     static buildServices(router: express.Router): void;
     static getPaths(): Set<string>;
     static getHttpMethods(path: string): Set<HttpMethod>;

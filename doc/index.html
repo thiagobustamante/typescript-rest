@@ -136,6 +136,7 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 				<p>This library allows you to use ES7 decorators to configure your services using
 				expressjs. </p>
 				<h3 id="server">Server</h3>
+				<p>TBD</p>
 				<h3 id="-path-decorator">@Path Decorator</h3>
 				<p>The @Path decorator allow us to define a router path for a given endpoint.
 					Route paths, in combination with a request method, define the endpoints at
@@ -525,10 +526,165 @@ test(myObject: MyClass): <span class="hljs-built_in">void</span> {
    }
 }
 </code></pre>
-				<p>An important point here to note is that you can inform your return type explicitly or not, as you can see
+				<p>It is important to observe that you can inform your return type explicitly or not, as you can see
 				in the above example.  </p>
 				<h3 id="errors">Errors</h3>
+				<p>This library provide some Error classes to map the problems that you may want to report to your clients.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>BadRequestError</td>
+							<td>Used to report errors with status code 400. </td>
+						</tr>
+						<tr>
+							<td>UnauthorizedError</td>
+							<td>Used to report errors with status code 401. </td>
+						</tr>
+						<tr>
+							<td>ForbidenError</td>
+							<td>Used to report errors with status code 403. </td>
+						</tr>
+						<tr>
+							<td>NotFoundError</td>
+							<td>Used to report errors with status code 404. </td>
+						</tr>
+						<tr>
+							<td>MethodNotAllowedError</td>
+							<td>Used to report errors with status code 405. </td>
+						</tr>
+						<tr>
+							<td>NotAcceptableError</td>
+							<td>Used to report errors with status code 406. </td>
+						</tr>
+						<tr>
+							<td>ConflictError</td>
+							<td>Used to report errors with status code 409. </td>
+						</tr>
+						<tr>
+							<td>InternalServerError</td>
+							<td>Used to report errors with status code 500. </td>
+						</tr>
+						<tr>
+							<td>NotImplementedError</td>
+							<td>Used to report errors with status code 501. </td>
+						</tr>
+					</tbody>
+				</table>
+				<p>If you throw any of these errors on a service method, the server you log the
+				problem and send a response with the appropriate status code an the error message on its body.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Errors} from <span class="hljs-string">"typescript-rest"</span>;
+
+@Path(<span class="hljs-string">"async"</span>)
+<span class="hljs-keyword">class</span> TestService {
+   @GET
+   @Path(<span class="hljs-string">"test1"</span>)
+   testGet() {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise&lt;MyClass&gt;(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>)</span>{
+         <span class="hljs-comment">//...</span>
+               <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Errors.NotImplementedError(<span class="hljs-string">"This operation is not available yet"</span>);
+          });
+   }
+
+   @GET
+   @Path(<span class="hljs-string">"test2"</span>)
+   testGet2() {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise&lt;MyClass&gt;(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">resolve, reject</span>)</span>{
+         <span class="hljs-comment">//...</span>
+               reject(<span class="hljs-keyword">new</span> Errors.NotImplementedError(<span class="hljs-string">"This operation is not available yet"</span>));
+          });
+   }
+
+   @GET
+   @Path(<span class="hljs-string">"test3"</span>)
+   testGet3() {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Errors.NotImplementedError(<span class="hljs-string">"This operation is not available yet"</span>);
+   }
+}
+</code></pre>
+				<p>All the three operations above will return a response with status code <code>501</code> and a message on the body
+				<code>This operation is not available yet</code></p>
+				<p>If you want to create a custom error that report your own status code, just extend the base class <code>HttpError</code>.</p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {HttpError} from <span class="hljs-string">"typescript-rest"</span>;
+
+<span class="hljs-keyword">class</span> MyOwnError extends HttpError {
+    <span class="hljs-keyword">static</span> myNoSenseStatusCode: <span class="hljs-built_in">number</span> = <span class="hljs-number">999</span>;
+  <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>(message?: string) </span>{
+        <span class="hljs-keyword">super</span>(<span class="hljs-string">"MyOwnError"</span>, MyOwnError.myNoSenseStatusCode, message);
+    }
+}
+</code></pre>
 				<h3 id="types-and-languages">Types and languages</h3>
+				<p>It is possible to use decorators to inform the server which languages or mime types are supported by each service method.</p>
+				<p>These decorators can be used on the service class or on a service method (or both).</p>
+				<p>The following decorators are available:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Decorator</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>AcceptLanguage</td>
+							<td>Tell the <a href="classes/_server_.server.html">Server</a> that a class or a method should only accept requests from clients that accepts one of the supported languages. </td>
+						</tr>
+						<tr>
+							<td>Accept</td>
+							<td>Tell the <a href="classes/_server_.server.html">Server</a> that a class or a method should only accept requests from clients that accepts one of the supported mime types. </td>
+						</tr>
+					</tbody>
+				</table>
+				<p>See some examples:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"test"</span>)
+@AcceptLanguage(<span class="hljs-string">"en"</span>, <span class="hljs-string">"pt-BR"</span>)
+<span class="hljs-keyword">class</span> TestAcceptService {
+    @GET
+    testLanguage(@ContextLanguage language: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> {
+        <span class="hljs-keyword">if</span> (language === <span class="hljs-string">'en'</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"accepted"</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"aceito"</span>;
+    }
+}
+</code></pre>
+				<p>In the above example, we declare that only <code>English</code> and <code>Brazilian Portuguese</code> are supported.
+					The order here is important. That declaration says that our first language is <code>English</code>. So, if nothing
+					was specified by the request, or if these two languages has the same weight on the
+				resquest <code>Accept-Language</code> header, <code>English</code> will be the choice.  </p>
+				<p>If the request specifies an <code>Accept-Language</code> header, we will choose the language that best fit the
+				header value, considering the list of possible values declared on <code>@AcceptLanguage</code> decorator.</p>
+				<p>If none of our possibilities is good for the <code>Accept-Language</code> header in the request, the server
+				throws a <code>NotAcceptableError</code> and returns a <code>406</code> status code for the client.</p>
+				<p>You can decorate methods too, like:</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"test"</span>)
+@AcceptLanguage(<span class="hljs-string">"en"</span>, <span class="hljs-string">"pt-BR"</span>)
+<span class="hljs-keyword">class</span> TestAcceptService {
+    @GET
+  @AcceptLanguage(<span class="hljs-string">"fr"</span>)
+    testLanguage(@ContextLanguage language: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> {
+    <span class="hljs-comment">// ...</span>
+    }
+}
+</code></pre>
+				<p>On the above example, the list of accepted languages will be <code>[&quot;en&quot;, &quot;pt-BR&quot;, &quot;fr&quot;]</code>, in that order.</p>
+				<p>The <code>@Accept</code> decorator works exaclty like <code>@AcceptLanguage</code>, but it inform the server about the mime type
+				that a service can provide. It uses the <code>Accept</code> header in the request to decide about the preferred media to use.</p>
+				<pre><code class="lang-typescript">@Path(<span class="hljs-string">"test"</span>)
+@Accept(<span class="hljs-string">"application/json"</span>)
+<span class="hljs-keyword">class</span> TestAcceptService {
+    @GET
+    testType(@ContextAccept accept: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> {
+     <span class="hljs-comment">//...</span>
+    }
+}
+</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

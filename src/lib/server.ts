@@ -8,7 +8,7 @@ import {HttpMethod} from "./server-types";
 /**
  * The Http server main class. 
  */
-export abstract class Server {
+export class Server {
 	/**
 	 * Create the routes for all classes decorated with our decorators
 	 */

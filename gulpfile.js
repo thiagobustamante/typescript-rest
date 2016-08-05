@@ -11,6 +11,7 @@ var jasmine = require('gulp-jasmine');
 var JasmineConsoleReporter = require('jasmine-console-reporter');
 var typedoc = require("gulp-typedoc");
 var babel = require('gulp-babel');
+var istanbul = require('gulp-istanbul');
 
 var tsProject = ts.createProject('tsconfig.json', { 
 	sortOutput: true, 
@@ -46,7 +47,7 @@ gulp.task('docs-clean', function() {
 });
 
 gulp.task('test-compile', function(done) {
- 	return tsResult = gulp.src('src/**/test-*.ts')
+ 	return gulp.src('src/spec/test-*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(ts(tsProject))
 		.pipe(babel({
@@ -55,12 +56,24 @@ gulp.task('test-compile', function(done) {
 		}))		
 		.pipe(rename({ extname: '.spec.js' }))
 		.pipe(sourcemaps.write('./')) 
-		.pipe(gulp.dest('release'));
+		.pipe(gulp.dest('release/test'));
 });
 
+gulp.task('test-coverage', function(done) {
+ 	return gulp.src('src/lib/*.ts')
+		.pipe(sourcemaps.init({ loadMaps: true }))
+		.pipe(ts(tsProject))
+		.pipe(babel({
+			presets: ['es2015'],
+			plugins: ['transform-runtime']
+		}))		
+		.pipe(istanbul())
+		.pipe(sourcemaps.write('./')) 
+		.pipe(gulp.dest('release/test'));
+});
  
 gulp.task('test-run', function() {
-	return gulp.src('release/**/*.spec.js')
+	return gulp.src('release/test/spec/*.spec.js')
 		.pipe(jasmine({
 	        timeout: 10000,
 	        includeStackTrace: false,
@@ -71,11 +84,15 @@ gulp.task('test-run', function() {
 				listStyle: 'indent', // "flat"|"indent" 
 				activity: false
 			})
-	    }));
+	    }))
+		.pipe(istanbul.writeReports({
+			dir: "release/test/coverage"
+		}))
+		.pipe(istanbul.enforceThresholds({ thresholds: { global: 45 } }));
 });
 
 gulp.task('test', function(done) {
-    runSequence('test-compile', 'test-run', function() {
+    runSequence('test-compile', 'test-coverage', 'test-run', function() {
         console.log('Release tested.');
         done();
     });
@@ -112,9 +129,9 @@ gulp.task('release', function(done) {
     });
 });
 
-gulp.task('build', function(done) {
-    runSequence('clean', 'compile', 'test', function() {
-        console.log('Release deployed.');
+gulp.task('clean-test', function(done) {
+    runSequence('clean', 'test',  function() {
+        console.log('End of Tests.');
         done();
     });
 });
