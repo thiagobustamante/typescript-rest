@@ -12,6 +12,8 @@ var JasmineConsoleReporter = require('jasmine-console-reporter');
 var typedoc = require("gulp-typedoc");
 var babel = require('gulp-babel');
 var istanbul = require('gulp-istanbul');
+var remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
+var coverageEnforcer = require("gulp-istanbul-enforcer");
 
 var tsProject = ts.createProject('tsconfig.json', { 
 	sortOutput: true, 
@@ -71,7 +73,33 @@ gulp.task('test-coverage', function(done) {
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release/test'));
 });
- 
+
+gulp.task('remap-istanbul-reports', function () {
+    return gulp.src('release/test/coverage/coverage-final.json')
+        .pipe(remapIstanbul({
+            reports: {
+                'json': 'release/test/coverage/typescript/coverage-final.json',
+                'html': 'release/test/coverage/typescript/lcov-report'
+            }
+        }));
+});
+
+gulp.task('enforce-coverage', function () {
+  var options = {
+        thresholds : {
+          statements : 80,
+          branches : 60,
+          lines : 80,
+          functions : 70
+        },
+        coverageDirectory : 'release/test/coverage/typescript',
+        rootDirectory : ''
+      };
+  return gulp
+    .src('src/lib/*.ts')
+    .pipe(coverageEnforcer(options));
+});
+
 gulp.task('test-run', function() {
 	return gulp.src('release/test/spec/*.spec.js')
 		.pipe(jasmine({
@@ -88,11 +116,12 @@ gulp.task('test-run', function() {
 		.pipe(istanbul.writeReports({
 			dir: "release/test/coverage"
 		}))
-		.pipe(istanbul.enforceThresholds({ thresholds: { global: 45 } }));
+		// .pipe(istanbul.enforceThresholds({ thresholds: { global: 45 } }));
 });
 
 gulp.task('test', function(done) {
-    runSequence('test-compile', 'test-coverage', 'test-run', function() {
+    runSequence('test-compile', 'test-coverage', 'test-run', 
+				'remap-istanbul-reports', 'enforce-coverage', function() {
         console.log('Release tested.');
         done();
     });
