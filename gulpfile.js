@@ -84,22 +84,6 @@ gulp.task('remap-istanbul-reports', function () {
         }));
 });
 
-gulp.task('enforce-coverage', function () {
-  var options = {
-        thresholds : {
-          statements : 80,
-          branches : 60,
-          lines : 80,
-          functions : 70
-        },
-        coverageDirectory : 'release/test/coverage/typescript',
-        rootDirectory : ''
-      };
-  return gulp
-    .src('src/lib/*.ts')
-    .pipe(coverageEnforcer(options));
-});
-
 gulp.task('test-run', function() {
 	return gulp.src('release/test/spec/*.spec.js')
 		.pipe(jasmine({
@@ -116,12 +100,12 @@ gulp.task('test-run', function() {
 		.pipe(istanbul.writeReports({
 			dir: "release/test/coverage"
 		}))
-		// .pipe(istanbul.enforceThresholds({ thresholds: { global: 45 } }));
+		.pipe(istanbul.enforceThresholds({ thresholds: { global: 50 } }));
 });
 
 gulp.task('test', function(done) {
     runSequence('test-compile', 'test-coverage', 'test-run', 
-				'remap-istanbul-reports', 'enforce-coverage', function() {
+				'remap-istanbul-reports', function() {
         console.log('Release tested.');
         done();
     });
