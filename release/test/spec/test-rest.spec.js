@@ -332,5 +332,26 @@ describe("Server Tests", function () {
             });
         });
     });
+    describe("Server", function () {
+        it("should return 404 when unmapped resources are requested", function (done) {
+            request({
+                url: "http://localhost:3000/unmapped/resource"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(404);
+                done();
+            });
+        });
+        it("should return 405 when a not supported method is requeted to a mapped resource", function (done) {
+            request.post({
+                url: "http://localhost:3000/person/123"
+            }, function (error, response, body) {
+                expect(response.statusCode).toEqual(405);
+                var allowed = response.headers['allow'];
+                expect(allowed).toContain("GET");
+                expect(allowed).toContain("PUT");
+                done();
+            });
+        });
+    });
 });
 //# sourceMappingURL=test-rest.spec.js.map

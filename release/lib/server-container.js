@@ -55,6 +55,7 @@ var InternalServer = function () {
                 });
             });
             InternalServer.pathsResolved = true;
+            this.handleNotAllowedMethods();
         }
     }, {
         key: "buildService",
@@ -98,6 +99,25 @@ var InternalServer = function () {
             }
         }
     }, {
+        key: "handleNotAllowedMethods",
+        value: function handleNotAllowedMethods() {
+            var _this3 = this;
+
+            var paths = InternalServer.getPaths();
+            paths.forEach(function (path) {
+                var supported = InternalServer.getHttpMethods(path);
+                var allowedMethods = new Array();
+                supported.forEach(function (method) {
+                    allowedMethods.push(server_types_1.HttpMethod[method]);
+                });
+                var allowed = allowedMethods.join(', ');
+                _this3.router.all(path, function (req, res, next) {
+                    res.set('Allow', allowed);
+                    throw new Errors.MethodNotAllowedError();
+                });
+            });
+        }
+    }, {
         key: "getUploader",
         value: function getUploader() {
             if (!this.upload) {
@@ -122,7 +142,7 @@ var InternalServer = function () {
     }, {
         key: "buildServiceMiddleware",
         value: function buildServiceMiddleware(serviceMethod) {
-            var _this3 = this;
+            var _this4 = this;
 
             var result = new Array();
             if (serviceMethod.mustParseCookies) {
@@ -151,7 +171,7 @@ var InternalServer = function () {
                             options.push({ "name": fileData.name });
                         }
                     });
-                    result.push(_this3.getUploader().fields(options));
+                    result.push(_this4.getUploader().fields(options));
                 })();
             }
             return result;
@@ -244,7 +264,7 @@ var InternalServer = function () {
     }, {
         key: "sendValue",
         value: function sendValue(value, res, next) {
-            var _this4 = this;
+            var _this5 = this;
 
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
                 case "number":
@@ -267,7 +287,7 @@ var InternalServer = function () {
                         res.sendStatus(value.statusCode);
                     } else if (value.then && value instanceof _promise2.default) {
                         (function () {
-                            var self = _this4;
+                            var self = _this5;
                             value.then(function (val) {
                                 self.sendValue(val, res, next);
                             }).catch(function (err) {
@@ -282,25 +302,25 @@ var InternalServer = function () {
     }, {
         key: "buildArgumentsList",
         value: function buildArgumentsList(serviceMethod, context) {
-            var _this5 = this;
+            var _this6 = this;
 
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case metadata.ParamType.path:
-                        result.push(_this5.convertType(context.request.params[param.name], param.type));
+                        result.push(_this6.convertType(context.request.params[param.name], param.type));
                         break;
                     case metadata.ParamType.query:
-                        result.push(_this5.convertType(context.request.query[param.name], param.type));
+                        result.push(_this6.convertType(context.request.query[param.name], param.type));
                         break;
                     case metadata.ParamType.header:
-                        result.push(_this5.convertType(context.request.header(param.name), param.type));
+                        result.push(_this6.convertType(context.request.header(param.name), param.type));
                         break;
                     case metadata.ParamType.cookie:
-                        result.push(_this5.convertType(context.request.cookies[param.name], param.type));
+                        result.push(_this6.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case metadata.ParamType.body:
-                        result.push(_this5.convertType(context.request.body, param.type));
+                        result.push(_this6.convertType(context.request.body, param.type));
                         break;
                     case metadata.ParamType.file:
                         var files = context.request.files[param.name];
@@ -312,7 +332,7 @@ var InternalServer = function () {
                         result.push(context.request.files[param.name]);
                         break;
                     case metadata.ParamType.form:
-                        result.push(_this5.convertType(context.request.body[param.name], param.type));
+                        result.push(_this6.convertType(context.request.body[param.name], param.type));
                         break;
                     case metadata.ParamType.context:
                         result.push(context);

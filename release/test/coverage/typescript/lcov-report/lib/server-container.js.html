@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80.72% </span>
+        <span class="strong">81.61% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>201/249</span>
+        <span class='fraction'>213/261</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">74.31% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>107/144</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">76.47% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>13/17</span>
+        <span class='fraction'>16/20</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80.49% </span>
+        <span class="strong">81.4% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>198/246</span>
+        <span class='fraction'>210/258</span>
       </div>
     </div>
   </div>
@@ -438,7 +438,23 @@
 393
 394
 395
-396</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -476,6 +492,7 @@
 <span class="cline-any cline-yes">11×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11×</span>
@@ -513,6 +530,21 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -748,7 +780,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">17×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -761,13 +793,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11×</span>
@@ -872,6 +904,7 @@ class InternalServer {
             });
         });
         InternalServer.pathsResolved = true;
+        this.handleNotAllowedMethods();
     }
     buildService(serviceClass, serviceMethod) {
         let handler = (req, res, next) =&gt; {
@@ -909,6 +942,21 @@ class InternalServer {
 <span class="branch-7 cbranch-no" title="branch not covered" >            default:</span>
 <span class="cstat-no" title="statement not covered" >                throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");</span>
         }
+    }
+    handleNotAllowedMethods() {
+        let paths = InternalServer.getPaths();
+        paths.forEach((path) =&gt; {
+            let supported = InternalServer.getHttpMethods(path);
+            let allowedMethods = new Array();
+            supported.forEach((method) =&gt; {
+                allowedMethods.push(server_types_1.HttpMethod[method]);
+            });
+            let allowed = allowedMethods.join(', ');
+            this.router.all(path, (req, res, next) =&gt; {
+                res.set('Allow', allowed);
+                throw new Errors.MethodNotAllowedError();
+            });
+        });
     }
     getUploader() {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.upload) {
@@ -1234,7 +1282,7 @@ exports.InternalServer = InternalServer;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 30 2016 19:36:26 GMT-0300 (BRT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 14 2016 15:20:28 GMT-0300 (BRT)
 </div>
 </div>
 <script src="../prettify.js"></script>

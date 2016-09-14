@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>InternalServerError | Typescript-rest</title>
+	<title>UnsupportedMediaTypeError | Typescript-rest</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,10 +58,10 @@
 					<a href="../modules/_server_errors_.html">&quot;server-errors&quot;</a>
 				</li>
 				<li>
-					<a href="_server_errors_.internalservererror.html">InternalServerError</a>
+					<a href="_server_errors_.unsupportedmediatypeerror.html">UnsupportedMediaTypeError</a>
 				</li>
 			</ul>
-			<h1>Class InternalServerError</h1>
+			<h1>Class UnsupportedMediaTypeError</h1>
 		</div>
 	</div>
 </header>
@@ -71,8 +71,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents an INTERNAL SERVER error. The server encountered an unexpected condition
-						which prevented it from fulfilling the request.</p>
+						<p>Represents an UNSUPPORTED MEDIA TYPE error. The server is refusing to service the request
+							because the entity of the request is in a format not supported by the requested resource
+						for the requested method.</p>
 					</div>
 				</div>
 			</section>
@@ -83,7 +84,7 @@
 						<a href="_server_types_.httperror.html" class="tsd-signature-type">HttpError</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">InternalServerError</span>
+								<span class="target">UnsupportedMediaTypeError</span>
 							</li>
 						</ul>
 					</li>
@@ -96,17 +97,17 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_server_errors_.internalservererror.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_server_errors_.unsupportedmediatypeerror.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.internalservererror.html#message" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.internalservererror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.internalservererror.html#message-1" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.internalservererror.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.internalservererror.html#stack" class="tsd-kind-icon">stack</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.unsupportedmediatypeerror.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.unsupportedmediatypeerror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.unsupportedmediatypeerror.html#message-1" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.unsupportedmediatypeerror.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.unsupportedmediatypeerror.html#stack" class="tsd-kind-icon">stack</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,14 +119,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Internal<wbr>Server<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_server_errors_.internalservererror.html" class="tsd-signature-type">InternalServerError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Unsupported<wbr>Media<wbr>Type<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_server_errors_.unsupportedmediatypeerror.html" class="tsd-signature-type">UnsupportedMediaTypeError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_server_types_.httperror.html">HttpError</a>.<a href="_server_types_.httperror.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/master/src/lib/server-errors.ts#L116">server-errors.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/master/src/lib/server-errors.ts#L106">server-errors.ts:106</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -134,7 +135,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_server_errors_.internalservererror.html" class="tsd-signature-type">InternalServerError</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_server_errors_.unsupportedmediatypeerror.html" class="tsd-signature-type">UnsupportedMediaTypeError</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -244,33 +245,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_server_errors_.goneerror.html" class="tsd-kind-icon">Gone<wbr>Error</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_server_errors_.internalservererror.html" class="tsd-kind-icon">Internal<wbr>Server<wbr>Error</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_server_errors_.internalservererror.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_server_errors_.internalservererror.html#message" class="tsd-kind-icon">message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_server_errors_.internalservererror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.internalservererror.html#message-1" class="tsd-kind-icon">message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.internalservererror.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.internalservererror.html#stack" class="tsd-kind-icon">stack</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_server_errors_.methodnotallowederror.html" class="tsd-kind-icon">Method<wbr>Not<wbr>Allowed<wbr>Error</a>
 					</li>
@@ -286,9 +263,33 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_server_errors_.unauthorizederror.html" class="tsd-kind-icon">Unauthorized<wbr>Error</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_server_errors_.unsupportedmediatypeerror.html" class="tsd-kind-icon">Unsupported<wbr>Media<wbr>Type<wbr>Error</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#message" class="tsd-kind-icon">message</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#message-1" class="tsd-kind-icon">message</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="_server_errors_.unsupportedmediatypeerror.html#stack" class="tsd-kind-icon">stack</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

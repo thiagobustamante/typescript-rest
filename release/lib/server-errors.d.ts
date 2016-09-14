@@ -21,6 +21,12 @@ export declare class NotAcceptableError extends HttpError {
 export declare class ConflictError extends HttpError {
     constructor(message?: string);
 }
+export declare class GoneError extends HttpError {
+    constructor(message?: string);
+}
+export declare class UnsupportedMediaTypeError extends HttpError {
+    constructor(message?: string);
+}
 export declare class InternalServerError extends HttpError {
     constructor(message?: string);
 }

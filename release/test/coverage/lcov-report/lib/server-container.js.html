@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">82.09% </span>
+        <span class="strong">82.86% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>220/268</span>
+        <span class='fraction'>232/280</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">74.32% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>110/148</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">89.74% </span>
+        <span class="strong">90.7% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>35/39</span>
+        <span class='fraction'>39/43</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">82.02% </span>
+        <span class="strong">82.8% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>219/267</span>
+        <span class='fraction'>231/279</span>
       </div>
     </div>
   </div>
@@ -524,7 +524,27 @@
 479
 480
 481
-482</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -581,6 +601,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -621,6 +642,25 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -905,7 +945,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">17×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -920,15 +960,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1062,6 +1102,7 @@ var InternalServer = function () {
                 });
             });
             InternalServer.pathsResolved = true;
+            this.handleNotAllowedMethods();
         }
     }, {
         key: "buildService",
@@ -1105,6 +1146,25 @@ var InternalServer = function () {
             }
         }
     }, {
+        key: "handleNotAllowedMethods",
+        value: function handleNotAllowedMethods() {
+            var _this3 = this;
+&nbsp;
+            var paths = InternalServer.getPaths();
+            paths.forEach(function (path) {
+                var supported = InternalServer.getHttpMethods(path);
+                var allowedMethods = new Array();
+                supported.forEach(function (method) {
+                    allowedMethods.push(server_types_1.HttpMethod[method]);
+                });
+                var allowed = allowedMethods.join(', ');
+                _this3.router.all(path, function (req, res, next) {
+                    res.set('Allow', allowed);
+                    throw new Errors.MethodNotAllowedError();
+                });
+            });
+        }
+    }, {
         key: "getUploader",
         value: function getUploader() {
             <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.upload) {
@@ -1129,7 +1189,7 @@ var InternalServer = function () {
     }, {
         key: "buildServiceMiddleware",
         value: function buildServiceMiddleware(serviceMethod) {
-            var _this3 = this;
+            var _this4 = this;
 &nbsp;
             var result = new Array();
             if (serviceMethod.mustParseCookies) {
@@ -1158,7 +1218,7 @@ var InternalServer = function () {
 <span class="cstat-no" title="statement not covered" >                            options.push({ "name": fileData.name });</span>
                         }
                     });
-                    result.push(_this3.getUploader().fields(options));
+                    result.push(_this4.getUploader().fields(options));
                 })();
             }
             return result;
@@ -1251,7 +1311,7 @@ var InternalServer = function () {
     }, {
         key: "sendValue",
         value: function sendValue(value, res, next) {
-            var _this4 = this;
+            var _this5 = this;
 &nbsp;
             switch (typeof value === "undefined" ? "undefined" : (0, _typeof3.default)(value)) {
 <span class="branch-0 cbranch-no" title="branch not covered" >                case "number":</span>
@@ -1274,7 +1334,7 @@ var InternalServer = function () {
                         res.sendStatus(value.statusCode);
                     } else if (value.then &amp;&amp; value instanceof _promise2.default) {
                         (function () {
-                            var self = _this4;
+                            var self = _this5;
                             value.then(function (val) {
                                 self.sendValue(val, res, next);
                             }).catch(function (err) {
@@ -1289,25 +1349,25 @@ var InternalServer = function () {
     }, {
         key: "buildArgumentsList",
         value: function buildArgumentsList(serviceMethod, context) {
-            var _this5 = this;
+            var _this6 = this;
 &nbsp;
             var result = new Array();
             serviceMethod.parameters.forEach(function (param) {
                 switch (param.paramType) {
                     case metadata.ParamType.path:
-                        result.push(_this5.convertType(context.request.params[param.name], param.type));
+                        result.push(_this6.convertType(context.request.params[param.name], param.type));
                         break;
                     case metadata.ParamType.query:
-                        result.push(_this5.convertType(context.request.query[param.name], param.type));
+                        result.push(_this6.convertType(context.request.query[param.name], param.type));
                         break;
                     case metadata.ParamType.header:
-                        result.push(_this5.convertType(context.request.header(param.name), param.type));
+                        result.push(_this6.convertType(context.request.header(param.name), param.type));
                         break;
                     case metadata.ParamType.cookie:
-                        result.push(_this5.convertType(context.request.cookies[param.name], param.type));
+                        result.push(_this6.convertType(context.request.cookies[param.name], param.type));
                         break;
                     case metadata.ParamType.body:
-                        result.push(_this5.convertType(context.request.body, param.type));
+                        result.push(_this6.convertType(context.request.body, param.type));
                         break;
                     case metadata.ParamType.file:
                         var files = context.request.files[param.name];
@@ -1319,7 +1379,7 @@ var InternalServer = function () {
 <span class="cstat-no" title="statement not covered" >                        result.push(context.request.files[param.name]);</span>
 <span class="cstat-no" title="statement not covered" >                        break;</span>
                     case metadata.ParamType.form:
-                        result.push(_this5.convertType(context.request.body[param.name], param.type));
+                        result.push(_this6.convertType(context.request.body[param.name], param.type));
                         break;
 <span class="branch-8 cbranch-no" title="branch not covered" >                    case metadata.ParamType.context:</span>
 <span class="cstat-no" title="statement not covered" >                        result.push(context);</span>
@@ -1492,7 +1552,7 @@ exports.InternalServer = InternalServer;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 30 2016 19:36:25 GMT-0300 (BRT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 14 2016 15:20:27 GMT-0300 (BRT)
 </div>
 </div>
 <script src="../prettify.js"></script>

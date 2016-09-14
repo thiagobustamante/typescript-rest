@@ -19,6 +19,7 @@ export declare class InternalServer {
     static registerServiceMethod(target: Function, methodName: string): metadata.ServiceMethod;
     buildServices(): void;
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod): void;
+    private handleNotAllowedMethods();
     private getUploader();
     private buildServiceMiddleware(serviceMethod);
     private processResponseHeaders(serviceMethod, context);

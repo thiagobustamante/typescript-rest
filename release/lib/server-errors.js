@@ -111,8 +111,34 @@ var ConflictError = function (_server_types_1$HttpE7) {
 
 exports.ConflictError = ConflictError;
 
-var InternalServerError = function (_server_types_1$HttpE8) {
-    (0, _inherits3.default)(InternalServerError, _server_types_1$HttpE8);
+var GoneError = function (_server_types_1$HttpE8) {
+    (0, _inherits3.default)(GoneError, _server_types_1$HttpE8);
+
+    function GoneError(message) {
+        (0, _classCallCheck3.default)(this, GoneError);
+        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(GoneError).call(this, "GoneError", 410, message));
+    }
+
+    return GoneError;
+}(server_types_1.HttpError);
+
+exports.GoneError = GoneError;
+
+var UnsupportedMediaTypeError = function (_server_types_1$HttpE9) {
+    (0, _inherits3.default)(UnsupportedMediaTypeError, _server_types_1$HttpE9);
+
+    function UnsupportedMediaTypeError(message) {
+        (0, _classCallCheck3.default)(this, UnsupportedMediaTypeError);
+        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(UnsupportedMediaTypeError).call(this, "GoneError", 415, message));
+    }
+
+    return UnsupportedMediaTypeError;
+}(server_types_1.HttpError);
+
+exports.UnsupportedMediaTypeError = UnsupportedMediaTypeError;
+
+var InternalServerError = function (_server_types_1$HttpE10) {
+    (0, _inherits3.default)(InternalServerError, _server_types_1$HttpE10);
 
     function InternalServerError(message) {
         (0, _classCallCheck3.default)(this, InternalServerError);
@@ -124,8 +150,8 @@ var InternalServerError = function (_server_types_1$HttpE8) {
 
 exports.InternalServerError = InternalServerError;
 
-var NotImplementedError = function (_server_types_1$HttpE9) {
-    (0, _inherits3.default)(NotImplementedError, _server_types_1$HttpE9);
+var NotImplementedError = function (_server_types_1$HttpE11) {
+    (0, _inherits3.default)(NotImplementedError, _server_types_1$HttpE11);
 
     function NotImplementedError(message) {
         (0, _classCallCheck3.default)(this, NotImplementedError);

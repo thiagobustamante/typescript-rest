@@ -56,6 +56,7 @@ export class InternalServer {
 			});
 		});
 		InternalServer.pathsResolved = true;
+		this.handleNotAllowedMethods();
 	}
 
 	buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
@@ -97,6 +98,22 @@ export class InternalServer {
 		 	default:
 				throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");
 		 }
+	}
+
+	private handleNotAllowedMethods() {
+		let paths: Set<string> = InternalServer.getPaths();
+		paths.forEach((path)=>{
+			let supported : Set<HttpMethod> = InternalServer.getHttpMethods(path);
+			let allowedMethods: Array<string> = new Array<string>();
+			supported.forEach((method: HttpMethod) => {
+				allowedMethods.push(HttpMethod[method]);
+			});
+			let allowed: string = allowedMethods.join(', '); 
+			this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
+				res.set('Allow', allowed);
+				throw new Errors.MethodNotAllowedError();
+			});
+		});
 	}
 
 	private getUploader(): multer.Instance {
