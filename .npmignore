@@ -7,6 +7,6 @@ typings.json
 .jshintrc
 .sublime-project
 .tern-project
-release/spec
+release/test
 package.sublime-workspace
 .travis.yml
