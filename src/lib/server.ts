@@ -20,16 +20,16 @@ export class Server {
 	/**
 	 * Return all paths accepted by the Server
 	 */
-	static getPaths(): Set<string> {
-		return InternalServer.getPaths();
+	static getPaths(): Array<string> {
+		return [...InternalServer.getPaths()];
 	}
 
 	/**
 	 * Return the set oh HTTP verbs configured for the given path
 	 * @param path The path to search HTTP verbs
 	 */
-	static getHttpMethods(path: string): Set<HttpMethod> {
-		return InternalServer.getHttpMethods(path);
+	static getHttpMethods(path: string): Array<HttpMethod> {
+		return [...InternalServer.getHttpMethods(path)];
 	}
 
 	/**

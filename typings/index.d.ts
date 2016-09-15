@@ -3,7 +3,6 @@
 /// <reference path="globals/express-serve-static-core/index.d.ts" />
 /// <reference path="globals/express/index.d.ts" />
 /// <reference path="globals/form-data/index.d.ts" />
-/// <reference path="globals/harmony-proxy/index.d.ts" />
 /// <reference path="globals/jasmine/index.d.ts" />
 /// <reference path="globals/mime/index.d.ts" />
 /// <reference path="globals/multer/index.d.ts" />

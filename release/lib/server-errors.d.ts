@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 import { HttpError } from "./server-types";
 export declare class BadRequestError extends HttpError {
     constructor(message?: string);

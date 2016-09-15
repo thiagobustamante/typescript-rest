@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 "use strict";
 
 import {ReferencedResource} from "./server-types"; 

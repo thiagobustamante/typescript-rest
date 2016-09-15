@@ -1,5 +1,9 @@
 "use strict";
 
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -26,12 +30,12 @@ var Server = function () {
     }, {
         key: "getPaths",
         value: function getPaths() {
-            return server_container_1.InternalServer.getPaths();
+            return [].concat((0, _toConsumableArray3.default)(server_container_1.InternalServer.getPaths()));
         }
     }, {
         key: "getHttpMethods",
         value: function getHttpMethods(path) {
-            return server_container_1.InternalServer.getHttpMethods(path);
+            return [].concat((0, _toConsumableArray3.default)(server_container_1.InternalServer.getHttpMethods(path)));
         }
     }, {
         key: "setCookiesSecret",

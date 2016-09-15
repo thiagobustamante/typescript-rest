@@ -1,10 +1,9 @@
-/// <reference path="../../typings/index.d.ts" />
 import * as express from "express";
 import { HttpMethod } from "./server-types";
 export declare class Server {
     static buildServices(router: express.Router): void;
-    static getPaths(): Set<string>;
-    static getHttpMethods(path: string): Set<HttpMethod>;
+    static getPaths(): Array<string>;
+    static getHttpMethods(path: string): Array<HttpMethod>;
     static setCookiesSecret(secret: string): void;
     static setCookiesDecoder(decoder: (val: string) => string): void;
     static setFileDest(dest: string): void;

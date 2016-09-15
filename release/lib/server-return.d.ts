@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 import { ReferencedResource } from "./server-types";
 export declare class NewResource extends ReferencedResource {
     constructor(location: string);

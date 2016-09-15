@@ -150,14 +150,14 @@ describe("Server Tests", () => {
 
 	describe("Server", () => {
 		it("should provide a catalog containing the exposed paths", () => {
-			expect(Server.getPaths().has("/person/:id")).toEqual(true);
-			expect(Server.getPaths().has("/headers")).toEqual(true);
-			expect(Server.getPaths().has("/context")).toEqual(true);
-			expect(Server.getPaths().has("/upload")).toEqual(true);
-			expect(Server.getHttpMethods("/person/:id").has(HttpMethod.GET)).toEqual(true);
-			expect(Server.getHttpMethods("/person/:id").has(HttpMethod.PUT)).toEqual(true);
-			expect(Server.getPaths().has("/accept")).toEqual(true);
-			expect(Server.getPaths().has("/accept/conflict")).toEqual(true);
+			expect(Server.getPaths().indexOf("/person/:id")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
+			expect(Server.getHttpMethods("/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
+			expect(Server.getHttpMethods("/person/:id").indexOf(HttpMethod.PUT)).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/accept")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/accept/conflict")).toBeGreaterThan(-1);
 		});
 	});
 

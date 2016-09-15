@@ -7,7 +7,9 @@
         "outDir": "./release",
         "removeComments": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true, 
+        "noResolve": false,
+        "isolatedModules": false
     },
     "exclude": [
         "node_modules",

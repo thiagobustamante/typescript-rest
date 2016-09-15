@@ -17,6 +17,7 @@
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-delete-lines": "0.0.7",
     "gulp-istanbul": "^1.0.0",
     "gulp-istanbul-enforcer": "^1.0.3",
     "gulp-jasmine": "^2.4.0",

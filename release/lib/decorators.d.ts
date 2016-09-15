@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 import "reflect-metadata";
 export declare function Path(path: string): (...args: any[]) => any;
 export declare function AcceptLanguage(...languages: string[]): (...args: any[]) => any;

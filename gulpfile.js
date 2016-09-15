@@ -14,31 +14,26 @@ var babel = require('gulp-babel');
 var istanbul = require('gulp-istanbul');
 var remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
 var coverageEnforcer = require("gulp-istanbul-enforcer");
+var deleteLines = require('gulp-delete-lines');
 
 var tsProject = ts.createProject('tsconfig.json', { 
 	sortOutput: true, 
-	declaration: true,
+	declaration: false,
 	rootDir: "./src", 
 	noExternalResolve: false
 }, ts.reporter.fullReporter(true));
 
 gulp.task('compile', function() {
- 	var tsResult = gulp.src('src/lib/*.ts')
+ 	return gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(ts(tsProject));
- 
-	return merge([
-		tsResult.dts.pipe(gulp.dest('release')),
-		
-		tsResult.js
-			.pipe(babel({
-				presets: ['es2015'],
-				plugins: ['transform-runtime']
-			}))		
-			.pipe(sourcemaps.write('./')) 
-			.pipe(gulp.dest('release'))
-	]);
-});
+		.pipe(ts(tsProject))
+		.pipe(babel({
+			presets: ['es2015'],
+			plugins: ['transform-runtime']
+		}))		
+		.pipe(sourcemaps.write('./')) 
+		.pipe(gulp.dest('release'));
+ });
 
 gulp.task('clean', function() {
 	return del(['release/**/*']);
@@ -135,8 +130,30 @@ gulp.task("docs", ['docs-clean'], function() {
     ;
 });
 
+gulp.task('generate-dts', function() {
+	var tsdProject = ts.createProject('tsconfig.json', { 
+		sortOutput: true, 
+		declaration: true,
+		rootDir: "./src", 
+		noExternalResolve: false
+	}, ts.reporter.fullReporter(true));
+
+ 	var tsResult = gulp.src(['src/lib/typescript-rest.ts', 
+	 						'src/lib/server-return.ts', 
+							'src/lib/server-errors.ts', 
+							'src/lib/server-types.ts', 
+							'src/lib/server.ts', 
+							'src/lib/decorators.ts'])
+		.pipe(ts(tsdProject))
+	return tsResult.dts.pipe(deleteLines({
+      'filters': [
+          /\/\/\//i
+      ]
+    })).pipe(gulp.dest('release'));
+});
+
 gulp.task('release', function(done) {
-    runSequence('clean', 'compile', 'test', 'docs', function() {
+    runSequence('clean', 'compile', 'test', 'generate-dts', 'docs', function() {
         console.log('Release deployed.');
         done();
     });

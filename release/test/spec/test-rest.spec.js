@@ -192,14 +192,14 @@ describe("Server Tests", function () {
     });
     describe("Server", function () {
         it("should provide a catalog containing the exposed paths", function () {
-            expect(typescript_rest_1.Server.getPaths().has("/person/:id")).toEqual(true);
-            expect(typescript_rest_1.Server.getPaths().has("/headers")).toEqual(true);
-            expect(typescript_rest_1.Server.getPaths().has("/context")).toEqual(true);
-            expect(typescript_rest_1.Server.getPaths().has("/upload")).toEqual(true);
-            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.GET)).toEqual(true);
-            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").has(typescript_rest_1.HttpMethod.PUT)).toEqual(true);
-            expect(typescript_rest_1.Server.getPaths().has("/accept")).toEqual(true);
-            expect(typescript_rest_1.Server.getPaths().has("/accept/conflict")).toEqual(true);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/person/:id")).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").indexOf(typescript_rest_1.HttpMethod.GET)).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getHttpMethods("/person/:id").indexOf(typescript_rest_1.HttpMethod.PUT)).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/accept")).toBeGreaterThan(-1);
+            expect(typescript_rest_1.Server.getPaths().indexOf("/accept/conflict")).toBeGreaterThan(-1);
         });
     });
     describe("PersonService", function () {
