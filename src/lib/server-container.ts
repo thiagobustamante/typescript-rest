@@ -7,11 +7,14 @@ import * as cookieParser from "cookie-parser";
 import * as multer from "multer";
 import * as metadata from "./metadata";
 import * as Errors from "./server-errors";
+import * as StringUtils from "underscore.string";
+import {Set, StringMap} from "./es5-compat";
+
 import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
 
 export class InternalServer {
-	static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
-	static paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
+	static serverClasses: StringMap<metadata.ServiceClass> = new StringMap<metadata.ServiceClass>();
+	static paths: StringMap<Set<HttpMethod>> = new StringMap<Set<HttpMethod>>();
 	static pathsResolved: boolean = false;
 	static cookiesSecret: string;
 	static cookiesDecoder: (val: string) => string;
@@ -28,7 +31,7 @@ export class InternalServer {
 
 	static registerServiceClass(target: Function): metadata.ServiceClass {
 		InternalServer.pathsResolved = false;
-		let name: string = target.name || target.constructor.name;
+		let name: string = target['name'] || target.constructor['name'];
 		if (!InternalServer.serverClasses.has(name)) {
 			InternalServer.serverClasses.set(name, new metadata.ServiceClass(target));
 		}
@@ -282,7 +285,7 @@ export class InternalServer {
 					res.set("Location", value.location);
 					res.sendStatus(value.statusCode);
 				}
-				else if (value.then && value instanceof Promise) {
+				else if (value.then && value.constructor['name'] === 'Promise') {
 					let self = this;
 					value.then(function(val) {
 						self.sendValue(val, res, next);
@@ -355,7 +358,7 @@ export class InternalServer {
 	}
 
 	private convertType(paramValue: string, paramType: Function): any {
-		let serializedType = paramType.name;
+		let serializedType = paramType['name'];
 		switch (serializedType) {
 			case "Number":
 				return paramValue ? parseFloat(paramValue) : 0;
@@ -444,14 +447,15 @@ export class InternalServer {
 	private static resolvePath(serviceClass: metadata.ServiceClass, 
 							   serviceMethod: metadata.ServiceMethod) : void {
 		let classPath: string = serviceClass.path ? serviceClass.path.trim() : "";
-		let resolvedPath = classPath.startsWith('/') ? classPath : '/' + classPath;
-		if (resolvedPath.endsWith('/')) {
+		
+		let resolvedPath = StringUtils.startsWith(classPath,'/') ? classPath : '/' + classPath;
+		if (StringUtils.endsWith(resolvedPath, '/')) {
 			resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
 		}
 
 		if (serviceMethod.path) {
 			let methodPath: string = serviceMethod.path.trim();
-			resolvedPath = classPath + (methodPath.startsWith('/') ? methodPath : '/' + methodPath);
+			resolvedPath = classPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
 		}
 
 		let declaredHttpMethods: Set<HttpMethod> = InternalServer.paths.get(resolvedPath);

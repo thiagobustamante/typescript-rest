@@ -1,75 +1,49 @@
 "use strict";
-
-var _map = require("babel-runtime/core-js/map");
-
-var _map2 = _interopRequireDefault(_map);
-
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var ServiceClass = function () {
+var es5_compat_1 = require("./es5-compat");
+var ServiceClass = (function () {
     function ServiceClass(targetClass) {
-        (0, _classCallCheck3.default)(this, ServiceClass);
-
         this.targetClass = targetClass;
-        this.methods = new _map2.default();
+        this.methods = new es5_compat_1.StringMap();
     }
-
-    (0, _createClass3.default)(ServiceClass, [{
-        key: "addProperty",
-        value: function addProperty(key, paramType) {
-            if (!this.hasProperties()) {
-                this.properties = new _map2.default();
-            }
-            this.properties.set(key, paramType);
+    ServiceClass.prototype.addProperty = function (key, paramType) {
+        if (!this.hasProperties()) {
+            this.properties = new es5_compat_1.StringMap();
         }
-    }, {
-        key: "hasProperties",
-        value: function hasProperties() {
-            return this.properties && this.properties.size > 0;
-        }
-    }]);
+        this.properties.set(key, paramType);
+    };
+    ServiceClass.prototype.hasProperties = function () {
+        return (this.properties && this.properties.size() > 0);
+    };
     return ServiceClass;
-}();
-
+}());
 exports.ServiceClass = ServiceClass;
-
-var ServiceMethod = function ServiceMethod() {
-    (0, _classCallCheck3.default)(this, ServiceMethod);
-
-    this.parameters = new Array();
-    this.mustParseCookies = false;
-    this.files = new Array();
-    this.mustParseBody = false;
-    this.mustParseForms = false;
-};
-
+var ServiceMethod = (function () {
+    function ServiceMethod() {
+        this.parameters = new Array();
+        this.mustParseCookies = false;
+        this.files = new Array();
+        this.mustParseBody = false;
+        this.mustParseForms = false;
+    }
+    return ServiceMethod;
+}());
 exports.ServiceMethod = ServiceMethod;
-
-var FileParam = function FileParam(name, singleFile) {
-    (0, _classCallCheck3.default)(this, FileParam);
-
-    this.name = name;
-    this.singleFile = singleFile;
-};
-
+var FileParam = (function () {
+    function FileParam(name, singleFile) {
+        this.name = name;
+        this.singleFile = singleFile;
+    }
+    return FileParam;
+}());
 exports.FileParam = FileParam;
-
-var MethodParam = function MethodParam(name, type, paramType) {
-    (0, _classCallCheck3.default)(this, MethodParam);
-
-    this.name = name;
-    this.type = type;
-    this.paramType = paramType;
-};
-
+var MethodParam = (function () {
+    function MethodParam(name, type, paramType) {
+        this.name = name;
+        this.type = type;
+        this.paramType = paramType;
+    }
+    return MethodParam;
+}());
 exports.MethodParam = MethodParam;
 (function (ParamType) {
     ParamType[ParamType["path"] = 0] = "path";
@@ -88,4 +62,5 @@ exports.MethodParam = MethodParam;
     ParamType[ParamType["context_accept_language"] = 13] = "context_accept_language";
 })(exports.ParamType || (exports.ParamType = {}));
 var ParamType = exports.ParamType;
+
 //# sourceMappingURL=metadata.js.map

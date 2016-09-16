@@ -9,3 +9,5 @@
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/request/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />
+/// <reference path="globals/underscore.string/index.d.ts" />
+/// <reference path="globals/underscore/index.d.ts" />

@@ -1,146 +1,156 @@
 "use strict";
-
-var _getMetadata = require("babel-runtime/core-js/reflect/get-metadata");
-
-var _getMetadata2 = _interopRequireDefault(_getMetadata);
-
-var _typeof2 = require("babel-runtime/helpers/typeof");
-
-var _typeof3 = _interopRequireDefault(_typeof2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 var server_container_1 = require("./server-container");
 var server_types_1 = require("./server-types");
 var metadata = require("./metadata");
 require("reflect-metadata");
 function Path(path) {
     return function () {
-        if (arguments.length == 1) {
-            return PathTypeDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], path]);
-        } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
-            return PathMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], path]);
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        if (args.length == 1) {
+            return PathTypeDecorator.apply(this, [args[0], path]);
+        }
+        else if (args.length == 3 && typeof args[2] === "object") {
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
         throw new Error("Invalid @Path Decorator declaration.");
     };
 }
 exports.Path = Path;
 function AcceptLanguage() {
-    for (var _len = arguments.length, languages = Array(_len), _key = 0; _key < _len; _key++) {
-        languages[_key] = arguments[_key];
+    var languages = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        languages[_i - 0] = arguments[_i];
     }
-
     return function () {
-        if (arguments.length == 1) {
-            return AcceptLanguageTypeDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], languages]);
-        } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
-            return AcceptLanguageMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], languages]);
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        if (args.length == 1) {
+            return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
+        }
+        else if (args.length == 3 && typeof args[2] === "object") {
+            return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
         }
         throw new Error("Invalid @AcceptLanguage Decorator declaration.");
     };
 }
 exports.AcceptLanguage = AcceptLanguage;
 function Accept() {
-    for (var _len2 = arguments.length, accepts = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        accepts[_key2] = arguments[_key2];
+    var accepts = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        accepts[_i - 0] = arguments[_i];
     }
-
     return function () {
-        if (arguments.length == 1) {
-            return AcceptTypeDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], accepts]);
-        } else if (arguments.length == 3 && (0, _typeof3.default)(arguments.length <= 2 ? undefined : arguments[2]) === "object") {
-            return AcceptMethodDecorator.apply(this, [arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], accepts]);
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        if (args.length == 1) {
+            return AcceptTypeDecorator.apply(this, [args[0], accepts]);
+        }
+        else if (args.length == 3 && typeof args[2] === "object") {
+            return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
         }
         throw new Error("Invalid @Accept Decorator declaration.");
     };
 }
 exports.Accept = Accept;
 function Context() {
-    for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs = args.concat([metadata.ParamType.context, null]);
-        return processDecoratedParameter.apply(this, _newArgs);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @Context Decorator declaration.");
 }
 exports.Context = Context;
 function ContextRequest() {
-    for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_request]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs2 = args.concat([metadata.ParamType.context_request, null]);
-        return processDecoratedParameter.apply(this, _newArgs2);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context_request, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @ContextRequest Decorator declaration.");
 }
 exports.ContextRequest = ContextRequest;
 function ContextResponse() {
-    for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_response]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs3 = args.concat([metadata.ParamType.context_response, null]);
-        return processDecoratedParameter.apply(this, _newArgs3);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context_response, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @ContextResponse Decorator declaration.");
 }
 exports.ContextResponse = ContextResponse;
 function ContextNext() {
-    for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-        args[_key6] = arguments[_key6];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_next]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs4 = args.concat([metadata.ParamType.context_next, null]);
-        return processDecoratedParameter.apply(this, _newArgs4);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context_next, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @ContextNext Decorator declaration.");
 }
 exports.ContextNext = ContextNext;
 function ContextLanguage() {
-    for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-        args[_key7] = arguments[_key7];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_accept_language]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs5 = args.concat([metadata.ParamType.context_accept_language, null]);
-        return processDecoratedParameter.apply(this, _newArgs5);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @ContextLanguage Decorator declaration.");
 }
 exports.ContextLanguage = ContextLanguage;
 function ContextAccept() {
-    for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-        args[_key8] = arguments[_key8];
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i - 0] = arguments[_i];
     }
-
     if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length == 3 && typeof args[2] === "number") {
-        var _newArgs6 = args.concat([metadata.ParamType.context_accept, null]);
-        return processDecoratedParameter.apply(this, _newArgs6);
+    }
+    else if (args.length == 3 && typeof args[2] === "number") {
+        var newArgs = args.concat([metadata.ParamType.context_accept, null]);
+        return processDecoratedParameter.apply(this, newArgs);
     }
     throw new Error("Invalid @ContextAccept Decorator declaration.");
 }
@@ -248,7 +258,7 @@ function PathMethodDecorator(target, propertyKey, descriptor, path) {
 function processDecoratedParameter(target, propertyKey, parameterIndex, paramType, name) {
     var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
-        var paramTypes = (0, _getMetadata2.default)("design:paramtypes", target, propertyKey);
+        var paramTypes = Reflect.getOwnMetadata("design:paramtypes", target, propertyKey);
         while (serviceMethod.parameters.length < paramTypes.length) {
             serviceMethod.parameters.push(new metadata.MethodParam(null, paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
         }
@@ -263,7 +273,9 @@ function processHttpVerb(target, propertyKey, httpMethod) {
     var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target, propertyKey);
     if (serviceMethod) {
         if (serviceMethod.httpMethod) {
-            throw new Error("Method is already annotated with @" + serviceMethod.httpMethod + ". You can only map a method to one HTTP verb.");
+            throw new Error("Method is already annotated with @" +
+                serviceMethod.httpMethod +
+                ". You can only map a method to one HTTP verb.");
         }
         serviceMethod.httpMethod = httpMethod;
         processServiceMethod(target, propertyKey, serviceMethod);
@@ -271,23 +283,27 @@ function processHttpVerb(target, propertyKey, httpMethod) {
 }
 function processServiceMethod(target, propertyKey, serviceMethod) {
     serviceMethod.name = propertyKey;
-    var paramTypes = (0, _getMetadata2.default)("design:paramtypes", target, propertyKey);
+    var paramTypes = Reflect.getOwnMetadata("design:paramtypes", target, propertyKey);
     while (paramTypes.length > serviceMethod.parameters.length) {
         serviceMethod.parameters.push(new metadata.MethodParam(null, paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
     }
     serviceMethod.parameters.forEach(function (param) {
         if (param.paramType == metadata.ParamType.cookie) {
             serviceMethod.mustParseCookies = true;
-        } else if (param.paramType == metadata.ParamType.file) {
+        }
+        else if (param.paramType == metadata.ParamType.file) {
             serviceMethod.files.push(new metadata.FileParam(param.name, true));
-        } else if (param.paramType == metadata.ParamType.files) {
+        }
+        else if (param.paramType == metadata.ParamType.files) {
             serviceMethod.files.push(new metadata.FileParam(param.name, false));
-        } else if (param.paramType == metadata.ParamType.form) {
+        }
+        else if (param.paramType == metadata.ParamType.form) {
             if (serviceMethod.mustParseBody) {
                 throw Error("Can not use form parameters with a body parameter on the same method.");
             }
             serviceMethod.mustParseForms = true;
-        } else if (param.paramType == metadata.ParamType.body) {
+        }
+        else if (param.paramType == metadata.ParamType.body) {
             if (serviceMethod.mustParseForms) {
                 throw Error("Can not use form parameters with a body parameter on the same method.");
             }
@@ -298,4 +314,5 @@ function processServiceMethod(target, propertyKey, serviceMethod) {
         }
     });
 }
+
 //# sourceMappingURL=decorators.js.map

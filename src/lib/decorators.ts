@@ -750,7 +750,7 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
 	paramType: metadata.ParamType, name: string) {
 	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
 	if (serviceMethod) { // does not intercept constructor
-		let paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
+		let paramTypes = Reflect.getOwnMetadata("design:paramtypes", target, propertyKey);
 
 		while (serviceMethod.parameters.length < paramTypes.length) {
 			serviceMethod.parameters.push(new metadata.MethodParam(null, 
@@ -791,7 +791,7 @@ function processHttpVerb(target: any, propertyKey: string,
  */
 function processServiceMethod(target: any, propertyKey: string, serviceMethod: metadata.ServiceMethod) {
 	serviceMethod.name = propertyKey;
-	let paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
+	let paramTypes = Reflect.getOwnMetadata("design:paramtypes", target, propertyKey);
 	while (paramTypes.length > serviceMethod.parameters.length) {
 		serviceMethod.parameters.push(new metadata.MethodParam(null,
 			paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));

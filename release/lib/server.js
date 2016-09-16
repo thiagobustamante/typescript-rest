@@ -1,70 +1,35 @@
 "use strict";
-
-var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 var server_container_1 = require("./server-container");
-
-var Server = function () {
+var Server = (function () {
     function Server() {
-        (0, _classCallCheck3.default)(this, Server);
     }
-
-    (0, _createClass3.default)(Server, null, [{
-        key: "buildServices",
-        value: function buildServices(router) {
-            var iternalServer = new server_container_1.InternalServer(router);
-            iternalServer.buildServices();
-        }
-    }, {
-        key: "getPaths",
-        value: function getPaths() {
-            return [].concat((0, _toConsumableArray3.default)(server_container_1.InternalServer.getPaths()));
-        }
-    }, {
-        key: "getHttpMethods",
-        value: function getHttpMethods(path) {
-            return [].concat((0, _toConsumableArray3.default)(server_container_1.InternalServer.getHttpMethods(path)));
-        }
-    }, {
-        key: "setCookiesSecret",
-        value: function setCookiesSecret(secret) {
-            server_container_1.InternalServer.cookiesSecret = secret;
-        }
-    }, {
-        key: "setCookiesDecoder",
-        value: function setCookiesDecoder(decoder) {
-            server_container_1.InternalServer.cookiesDecoder = decoder;
-        }
-    }, {
-        key: "setFileDest",
-        value: function setFileDest(dest) {
-            server_container_1.InternalServer.fileDest = dest;
-        }
-    }, {
-        key: "setFileFilter",
-        value: function setFileFilter(filter) {
-            server_container_1.InternalServer.fileFilter = filter;
-        }
-    }, {
-        key: "setFileLimits",
-        value: function setFileLimits(limit) {
-            server_container_1.InternalServer.fileLimits = limit;
-        }
-    }]);
+    Server.buildServices = function (router) {
+        var iternalServer = new server_container_1.InternalServer(router);
+        iternalServer.buildServices();
+    };
+    Server.getPaths = function () {
+        return server_container_1.InternalServer.getPaths().asArray();
+    };
+    Server.getHttpMethods = function (path) {
+        return server_container_1.InternalServer.getHttpMethods(path).asArray();
+    };
+    Server.setCookiesSecret = function (secret) {
+        server_container_1.InternalServer.cookiesSecret = secret;
+    };
+    Server.setCookiesDecoder = function (decoder) {
+        server_container_1.InternalServer.cookiesDecoder = decoder;
+    };
+    Server.setFileDest = function (dest) {
+        server_container_1.InternalServer.fileDest = dest;
+    };
+    Server.setFileFilter = function (filter) {
+        server_container_1.InternalServer.fileFilter = filter;
+    };
+    Server.setFileLimits = function (limit) {
+        server_container_1.InternalServer.fileLimits = limit;
+    };
     return Server;
-}();
-
+}());
 exports.Server = Server;
+
 //# sourceMappingURL=server.js.map

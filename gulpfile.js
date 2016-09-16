@@ -10,7 +10,6 @@ var rename = require('gulp-rename');
 var jasmine = require('gulp-jasmine');
 var JasmineConsoleReporter = require('jasmine-console-reporter');
 var typedoc = require("gulp-typedoc");
-var babel = require('gulp-babel');
 var istanbul = require('gulp-istanbul');
 var remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
 var coverageEnforcer = require("gulp-istanbul-enforcer");
@@ -27,10 +26,6 @@ gulp.task('compile', function() {
  	return gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(ts(tsProject))
-		.pipe(babel({
-			presets: ['es2015'],
-			plugins: ['transform-runtime']
-		}))		
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release'));
  });
@@ -47,10 +42,6 @@ gulp.task('test-compile', function(done) {
  	return gulp.src('src/spec/test-*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(ts(tsProject))
-		.pipe(babel({
-			presets: ['es2015'],
-			plugins: ['transform-runtime']
-		}))		
 		.pipe(rename({ extname: '.spec.js' }))
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release/test'));
@@ -60,10 +51,6 @@ gulp.task('test-coverage', function(done) {
  	return gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(ts(tsProject))
-		.pipe(babel({
-			presets: ['es2015'],
-			plugins: ['transform-runtime']
-		}))		
 		.pipe(istanbul())
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release/test'));
@@ -142,7 +129,8 @@ gulp.task('generate-dts', function() {
 	 						'src/lib/server-return.ts', 
 							'src/lib/server-errors.ts', 
 							'src/lib/server-types.ts', 
-							'src/lib/server.ts', 
+							'src/lib/server.ts',
+							'src/lib/es5-compat.ts', 
 							'src/lib/decorators.ts'])
 		.pipe(ts(tsdProject))
 	return tsResult.dts.pipe(deleteLines({

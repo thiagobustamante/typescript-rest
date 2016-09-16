@@ -1,15 +1,13 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
+        "target": "es5",
         "noImplicitAny": false,
         "rootDir": "./src",
         "outDir": "./release",
         "removeComments": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true, 
-        "noResolve": false,
-        "isolatedModules": false
+        "emitDecoratorMetadata": true 
     },
     "exclude": [
         "node_modules",

@@ -1,23 +1,9 @@
 "use strict";
-
-var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
-
-var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
-
-var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
-
-var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
-
-var _inherits2 = require("babel-runtime/helpers/inherits");
-
-var _inherits3 = _interopRequireDefault(_inherits2);
-
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (HttpMethod) {
     HttpMethod[HttpMethod["GET"] = 0] = "GET";
     HttpMethod[HttpMethod["POST"] = 1] = "POST";
@@ -28,39 +14,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     HttpMethod[HttpMethod["PATCH"] = 6] = "PATCH";
 })(exports.HttpMethod || (exports.HttpMethod = {}));
 var HttpMethod = exports.HttpMethod;
-
-var ServiceContext = function ServiceContext() {
-    (0, _classCallCheck3.default)(this, ServiceContext);
-};
-
-exports.ServiceContext = ServiceContext;
-
-var HttpError = function (_Error) {
-    (0, _inherits3.default)(HttpError, _Error);
-
-    function HttpError(name, statusCode, message) {
-        (0, _classCallCheck3.default)(this, HttpError);
-
-        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(HttpError).call(this, message));
-
-        _this.statusCode = statusCode;
-        _this.message = message;
-        _this.name = name;
-        _this.stack = new Error().stack;
-        return _this;
+var ServiceContext = (function () {
+    function ServiceContext() {
     }
-
+    return ServiceContext;
+}());
+exports.ServiceContext = ServiceContext;
+var HttpError = (function (_super) {
+    __extends(HttpError, _super);
+    function HttpError(name, statusCode, message) {
+        _super.call(this, message);
+        this.statusCode = statusCode;
+        this.message = message;
+        this.name = name;
+        this.stack = (new Error()).stack;
+    }
     return HttpError;
-}(Error);
-
+}(Error));
 exports.HttpError = HttpError;
-
-var ReferencedResource = function ReferencedResource(location, statusCode) {
-    (0, _classCallCheck3.default)(this, ReferencedResource);
-
-    this.location = location;
-    this.statusCode = statusCode;
-};
-
+var ReferencedResource = (function () {
+    function ReferencedResource(location, statusCode) {
+        this.location = location;
+        this.statusCode = statusCode;
+    }
+    return ReferencedResource;
+}());
 exports.ReferencedResource = ReferencedResource;
+
 //# sourceMappingURL=server-types.js.map
