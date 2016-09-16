@@ -106,7 +106,22 @@ expressjs.
 
 ### Server
 
-TBD
+The Server class is used to configure the server, like: 
+
+```typescript
+let app: express.Application = express();
+Server.setFileDest('/uploads');
+Server.buildServices(app);
+app.listen(3000, function() {
+  console.log('Rest Server listening on port 3000!');
+});
+```
+
+Note that Server receives an ```express.Router``` instance. Then it configures
+all the routes based on the decorators used on your classes.
+
+So, you can use also any other expressjs feature, like error handlers, middlewares etc 
+without any restriction.  
 
 ### @Path Decorator
 

@@ -147,7 +147,18 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 				<p>This library allows you to use ES7 decorators to configure your services using
 				expressjs. </p>
 				<h3 id="server">Server</h3>
-				<p>TBD</p>
+				<p>The Server class is used to configure the server, like: </p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">let</span> app: express.Application = express();
+Server.setFileDest(<span class="hljs-string">'/uploads'</span>);
+Server.buildServices(app);
+app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Rest Server listening on port 3000!'</span>);
+});
+</code></pre>
+				<p>Note that Server receives an <code>express.Router</code> instance. Then it configures
+				all the routes based on the decorators used on your classes.</p>
+				<p>So, you can use also any other expressjs feature, like error handlers, middlewares etc
+				without any restriction.  </p>
 				<h3 id="-path-decorator">@Path Decorator</h3>
 				<p>The @Path decorator allow us to define a router path for a given endpoint.
 					Route paths, in combination with a request method, define the endpoints at
