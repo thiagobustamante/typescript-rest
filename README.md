@@ -1,7 +1,3 @@
-It is an work in progress. We have no releases yet. We are finishing the library documentantion 
-to release our first beta release.
-
-
 # REST Services for Typescript
 This is a lightweight annotation-based [expressjs](http://expressjs.com/) extension for typescript.
 

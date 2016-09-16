@@ -1,6 +1,6 @@
 {
   "name": "typescript-rest",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "dependencies": {
