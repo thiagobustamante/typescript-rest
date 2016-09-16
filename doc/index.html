@@ -110,8 +110,19 @@
   }
 }
 </code></pre>
+				<p>You need also to install declaration files for express (.d.ts files).
+				Use [typings][<a href="https://www.npmjs.com/package/typings">https://www.npmjs.com/package/typings</a>] to get the files.</p>
+				<pre><code class="lang-bash">typings install dt~serve-static --global --save
+typings install dt~express-serve-static-core --global --save
+typings install dt~express --global --save
+</code></pre>
+				<p>If you need to handle file parameters, install also:</p>
+				<pre><code class="lang-bash">typings install dt~multer --global --save
+</code></pre>
 				<h2 id="basic-usage">Basic Usage</h2>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * as express from <span class="hljs-string">"express"</span>;
+				<pre><code class="lang-typescript"><span class="hljs-comment">/// &lt;reference path="typings/index.d.ts" /&gt;</span>
+
+<span class="hljs-keyword">import</span> * as express from <span class="hljs-string">"express"</span>;
 <span class="hljs-keyword">import</span> {Server, Path, GET, PathParam} from <span class="hljs-string">"typescript-rest"</span>;
 
 @Path(<span class="hljs-string">"/hello"</span>)

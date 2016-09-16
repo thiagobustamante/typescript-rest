@@ -52,9 +52,26 @@ Typescript-rest requires the following TypeScript compilation options in your ts
 }
 ```
 
+You need also to install declaration files for express (.d.ts files). 
+Use [typings][https://www.npmjs.com/package/typings] to get the files.
+
+```bash
+typings install dt~serve-static --global --save
+typings install dt~express-serve-static-core --global --save
+typings install dt~express --global --save
+```
+
+If you need to handle file parameters, install also:
+
+```bash
+typings install dt~multer --global --save
+```
+
 ## Basic Usage
 
 ```typescript
+/// <reference path="typings/index.d.ts" />
+
 import * as express from "express";
 import {Server, Path, GET, PathParam} from "typescript-rest";
 
@@ -448,6 +465,7 @@ NewResource | Inform that a new resource was created. Server will add a Location
 RequestAccepted | Inform that the request was accepted but is not completed. A Location header should inform the location where the user can monitor his request processing status. Server will set the status to 202 
 MovedPermanently | Inform that the resource has permanently moved to a new location, and that future references should use a new URI with their requests. Server will set the status to 301 
 MovedTemporarily | Inform that the resource has temporarily moved to another location, but that future references should still use the original URI to access the resource. Server will set the status to 302 
+
 
 ```typescript
 import {Return} from "typescript-rest";
