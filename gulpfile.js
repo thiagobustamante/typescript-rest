@@ -118,10 +118,9 @@ gulp.task("docs", ['docs-clean'], function() {
 
 gulp.task('generate-dts', function() {
 	var tsdProject = ts.createProject('tsconfig.json', { 
-		sortOutput: true, 
 		declaration: true,
 		rootDir: "./src", 
-		noExternalResolve: false
+		noResolve: false
 	}, ts.reporter.fullReporter(true));
 
  	var tsResult = gulp.src(['src/lib/typescript-rest.ts', 
@@ -131,7 +130,7 @@ gulp.task('generate-dts', function() {
 							'src/lib/server.ts',
 							'src/lib/es5-compat.ts', 
 							'src/lib/decorators.ts'])
-		.pipe(ts(tsdProject))
+		.pipe(tsdProject())
 	return tsResult.dts.pipe(deleteLines({
       'filters': [
           /\/\/\//i
