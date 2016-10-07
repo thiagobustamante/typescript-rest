@@ -18,7 +18,7 @@ export declare class ServiceContext {
 export declare abstract class HttpError extends Error {
     statusCode: number;
     message: string;
-    constructor(name: string, statusCode: number, message?: string);
+    constructor(name: string, statusCode: number, message: string);
 }
 export declare abstract class ReferencedResource {
     location: string;

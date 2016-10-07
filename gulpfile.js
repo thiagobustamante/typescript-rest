@@ -26,7 +26,7 @@ gulp.task('build', function() {
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(tsProject())
 		.pipe(sourcemaps.write('./')) 
-		.pipe(gulp.dest('release'));
+		.pipe(gulp.dest('release/lib'));
  });
 
 gulp.task('clean', function() {
@@ -43,7 +43,7 @@ gulp.task('test-build', function(done) {
 		.pipe(tsProject())
 		.pipe(rename({ extname: '.spec.js' }))
 		.pipe(sourcemaps.write('./')) 
-		.pipe(gulp.dest('release/test'));
+		.pipe(gulp.dest('release/test/spec'));
 });
 
 gulp.task('test-coverage', function(done) {
@@ -52,7 +52,7 @@ gulp.task('test-coverage', function(done) {
 		.pipe(tsProject())
 		.pipe(istanbul())
 		.pipe(sourcemaps.write('./')) 
-		.pipe(gulp.dest('release/test'));
+		.pipe(gulp.dest('release/test/lib'));
 });
 
 gulp.task('remap-istanbul-reports', function () {
@@ -135,7 +135,7 @@ gulp.task('generate-dts', function() {
       'filters': [
           /\/\/\//i
       ]
-    })).pipe(gulp.dest('release'));
+    })).pipe(gulp.dest('release/lib'));
 });
 
 gulp.task('release', function(done) {
