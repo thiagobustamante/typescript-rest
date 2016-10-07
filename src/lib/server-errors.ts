@@ -9,7 +9,7 @@ import {HttpError} from "./server-types";
  */
 export class BadRequestError extends HttpError {
 	constructor(message?: string) {
-		super("BadRequestError", 400, message);
+		super("BadRequestError", 400, message || "Bad Request");
 	}
 }
 
@@ -20,7 +20,7 @@ export class BadRequestError extends HttpError {
  */
 export class UnauthorizedError extends HttpError {
 	constructor(message?: string) {
-		super("UnauthorizedError", 401, message);
+		super("UnauthorizedError", 401, message || "Unauthorized");
 	}
 }
 
@@ -30,7 +30,7 @@ export class UnauthorizedError extends HttpError {
  */
 export class ForbidenError extends HttpError {
 	constructor(message?: string) {
-		super("ForbidenError", 403, message);
+		super("ForbidenError", 403, message || "Forbiden");
 	}
 }
 
@@ -47,7 +47,7 @@ export class ForbidenError extends HttpError {
  */
 export class NotFoundError extends HttpError {
 	constructor(message?: string) {
-		super("NotFoundError", 404, message);
+		super("NotFoundError", 404, message || "Not Found");
 	}
 }
 
@@ -58,7 +58,7 @@ export class NotFoundError extends HttpError {
  */
 export class MethodNotAllowedError extends HttpError {
 	constructor(message?: string) {
-		super("MethodNotAllowedError", 405, message);
+		super("MethodNotAllowedError", 405, message || "Method Not Allowed");
 	}
 }
 
@@ -69,7 +69,7 @@ export class MethodNotAllowedError extends HttpError {
  */
 export class NotAcceptableError extends HttpError {
 	constructor(message?: string) {
-		super("NotAcceptableError", 406, message);
+		super("NotAcceptableError", 406, message || "Not Acceptable");
 	}
 }
 /**
@@ -78,7 +78,7 @@ export class NotAcceptableError extends HttpError {
  */
 export class ConflictError extends HttpError {
 	constructor(message?: string) {
-		super("ConflictError", 409, message);
+		super("ConflictError", 409, message || "Conflict");
 	}
 }
 
@@ -93,7 +93,7 @@ export class ConflictError extends HttpError {
  */
 export class GoneError extends HttpError {
 	constructor(message?: string) {
-		super("GoneError", 410, message);
+		super("GoneError", 410, message || "Gone");
 	}
 }
 
@@ -104,7 +104,7 @@ export class GoneError extends HttpError {
  */
 export class UnsupportedMediaTypeError extends HttpError {
 	constructor(message?: string) {
-		super("GoneError", 415, message);
+		super("UnsupportedMediaTypeError", 415, message || "Unsupported Media Type");
 	}
 }
 
@@ -114,7 +114,7 @@ export class UnsupportedMediaTypeError extends HttpError {
  */
 export class InternalServerError extends HttpError {
 	constructor(message?: string) {
-		super("InternalServerError", 500, message);
+		super("InternalServerError", 500, message || "Internal Server Error");
 	}
 }
 
@@ -125,6 +125,6 @@ export class InternalServerError extends HttpError {
  */
 export class NotImplementedError extends HttpError {
 	constructor(message?: string) {
-		super("NotImplementedError", 501, message);
+		super("NotImplementedError", 501, message|| "Not Implemented");
 	}
 }

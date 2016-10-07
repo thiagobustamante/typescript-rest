@@ -16,16 +16,15 @@ var coverageEnforcer = require("gulp-istanbul-enforcer");
 var deleteLines = require('gulp-delete-lines');
 
 var tsProject = ts.createProject('tsconfig.json', { 
-	sortOutput: true, 
 	declaration: false,
 	rootDir: "./src", 
-	noExternalResolve: false
+	noResolve: false
 }, ts.reporter.fullReporter(true));
 
-gulp.task('compile', function() {
+gulp.task('build', function() {
  	return gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(ts(tsProject))
+		.pipe(tsProject())
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release'));
  });
@@ -38,10 +37,10 @@ gulp.task('docs-clean', function() {
 	return del(['doc/']);
 });
 
-gulp.task('test-compile', function(done) {
+gulp.task('test-build', function(done) {
  	return gulp.src('src/spec/test-*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(ts(tsProject))
+		.pipe(tsProject())
 		.pipe(rename({ extname: '.spec.js' }))
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release/test'));
@@ -50,7 +49,7 @@ gulp.task('test-compile', function(done) {
 gulp.task('test-coverage', function(done) {
  	return gulp.src('src/lib/*.ts')
 		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(ts(tsProject))
+		.pipe(tsProject())
 		.pipe(istanbul())
 		.pipe(sourcemaps.write('./')) 
 		.pipe(gulp.dest('release/test'));
@@ -86,7 +85,7 @@ gulp.task('test-run', function() {
 });
 
 gulp.task('test', function(done) {
-    runSequence('test-compile', 'test-coverage', 'test-run', 
+    runSequence('test-build', 'test-coverage', 'test-run', 
 				'remap-istanbul-reports', function() {
         console.log('Release tested.');
         done();
@@ -141,12 +140,12 @@ gulp.task('generate-dts', function() {
 });
 
 gulp.task('release', function(done) {
-    runSequence('clean', 'compile', 'test', 'generate-dts', 'docs', function() {
+    runSequence('clean', 'build', 'test', 'generate-dts', 'docs', function() {
         console.log('Release deployed.');
         done();
     });
 });
 
-gulp.task('watch', ['compile'], function() {
-    gulp.watch('src/**/*.ts', ['compile']);
+gulp.task('watch', ['build'], function() {
+    gulp.watch('src/**/*.ts', ['build']);
 });

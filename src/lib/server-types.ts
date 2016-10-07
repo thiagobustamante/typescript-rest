@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 "use strict";
 
 import * as express from "express"; 
@@ -49,7 +48,7 @@ export class ServiceContext {
 export abstract class HttpError extends Error {
   constructor(name: string, 
   			  public statusCode: number, 
-  			  public message?: string) {
+  			  public message: string) {
     super(message);
     this.name = name;
     this.stack = (<any> new Error()).stack;

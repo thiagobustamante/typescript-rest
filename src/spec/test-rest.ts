@@ -1,4 +1,4 @@
-/// <reference path="../../typings/index.d.ts" />
+"use strict";
 
 import * as express from "express";
 import * as request from 'request';
