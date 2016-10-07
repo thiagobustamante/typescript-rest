@@ -232,7 +232,8 @@ var InternalServer = (function () {
         this.checkAcceptance(serviceMethod, context);
         var serviceObject = this.createService(serviceClass, context);
         var args = this.buildArgumentsList(serviceMethod, context);
-        var result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+        var toCall = serviceClass.targetClass.prototype[serviceMethod.name] || serviceClass.targetClass[serviceMethod.name];
+        var result = toCall.apply(serviceObject, args);
         this.processResponseHeaders(serviceMethod, context);
         this.sendValue(result, res, next);
     };
@@ -404,7 +405,7 @@ var InternalServer = (function () {
         }
         if (serviceMethod.path) {
             var methodPath = serviceMethod.path.trim();
-            resolvedPath = classPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
+            resolvedPath = resolvedPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
         }
         var declaredHttpMethods = InternalServer.paths.get(resolvedPath);
         if (!declaredHttpMethods) {

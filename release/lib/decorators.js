@@ -270,7 +270,7 @@ function processDecoratedProperty(target, key, paramType) {
     classData.addProperty(key, paramType);
 }
 function processHttpVerb(target, propertyKey, httpMethod) {
-    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target, propertyKey);
+    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         if (serviceMethod.httpMethod) {
             throw new Error("Method is already annotated with @" +

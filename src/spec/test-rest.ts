@@ -23,7 +23,15 @@ class Person {
 	age: number;
 }
 
-@Path("/person")
+@Path("mypath")
+class MyService {
+	@GET
+	test( ): string {
+		return "OK";
+	}
+}
+
+@Path("/asubpath/person")
 class PersonService {
 	@Path(":id")
 	@GET
@@ -136,8 +144,8 @@ class AcceptTest {
 
 let app: express.Application = express();
 app.set('env', 'test');
-Server.buildServices(app, PersonService);
-Server.buildServices(app, PersonService, TestParams, AcceptTest);
+Server.buildServices(app);
+//Server.buildServices(app, PersonService, TestParams, AcceptTest);
 
 let server;
 describe("Server Tests", () => {
@@ -152,30 +160,31 @@ describe("Server Tests", () => {
 
 	describe("Server", () => {
 		it("should provide a catalog containing the exposed paths", () => {
-			expect(Server.getPaths().indexOf("/person/:id")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
-			expect(Server.getHttpMethods("/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
-			expect(Server.getHttpMethods("/person/:id").indexOf(HttpMethod.PUT)).toBeGreaterThan(-1);
+			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
+			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.PUT)).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/accept")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/accept/conflict")).toBeGreaterThan(-1);
 		});
 	});
 
 	describe("PersonService", () => {
-		it("should return the person (123) for GET on path: /person/123", (done) => {
-			request("http://localhost:3000/person/123", function(error, response, body) {
+		it("should return the person (123) for GET on path: /asubpath/person/123", (done) => {
+			request("http://localhost:3000/asubpath/person/123", function(error, response, body) {
 				let result: Person = JSON.parse(body);
 				expect(result.id).toEqual(123);
 				done();
 			});
 		});
 	
-		it("should return true for PUT on path: /person/123", (done) => {
+		it("should return true for PUT on path: /asubpath/person/123", (done) => {
 			request.put({ 
 				headers: { 'content-type': 'application/json' },
-				url: "http://localhost:3000/person/123", 
+				url: "http://localhost:3000/asubpath/person/123", 
 				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
 			}, function(error, response, body) {
 				expect(body).toEqual("true");
@@ -183,26 +192,36 @@ describe("Server Tests", () => {
 			});
 		});
 
-		it("should return 201 for POST on path: /person", (done) => {
+		it("should return 201 for POST on path: /asubpath/person", (done) => {
 			request.post({ 
 				headers: { 'content-type': 'application/json' },
-				url: "http://localhost:3000/person", 
+				url: "http://localhost:3000/asubpath/person", 
 				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(201);
-				expect(response.headers['location']).toEqual("/person/123");
+				expect(response.headers['location']).toEqual("/asubpath/person/123");
 				done();
 			});
 		});
 
-		it("should return an array with 3 elements for GET on path: /person?start=0&size=3", (done) => {
-			request("http://localhost:3000/person?start=0&size=3", function(error, response, body) {
+		it("should return an array with 3 elements for GET on path: /asubpath/person?start=0&size=3", (done) => {
+			request("http://localhost:3000/asubpath/person?start=0&size=3", function(error, response, body) {
 				let result: Array<Person> = JSON.parse(body);
 				expect(result.length).toEqual(3);
 				done();
 			});
 		});
 	});
+
+	describe("MyService", () => {
+		it("should configure a path without an initial /", (done) => {
+			request("http://localhost:3000/mypath", function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});
+	});
+
 
 	describe("TestParams", () => {
 		it("should parse header and cookies correclty", (done) => {
@@ -317,7 +336,7 @@ describe("Server Tests", () => {
 
 		it("should return 405 when a not supported method is requeted to a mapped resource", (done) => {
 			request.post({
-				url: "http://localhost:3000/person/123"				
+				url: "http://localhost:3000/asubpath/person/123"				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(405);
 				let allowed: string = response.headers['allow'];

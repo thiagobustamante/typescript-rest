@@ -267,7 +267,8 @@ export class InternalServer {
 		this.checkAcceptance(serviceMethod, context);
 		let serviceObject = this.createService(serviceClass, context);
 		let args = this.buildArgumentsList(serviceMethod, context);
-		let result = serviceClass.targetClass.prototype[serviceMethod.name].apply(serviceObject, args);
+		let toCall = serviceClass.targetClass.prototype[serviceMethod.name] || serviceClass.targetClass[serviceMethod.name];
+		let result = toCall.apply(serviceObject, args);
 		this.processResponseHeaders(serviceMethod, context);
 		this.sendValue(result, res, next);
 	}
@@ -463,7 +464,7 @@ export class InternalServer {
 
 		if (serviceMethod.path) {
 			let methodPath: string = serviceMethod.path.trim();
-			resolvedPath = classPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
+			resolvedPath = resolvedPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
 		}
 
 		let declaredHttpMethods: Set<HttpMethod> = InternalServer.paths.get(resolvedPath);

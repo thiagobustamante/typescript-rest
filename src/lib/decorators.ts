@@ -774,7 +774,7 @@ function processDecoratedProperty(target: Function, key: string, paramType: meta
  */
 function processHttpVerb(target: any, propertyKey: string,
 	httpMethod: HttpMethod) {
-	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
 		if (serviceMethod.httpMethod) {
 			throw new Error("Method is already annotated with @" +
