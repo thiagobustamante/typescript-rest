@@ -4,8 +4,12 @@ var Server = (function () {
     function Server() {
     }
     Server.buildServices = function (router) {
+        var types = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            types[_i - 1] = arguments[_i];
+        }
         var iternalServer = new server_container_1.InternalServer(router);
-        iternalServer.buildServices();
+        iternalServer.buildServices(types);
     };
     Server.getPaths = function () {
         return server_container_1.InternalServer.getPaths().asArray();

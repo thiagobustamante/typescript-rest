@@ -32,11 +32,13 @@ var InternalServer = (function () {
         }
         return null;
     };
-    InternalServer.prototype.buildServices = function () {
+    InternalServer.prototype.buildServices = function (types) {
         var _this = this;
         InternalServer.serverClasses.forEach(function (classData) {
             classData.methods.forEach(function (method) {
-                _this.buildService(classData, method);
+                if (_this.validateTargetType(classData.targetClass, types)) {
+                    _this.buildService(classData, method);
+                }
             });
         });
         InternalServer.pathsResolved = true;
@@ -79,6 +81,12 @@ var InternalServer = (function () {
             default:
                 throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");
         }
+    };
+    InternalServer.prototype.validateTargetType = function (targetClass, types) {
+        if (types && types.length > 0) {
+            return (types.indexOf(targetClass) > -1);
+        }
+        return true;
     };
     InternalServer.prototype.handleNotAllowedMethods = function () {
         var _this = this;

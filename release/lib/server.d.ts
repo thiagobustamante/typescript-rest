@@ -1,7 +1,7 @@
 import * as express from "express";
 import { HttpMethod } from "./server-types";
 export declare class Server {
-    static buildServices(router: express.Router): void;
+    static buildServices(router: express.Router, ...types: any[]): void;
     static getPaths(): Array<string>;
     static getHttpMethods(path: string): Array<HttpMethod>;
     static setCookiesSecret(secret: string): void;

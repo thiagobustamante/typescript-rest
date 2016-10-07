@@ -136,7 +136,8 @@ class AcceptTest {
 
 let app: express.Application = express();
 app.set('env', 'test');
-Server.buildServices(app);
+Server.buildServices(app, PersonService);
+Server.buildServices(app, PersonService, TestParams, AcceptTest);
 
 let server;
 describe("Server Tests", () => {

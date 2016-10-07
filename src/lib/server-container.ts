@@ -51,10 +51,12 @@ export class InternalServer {
 		return null;
 	}
 
-	buildServices() {
+	buildServices(types?: Array<Function>) {
 		InternalServer.serverClasses.forEach(classData => { 
 			classData.methods.forEach(method => {
-				this.buildService(classData, method);
+				if (this.validateTargetType(classData.targetClass, types)) {
+					this.buildService(classData, method);
+				}
 			});
 		});
 		InternalServer.pathsResolved = true;
@@ -100,6 +102,13 @@ export class InternalServer {
 		 	default:
 				throw Error("Invalid http method for service [" + serviceMethod.resolvedPath + "]");
 		 }
+	}
+
+	private validateTargetType(targetClass: Function, types: Array<Function>): boolean {
+		if (types && types.length > 0){
+			return (types.indexOf(targetClass) > -1);
+		}
+		return true
 	}
 
 	private handleNotAllowedMethods() {

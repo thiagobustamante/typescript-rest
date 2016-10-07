@@ -11,9 +11,9 @@ export class Server {
 	/**
 	 * Create the routes for all classes decorated with our decorators
 	 */
-	static buildServices(router: express.Router) {
+	static buildServices(router: express.Router, ...types) {
 		let iternalServer: InternalServer = new InternalServer(router);
-		iternalServer.buildServices();
+		iternalServer.buildServices(types);
 	}
 
 	/**
