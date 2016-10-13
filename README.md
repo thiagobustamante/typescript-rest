@@ -49,25 +49,23 @@ Typescript-rest requires the following TypeScript compilation options in your ts
 ```
 
 You need also to install declaration files for express (.d.ts files). 
-Use [typings][https://www.npmjs.com/package/typings] to get the files.
 
 ```bash
-typings install dt~serve-static --global --save
-typings install dt~express-serve-static-core --global --save
-typings install dt~express --global --save
+npm install @types/serve-static --save-dev
+npm install @types/express-serve-static-core --save-dev
+npm install @types/express --save-dev
+npm install @types/es6-promise --save-dev
 ```
 
 If you need to handle file parameters, install also:
 
 ```bash
-typings install dt~multer --global --save
+npm install @types/multer --save-dev
 ```
 
 ## Basic Usage
 
 ```typescript
-/// <reference path="typings/index.d.ts" />
-
 import * as express from "express";
 import {Server, Path, GET, PathParam} from "typescript-rest";
 
