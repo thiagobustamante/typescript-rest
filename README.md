@@ -284,6 +284,7 @@ Decorator | Description
 @CookieParam | Parameter in a cookie  
 @FileParam | A File in a multipart form  
 @FilesParam | An array of Files in a multipart form  
+@Param | Parameter informed via any of hte previous ways (form, query, header, cookie, path) 
  
 Some examples:
 

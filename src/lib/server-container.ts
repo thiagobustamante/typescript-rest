@@ -152,7 +152,7 @@ export class InternalServer {
 	private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
 		let result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
-		if (serviceMethod.mustParseCookies) {
+		if (serviceMethod.mustParseCookies || serviceMethod.acceptMultiTypedParam) {
 			let args = [];
 			if (InternalServer.cookiesSecret) {
 				args.push(InternalServer.cookiesSecret);
@@ -166,7 +166,7 @@ export class InternalServer {
 			result.push(bodyParser.json());
 			//TODO adicionar parser de XML para o body
 		}
-		if (serviceMethod.mustParseForms) {
+		if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
 			result.push(bodyParser.urlencoded({ extended: true }));
 		}
 		if (serviceMethod.files.length > 0) {
@@ -339,6 +339,14 @@ export class InternalServer {
 					break;
 				case metadata.ParamType.form:
 					result.push(this.convertType(context.request.body[param.name], param.type));
+					break;
+				case metadata.ParamType.param:
+					let paramValue = context.request.body[param.name] ||
+									 context.request.query[param.name] || 
+									 context.request.cookies[param.name] ||
+									 context.request.header(param.name) ||
+									 context.request.params[param.name];
+					result.push(this.convertType(paramValue, param.type));
 					break;
 				case metadata.ParamType.context:
 					result.push(context);

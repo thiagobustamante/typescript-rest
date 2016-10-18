@@ -687,6 +687,33 @@ export function FormParam(name: string) {
 }
 
 /**
+ * Creates a mapping between a parameter on request and a method
+ * argument.
+ * 
+ * For example:
+ *
+ * ```
+ * @ Path("people")
+ * class PeopleService {
+ *   @ GET
+ *   getPeople(@ Param("name") name: string) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests and bind the 
+ * request paramenter called "name" to the name argument on getPerson 
+ * method's call. It will work to query parameters, form parameters or any 
+ * kind of parameter supported by this library.
+ */
+export function Param(name: string) {
+    return function(target: Object, propertyKey: string, parameterIndex: number) {
+		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.param, name);
+	}
+}
+
+/**
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
@@ -806,6 +833,9 @@ function processServiceMethod(target: any, propertyKey: string, serviceMethod: m
 		}
 		else if (param.paramType == metadata.ParamType.files) {
 			serviceMethod.files.push(new metadata.FileParam(param.name, false));
+		}
+		else if (param.paramType == metadata.ParamType.param) {
+			serviceMethod.acceptMultiTypedParam = true;
 		}
 		else if (param.paramType == metadata.ParamType.form) {
 			if (serviceMethod.mustParseBody) {

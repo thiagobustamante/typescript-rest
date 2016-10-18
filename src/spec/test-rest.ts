@@ -7,7 +7,7 @@ import * as StringUtils from "underscore.string";
 
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
-		FormParam, Context, ServiceContext, ContextRequest, 
+		FormParam, Param, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccept, 
 		ContextNext, AcceptLanguage, Accept, FileParam, 
 		Errors, Return} from "../lib/typescript-rest";
@@ -74,6 +74,12 @@ class TestParams {
 	testHeaders( @HeaderParam('my-header') header: string,
 				 @CookieParam('my-cookie') cookie: string): string {
 		return "cookie: " + cookie + "|header: "+header;
+	}
+
+	@POST
+	@Path("multi-param/:param")
+	testMultiParam( @Param('param') param: string): string {
+		return param;
 	}
 
 	@GET
@@ -151,7 +157,7 @@ let server;
 describe("Server Tests", () => {
 
 	beforeAll(function(){
-		server = app.listen(3000);
+		server = app.listen(5674);
 	});
 
 	afterAll(function(){
@@ -163,6 +169,7 @@ describe("Server Tests", () => {
 			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/multi-param/:param")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
 			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
@@ -174,7 +181,7 @@ describe("Server Tests", () => {
 
 	describe("PersonService", () => {
 		it("should return the person (123) for GET on path: /asubpath/person/123", (done) => {
-			request("http://localhost:3000/asubpath/person/123", function(error, response, body) {
+			request("http://localhost:5674/asubpath/person/123", function(error, response, body) {
 				let result: Person = JSON.parse(body);
 				expect(result.id).toEqual(123);
 				done();
@@ -184,7 +191,7 @@ describe("Server Tests", () => {
 		it("should return true for PUT on path: /asubpath/person/123", (done) => {
 			request.put({ 
 				headers: { 'content-type': 'application/json' },
-				url: "http://localhost:3000/asubpath/person/123", 
+				url: "http://localhost:5674/asubpath/person/123", 
 				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
 			}, function(error, response, body) {
 				expect(body).toEqual("true");
@@ -195,7 +202,7 @@ describe("Server Tests", () => {
 		it("should return 201 for POST on path: /asubpath/person", (done) => {
 			request.post({ 
 				headers: { 'content-type': 'application/json' },
-				url: "http://localhost:3000/asubpath/person", 
+				url: "http://localhost:5674/asubpath/person", 
 				body: JSON.stringify(new Person(123, "Fulano de Tal número 123", 35))
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(201);
@@ -205,7 +212,7 @@ describe("Server Tests", () => {
 		});
 
 		it("should return an array with 3 elements for GET on path: /asubpath/person?start=0&size=3", (done) => {
-			request("http://localhost:3000/asubpath/person?start=0&size=3", function(error, response, body) {
+			request("http://localhost:5674/asubpath/person?start=0&size=3", function(error, response, body) {
 				let result: Array<Person> = JSON.parse(body);
 				expect(result.length).toEqual(3);
 				done();
@@ -215,7 +222,7 @@ describe("Server Tests", () => {
 
 	describe("MyService", () => {
 		it("should configure a path without an initial /", (done) => {
-			request("http://localhost:3000/mypath", function(error, response, body) {
+			request("http://localhost:5674/mypath", function(error, response, body) {
 				expect(body).toEqual("OK");
 				done();
 			});
@@ -227,16 +234,58 @@ describe("Server Tests", () => {
 		it("should parse header and cookies correclty", (done) => {
 			request({
 				headers: { 'my-header': 'header value', 'Cookie': 'my-cookie=cookie value' },
-				url: "http://localhost:3000/headers"				
+				url: "http://localhost:5674/headers"				
 			}, function(error, response, body) {
 				expect(body).toEqual("cookie: cookie value|header: header value");
 				done();
 			});
 		});
 
+		it("should parse multi param as path param", (done) => {
+			request.post({
+				url: "http://localhost:5674/multi-param/myvalue"				
+			}, function(error, response, body) {
+				expect(body).toEqual("myvalue");
+				done();
+			});
+		});
+
+		it("should parse multi param as query param", (done) => {
+			request.post({
+				url: "http://localhost:5674/multi-param/myvalue?param=myQueryValue"				
+			}, function(error, response, body) {
+				expect(body).toEqual("myQueryValue");
+				done();
+			});
+		});
+
+		it("should parse multi param as cookie param", (done) => {
+			request.post({
+				headers: { 'Cookie': 'param=paramCookie' },
+				url: "http://localhost:5674/multi-param/myvalue"				
+			}, function(error, response, body) {
+				expect(body).toEqual("paramCookie");
+				done();
+			});
+		});
+
+		it("should parse multi param as form param", (done) => {
+			let form = {
+				'param': 'formParam'
+			};
+			let req = request.post({
+					"url": "http://localhost:5674/multi-param/myvalue",
+					"form": form
+				}, function(error, response, body) {
+					expect(body).toEqual("formParam");
+					expect(response.statusCode).toEqual(200);
+					done();
+			});
+		});
+
 		it("should accept Context parameters", (done) => {
 			request({
-				url: "http://localhost:3000/context?q=123"
+				url: "http://localhost:5674/context?q=123"
 			}, function(error, response, body) {
 				expect(body).toEqual("true");
 				expect(response.statusCode).toEqual(201);
@@ -245,7 +294,7 @@ describe("Server Tests", () => {
 		});
 
 		it("should accept file parameters", (done) => {
-			let req = request.post("http://localhost:3000/upload", function(error, response, body) {
+			let req = request.post("http://localhost:5674/upload", function(error, response, body) {
 				expect(body).toEqual("true");
 				expect(response.statusCode).toEqual(200);
 				done();
@@ -260,7 +309,7 @@ describe("Server Tests", () => {
 		it("should choose language correctly", (done) => {
 			request({
 				headers: { 'Accept-Language': 'pt-BR' },
-				url: "http://localhost:3000/accept"				
+				url: "http://localhost:5674/accept"				
 			}, function(error, response, body) {
 				expect(body).toEqual("aceito");
 				done();
@@ -270,7 +319,7 @@ describe("Server Tests", () => {
 		it("should reject unacceptable languages", (done) => {
 			request({
 				headers: { 'Accept-Language': 'fr' },
-				url: "http://localhost:3000/accept"				
+				url: "http://localhost:5674/accept"				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(406);
 				done();
@@ -279,7 +328,7 @@ describe("Server Tests", () => {
 
 		it("should use default language if none specified", (done) => {
 			request({
-				url: "http://localhost:3000/accept"				
+				url: "http://localhost:5674/accept"				
 			}, function(error, response, body) {
 				expect(body).toEqual("accepted");
 				done();
@@ -288,7 +337,7 @@ describe("Server Tests", () => {
 
 		it("should use default media type if none specified", (done) => {
 			request({
-				url: "http://localhost:3000/accept/types"				
+				url: "http://localhost:5674/accept/types"				
 			}, function(error, response, body) {
 				expect(body).toEqual("accepted");
 				done();
@@ -297,7 +346,7 @@ describe("Server Tests", () => {
 		it("should handle RestErrors", (done) => {
 			request.put({
 				headers: { 'Accept': 'text/html' },
-				url: "http://localhost:3000/accept/conflict",				
+				url: "http://localhost:5674/accept/conflict",				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(409);
 				done();
@@ -306,7 +355,7 @@ describe("Server Tests", () => {
 		it("should handle RestErrors on Async calls", (done) => {
 			request.post({
 				headers: { 'Accept': 'text/html' },
-				url: "http://localhost:3000/accept/conflict",				
+				url: "http://localhost:5674/accept/conflict",				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(409);
 				done();
@@ -315,7 +364,7 @@ describe("Server Tests", () => {
 		it("should reject unacceptable media types", (done) => {
 			request({
 				headers: { 'Accept': 'text/html' },
-				url: "http://localhost:3000/accept/types"				
+				url: "http://localhost:5674/accept/types"				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(406);
 				done();
@@ -327,7 +376,7 @@ describe("Server Tests", () => {
 	describe("Server", () => {
 		it("should return 404 when unmapped resources are requested", (done) => {
 			request({
-				url: "http://localhost:3000/unmapped/resource"				
+				url: "http://localhost:5674/unmapped/resource"				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(404);
 				done();
@@ -336,7 +385,7 @@ describe("Server Tests", () => {
 
 		it("should return 405 when a not supported method is requeted to a mapped resource", (done) => {
 			request.post({
-				url: "http://localhost:3000/asubpath/person/123"				
+				url: "http://localhost:5674/asubpath/person/123"				
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(405);
 				let allowed: string = response.headers['allow'];

@@ -44,6 +44,7 @@ export class ServiceMethod {
 	files: Array<FileParam> = new Array<FileParam>();
 	mustParseBody: boolean = false;
 	mustParseForms: boolean = false;
+	acceptMultiTypedParam: boolean = false;
 	languages: Array<string>;
 	accepts: Array<string>;
 	resolvedLanguages: Array<string>;
@@ -88,6 +89,7 @@ export enum ParamType {
 	cookie,
 	form,
 	body,
+	param,
 	file, 
 	files, 
 	context,

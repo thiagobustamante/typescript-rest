@@ -127,7 +127,7 @@ var InternalServer = (function () {
     };
     InternalServer.prototype.buildServiceMiddleware = function (serviceMethod) {
         var result = new Array();
-        if (serviceMethod.mustParseCookies) {
+        if (serviceMethod.mustParseCookies || serviceMethod.acceptMultiTypedParam) {
             var args = [];
             if (InternalServer.cookiesSecret) {
                 args.push(InternalServer.cookiesSecret);
@@ -140,7 +140,7 @@ var InternalServer = (function () {
         if (serviceMethod.mustParseBody) {
             result.push(bodyParser.json());
         }
-        if (serviceMethod.mustParseForms) {
+        if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
             result.push(bodyParser.urlencoded({ extended: true }));
         }
         if (serviceMethod.files.length > 0) {
@@ -302,6 +302,14 @@ var InternalServer = (function () {
                     break;
                 case metadata.ParamType.form:
                     result.push(_this.convertType(context.request.body[param.name], param.type));
+                    break;
+                case metadata.ParamType.param:
+                    var paramValue = context.request.body[param.name] ||
+                        context.request.query[param.name] ||
+                        context.request.cookies[param.name] ||
+                        context.request.header(param.name) ||
+                        context.request.params[param.name];
+                    result.push(_this.convertType(paramValue, param.type));
                     break;
                 case metadata.ParamType.context:
                     result.push(context);

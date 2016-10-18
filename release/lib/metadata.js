@@ -24,6 +24,7 @@ var ServiceMethod = (function () {
         this.files = new Array();
         this.mustParseBody = false;
         this.mustParseForms = false;
+        this.acceptMultiTypedParam = false;
     }
     return ServiceMethod;
 }());
@@ -52,14 +53,15 @@ exports.MethodParam = MethodParam;
     ParamType[ParamType["cookie"] = 3] = "cookie";
     ParamType[ParamType["form"] = 4] = "form";
     ParamType[ParamType["body"] = 5] = "body";
-    ParamType[ParamType["file"] = 6] = "file";
-    ParamType[ParamType["files"] = 7] = "files";
-    ParamType[ParamType["context"] = 8] = "context";
-    ParamType[ParamType["context_request"] = 9] = "context_request";
-    ParamType[ParamType["context_response"] = 10] = "context_response";
-    ParamType[ParamType["context_next"] = 11] = "context_next";
-    ParamType[ParamType["context_accept"] = 12] = "context_accept";
-    ParamType[ParamType["context_accept_language"] = 13] = "context_accept_language";
+    ParamType[ParamType["param"] = 6] = "param";
+    ParamType[ParamType["file"] = 7] = "file";
+    ParamType[ParamType["files"] = 8] = "files";
+    ParamType[ParamType["context"] = 9] = "context";
+    ParamType[ParamType["context_request"] = 10] = "context_request";
+    ParamType[ParamType["context_response"] = 11] = "context_response";
+    ParamType[ParamType["context_next"] = 12] = "context_next";
+    ParamType[ParamType["context_accept"] = 13] = "context_accept";
+    ParamType[ParamType["context_accept_language"] = 14] = "context_accept_language";
 })(exports.ParamType || (exports.ParamType = {}));
 var ParamType = exports.ParamType;
 

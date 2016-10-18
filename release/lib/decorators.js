@@ -225,6 +225,12 @@ function FormParam(name) {
     };
 }
 exports.FormParam = FormParam;
+function Param(name) {
+    return function (target, propertyKey, parameterIndex) {
+        processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.param, name);
+    };
+}
+exports.Param = Param;
 function AcceptLanguageTypeDecorator(target, languages) {
     var classData = server_container_1.InternalServer.registerServiceClass(target);
     classData.languages = languages;
@@ -296,6 +302,9 @@ function processServiceMethod(target, propertyKey, serviceMethod) {
         }
         else if (param.paramType == metadata.ParamType.files) {
             serviceMethod.files.push(new metadata.FileParam(param.name, false));
+        }
+        else if (param.paramType == metadata.ParamType.param) {
+            serviceMethod.acceptMultiTypedParam = true;
         }
         else if (param.paramType == metadata.ParamType.form) {
             if (serviceMethod.mustParseBody) {

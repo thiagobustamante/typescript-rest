@@ -22,3 +22,4 @@ export declare function QueryParam(name: string): (target: Object, propertyKey: 
 export declare function HeaderParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare function CookieParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
 export declare function FormParam(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
+export declare function Param(name: string): (target: Object, propertyKey: string, parameterIndex: number) => void;
