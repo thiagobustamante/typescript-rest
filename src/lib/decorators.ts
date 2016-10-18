@@ -704,8 +704,8 @@ export function FormParam(name: string) {
  *
  * Will create a service that listen for requests and bind the 
  * request paramenter called "name" to the name argument on getPerson 
- * method's call. It will work to query parameters, form parameters or any 
- * kind of parameter supported by this library.
+ * method's call. It will work to query parameters or form parameters 
+ * received in the current request.
  */
 export function Param(name: string) {
     return function(target: Object, propertyKey: string, parameterIndex: number) {

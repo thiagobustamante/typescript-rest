@@ -152,7 +152,7 @@ export class InternalServer {
 	private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
 		let result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
-		if (serviceMethod.mustParseCookies || serviceMethod.acceptMultiTypedParam) {
+		if (serviceMethod.mustParseCookies) {
 			let args = [];
 			if (InternalServer.cookiesSecret) {
 				args.push(InternalServer.cookiesSecret);
@@ -342,10 +342,7 @@ export class InternalServer {
 					break;
 				case metadata.ParamType.param:
 					let paramValue = context.request.body[param.name] ||
-									 context.request.query[param.name] || 
-									 context.request.cookies[param.name] ||
-									 context.request.header(param.name) ||
-									 context.request.params[param.name];
+									 context.request.query[param.name]; 
 					result.push(this.convertType(paramValue, param.type));
 					break;
 				case metadata.ParamType.context:

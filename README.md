@@ -279,12 +279,12 @@ Decorator | Description
 --------- | -----------
 @PathParam | Parameter in requested URL path 
 @QueryParam | Parameter in the query string 
-@FormParam | Parameter in a HTML form 
+@FormParam | Parameter in an HTML form 
 @HeaderParam | Parameter in the request header
 @CookieParam | Parameter in a cookie  
 @FileParam | A File in a multipart form  
 @FilesParam | An array of Files in a multipart form  
-@Param | Parameter informed via any of hte previous ways (form, query, header, cookie, path) 
+@Param | Parameter in the query string or in an HTML form
  
 Some examples:
 

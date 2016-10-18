@@ -77,7 +77,7 @@ class TestParams {
 	}
 
 	@POST
-	@Path("multi-param/:param")
+	@Path("multi-param")
 	testMultiParam( @Param('param') param: string): string {
 		return param;
 	}
@@ -169,7 +169,7 @@ describe("Server Tests", () => {
 			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
-			expect(Server.getPaths().indexOf("/multi-param/:param")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/multi-param")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
 			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
@@ -241,30 +241,11 @@ describe("Server Tests", () => {
 			});
 		});
 
-		it("should parse multi param as path param", (done) => {
-			request.post({
-				url: "http://localhost:5674/multi-param/myvalue"				
-			}, function(error, response, body) {
-				expect(body).toEqual("myvalue");
-				done();
-			});
-		});
-
 		it("should parse multi param as query param", (done) => {
 			request.post({
-				url: "http://localhost:5674/multi-param/myvalue?param=myQueryValue"				
+				url: "http://localhost:5674/multi-param?param=myQueryValue"				
 			}, function(error, response, body) {
 				expect(body).toEqual("myQueryValue");
-				done();
-			});
-		});
-
-		it("should parse multi param as cookie param", (done) => {
-			request.post({
-				headers: { 'Cookie': 'param=paramCookie' },
-				url: "http://localhost:5674/multi-param/myvalue"				
-			}, function(error, response, body) {
-				expect(body).toEqual("paramCookie");
 				done();
 			});
 		});
@@ -274,7 +255,7 @@ describe("Server Tests", () => {
 				'param': 'formParam'
 			};
 			let req = request.post({
-					"url": "http://localhost:5674/multi-param/myvalue",
+					"url": "http://localhost:5674/multi-param",
 					"form": form
 				}, function(error, response, body) {
 					expect(body).toEqual("formParam");
