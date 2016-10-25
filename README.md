@@ -48,21 +48,6 @@ Typescript-rest requires the following TypeScript compilation options in your ts
 }
 ```
 
-You need also to install declaration files for express (.d.ts files). 
-
-```bash
-npm install @types/serve-static --save-dev
-npm install @types/express-serve-static-core --save-dev
-npm install @types/express --save-dev
-npm install @types/es6-promise --save-dev
-```
-
-If you need to handle file parameters, install also:
-
-```bash
-npm install @types/multer --save-dev
-```
-
 ## Basic Usage
 
 ```typescript

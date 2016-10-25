@@ -108,15 +108,6 @@
   }
 }
 </code></pre>
-				<p>You need also to install declaration files for express (.d.ts files). </p>
-				<pre><code class="lang-bash">npm install @types/serve-static --save-dev
-npm install @types/express-serve-static-core --save-dev
-npm install @types/express --save-dev
-npm install @types/es6-promise --save-dev
-</code></pre>
-				<p>If you need to handle file parameters, install also:</p>
-				<pre><code class="lang-bash">npm install @types/multer --save-dev
-</code></pre>
 				<h2 id="basic-usage">Basic Usage</h2>
 				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * as express from <span class="hljs-string">"express"</span>;
 <span class="hljs-keyword">import</span> {Server, Path, GET, PathParam} from <span class="hljs-string">"typescript-rest"</span>;
