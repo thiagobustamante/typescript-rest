@@ -1,4 +1,5 @@
 "use strict";
+require("multer");
 var server_container_1 = require("./server-container");
 var Server = (function () {
     function Server() {

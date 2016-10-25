@@ -1,6 +1,7 @@
 "use strict";
 
-import * as express from "express"; 
+import * as express from "express";
+import "multer"; 
 import {InternalServer} from "./server-container"; 
 import {HttpMethod} from "./server-types"; 
 

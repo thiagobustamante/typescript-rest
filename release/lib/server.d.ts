@@ -1,4 +1,5 @@
 import * as express from "express";
+import "multer";
 import { HttpMethod } from "./server-types";
 export declare class Server {
     static buildServices(router: express.Router, ...types: any[]): void;
