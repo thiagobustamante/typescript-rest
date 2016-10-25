@@ -107,7 +107,6 @@ gulp.task("docs", ['docs-clean'], function() {
 
 			// TypeDoc options (see typedoc docs) 
 			version: true,
-			verbose: false,
 			// json: "output/to/file.json"
  
 			// theme: "/path/to/my/theme",
