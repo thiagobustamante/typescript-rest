@@ -138,7 +138,7 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 });
 </code></pre>
 				<p>That&#39;s it. You can just call now:</p>
-				<pre><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//localhost:3000/hello/joe</span>
+				<pre><code>GET http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">3000</span><span class="hljs-regexp">/hello/</span>joe
 </code></pre><h2 id="complete-guide">Complete Guide</h2>
 				<p>This library allows you to use ES7 decorators to configure your services using
 				expressjs. </p>
@@ -212,8 +212,8 @@ app.listen(<span class="hljs-number">3000</span>, <span class="hljs-function"><s
 }
 </code></pre>
 				<p>The requested URL <a href="http://localhost:3000/users/34/books/8989">http://localhost:3000/users/34/books/8989</a> would map the parameters as:</p>
-				<pre><code>   <span class="hljs-attribute">userId</span>: <span class="hljs-string">"34"</span>
-   <span class="hljs-attribute">bookId</span>: <span class="hljs-string">"8989"</span>
+				<pre><code><span class="hljs-symbol">   userId:</span> <span class="hljs-string">"34"</span>
+<span class="hljs-symbol">   bookId:</span> <span class="hljs-string">"8989"</span>
 </code></pre><p>Since the hyphen (-) and the dot (.) are interpreted literally, they can be used along with route 
 				parameters for useful purposes.</p>
 				<pre><code>Route <span class="hljs-string">path:</span> <span class="hljs-regexp">/flights/</span>:from-:to
@@ -636,7 +636,7 @@ test(myObject: MyClass): <span class="hljs-built_in">void</span> {
 
 <span class="hljs-keyword">class</span> MyOwnError extends HttpError {
     <span class="hljs-keyword">static</span> myNoSenseStatusCode: <span class="hljs-built_in">number</span> = <span class="hljs-number">999</span>;
-  <span class="hljs-constructor"><span class="hljs-keyword">constructor</span>(message?: string) </span>{
+  <span class="hljs-keyword">constructor</span>(message?: string) {
         <span class="hljs-keyword">super</span>(<span class="hljs-string">"MyOwnError"</span>, MyOwnError.myNoSenseStatusCode, message);
     }
 }
