@@ -496,9 +496,9 @@ the URL of the created resource.
 #### Asynchronous services
 
 The above section shows how the types returned are handled by the Server. However, all the previous examples are working
-synchronously. The recommended way is to work assynchronously, for a better performance.
+synchronously. The recommended way is to work asynchronously, for a better performance.
 
-To work assynchronously, you can return a ```Promise``` on your service method. The above rules to handle return types 
+To work asynchronously, you can return a ```Promise``` on your service method. The above rules to handle return types 
 applies to the returned promise resolved value.
 
 Some examples:
