@@ -227,7 +227,7 @@ export class InternalServer {
 	}
 
 	private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
-		let serviceObject = Object.create(serviceClass.targetClass);
+		let serviceObject = Object.create(serviceClass.targetClass.prototype);
 		if (serviceClass.hasProperties()) {
 			serviceClass.properties.forEach((paramType, key) => {
 				switch (paramType) {
