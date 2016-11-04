@@ -195,7 +195,7 @@ var InternalServer = (function () {
         }
     };
     InternalServer.prototype.createService = function (serviceClass, context) {
-        var serviceObject = Object.create(serviceClass.targetClass);
+        var serviceObject = Object.create(serviceClass.targetClass.prototype);
         if (serviceClass.hasProperties()) {
             serviceClass.properties.forEach(function (paramType, key) {
                 switch (paramType) {

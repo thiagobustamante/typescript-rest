@@ -51,7 +51,6 @@ export abstract class HttpError extends Error {
   			  public message: string) {
     super(message);
     this.name = name;
-    this.stack = (<any> new Error()).stack;
   }
 }
 

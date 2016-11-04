@@ -27,7 +27,6 @@ var HttpError = (function (_super) {
         this.statusCode = statusCode;
         this.message = message;
         this.name = name;
-        this.stack = (new Error()).stack;
     }
     return HttpError;
 }(Error));
