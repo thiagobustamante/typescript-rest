@@ -29,6 +29,21 @@ class MyService {
 	test( ): string {
 		return "OK";
 	}
+
+	@GET
+	@Path("secondpath")
+	test2( ): string {
+		return "OK";
+	}
+}
+
+@Path("mypath2")
+class MyService2 {
+	@GET
+	@Path("secondpath")
+	test( ): string {
+		return "OK";
+	}
 }
 
 @Path("/asubpath/person")
@@ -167,6 +182,7 @@ describe("Server Tests", () => {
 	describe("Server", () => {
 		it("should provide a catalog containing the exposed paths", () => {
 			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/mypath2/secondpath")).toBeGreaterThan(-1);			
 			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/multi-param")).toBeGreaterThan(-1);
@@ -227,6 +243,15 @@ describe("Server Tests", () => {
 				done();
 			});
 		});
+	});
+
+	describe("MyService2", () => {
+		it("should configure a path on method ", (done) => {
+			request("http://localhost:5674/mypath2/secondpath", function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});		
 	});
 
 

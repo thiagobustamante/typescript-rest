@@ -236,7 +236,7 @@ function AcceptLanguageTypeDecorator(target, languages) {
     classData.languages = languages;
 }
 function AcceptLanguageMethodDecorator(target, propertyKey, descriptor, languages) {
-    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target, propertyKey);
+    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         serviceMethod.languages = languages;
     }
@@ -246,7 +246,7 @@ function AcceptTypeDecorator(target, accepts) {
     classData.accepts = accepts;
 }
 function AcceptMethodDecorator(target, propertyKey, descriptor, accepts) {
-    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target, propertyKey);
+    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         serviceMethod.accepts = accepts;
     }
@@ -256,7 +256,7 @@ function PathTypeDecorator(target, path) {
     classData.path = path;
 }
 function PathMethodDecorator(target, propertyKey, descriptor, path) {
-    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target, propertyKey);
+    var serviceMethod = server_container_1.InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         serviceMethod.path = path;
     }

@@ -726,7 +726,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string, 
 			descriptor: PropertyDescriptor, languages: string[]) {
-	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
 		serviceMethod.languages = languages;
     }
@@ -745,7 +745,7 @@ function AcceptTypeDecorator(target: Function, accepts: string[]) {
  */
 function AcceptMethodDecorator(target: any, propertyKey: string, 
 			descriptor: PropertyDescriptor, accepts: string[]) {
-	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
 		serviceMethod.accepts = accepts;
     }
@@ -764,7 +764,7 @@ function PathTypeDecorator(target: Function, path: string) {
  */
 function PathMethodDecorator(target: any, propertyKey: string, 
 			descriptor: PropertyDescriptor, path: string) {
-	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target, propertyKey);
+	let serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
 		serviceMethod.path = path;
     }
