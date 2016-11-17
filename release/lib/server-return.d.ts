@@ -11,3 +11,8 @@ export declare class MovedPermanently extends ReferencedResource {
 export declare class MovedTemporarily extends ReferencedResource {
     constructor(location: string);
 }
+export declare class DownloadResource {
+    filePath: string;
+    fileName: string;
+    constructor(filePath: string, fileName: string);
+}

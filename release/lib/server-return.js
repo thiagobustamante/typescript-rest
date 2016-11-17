@@ -37,5 +37,13 @@ var MovedTemporarily = (function (_super) {
     return MovedTemporarily;
 }(server_types_1.ReferencedResource));
 exports.MovedTemporarily = MovedTemporarily;
+var DownloadResource = (function () {
+    function DownloadResource(filePath, fileName) {
+        this.filePath = filePath;
+        this.fileName = fileName;
+    }
+    return DownloadResource;
+}());
+exports.DownloadResource = DownloadResource;
 
 //# sourceMappingURL=server-return.js.map

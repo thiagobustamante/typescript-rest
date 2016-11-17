@@ -25,8 +25,3 @@ export declare abstract class ReferencedResource {
     statusCode: number;
     constructor(location: string, statusCode: number);
 }
-export declare class DownloadResource {
-    filePath: string;
-    fileName: string;
-    constructor(filePath: string, fileName: string);
-}

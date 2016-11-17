@@ -9,7 +9,8 @@ import * as Errors from "./server-errors";
 import * as StringUtils from "underscore.string";
 import {Set, StringMap} from "./es5-compat";
 
-import {HttpMethod, ServiceContext, ReferencedResource, DownloadResource} from "./server-types";
+import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
+import {DownloadResource} from "./server-return";
 
 export class InternalServer {
 	static serverClasses: StringMap<metadata.ServiceClass> = new StringMap<metadata.ServiceClass>();

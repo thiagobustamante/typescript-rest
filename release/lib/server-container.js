@@ -7,6 +7,7 @@ var Errors = require("./server-errors");
 var StringUtils = require("underscore.string");
 var es5_compat_1 = require("./es5-compat");
 var server_types_1 = require("./server-types");
+var server_return_1 = require("./server-return");
 var InternalServer = (function () {
     function InternalServer(router) {
         this.router = router;
@@ -254,7 +255,7 @@ var InternalServer = (function () {
                 }
                 break;
             default:
-                if (value.filePath && value instanceof server_types_1.DownloadResource) {
+                if (value.filePath && value instanceof server_return_1.DownloadResource) {
                     res.download(value.filePath, value.fileName);
                 }
                 else if (value.location && value instanceof server_types_1.ReferencedResource) {
