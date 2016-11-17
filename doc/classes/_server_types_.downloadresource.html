@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;server-types&quot; | Typescript-rest</title>
+	<title>DownloadResource | Typescript-rest</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,35 +55,128 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_server_types_.html">&quot;server-types&quot;</a>
+					<a href="../modules/_server_types_.html">&quot;server-types&quot;</a>
+				</li>
+				<li>
+					<a href="_server_types_.downloadresource.html">DownloadResource</a>
 				</li>
 			</ul>
-			<h1>External module &quot;server-types&quot;</h1>
+			<h1>Class DownloadResource</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Used to download a resource.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">DownloadResource</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumerations</h3>
+							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum tsd-parent-kind-external-module"><a href="../enums/_server_types_.httpmethod.html" class="tsd-kind-icon">Http<wbr>Method</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_server_types_.downloadresource.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Classes</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_server_types_.downloadresource.html" class="tsd-kind-icon">Download<wbr>Resource</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_server_types_.httperror.html" class="tsd-kind-icon">Http<wbr>Error</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_server_types_.referencedresource.html" class="tsd-kind-icon">Referenced<wbr>Resource</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_server_types_.servicecontext.html" class="tsd-kind-icon">Service<wbr>Context</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_server_types_.downloadresource.html#filename" class="tsd-kind-icon">file<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_server_types_.downloadresource.html#filepath" class="tsd-kind-icon">file<wbr>Path</a></li>
 							</ul>
 						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Download<wbr>Resource<span class="tsd-signature-symbol">(</span>filePath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fileName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_server_types_.downloadresource.html" class="tsd-signature-type">DownloadResource</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/72cc9d9/src/lib/server-types.ts#L72">server-types.ts:72</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Constructor. Receives the location of the resource.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>filePath: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The file path to download.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>fileName: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The file name</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_server_types_.downloadresource.html" class="tsd-signature-type">DownloadResource</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="filename" class="tsd-anchor"></a>
+					<h3>file<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">file<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/72cc9d9/src/lib/server-types.ts#L78">server-types.ts:78</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The file name</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="filepath" class="tsd-anchor"></a>
+					<h3>file<wbr>Path</h3>
+					<div class="tsd-signature tsd-kind-icon">file<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/72cc9d9/src/lib/server-types.ts#L78">server-types.ts:78</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The file path to download.</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -95,31 +188,31 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_decorators_.html">"decorators"</a>
+						<a href="../modules/_decorators_.html">"decorators"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_es5_compat_.html">"es5-<wbr>compat"</a>
+						<a href="../modules/_es5_compat_.html">"es5-<wbr>compat"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_metadata_.html">"metadata"</a>
+						<a href="../modules/_metadata_.html">"metadata"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_server_.html">"server"</a>
+						<a href="../modules/_server_.html">"server"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_server_container_.html">"server-<wbr>container"</a>
+						<a href="../modules/_server_container_.html">"server-<wbr>container"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_server_errors_.html">"server-<wbr>errors"</a>
+						<a href="../modules/_server_errors_.html">"server-<wbr>errors"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_server_return_.html">"server-<wbr>return"</a>
+						<a href="../modules/_server_return_.html">"server-<wbr>return"</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_server_types_.html">"server-<wbr>types"</a>
+						<a href="../modules/_server_types_.html">"server-<wbr>types"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_typescript_rest_.html">"typescript-<wbr>rest"</a>
+						<a href="../modules/_typescript_rest_.html">"typescript-<wbr>rest"</a>
 					</li>
 				</ul>
 			</nav>
@@ -128,17 +221,32 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
 						<a href="../enums/_server_types_.httpmethod.html" class="tsd-kind-icon">Http<wbr>Method</a>
 					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_server_types_.downloadresource.html" class="tsd-kind-icon">Download<wbr>Resource</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_server_types_.downloadresource.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_server_types_.downloadresource.html#filename" class="tsd-kind-icon">file<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_server_types_.downloadresource.html#filepath" class="tsd-kind-icon">file<wbr>Path</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_server_types_.downloadresource.html" class="tsd-kind-icon">Download<wbr>Resource</a>
+						<a href="_server_types_.httperror.html" class="tsd-kind-icon">Http<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_server_types_.httperror.html" class="tsd-kind-icon">Http<wbr>Error</a>
+						<a href="_server_types_.referencedresource.html" class="tsd-kind-icon">Referenced<wbr>Resource</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_server_types_.referencedresource.html" class="tsd-kind-icon">Referenced<wbr>Resource</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_server_types_.servicecontext.html" class="tsd-kind-icon">Service<wbr>Context</a>
+						<a href="_server_types_.servicecontext.html" class="tsd-kind-icon">Service<wbr>Context</a>
 					</li>
 				</ul>
 			</nav>

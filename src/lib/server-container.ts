@@ -9,7 +9,7 @@ import * as Errors from "./server-errors";
 import * as StringUtils from "underscore.string";
 import {Set, StringMap} from "./es5-compat";
 
-import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
+import {HttpMethod, ServiceContext, ReferencedResource, DownloadResource} from "./server-types";
 
 export class InternalServer {
 	static serverClasses: StringMap<metadata.ServiceClass> = new StringMap<metadata.ServiceClass>();
@@ -290,7 +290,10 @@ export class InternalServer {
 				}
 				break;
 			default:
-				if (value.location && value instanceof ReferencedResource) {
+				if (value.filePath && value instanceof DownloadResource) {
+					res.download(value.filePath, value.fileName);
+				}
+				else if (value.location && value instanceof ReferencedResource) {
 					res.set("Location", value.location);
 					res.sendStatus(value.statusCode);
 				}

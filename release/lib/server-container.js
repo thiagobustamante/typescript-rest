@@ -254,7 +254,10 @@ var InternalServer = (function () {
                 }
                 break;
             default:
-                if (value.location && value instanceof server_types_1.ReferencedResource) {
+                if (value.filePath && value instanceof server_types_1.DownloadResource) {
+                    res.download(value.filePath, value.fileName);
+                }
+                else if (value.location && value instanceof server_types_1.ReferencedResource) {
                     res.set("Location", value.location);
                     res.sendStatus(value.statusCode);
                 }
