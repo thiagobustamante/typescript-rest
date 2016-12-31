@@ -135,7 +135,7 @@ export function Accept(...accepts: string[]) {
  * [[ServiceContext]] instance.
  */
 export function Context(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -167,7 +167,7 @@ export function Context(...args: any[]) {
  * request.
  */
 export function ContextRequest(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context_request]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -199,7 +199,7 @@ export function ContextRequest(...args: any[]) {
  * response object.
  */
 export function ContextResponse(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context_response]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -231,7 +231,7 @@ export function ContextResponse(...args: any[]) {
  * middleware the current request processing.
  */
 export function ContextNext(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context_next]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -260,7 +260,7 @@ export function ContextNext(...args: any[]) {
  * ```
  */
 export function ContextLanguage(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context_accept_language]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -289,7 +289,7 @@ export function ContextLanguage(...args: any[]) {
  * ```
  */
 export function ContextAccept(...args: any[]) {
-    if (args.length == 2) {
+	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
     	let newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
     }

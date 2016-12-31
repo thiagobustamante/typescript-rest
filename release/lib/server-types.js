@@ -4,6 +4,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var HttpMethod;
 (function (HttpMethod) {
     HttpMethod[HttpMethod["GET"] = 0] = "GET";
     HttpMethod[HttpMethod["POST"] = 1] = "POST";
@@ -12,8 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     HttpMethod[HttpMethod["HEAD"] = 4] = "HEAD";
     HttpMethod[HttpMethod["OPTIONS"] = 5] = "OPTIONS";
     HttpMethod[HttpMethod["PATCH"] = 6] = "PATCH";
-})(exports.HttpMethod || (exports.HttpMethod = {}));
-var HttpMethod = exports.HttpMethod;
+})(HttpMethod = exports.HttpMethod || (exports.HttpMethod = {}));
 var ServiceContext = (function () {
     function ServiceContext() {
     }
@@ -23,10 +23,11 @@ exports.ServiceContext = ServiceContext;
 var HttpError = (function (_super) {
     __extends(HttpError, _super);
     function HttpError(name, statusCode, message) {
-        _super.call(this, message);
-        this.statusCode = statusCode;
-        this.message = message;
-        this.name = name;
+        var _this = _super.call(this, message) || this;
+        _this.statusCode = statusCode;
+        _this.message = message;
+        _this.name = name;
+        return _this;
     }
     return HttpError;
 }(Error));

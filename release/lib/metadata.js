@@ -46,6 +46,7 @@ var MethodParam = (function () {
     return MethodParam;
 }());
 exports.MethodParam = MethodParam;
+var ParamType;
 (function (ParamType) {
     ParamType[ParamType["path"] = 0] = "path";
     ParamType[ParamType["query"] = 1] = "query";
@@ -62,7 +63,6 @@ exports.MethodParam = MethodParam;
     ParamType[ParamType["context_next"] = 12] = "context_next";
     ParamType[ParamType["context_accept"] = 13] = "context_accept";
     ParamType[ParamType["context_accept_language"] = 14] = "context_accept_language";
-})(exports.ParamType || (exports.ParamType = {}));
-var ParamType = exports.ParamType;
+})(ParamType = exports.ParamType || (exports.ParamType = {}));
 
 //# sourceMappingURL=metadata.js.map

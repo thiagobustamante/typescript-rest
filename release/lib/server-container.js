@@ -428,11 +428,11 @@ var InternalServer = (function () {
         declaredHttpMethods.add(serviceMethod.httpMethod);
         serviceMethod.resolvedPath = resolvedPath;
     };
-    InternalServer.serverClasses = new es5_compat_1.StringMap();
-    InternalServer.paths = new es5_compat_1.StringMap();
-    InternalServer.pathsResolved = false;
     return InternalServer;
 }());
+InternalServer.serverClasses = new es5_compat_1.StringMap();
+InternalServer.paths = new es5_compat_1.StringMap();
+InternalServer.pathsResolved = false;
 exports.InternalServer = InternalServer;
 
 //# sourceMappingURL=server-container.js.map

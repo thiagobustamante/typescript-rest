@@ -7,7 +7,7 @@ function Path(path) {
     return function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
+            args[_i] = arguments[_i];
         }
         if (args.length == 1) {
             return PathTypeDecorator.apply(this, [args[0], path]);
@@ -22,12 +22,12 @@ exports.Path = Path;
 function AcceptLanguage() {
     var languages = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        languages[_i - 0] = arguments[_i];
+        languages[_i] = arguments[_i];
     }
     return function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
+            args[_i] = arguments[_i];
         }
         if (args.length == 1) {
             return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
@@ -42,12 +42,12 @@ exports.AcceptLanguage = AcceptLanguage;
 function Accept() {
     var accepts = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        accepts[_i - 0] = arguments[_i];
+        accepts[_i] = arguments[_i];
     }
     return function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
+            args[_i] = arguments[_i];
         }
         if (args.length == 1) {
             return AcceptTypeDecorator.apply(this, [args[0], accepts]);
@@ -62,9 +62,9 @@ exports.Accept = Accept;
 function Context() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -78,9 +78,9 @@ exports.Context = Context;
 function ContextRequest() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context_request]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -94,9 +94,9 @@ exports.ContextRequest = ContextRequest;
 function ContextResponse() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context_response]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -110,9 +110,9 @@ exports.ContextResponse = ContextResponse;
 function ContextNext() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context_next]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -126,9 +126,9 @@ exports.ContextNext = ContextNext;
 function ContextLanguage() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context_accept_language]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -142,9 +142,9 @@ exports.ContextLanguage = ContextLanguage;
 function ContextAccept() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
-    if (args.length == 2) {
+    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
         var newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
     }
