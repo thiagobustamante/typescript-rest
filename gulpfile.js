@@ -85,7 +85,7 @@ gulp.task('test-run', function() {
 });
 
 gulp.task('test', function(done) {
-    runSequence('test-build', 'test-coverage', 'test-run', 
+    runSequence('test-build', 'test-coverage', 'test-run',
 				'remap-istanbul-reports', function() {
         console.log('Release tested.');
         done();

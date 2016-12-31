@@ -1,18 +1,17 @@
 "use strict";
-var es5_compat_1 = require("./es5-compat");
 var ServiceClass = (function () {
     function ServiceClass(targetClass) {
         this.targetClass = targetClass;
-        this.methods = new es5_compat_1.StringMap();
+        this.methods = new Map();
     }
     ServiceClass.prototype.addProperty = function (key, paramType) {
         if (!this.hasProperties()) {
-            this.properties = new es5_compat_1.StringMap();
+            this.properties = new Map();
         }
         this.properties.set(key, paramType);
     };
     ServiceClass.prototype.hasProperties = function () {
-        return (this.properties && this.properties.size() > 0);
+        return (this.properties && this.properties.size > 0);
     };
     return ServiceClass;
 }());

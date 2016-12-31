@@ -1,3 +1,4 @@
+/// <reference path="./collections.d.ts" />
 "use strict";
 
 import * as express from "express"; 
@@ -6,15 +7,14 @@ import * as cookieParser from "cookie-parser";
 import * as multer from "multer";
 import * as metadata from "./metadata";
 import * as Errors from "./server-errors";
-import * as StringUtils from "underscore.string";
-import {Set, StringMap} from "./es5-compat";
+import * as _ from "lodash";
 
 import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
 import {DownloadResource} from "./server-return";
 
 export class InternalServer {
-	static serverClasses: StringMap<metadata.ServiceClass> = new StringMap<metadata.ServiceClass>();
-	static paths: StringMap<Set<HttpMethod>> = new StringMap<Set<HttpMethod>>();
+	static serverClasses: Map<string,metadata.ServiceClass> = new Map<string,metadata.ServiceClass>();
+	static paths: Map<string,Set<HttpMethod>> = new Map<string,Set<HttpMethod>>();
 	static pathsResolved: boolean = false;
 	static cookiesSecret: string;
 	static cookiesDecoder: (val: string) => string;
@@ -410,7 +410,11 @@ export class InternalServer {
 
 	static getPaths(): Set<string> {
 		InternalServer.resolveAllPaths();
-		return new Set(InternalServer.paths.keys());
+		let result = new Set<string>();
+		InternalServer.paths.forEach((value, key)=>{
+			result.add(key);
+		});
+		return result;
 	}
 
 	static getHttpMethods(path: string) : Set<HttpMethod>{
@@ -466,14 +470,14 @@ export class InternalServer {
 							   serviceMethod: metadata.ServiceMethod) : void {
 		let classPath: string = serviceClass.path ? serviceClass.path.trim() : "";
 		
-		let resolvedPath = StringUtils.startsWith(classPath,'/') ? classPath : '/' + classPath;
-		if (StringUtils.endsWith(resolvedPath, '/')) {
+		let resolvedPath = _.startsWith(classPath,'/') ? classPath : '/' + classPath;
+		if (_.endsWith(resolvedPath, '/')) {
 			resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
 		}
 
 		if (serviceMethod.path) {
 			let methodPath: string = serviceMethod.path.trim();
-			resolvedPath = resolvedPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
+			resolvedPath = resolvedPath + (_.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
 		}
 
 		let declaredHttpMethods: Set<HttpMethod> = InternalServer.paths.get(resolvedPath);

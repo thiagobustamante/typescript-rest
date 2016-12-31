@@ -3,7 +3,7 @@
 import * as express from "express";
 import * as request from 'request';
 import * as fs from "fs";
-import * as StringUtils from "underscore.string";
+import * as _ from "lodash";
 
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
@@ -120,7 +120,7 @@ class TestParams {
 	testUploadFile( @FileParam("myFile") file: Express.Multer.File, 
 					@FormParam("myField") myField: string): boolean {
 		return (file 
-		 && (StringUtils.startsWith(file.buffer.toString(),'"use strict";')) 
+		 && (_.startsWith(file.buffer.toString(),'"use strict";')) 
 	     && (myField === "my_value"));
 	}
 }

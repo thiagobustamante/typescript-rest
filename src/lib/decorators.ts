@@ -4,7 +4,8 @@ import {InternalServer} from "./server-container"
 import {HttpMethod, ServiceContext} from "./server-types"
 import * as metadata from "./metadata"
 
-import "reflect-metadata"
+import "reflect-metadata";
+import * as _ from "lodash";
 
 /**
  * A decorator to tell the [[Server]] that a class or a method 
@@ -38,7 +39,8 @@ import "reflect-metadata"
  */
 export function Path(path: string) {
     return function (...args: any[]) {
-	    if (args.length == 1) {
+		args = _.without(args, undefined);
+		if (args.length == 1) {
 	        return PathTypeDecorator.apply(this, [args[0], path]);
 	    }
 	    else if (args.length == 3 && typeof args[2] === "object") {
@@ -71,6 +73,7 @@ export function Path(path: string) {
  */
 export function AcceptLanguage(...languages: string[]) {
     return function (...args: any[]) {
+		args = _.without(args, undefined);
 	    if (args.length == 1) {
 	        return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
 	    }
@@ -104,6 +107,7 @@ export function AcceptLanguage(...languages: string[]) {
  */
 export function Accept(...accepts: string[]) {
     return function (...args: any[]) {
+		args = _.without(args, undefined);
 	    if (args.length == 1) {
 	        return AcceptTypeDecorator.apply(this, [args[0], accepts]);
 	    }
@@ -135,7 +139,8 @@ export function Accept(...accepts: string[]) {
  * [[ServiceContext]] instance.
  */
 export function Context(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -167,7 +172,8 @@ export function Context(...args: any[]) {
  * request.
  */
 export function ContextRequest(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context_request]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -199,7 +205,8 @@ export function ContextRequest(...args: any[]) {
  * response object.
  */
 export function ContextResponse(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context_response]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -231,7 +238,8 @@ export function ContextResponse(...args: any[]) {
  * middleware the current request processing.
  */
 export function ContextNext(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context_next]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -260,7 +268,8 @@ export function ContextNext(...args: any[]) {
  * ```
  */
 export function ContextLanguage(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context_accept_language]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -289,7 +298,8 @@ export function ContextLanguage(...args: any[]) {
  * ```
  */
 export function ContextAccept(...args: any[]) {
-	if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")){
+	args = _.without(args, undefined);
+	if (args.length == 2){
     	let newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
     }

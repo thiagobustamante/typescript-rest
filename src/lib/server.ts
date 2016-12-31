@@ -21,7 +21,12 @@ export class Server {
 	 * Return all paths accepted by the Server
 	 */
 	static getPaths(): Array<string> {
-		return InternalServer.getPaths().asArray();
+		let result = new Array<string>();
+		InternalServer.getPaths().forEach(value=>{
+			result.push(value);
+		});
+
+		return result;
 	}
 
 	/**
@@ -29,7 +34,12 @@ export class Server {
 	 * @param path The path to search HTTP verbs
 	 */
 	static getHttpMethods(path: string): Array<HttpMethod> {
-		return InternalServer.getHttpMethods(path).asArray();
+		let result = new Array<HttpMethod>();
+		InternalServer.getHttpMethods(path).forEach(value=>{
+			result.push(value);
+		});
+
+		return result;
 	}
 
 	/**

@@ -3,12 +3,14 @@ var server_container_1 = require("./server-container");
 var server_types_1 = require("./server-types");
 var metadata = require("./metadata");
 require("reflect-metadata");
+var _ = require("lodash");
 function Path(path) {
     return function () {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        args = _.without(args, undefined);
         if (args.length == 1) {
             return PathTypeDecorator.apply(this, [args[0], path]);
         }
@@ -29,6 +31,7 @@ function AcceptLanguage() {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        args = _.without(args, undefined);
         if (args.length == 1) {
             return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
         }
@@ -49,6 +52,7 @@ function Accept() {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        args = _.without(args, undefined);
         if (args.length == 1) {
             return AcceptTypeDecorator.apply(this, [args[0], accepts]);
         }
@@ -64,7 +68,8 @@ function Context() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -80,7 +85,8 @@ function ContextRequest() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_request]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -96,7 +102,8 @@ function ContextResponse() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_response]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -112,7 +119,8 @@ function ContextNext() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_next]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -128,7 +136,8 @@ function ContextLanguage() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_accept_language]);
         return processDecoratedProperty.apply(this, newArgs);
     }
@@ -144,7 +153,8 @@ function ContextAccept() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    if ((args.length == 2) || (args.length == 3 && typeof args[2] === "undefined")) {
+    args = _.without(args, undefined);
+    if (args.length == 2) {
         var newArgs = args.concat([metadata.ParamType.context_accept]);
         return processDecoratedProperty.apply(this, newArgs);
     }

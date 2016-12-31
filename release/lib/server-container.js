@@ -4,8 +4,7 @@ var cookieParser = require("cookie-parser");
 var multer = require("multer");
 var metadata = require("./metadata");
 var Errors = require("./server-errors");
-var StringUtils = require("underscore.string");
-var es5_compat_1 = require("./es5-compat");
+var _ = require("lodash");
 var server_types_1 = require("./server-types");
 var server_return_1 = require("./server-return");
 var InternalServer = (function () {
@@ -362,12 +361,16 @@ var InternalServer = (function () {
     };
     InternalServer.getPaths = function () {
         InternalServer.resolveAllPaths();
-        return new es5_compat_1.Set(InternalServer.paths.keys());
+        var result = new Set();
+        InternalServer.paths.forEach(function (value, key) {
+            result.add(key);
+        });
+        return result;
     };
     InternalServer.getHttpMethods = function (path) {
         InternalServer.resolveAllPaths();
         var methods = InternalServer.paths.get(path);
-        return methods || new es5_compat_1.Set();
+        return methods || new Set();
     };
     InternalServer.resolveLanguages = function (serviceClass, serviceMethod) {
         var resolvedLanguages = new Array();
@@ -408,17 +411,17 @@ var InternalServer = (function () {
     };
     InternalServer.resolvePath = function (serviceClass, serviceMethod) {
         var classPath = serviceClass.path ? serviceClass.path.trim() : "";
-        var resolvedPath = StringUtils.startsWith(classPath, '/') ? classPath : '/' + classPath;
-        if (StringUtils.endsWith(resolvedPath, '/')) {
+        var resolvedPath = _.startsWith(classPath, '/') ? classPath : '/' + classPath;
+        if (_.endsWith(resolvedPath, '/')) {
             resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
         }
         if (serviceMethod.path) {
             var methodPath = serviceMethod.path.trim();
-            resolvedPath = resolvedPath + (StringUtils.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
+            resolvedPath = resolvedPath + (_.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
         }
         var declaredHttpMethods = InternalServer.paths.get(resolvedPath);
         if (!declaredHttpMethods) {
-            declaredHttpMethods = new es5_compat_1.Set();
+            declaredHttpMethods = new Set();
             InternalServer.paths.set(resolvedPath, declaredHttpMethods);
         }
         if (declaredHttpMethods.has(serviceMethod.httpMethod)) {
@@ -430,8 +433,8 @@ var InternalServer = (function () {
     };
     return InternalServer;
 }());
-InternalServer.serverClasses = new es5_compat_1.StringMap();
-InternalServer.paths = new es5_compat_1.StringMap();
+InternalServer.serverClasses = new Map();
+InternalServer.paths = new Map();
 InternalServer.pathsResolved = false;
 exports.InternalServer = InternalServer;
 

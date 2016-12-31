@@ -13,10 +13,18 @@ var Server = (function () {
         iternalServer.buildServices(types);
     };
     Server.getPaths = function () {
-        return server_container_1.InternalServer.getPaths().asArray();
+        var result = new Array();
+        server_container_1.InternalServer.getPaths().forEach(function (value) {
+            result.push(value);
+        });
+        return result;
     };
     Server.getHttpMethods = function (path) {
-        return server_container_1.InternalServer.getHttpMethods(path).asArray();
+        var result = new Array();
+        server_container_1.InternalServer.getHttpMethods(path).forEach(function (value) {
+            result.push(value);
+        });
+        return result;
     };
     Server.setCookiesSecret = function (secret) {
         server_container_1.InternalServer.cookiesSecret = secret;

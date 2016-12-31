@@ -1,7 +1,7 @@
+/// <reference path="./collections.d.ts" />
 "use strict";
 
 import {HttpMethod} from "./server-types"
-import {StringMap} from "./es5-compat";
 
 /**
  * Metadata for REST service classes
@@ -9,25 +9,25 @@ import {StringMap} from "./es5-compat";
 export class ServiceClass {
 	constructor(targetClass: Function) {
 		this.targetClass = targetClass;
-		this.methods = new StringMap<ServiceMethod>();
+		this.methods = new Map<string,ServiceMethod>();
 	}
 
 	targetClass: Function;
 	path: string;
-	methods: StringMap<ServiceMethod>;
+	methods: Map<string,ServiceMethod>;
 	languages: Array<string>;
 	accepts: Array<string>;
-	properties: StringMap<ParamType>;
+	properties: Map<string,ParamType>;
 	
 	addProperty(key: string, paramType: ParamType) {
 		if (!this.hasProperties()) {
-			this.properties = new StringMap<ParamType>();
+			this.properties = new Map<string,ParamType>();
 		}
 		this.properties.set(key, paramType);
 	}
 
 	hasProperties(): boolean {
-		return (this.properties && this.properties.size() > 0);
+		return (this.properties && this.properties.size > 0);
 	}
 }
 
