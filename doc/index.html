@@ -511,6 +511,34 @@ test(myObject: MyClass): <span class="hljs-built_in">void</span> {
 </code></pre>
 				<p>The server will return an empty body with a <code>201</code> status code and a <code>Location</code> header pointing to
 				the URL of the created resource. </p>
+				<p>You can use special types to download files:
+					Type | Description
+					---- | -----------
+					DownloadResource | Used to reference a resource (by its fileName) and download it
+				DownloadBinaryData | Used to return a file to download, based on a Buffer object</p>
+				<p>For example: </p>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> {Return} from <span class="hljs-string">"typescript-rest"</span>;
+
+<span class="hljs-meta">@Path</span>(<span class="hljs-string">"download"</span>)
+<span class="hljs-keyword">class</span> TestDownload {
+    <span class="hljs-meta">@GET</span>
+    testDownloadFile(): Return.DownloadResource {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Return.DownloadResource(__dirname +<span class="hljs-string">'/test-rest.spec.js'</span>, <span class="hljs-string">'/test-rest.spec.js'</span>);
+    }
+
+    <span class="hljs-meta">@GET</span>
+    testDownloadFile(): Promise&lt;Return.DownloadBinaryData&gt; {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Promise&lt;Return.DownloadBinaryData&gt;((resolve, reject)=&gt;{
+            fs.readFile(__dirname + <span class="hljs-string">'/test-rest.spec.js'</span>, (err, data)=&gt;{
+                <span class="hljs-keyword">if</span> (err) {
+                    <span class="hljs-keyword">return</span> reject(err);
+                }
+                <span class="hljs-keyword">return</span> resolve(<span class="hljs-keyword">new</span> Return.DownloadBinaryData(data, <span class="hljs-string">'application/javascript'</span>, <span class="hljs-string">'test-rest.spec.js'</span>))
+            });
+        });
+    }
+}
+</code></pre>
 				<h4 id="asynchronous-services">Asynchronous services</h4>
 				<p>The above section shows how the types returned are handled by the Server. However, all the previous examples are working
 				synchronously. The recommended way is to work asynchronously, for a better performance.</p>

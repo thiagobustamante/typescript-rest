@@ -125,6 +125,21 @@ class TestParams {
 	}
 }
 
+@Path("download")
+class TestDownload {
+	@GET
+	testDownloadFile(): Promise<Return.DownloadBinaryData> {
+		return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
+			fs.readFile(__dirname + '/test-rest.spec.js', (err, data)=>{
+				if (err) {
+					return reject(err);
+				}
+				return resolve(new Return.DownloadBinaryData(data, 'application/javascript', 'test-rest.spec.js'))
+			});
+		});
+	}
+}
+
 @Path("/accept")
 @AcceptLanguage("en", "pt-BR")
 class AcceptTest {
@@ -188,6 +203,7 @@ describe("Server Tests", () => {
 			expect(Server.getPaths().indexOf("/multi-param")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/context")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/upload")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/download")).toBeGreaterThan(-1);
 			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.GET)).toBeGreaterThan(-1);
 			expect(Server.getHttpMethods("/asubpath/person/:id").indexOf(HttpMethod.PUT)).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/accept")).toBeGreaterThan(-1);
@@ -308,6 +324,17 @@ describe("Server Tests", () => {
 			let form: FormData = req.form();
 			form.append('myField', 'my_value');
 			form.append('myFile', fs.createReadStream(__dirname + '/test-rest.spec.js'), 'test-rest.spec.js');
+		});
+	});
+	describe("TestDownload", () => {
+		it("should return a file", (done) => {
+			request({
+				url: "http://localhost:5674/download"				
+			}, function(error, response, body) {
+				expect(response.headers['content-type']).toEqual('application/javascript');
+				expect(_.startsWith(body.toString(),'"use strict";')).toEqual(true);
+				done();
+			});
 		});
 	});
 

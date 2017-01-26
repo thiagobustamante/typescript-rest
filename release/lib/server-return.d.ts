@@ -16,3 +16,9 @@ export declare class DownloadResource {
     fileName: string;
     constructor(filePath: string, fileName: string);
 }
+export declare class DownloadBinaryData {
+    content: Buffer;
+    mimeType: string;
+    fileName: string;
+    constructor(content: Buffer, mimeType: string, fileName: string);
+}

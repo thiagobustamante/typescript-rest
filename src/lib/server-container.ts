@@ -10,7 +10,7 @@ import * as Errors from "./server-errors";
 import * as _ from "lodash";
 
 import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
-import {DownloadResource} from "./server-return";
+import {DownloadResource, DownloadBinaryData} from "./server-return";
 
 export class InternalServer {
 	static serverClasses: Map<string,metadata.ServiceClass> = new Map<string,metadata.ServiceClass>();
@@ -293,6 +293,14 @@ export class InternalServer {
 			default:
 				if (value.filePath && value instanceof DownloadResource) {
 					res.download(value.filePath, value.fileName);
+				}
+				else if (value instanceof DownloadBinaryData) {
+					res.writeHead(200, {
+						'Content-Type': value.mimeType,
+						'Content-disposition': 'attachment;filename=' + value.fileName,
+						'Content-Length': value.content.length
+					});
+					res.end(value.content);					
 				}
 				else if (value.location && value instanceof ReferencedResource) {
 					res.set("Location", value.location);

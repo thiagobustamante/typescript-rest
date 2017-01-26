@@ -45,5 +45,14 @@ var DownloadResource = (function () {
     return DownloadResource;
 }());
 exports.DownloadResource = DownloadResource;
+var DownloadBinaryData = (function () {
+    function DownloadBinaryData(content, mimeType, fileName) {
+        this.content = content;
+        this.mimeType = mimeType;
+        this.fileName = fileName;
+    }
+    return DownloadBinaryData;
+}());
+exports.DownloadBinaryData = DownloadBinaryData;
 
 //# sourceMappingURL=server-return.js.map

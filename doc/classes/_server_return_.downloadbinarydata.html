@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>NotFoundError | Typescript-rest</title>
+	<title>DownloadBinaryData | Typescript-rest</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,13 +54,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_server_errors_.html">&quot;server-errors&quot;</a>
+					<a href="../modules/_server_return_.html">&quot;server-return&quot;</a>
 				</li>
 				<li>
-					<a href="_server_errors_.notfounderror.html">NotFoundError</a>
+					<a href="_server_return_.downloadbinarydata.html">DownloadBinaryData</a>
 				</li>
 			</ul>
-			<h1>Class NotFoundError</h1>
+			<h1>Class DownloadBinaryData</h1>
 		</div>
 	</div>
 </header>
@@ -70,27 +70,15 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents a NOT FOUND error. The server has not found anything matching
-							the Request-URI. No indication is given of whether the condition is temporary
-							or permanent. The 410 (GoneError) status code SHOULD be used if the server knows,
-							through some internally configurable mechanism, that an old resource is permanently
-						unavailable and has no forwarding address.</p>
+						<p>Used to download binary data as a file.</p>
 					</div>
-					<p>This error is commonly used when
-						the server does not wish to reveal exactly why the request has been refused,
-					or when no other response is applicable.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_server_types_.httperror.html" class="tsd-signature-type">HttpError</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">NotFoundError</span>
-							</li>
-						</ul>
+						<span class="target">DownloadBinaryData</span>
 					</li>
 				</ul>
 			</section>
@@ -101,17 +89,15 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_server_errors_.notfounderror.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_server_return_.downloadbinarydata.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.notfounderror.html#message" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_server_errors_.notfounderror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.notfounderror.html#message-1" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_server_errors_.notfounderror.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static"><a href="_server_errors_.notfounderror.html#stack" class="tsd-kind-icon">stack</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_server_return_.downloadbinarydata.html#content" class="tsd-kind-icon">content</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_server_return_.downloadbinarydata.html#filename" class="tsd-kind-icon">file<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_server_return_.downloadbinarydata.html#mimetype" class="tsd-kind-icon">mime<wbr>Type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,88 +105,102 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Not<wbr>Found<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_server_errors_.notfounderror.html" class="tsd-signature-type">NotFoundError</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Download<wbr>Binary<wbr>Data<span class="tsd-signature-symbol">(</span>content<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span>, mimeType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fileName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_server_return_.downloadbinarydata.html" class="tsd-signature-type">DownloadBinaryData</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_server_types_.httperror.html">HttpError</a>.<a href="_server_types_.httperror.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-errors.ts#L53">server-errors.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-return.ts#L80">server-return.ts:80</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Constructor. Receives the location of the resource.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
+									<h5>content: <span class="tsd-signature-type">Buffer</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The binary data to be downloaded as a file.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>mimeType: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The mime-type to be passed on Content-Type header.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5>fileName: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The file name</p>
+										</div>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_server_errors_.notfounderror.html" class="tsd-signature-type">NotFoundError</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_server_return_.downloadbinarydata.html" class="tsd-signature-type">DownloadBinaryData</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="message" class="tsd-anchor"></a>
-					<h3>message</h3>
-					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="content" class="tsd-anchor"></a>
+					<h3>content</h3>
+					<div class="tsd-signature tsd-kind-icon">content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Buffer</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_server_types_.httperror.html">HttpError</a>.<a href="_server_types_.httperror.html#message">message</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-types.ts#L51">server-types.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-return.ts#L87">server-return.ts:87</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The binary data to be downloaded as a file.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="statuscode" class="tsd-anchor"></a>
-					<h3>status<wbr>Code</h3>
-					<div class="tsd-signature tsd-kind-icon">status<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="filename" class="tsd-anchor"></a>
+					<h3>file<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">file<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_server_types_.httperror.html">HttpError</a>.<a href="_server_types_.httperror.html#statuscode">statusCode</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-types.ts#L50">server-types.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-return.ts#L87">server-return.ts:87</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The file name</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="message-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> message</h3>
-					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="mimetype" class="tsd-anchor"></a>
+					<h3>mime<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">mime<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from Error.message</p>
 						<ul>
-							<li>Defined in /Users/thiago/git/typescript-rest/node_modules/typescript/lib/lib.es6.d.ts:913</li>
+							<li>Defined in <a href="https://github.com/thiagobustamante/typescript-rest/blob/cd7174a/src/lib/server-return.ts#L87">server-return.ts:87</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="name" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from Error.name</p>
-						<ul>
-							<li>Defined in /Users/thiago/git/typescript-rest/node_modules/typescript/lib/lib.es6.d.ts:912</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
-					<a name="stack" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagOptional">Optional</span> stack</h3>
-					<div class="tsd-signature tsd-kind-icon">stack<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from Error.stack</p>
-						<p>Overrides Error.stack</p>
-						<ul>
-							<li>Defined in /Users/thiago/git/typescript-rest/node_modules/typescript/lib/lib.es6.d.ts:914</li>
-						</ul>
-					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The mime-type to be passed on Content-Type header.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -225,10 +225,10 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_server_container_.html">"server-<wbr>container"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_server_errors_.html">"server-<wbr>errors"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_server_return_.html">"server-<wbr>return"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -241,62 +241,41 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.badrequesterror.html" class="tsd-kind-icon">Bad<wbr>Request<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.conflicterror.html" class="tsd-kind-icon">Conflict<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.forbidenerror.html" class="tsd-kind-icon">Forbiden<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.goneerror.html" class="tsd-kind-icon">Gone<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.internalservererror.html" class="tsd-kind-icon">Internal<wbr>Server<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.methodnotallowederror.html" class="tsd-kind-icon">Method<wbr>Not<wbr>Allowed<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.notacceptableerror.html" class="tsd-kind-icon">Not<wbr>Acceptable<wbr>Error</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.notfounderror.html" class="tsd-kind-icon">Not<wbr>Found<wbr>Error</a>
+						<a href="_server_return_.downloadbinarydata.html" class="tsd-kind-icon">Download<wbr>Binary<wbr>Data</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_server_errors_.notfounderror.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_server_return_.downloadbinarydata.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_server_errors_.notfounderror.html#message" class="tsd-kind-icon">message</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_server_return_.downloadbinarydata.html#content" class="tsd-kind-icon">content</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_server_errors_.notfounderror.html#statuscode" class="tsd-kind-icon">status<wbr>Code</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_server_return_.downloadbinarydata.html#filename" class="tsd-kind-icon">file<wbr>Name</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.notfounderror.html#message-1" class="tsd-kind-icon">message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.notfounderror.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-static">
-								<a href="_server_errors_.notfounderror.html#stack" class="tsd-kind-icon">stack</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_server_return_.downloadbinarydata.html#mimetype" class="tsd-kind-icon">mime<wbr>Type</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.notimplementederror.html" class="tsd-kind-icon">Not<wbr>Implemented<wbr>Error</a>
+						<a href="_server_return_.downloadresource.html" class="tsd-kind-icon">Download<wbr>Resource</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.unauthorizederror.html" class="tsd-kind-icon">Unauthorized<wbr>Error</a>
+						<a href="_server_return_.movedpermanently.html" class="tsd-kind-icon">Moved<wbr>Permanently</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_server_errors_.unsupportedmediatypeerror.html" class="tsd-kind-icon">Unsupported<wbr>Media<wbr>Type<wbr>Error</a>
+						<a href="_server_return_.movedtemporarily.html" class="tsd-kind-icon">Moved<wbr>Temporarily</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_server_return_.newresource.html" class="tsd-kind-icon">New<wbr>Resource</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_server_return_.requestaccepted.html" class="tsd-kind-icon">Request<wbr>Accepted</a>
 					</li>
 				</ul>
 			</nav>

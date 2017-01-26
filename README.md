@@ -478,6 +478,39 @@ class TestService {
 The server will return an empty body with a ```201``` status code and a ```Location``` header pointing to 
 the URL of the created resource. 
 
+You can use special types to download files:
+Type | Description
+---- | -----------
+DownloadResource | Used to reference a resource (by its fileName) and download it
+DownloadBinaryData | Used to return a file to download, based on a Buffer object
+
+For example: 
+
+```typescript
+import {Return} from "typescript-rest";
+
+@Path("download")
+class TestDownload {
+	@GET
+	testDownloadFile(): Return.DownloadResource {
+		return new Return.DownloadResource(__dirname +'/test-rest.spec.js', '/test-rest.spec.js');
+	}
+
+	@GET
+	testDownloadFile(): Promise<Return.DownloadBinaryData> {
+		return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
+			fs.readFile(__dirname + '/test-rest.spec.js', (err, data)=>{
+				if (err) {
+					return reject(err);
+				}
+				return resolve(new Return.DownloadBinaryData(data, 'application/javascript', 'test-rest.spec.js'))
+			});
+		});
+	}
+}
+```
+
+
 #### Asynchronous services
 
 The above section shows how the types returned are handled by the Server. However, all the previous examples are working

@@ -257,6 +257,14 @@ var InternalServer = (function () {
                 if (value.filePath && value instanceof server_return_1.DownloadResource) {
                     res.download(value.filePath, value.fileName);
                 }
+                else if (value instanceof server_return_1.DownloadBinaryData) {
+                    res.writeHead(200, {
+                        'Content-Type': value.mimeType,
+                        'Content-disposition': 'attachment;filename=' + value.fileName,
+                        'Content-Length': value.content.length
+                    });
+                    res.end(value.content);
+                }
                 else if (value.location && value instanceof server_types_1.ReferencedResource) {
                     res.set("Location", value.location);
                     res.sendStatus(value.statusCode);
