@@ -20,6 +20,7 @@ It can be used to define your APIs using ES7 decorators.
       - [Asynchronous services](#asynchronous-services)
     - [Errors](#errors)
     - [Types and languages](#types-and-languages)
+    - [IoC](#ioc)
 
 ## Installation
 
@@ -684,3 +685,40 @@ class TestAcceptService {
 	}
 }
 ```
+
+### IoC
+
+It is possible to delegate to [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc) the instantiation of the service objects.
+
+To do this, just ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration.
+
+```typescript
+/*Ensure to call Server.useIoC() before your service declarations. 
+It only need to be called once*/
+Server.useIoC();
+
+@AutoWired
+class HelloService {
+  sayHello(name: string) {
+    return "Hello " + name;
+  }
+}
+
+@Path("/hello")
+@AutoWired
+class HelloRestService {
+  @Inject
+  private helloService: HelloService;
+
+  @Path(":name")
+  @GET
+  sayHello( @PathParam('name') name: string): string {
+    return this.sayHello(name);
+  }
+}
+```
+
+It is also possible to inform a custom serviceFactory to instantiate your services. To do this, 
+call ```Server.registerServiceFactory``` instead of ```Server.useIoC()``` and provide your own ServiceFactory implementation.
+
+It could be used to allow other libraries, like [Inversify](http://inversify.io/).
