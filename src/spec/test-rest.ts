@@ -4,6 +4,7 @@ import * as express from "express";
 import * as request from 'request';
 import * as fs from "fs";
 import * as _ from "lodash";
+import {Inject, AutoWired} from "typescript-ioc";
 
 import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		PathParam, QueryParam, CookieParam, HeaderParam, 
@@ -11,6 +12,8 @@ import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		ContextResponse, ContextLanguage, ContextAccept, 
 		ContextNext, AcceptLanguage, Accept, FileParam, 
 		Errors, Return} from "../lib/typescript-rest";
+
+Server.useIoC();
 
 class Person {
 	constructor(id: number, name: string, age: number) {
@@ -21,6 +24,35 @@ class Person {
 	id: number;
 	name: string;
 	age: number;
+}
+
+@AutoWired
+class InjectableObject {
+
+}
+
+@AutoWired
+@Path("ioctest")
+class MyIoCService {
+	@Inject
+	private injectedObject: InjectableObject
+	
+	@GET
+	test( ): string {
+		return (this.injectedObject)?"OK":"NOT OK";
+	}
+}
+
+@Path("ioctest2")
+@AutoWired
+class MyIoCService2 {
+	@Inject
+	private injectedObject: InjectableObject
+	
+	@GET
+	test( ): string {
+		return (this.injectedObject)?"OK":"NOT OK";
+	}
 }
 
 @Path("mypath")
@@ -197,6 +229,8 @@ describe("Server Tests", () => {
 	describe("Server", () => {
 		it("should provide a catalog containing the exposed paths", () => {
 			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/ioctest")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/ioctest2")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/mypath2/secondpath")).toBeGreaterThan(-1);			
 			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
@@ -255,6 +289,21 @@ describe("Server Tests", () => {
 	describe("MyService", () => {
 		it("should configure a path without an initial /", (done) => {
 			request("http://localhost:5674/mypath", function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});
+	});
+
+	describe("MyIoCService", () => {
+		it("should use IoC container to instantiate the services", (done) => {
+			request("http://localhost:5674/ioctest", function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});
+		it("should use IoC container to instantiate the services, does not carrying about the decorators order", (done) => {
+			request("http://localhost:5674/ioctest2", function(error, response, body) {
 				expect(body).toEqual("OK");
 				done();
 			});

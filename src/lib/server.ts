@@ -3,7 +3,7 @@
 import * as express from "express";
 import "multer"; 
 import {InternalServer} from "./server-container"; 
-import {HttpMethod} from "./server-types"; 
+import {HttpMethod, ServiceFactory} from "./server-types"; 
 
 /**
  * The Http server main class. 
@@ -27,6 +27,40 @@ export class Server {
 		});
 
 		return result;
+	}
+
+	/**
+	 * Register a custom serviceFactory. It will be used to instantiate the service Objects
+	 * If You plan to use a custom serviceFactory, You must ensure to call this method before any typescript-rest service declaration.
+	 */
+	static registerServiceFactory(serviceFactory: ServiceFactory) {
+		InternalServer.serviceFactory = serviceFactory;	
+	}
+
+	/**
+	 * Configure the Server to use [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc)
+	 * to instantiate the service objects.
+	 * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
+	 */
+	static useIoC() {
+		let ioc = require("typescript-ioc");
+		Server.registerServiceFactory({
+			create: (serviceClass) => {
+				return ioc.Container.get(serviceClass);
+			},
+			getTargetClass: (serviceClass: Function) => {
+				let typeConstructor: Function = serviceClass;
+				if (typeConstructor['name']) {
+					return <FunctionConstructor>typeConstructor;
+				}
+				while (typeConstructor = typeConstructor['__parent']) {
+					if (typeConstructor['name']) {
+						return <FunctionConstructor>typeConstructor;
+					}
+				}
+				throw TypeError('Can not identify the base Type for requested target');
+			}
+		});
 	}
 
 	/**

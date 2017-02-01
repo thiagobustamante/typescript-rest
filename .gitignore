@@ -8,4 +8,5 @@
 /typescript-rest.sublime-project
 /typescript-rest.sublime-workspace
 /.vscode
-/release/test
+/release
+/doc

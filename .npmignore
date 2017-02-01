@@ -2,11 +2,12 @@ src
 typings
 gulpfile.js
 tsconfig.json
-typings.json
 .DS_Store 
 .jshintrc
 .sublime-project
 .tern-project
-release/test
+release/spec
+!/release
+!/doc
 package.sublime-workspace
 .travis.yml

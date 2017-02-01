@@ -9,7 +9,7 @@ import * as metadata from "./metadata";
 import * as Errors from "./server-errors";
 import * as _ from "lodash";
 
-import {HttpMethod, ServiceContext, ReferencedResource} from "./server-types";
+import {HttpMethod, ServiceContext, ReferencedResource, ServiceFactory} from "./server-types";
 import {DownloadResource, DownloadBinaryData} from "./server-return";
 
 export class InternalServer {
@@ -21,6 +21,16 @@ export class InternalServer {
 	static fileDest: string;
 	static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
 	static fileLimits: number;
+	static serviceFactory: ServiceFactory = {
+		create: (serviceClass: Function) => {
+			let serviceObject = Object.create(serviceClass.prototype);
+			serviceClass.apply(serviceObject);
+			return serviceObject;
+		},
+		getTargetClass: (serviceClass: Function) => {
+			return <FunctionConstructor>serviceClass;
+		}
+	}
 
 	router: express.Router;
 	upload: multer.Instance; 
@@ -31,6 +41,7 @@ export class InternalServer {
 
 	static registerServiceClass(target: Function): metadata.ServiceClass {
 		InternalServer.pathsResolved = false;
+		target = InternalServer.serviceFactory.getTargetClass(target);
 		let name: string = target['name'] || target.constructor['name'];
 		if (!InternalServer.serverClasses.has(name)) {
 			InternalServer.serverClasses.set(name, new metadata.ServiceClass(target));
@@ -228,8 +239,7 @@ export class InternalServer {
 	}
 
 	private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
-		let serviceObject = Object.create(serviceClass.targetClass.prototype);
-		serviceClass.targetClass.apply(serviceObject);
+		let serviceObject = InternalServer.serviceFactory.create(serviceClass.targetClass);
 		if (serviceClass.hasProperties()) {
 			serviceClass.properties.forEach((paramType, key) => {
 				switch (paramType) {
