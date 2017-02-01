@@ -480,6 +480,7 @@ The server will return an empty body with a ```201``` status code and a ```Locat
 the URL of the created resource. 
 
 You can use special types to download files:
+
 Type | Description
 ---- | -----------
 DownloadResource | Used to reference a resource (by its fileName) and download it
