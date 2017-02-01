@@ -719,6 +719,6 @@ class HelloRestService {
 ```
 
 It is also possible to inform a custom serviceFactory to instantiate your services. To do this, 
-call ```Server.registerServiceFactory``` instead of ```Server.useIoC()``` and provide your own ServiceFactory implementation.
+call ```Server.registerServiceFactory()``` instead of ```Server.useIoC()``` and provide your own ServiceFactory implementation.
 
 It could be used to allow other libraries, like [Inversify](http://inversify.io/).
