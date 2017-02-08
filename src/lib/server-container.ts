@@ -64,6 +64,9 @@ export class InternalServer {
 	}
 
 	buildServices(types?: Array<Function>) {
+		if (types) {
+			types = types.map(type => InternalServer.serviceFactory.getTargetClass(type));
+		}
 		InternalServer.serverClasses.forEach(classData => { 
 			classData.methods.forEach(method => {
 				if (this.validateTargetType(classData.targetClass, types)) {
