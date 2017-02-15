@@ -691,7 +691,11 @@ class TestAcceptService {
 
 It is possible to delegate to [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc) the instantiation of the service objects.
 
-To do this, just ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration.
+You ca configure it in two ways:
+  1. Ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration, or
+  2. Create a file called ```rest.config``` and put it on the root of your project:
+
+
 
 ```typescript
 /*Ensure to call Server.useIoC() before your service declarations. 
@@ -719,7 +723,28 @@ class HelloRestService {
 }
 ```
 
+or Configure a rest.config file:
+
+```json
+{
+   "useIoC": true
+}
+
+```
+
 It is also possible to inform a custom serviceFactory to instantiate your services. To do this, 
 call ```Server.registerServiceFactory()``` instead of ```Server.useIoC()``` and provide your own ServiceFactory implementation.
 
+You can also use the ```serviceFactory``` property on rest.config file to configure it:
+
+
+```json
+{
+   "serviceFactory": "./myServiceFactory"
+}
+```
+
+And export as default your serviceFactory class on ```./myServiceFactory.ts``` file.
+
 It could be used to allow other libraries, like [Inversify](http://inversify.io/).
+
