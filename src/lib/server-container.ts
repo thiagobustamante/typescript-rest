@@ -178,11 +178,21 @@ export class InternalServer {
 			result.push(cookieParser.apply(this, args));
 		}
 		if (serviceMethod.mustParseBody) {
-			result.push(bodyParser.json());
+			if (serviceMethod.bodyParserOptions) {
+				result.push(bodyParser.json(serviceMethod.bodyParserOptions));			
+			}
+			else {
+				result.push(bodyParser.json());
+			}
 			//TODO adicionar parser de XML para o body
 		}
 		if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
-			result.push(bodyParser.urlencoded({ extended: true }));
+			if (serviceMethod.bodyParserOptions) {
+				result.push(bodyParser.urlencoded(serviceMethod.bodyParserOptions));
+			}
+			else {
+				result.push(bodyParser.urlencoded({ extended: true }));
+			}
 		}
 		if (serviceMethod.files.length > 0) {
 			let options: Array<multer.Field> = new Array<multer.Field>();

@@ -11,7 +11,7 @@ import {Path, Server, GET, POST, PUT, DELETE, HttpMethod,
 		FormParam, Param, Context, ServiceContext, ContextRequest, 
 		ContextResponse, ContextLanguage, ContextAccept, 
 		ContextNext, AcceptLanguage, Accept, FileParam, 
-		Errors, Return} from "../lib/typescript-rest";
+		Errors, Return, BodyOptions} from "../lib/typescript-rest";
 
 Server.useIoC();
 
@@ -95,6 +95,7 @@ class PersonService {
 	}
 
 	@POST
+	@BodyOptions({limit:'100kb'})
 	addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource {
 		return new Return.NewResource(req.url + "/" + person.id);
 	}

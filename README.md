@@ -617,6 +617,47 @@ class MyOwnError extends HttpError {
 }
 ```
 
+### BodyParser Options
+
+If you need to inform any options to the body parser, you can use the @BodyOptions decorator.
+
+For example:
+```typescript
+import {HttpError} from "typescript-rest";
+
+import {Errors} from "typescript-rest";
+
+@Path("async")
+class TestService {
+   @POST
+   @Path("test1")
+ 	 @BodyOptions({limit:'100kb'})
+   testPost(myData) {
+      return new Promise<MyClass>(function(resolve, reject){
+         //...
+			   throw new Errors.NotImplementedError("This operation is not available yet");
+		  });
+   }
+
+   @GET
+   @Path("test2")
+ 	 @BodyOptions({extended:false})
+   testPost2(@FormParam("field1")myParam) {
+      return new Promise<MyClass>(function(resolve, reject){
+         //...
+			   reject(new Errors.NotImplementedError("This operation is not available yet"));
+		  });
+   }
+
+   @GET
+   @Path("test3")
+   testGet3() {
+			throw new Errors.NotImplementedError("This operation is not available yet");
+   }
+}
+}
+```
+
 ### Types and languages
 
 It is possible to use decorators to inform the server which languages or mime types are supported by each service method.

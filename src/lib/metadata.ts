@@ -43,6 +43,7 @@ export class ServiceMethod {
 	mustParseCookies: boolean = false;
 	files: Array<FileParam> = new Array<FileParam>();
 	mustParseBody: boolean = false;
+	bodyParserOptions: any;
 	mustParseForms: boolean = false;
 	acceptMultiTypedParam: boolean = false;
 	languages: Array<string>;
