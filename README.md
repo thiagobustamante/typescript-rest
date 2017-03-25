@@ -516,7 +516,7 @@ class TestDownload {
 
 #### Asynchronous services
 
-The above section shows how the types returned are handled by the Server. However, all the previous examples are working
+The above section shows how the types returned are handled by the Server. However, most of the previous examples are working
 synchronously. The recommended way is to work asynchronously, for a better performance.
 
 To work asynchronously, you can return a ```Promise``` on your service method. The above rules to handle return types 
