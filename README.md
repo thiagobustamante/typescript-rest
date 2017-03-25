@@ -493,22 +493,22 @@ import {Return} from "typescript-rest";
 
 @Path("download")
 class TestDownload {
-	@GET
-	testDownloadFile(): Return.DownloadResource {
-		return new Return.DownloadResource(__dirname +'/test-rest.spec.js', '/test-rest.spec.js');
-	}
+  @GET
+  testDownloadFile(): Return.DownloadResource {
+    return new Return.DownloadResource(__dirname +'/test-rest.spec.js', '/test-rest.spec.js');
+  }
 
-	@GET
-	testDownloadFile(): Promise<Return.DownloadBinaryData> {
-		return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
-			fs.readFile(__dirname + '/test-rest.spec.js', (err, data)=>{
-				if (err) {
-					return reject(err);
-				}
-				return resolve(new Return.DownloadBinaryData(data, 'application/javascript', 'test-rest.spec.js'))
-			});
-		});
-	}
+  @GET
+  testDownloadFile(): Promise<Return.DownloadBinaryData> {
+    return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
+      fs.readFile(__dirname + '/test-rest.spec.js', (err, data)=>{
+        if (err) {
+          return reject(err);
+        }
+        return resolve(new Return.DownloadBinaryData(data, 'application/javascript', 'test-rest.spec.js'))
+      });
+    });
+  }
 }
 ```
 
@@ -532,16 +532,16 @@ class TestService {
    test(myObject: MyClass, @ContextRequest request: express.Request): Promise<Return.NewResource> {
       return new Promise<Return.NewResource>(function(resolve, reject){
          //...
-			   resolve(new Return.NewResource(req.url + "/" + generatedId));
-		  });
+         resolve(new Return.NewResource(req.url + "/" + generatedId));
+      });
    }
 
    @GET
    testGet() {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   resolve(new MyClass());
-		  });
+         resolve(new MyClass());
+      });
    }
 }
 ```
@@ -579,8 +579,8 @@ class TestService {
    testGet() {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   throw new Errors.NotImplementedError("This operation is not available yet");
-		  });
+      throw new Errors.NotImplementedError("This operation is not available yet");
+      });
    }
 
    @GET
@@ -588,14 +588,14 @@ class TestService {
    testGet2() {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   reject(new Errors.NotImplementedError("This operation is not available yet"));
-		  });
+         reject(new Errors.NotImplementedError("This operation is not available yet"));
+      });
    }
 
    @GET
    @Path("test3")
    testGet3() {
-			throw new Errors.NotImplementedError("This operation is not available yet");
+      throw new Errors.NotImplementedError("This operation is not available yet");
    }
 }
 ```
@@ -610,16 +610,18 @@ If you want to create a custom error that report your own status code, just exte
 import {HttpError} from "typescript-rest";
 
 class MyOwnError extends HttpError {
-	static myNoSenseStatusCode: number = 999;
+  static myNoSenseStatusCode: number = 999;
   constructor(message?: string) {
-		super("MyOwnError", MyOwnError.myNoSenseStatusCode, message);
-	}
+    super("MyOwnError", MyOwnError.myNoSenseStatusCode, message);
+  }
 }
 ```
 
 ### BodyParser Options
 
 If you need to inform any options to the body parser, you can use the @BodyOptions decorator.
+
+You can inform any property accepted by [bodyParser](https://www.npmjs.com/package/body-parser)
 
 For example:
 ```typescript
@@ -631,31 +633,55 @@ import {Errors} from "typescript-rest";
 class TestService {
    @POST
    @Path("test1")
- 	 @BodyOptions({limit:'100kb'})
+   @BodyOptions({limit:'100kb'})
    testPost(myData) {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   throw new Errors.NotImplementedError("This operation is not available yet");
-		  });
+         throw new Errors.NotImplementedError("This operation is not available yet");
+      });
    }
 
    @GET
    @Path("test2")
- 	 @BodyOptions({extended:false})
+   @BodyOptions({extended:false})
    testPost2(@FormParam("field1")myParam) {
       return new Promise<MyClass>(function(resolve, reject){
          //...
-			   reject(new Errors.NotImplementedError("This operation is not available yet"));
-		  });
+         reject(new Errors.NotImplementedError("This operation is not available yet"));
+      });
    }
 
    @GET
    @Path("test3")
    testGet3() {
-			throw new Errors.NotImplementedError("This operation is not available yet");
+      throw new Errors.NotImplementedError("This operation is not available yet");
    }
 }
+```
+
+It can be used, for example, to inform the bodyParser that it must handle date types for you:
+
+```typescript
+function dateReviver(key, value) {
+    let a;
+    if (typeof value === 'string') {
+        a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
+        if (a) {
+            return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],
+                            +a[5], +a[6]));
+        }
+    }
+    return value;
 }
+
+@Path('test')
+class MyRestService {
+   @POST
+   @BodyOptions({reviver: dateReviver})
+   myHandler(param) {
+      //...
+   }
+} 
 ```
 
 ### Types and languages
@@ -677,13 +703,13 @@ See some examples:
 @Path("test")
 @AcceptLanguage("en", "pt-BR")
 class TestAcceptService {
-	@GET
-	testLanguage(@ContextLanguage language: string): string {
-		if (language === 'en') {
-			return "accepted";
-		}
-		return "aceito";
-	}
+  @GET
+  testLanguage(@ContextLanguage language: string): string {
+    if (language === 'en') {
+      return "accepted";
+    }
+    return "aceito";
+  }
 }
 ```
 
@@ -704,11 +730,11 @@ You can decorate methods too, like:
 @Path("test")
 @AcceptLanguage("en", "pt-BR")
 class TestAcceptService {
-	@GET
+  @GET
   @AcceptLanguage("fr")
-	testLanguage(@ContextLanguage language: string): string {
+  testLanguage(@ContextLanguage language: string): string {
     // ...
-	}
+  }
 }
 ```
 
@@ -721,10 +747,10 @@ that a service can provide. It uses the ```Accept``` header in the request to de
 @Path("test")
 @Accept("application/json")
 class TestAcceptService {
-	@GET
-	testType(@ContextAccept accept: string): string {
+  @GET
+  testType(@ContextAccept accept: string): string {
      //...
-	}
+  }
 }
 ```
 

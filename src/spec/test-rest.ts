@@ -211,6 +211,29 @@ class AcceptTest {
 	}
 }
 
+interface DataParam {
+	param1: string;
+	param2: Date;
+}
+
+@Path("dateTest")
+class DateTest {
+
+	@POST
+	@BodyOptions({reviver:(key, value) =>{
+		if (key == "param2") {
+			return new Date(value);
+		}
+		return value;
+	}})
+	testData(param: DataParam) {
+		if ((param.param2 instanceof Date) && (param.param2.toString() === param.param1)){
+			return "OK";
+		}
+		return "NOT OK";
+	}
+}
+
 let app: express.Application = express();
 app.set('env', 'test');
 Server.buildServices(app);
@@ -478,6 +501,24 @@ describe("Server Tests", () => {
 			});
 		});
 	});
+
+	describe("DateTest", () => {
+		it("should be able to send a Date into a json object ", (done) => {
+			let date = new Date();
+			request.post({ 
+				url: "http://localhost:5674/dateTest",
+				json: true,
+				body: {
+					param1: date.toString(),
+					param2: date
+				}
+			}, function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});		
+	});
+
 
 });
 
