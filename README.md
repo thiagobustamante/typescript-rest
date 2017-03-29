@@ -344,7 +344,7 @@ accept | string | The preferred media type to be used to respond the current req
 next | express.NextFunction | The next function. It can be used to delegate to the next middleware registered the processing of the current request. 
 
 
-See [Types and languages](#types-and-languages) to know how the language and preferredMedia fields are calculated.
+See [Types and languages](#types-and-languages) to know how the language and accept fields are calculated.
 
 The ``` @Context ``` decorator can be used on service method's arguments or on service class properties to bind 
 the argument or the property to the current context object.  
@@ -761,8 +761,6 @@ It is possible to delegate to [typescript-ioc](https://github.com/thiagobustaman
 
 You ca configure it in two ways:
   1. Ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration, or
-  2. Create a file called ```rest.config``` and put it on the root of your project:
-
 
 
 ```typescript
@@ -791,7 +789,7 @@ class HelloRestService {
 }
 ```
 
-or Configure a rest.config file:
+  2. Create a file called ```rest.config``` and put it on the root of your project:
 
 ```json
 {
@@ -814,5 +812,5 @@ You can also use the ```serviceFactory``` property on rest.config file to config
 
 And export as default your serviceFactory class on ```./myServiceFactory.ts``` file.
 
-It could be used to allow other libraries, like [Inversify](http://inversify.io/).
+It could be used to allow the usage of other libraries, like [Inversify](http://inversify.io/).
 
