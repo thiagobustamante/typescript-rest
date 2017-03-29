@@ -19,7 +19,7 @@ It can be used to define your APIs using ES7 decorators.
     - [Service Return](#service-return)
       - [Asynchronous services](#asynchronous-services)
     - [Errors](#errors)
-    - [BodyParser Options](#bodyParser-options)
+    - [BodyParser Options](#bodyparser-options)
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
 
