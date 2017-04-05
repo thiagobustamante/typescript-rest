@@ -328,6 +328,24 @@ class Sample {
 }
 ```
 
+The ``` @*Param ``` decorators can also be used on service class properties.  
+
+An example:
+
+```typescript
+ @Path("users/:userId/photos")
+ class TestService {
+   @PathParam('userId')
+   userId: string;
+
+   @GET
+   getPhoto(@PathParam('photoId')) {
+      // Get the photo and return
+   }
+ }
+```
+
+
 ### Service Context
 
 A Context object is created to group informations about the current request being handled.

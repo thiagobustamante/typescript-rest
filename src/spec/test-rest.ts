@@ -117,6 +117,15 @@ class TestParams {
 	@Context
 	context: ServiceContext;
 
+	@HeaderParam('my-header')
+	private myHeader: ServiceContext;
+
+	@GET
+	@Path("myheader")
+	testMyHeader(): string {
+		return "header: " + this.myHeader;
+	}
+
 	@GET
 	@Path("headers")
 	testHeaders( @HeaderParam('my-header') header: string,
@@ -351,6 +360,16 @@ describe("Server Tests", () => {
 				url: "http://localhost:5674/headers"				
 			}, function(error, response, body) {
 				expect(body).toEqual("cookie: cookie value|header: header value");
+				done();
+			});
+		});
+
+		it("should read parameters as class property", (done) => {
+			request({
+				headers: { 'my-header': 'header value'},
+				url: "http://localhost:5674/myheader"				
+			}, function(error, response, body) {
+				expect(body).toEqual("header: header value");
 				done();
 			});
 		});

@@ -254,30 +254,9 @@ export class InternalServer {
 	private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
 		let serviceObject = InternalServer.serviceFactory.create(serviceClass.targetClass);
 		if (serviceClass.hasProperties()) {
-			serviceClass.properties.forEach((paramType, key) => {
-				switch (paramType) {
-					case metadata.ParamType.context:
-						serviceObject[key] = context;
-						break;
-					case metadata.ParamType.context_accept_language:
-						serviceObject[key] = context.language;
-						break;
-					case metadata.ParamType.context_accept:
-						serviceObject[key] = context.accept;
-						break;
-					case metadata.ParamType.context_request:
-						serviceObject[key] = context.request;
-						break;
-					case metadata.ParamType.context_response:
-						serviceObject[key] = context.response;
-						break;
-					case metadata.ParamType.context_next:
-						serviceObject[key] = context.next;
-						break;
-					default:
-						break;
-				}
-			})
+			serviceClass.properties.forEach((property, key) => {				
+				serviceObject[key] = this.processParameter(property.type, context, property.name, property.propertyType)
+			});
 		}
 		return serviceObject;
 	}
@@ -348,63 +327,53 @@ export class InternalServer {
 		let result: Array<any> = new Array<any>();
 
 		serviceMethod.parameters.forEach(param => {
-			switch (param.paramType) {
-				case metadata.ParamType.path:
-					result.push(this.convertType(context.request.params[param.name], param.type));
-					break;
-				case metadata.ParamType.query:
-					result.push(this.convertType(context.request.query[param.name], param.type));
-					break;
-				case metadata.ParamType.header:
-					result.push(this.convertType(context.request.header(param.name), param.type));
-					break;
-				case metadata.ParamType.cookie:
-					result.push(this.convertType(context.request.cookies[param.name], param.type));
-					break;
-				case metadata.ParamType.body:
-					result.push(this.convertType(context.request.body, param.type));
-					break;
-				case metadata.ParamType.file:
-					let files : Array<Express.Multer.File> = context.request.files[param.name];
-					if (files && files.length > 0) {
-						result.push(files[0]);
-					}
-					break;
-				case metadata.ParamType.files:
-					result.push(context.request.files[param.name]);
-					break;
-				case metadata.ParamType.form:
-					result.push(this.convertType(context.request.body[param.name], param.type));
-					break;
-				case metadata.ParamType.param:
-					let paramValue = context.request.body[param.name] ||
-									 context.request.query[param.name]; 
-					result.push(this.convertType(paramValue, param.type));
-					break;
-				case metadata.ParamType.context:
-					result.push(context);
-					break;
-				case metadata.ParamType.context_request:
-					result.push(context.request);
-					break;
-				case metadata.ParamType.context_response:
-					result.push(context.response);
-					break;
-				case metadata.ParamType.context_next:
-					result.push(context.next);
-					break;
-				case metadata.ParamType.context_accept:
-					result.push(context.accept);
-					break;
-				case metadata.ParamType.context_accept_language:
-					result.push(context.language);
-					break;
-				default:
-					throw Error("Invalid parameter type");
-			}
+			result.push(this.processParameter(param.paramType, context, param.name, param.type));
 		});
 
 		return result;
+	}
+
+	private processParameter(paramType: metadata.ParamType, context: ServiceContext, name: string, type: any) {
+		switch (paramType) {
+			case metadata.ParamType.path:
+				return this.convertType(context.request.params[name], type);
+			case metadata.ParamType.query:
+				return this.convertType(context.request.query[name], type);
+			case metadata.ParamType.header:
+				return this.convertType(context.request.header(name), type);
+			case metadata.ParamType.cookie:
+				return this.convertType(context.request.cookies[name], type);
+			case metadata.ParamType.body:
+				return this.convertType(context.request.body, type);
+			case metadata.ParamType.file:
+				let files : Array<Express.Multer.File> = context.request.files[name];
+				if (files && files.length > 0) {
+					return files[0];
+				}
+				return null;
+			case metadata.ParamType.files:
+				return context.request.files[name];
+			case metadata.ParamType.form:
+				return this.convertType(context.request.body[name], type);
+			case metadata.ParamType.param:
+				let paramValue = context.request.body[name] ||
+									context.request.query[name]; 
+				return this.convertType(paramValue, type);
+			case metadata.ParamType.context:
+				return context;
+			case metadata.ParamType.context_request:
+				return context.request;
+			case metadata.ParamType.context_response:
+				return context.response;
+			case metadata.ParamType.context_next:
+				return context.next;
+			case metadata.ParamType.context_accept:
+				return context.accept;
+			case metadata.ParamType.context_accept_language:
+				return context.language;
+			default:
+				throw Error("Invalid parameter type");
+		}		
 	}
 
 	private convertType(paramValue: string, paramType: Function): any {

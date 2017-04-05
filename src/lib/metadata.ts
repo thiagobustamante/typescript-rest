@@ -3,6 +3,12 @@
 
 import {HttpMethod} from "./server-types"
 
+export interface SeviceProperty {
+	type: ParamType;
+	name: string;
+	propertyType: any;
+}
+
 /**
  * Metadata for REST service classes
  */
@@ -17,13 +23,13 @@ export class ServiceClass {
 	methods: Map<string,ServiceMethod>;
 	languages: Array<string>;
 	accepts: Array<string>;
-	properties: Map<string,ParamType>;
+	properties: Map<string,SeviceProperty>;
 	
-	addProperty(key: string, paramType: ParamType) {
+	addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
 		if (!this.hasProperties()) {
-			this.properties = new Map<string,ParamType>();
+			this.properties = new Map<string,SeviceProperty>();
 		}
-		this.properties.set(key, paramType);
+		this.properties.set(key, {type: paramType, name: paramName, propertyType: propertyType});
 	}
 
 	hasProperties(): boolean {

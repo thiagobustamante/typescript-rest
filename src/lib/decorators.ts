@@ -140,12 +140,11 @@ export function Accept(...accepts: string[]) {
  */
 export function Context(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context]);
+    let newArgs = args.concat([metadata.ParamType.context, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -173,12 +172,11 @@ export function Context(...args: any[]) {
  */
 export function ContextRequest(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context_request]);
+    let newArgs = args.concat([metadata.ParamType.context_request, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context_request, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -206,12 +204,11 @@ export function ContextRequest(...args: any[]) {
  */
 export function ContextResponse(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context_response]);
+    let newArgs = args.concat([metadata.ParamType.context_response, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context_response, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -239,12 +236,11 @@ export function ContextResponse(...args: any[]) {
  */
 export function ContextNext(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context_next]);
+    let newArgs = args.concat([metadata.ParamType.context_next, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context_next, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -269,12 +265,11 @@ export function ContextNext(...args: any[]) {
  */
 export function ContextLanguage(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context_accept_language]);
+    let newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -299,12 +294,11 @@ export function ContextLanguage(...args: any[]) {
  */
 export function ContextAccept(...args: any[]) {
 	args = _.without(args, undefined);
-	if (args.length == 2){
-    	let newArgs = args.concat([metadata.ParamType.context_accept]);
+    let newArgs = args.concat([metadata.ParamType.context_accept, null]);
+	if (args.length < 3 || typeof args[2] === "undefined") {
         return processDecoratedProperty.apply(this, newArgs);
     }
     else if (args.length == 3 && typeof args[2] === "number") {
-    	let newArgs = args.concat([metadata.ParamType.context_accept, null]);
         return processDecoratedParameter.apply(this, newArgs);
     }
 
@@ -543,8 +537,17 @@ export function BodyOptions(options: any) {
  * And pass 123 as the id argument on getPerson method's call.
  */
 export function PathParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.path, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.path, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @PathParam Decorator declaration.");	
 	}
 }
 
@@ -571,8 +574,17 @@ export function PathParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FileParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.file, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.file, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @FileParam Decorator declaration.");	
 	}
 }
 
@@ -599,8 +611,17 @@ export function FileParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FilesParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.files, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.files, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @FilesParam Decorator declaration.");	
 	}
 }
 
@@ -629,8 +650,17 @@ export function FilesParam(name: string) {
  * And pass "joe" as the name argument on getPerson method's call.
  */
 export function QueryParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.query, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.query, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @QueryParam Decorator declaration.");	
 	}
 }
 
@@ -654,8 +684,17 @@ export function QueryParam(name: string) {
  * header called "header" to the header argument on getPerson method's call.
  */
 export function HeaderParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.header, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.header, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @HeaderParam Decorator declaration.");	
 	}
 }
 
@@ -679,8 +718,17 @@ export function HeaderParam(name: string) {
  * cookie called "cookie" to the cookie argument on getPerson method's call.
  */
 export function CookieParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.cookie, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.cookie, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @CookieParam Decorator declaration.");	
 	}
 }
 
@@ -705,8 +753,17 @@ export function CookieParam(name: string) {
  * method's call.
  */
 export function FormParam(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.form, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.form, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @FormParam Decorator declaration.");	
 	}
 }
 
@@ -732,8 +789,17 @@ export function FormParam(name: string) {
  * received in the current request.
  */
 export function Param(name: string) {
-    return function(target: Object, propertyKey: string, parameterIndex: number) {
-		processDecoratedParameter(target, propertyKey, parameterIndex, metadata.ParamType.param, name);
+    return function(...args: any[]) {
+		args = _.without(args, undefined);
+		let newArgs = args.concat([metadata.ParamType.param, name]);
+	    if (args.length < 3 || typeof args[2] === "undefined") {
+			return processDecoratedProperty.apply(this, newArgs);
+		}
+		else if (args.length == 3 && typeof args[2] === "number") {
+			return processDecoratedParameter.apply(this, newArgs);
+		}
+
+		throw new Error("Invalid @Param Decorator declaration.");	
 	}
 }
 
@@ -814,9 +880,10 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
 /**
  * Decorator processor for annotations on properties
  */
-function processDecoratedProperty(target: Function, key: string, paramType: metadata.ParamType) {
+function processDecoratedProperty(target: Function, key: string, paramType: metadata.ParamType, paramName: string) {
 	let classData: metadata.ServiceClass = InternalServer.registerServiceClass(target.constructor);
-    classData.addProperty(key, paramType);
+    let propertyType = Reflect.getMetadata("design:type", target, key);
+    classData.addProperty(key, paramType, paramName, propertyType);
 }
 
 
