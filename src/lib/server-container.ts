@@ -307,7 +307,13 @@ export class InternalServer {
 				}
 				else if (value.location && value instanceof ReferencedResource) {
 					res.set("Location", value.location);
-					res.sendStatus(value.statusCode);
+					if (value.body) {
+						res.status(value.statusCode);
+						this.sendValue(value.body, res, next);
+					} else {
+						res.sendStatus(value.statusCode);
+					}
+
 				}
 				else if (value.then && value.constructor['name'] === 'Promise') {
 					let self = this;

@@ -62,8 +62,9 @@ export abstract class ReferencedResource {
 	 * Constructor. Receives the location of the resource.
 	 * @param location To be added to the Location header on response
 	 * @param statusCode the response status code to be sent
+	 * @param body the body to be sent
 	 */
-	constructor(public location: string, public statusCode: number) {}
+	constructor(public location: string, public statusCode: number, public body?: any) {}
 }
 
 /**

@@ -97,7 +97,7 @@ class PersonService {
 	@POST
 	@BodyOptions({limit:'100kb'})
 	addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource {
-		return new Return.NewResource(req.url + "/" + person.id);
+		return new Return.NewResource(req.url + "/" + person.id, {id: person.id});
 	}
 
 	@GET
@@ -306,6 +306,8 @@ describe("Server Tests", () => {
 			}, function(error, response, body) {
 				expect(response.statusCode).toEqual(201);
 				expect(response.headers['location']).toEqual("/asubpath/person/123");
+				let result: Person = JSON.parse(body);
+				expect(result.id).toEqual(123);
 				done();
 			});
 		});

@@ -10,9 +10,10 @@ export class NewResource extends ReferencedResource {
 	/**
 	 * Constructor. Receives the location of the new resource created.
 	 * @param location To be added to the Location header on response
+	 * @param body To be added to the response body
 	 */
-	constructor(location: string) {
-		super(location, 201);
+	constructor(location: string, body?: any) {
+		super(location, 201, body);
 	}
 }
 
@@ -26,9 +27,10 @@ export class RequestAccepted extends ReferencedResource {
 	 * Constructor. Receives the location where information about the 
 	 * request processing can be found.
 	 * @param location To be added to the Location header on response
+	 * @param body To be added to the response body
 	 */
-	constructor(location: string) {
-		super(location, 202);
+	constructor(location: string, body?: any) {
+		super(location, 202, body);
 	}
 }
 
@@ -41,9 +43,10 @@ export class MovedPermanently extends ReferencedResource {
 	/**
 	 * Constructor. Receives the location where the resource can be found.
 	 * @param location To be added to the Location header on response
+	 * @param body To be added to the response body
 	 */
-	constructor(location: string) {
-		super(location, 301);
+	constructor(location: string, body?: any) {
+		super(location, 301, body);
 	}
 }
 
@@ -56,9 +59,10 @@ export class MovedTemporarily extends ReferencedResource {
 	/**
 	 * Constructor. Receives the location where the resource can be found.
 	 * @param location To be added to the Location header on response
+	 * @param body To be added to the response body
 	 */
-	constructor(location: string) {
-		super(location, 302);
+	constructor(location: string, body?: any) {
+		super(location, 302, body);
 	}
 }
 

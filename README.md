@@ -498,6 +498,23 @@ class TestService {
 The server will return an empty body with a ```201``` status code and a ```Location``` header pointing to 
 the URL of the created resource. 
 
+It is possible to specify a body to be sent in responses:
+
+```typescript
+import {Return} from "typescript-rest";
+
+@Path("test")
+class TestService {
+   @POST
+   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource {
+      //...
+      return new Return.NewResource(req.url + "/" + generatedId, {id: generatedId}); //Returns a JSON on body {id: generatedId}
+   }
+}
+```
+
+
+
 You can use special types to download files:
 
 Type | Description
