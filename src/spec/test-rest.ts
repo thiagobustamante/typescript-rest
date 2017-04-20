@@ -55,6 +55,22 @@ class MyIoCService2 {
 	}
 }
 
+
+@Path("ioctest3")
+@AutoWired
+class MyIoCService3 {
+	private injectedObject: InjectableObject
+
+	constructor(@Inject injectedObject: InjectableObject) {
+		this.injectedObject = injectedObject;
+	}
+
+	@GET
+	test( ): string {
+		return (this.injectedObject)?"OK":"NOT OK";
+	}
+}
+
 @Path("mypath")
 class MyService {
 	@GET
@@ -264,6 +280,7 @@ describe("Server Tests", () => {
 			expect(Server.getPaths().indexOf("/mypath")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/ioctest")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/ioctest2")).toBeGreaterThan(-1);
+			expect(Server.getPaths().indexOf("/ioctest3")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/mypath2/secondpath")).toBeGreaterThan(-1);			
 			expect(Server.getPaths().indexOf("/asubpath/person/:id")).toBeGreaterThan(-1);
 			expect(Server.getPaths().indexOf("/headers")).toBeGreaterThan(-1);
@@ -339,6 +356,12 @@ describe("Server Tests", () => {
 		});
 		it("should use IoC container to instantiate the services, does not carrying about the decorators order", (done) => {
 			request("http://localhost:5674/ioctest2", function(error, response, body) {
+				expect(body).toEqual("OK");
+				done();
+			});
+		});
+		it("should use IoC container to instantiate the services with injected params on constructor", (done) => {
+			request("http://localhost:5674/ioctest3", function(error, response, body) {
 				expect(body).toEqual("OK");
 				done();
 			});

@@ -22,10 +22,8 @@ export class InternalServer {
 	static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
 	static fileLimits: number;
 	static serviceFactory: ServiceFactory = {
-		create: (serviceClass: Function) => {
-			let serviceObject = Object.create(serviceClass.prototype);
-			serviceClass.apply(serviceObject);
-			return serviceObject;
+		create: (serviceClass: any) => {
+			return new serviceClass()
 		},
 		getTargetClass: (serviceClass: Function) => {
 			return <FunctionConstructor>serviceClass;

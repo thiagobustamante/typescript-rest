@@ -795,7 +795,7 @@ class TestAcceptService {
 It is possible to delegate to [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc) the instantiation of the service objects.
 
 You ca configure it in two ways:
-  1. Ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration, or
+  1. Ensure that you call ```Server.useIoC()``` in the begining of your code, before any service declaration
 
 
 ```typescript
@@ -823,6 +823,8 @@ class HelloRestService {
   }
 }
 ```
+
+or
 
   2. Create a file called ```rest.config``` and put it on the root of your project:
 

@@ -6,21 +6,26 @@ interface Map<K, V> {
     get(key: K): V;
     has(key: K): boolean;
     set(key: K, value: V): Map<K, V>;
-    size: number;
+    readonly size: number;
 }
-declare var Map: {
-    new <K, V>(): Map<K, V>;
-    prototype: Map<any, any>;
+
+interface MapConstructor {
+    new (): Map<any, any>;
+    new <K, V>(entries?: [K, V][]): Map<K, V>;
+    readonly prototype: Map<any, any>;
 }
+declare var Map: MapConstructor;
 interface Set<T> {
     add(value: T): Set<T>;
     clear(): void;
     delete(value: T): boolean;
     forEach(callbackfn: (value: T, index: T, set: Set<T>) => void, thisArg?: any): void;
     has(value: T): boolean;
-    size: number;
+    readonly size: number;
 }
-declare var Set: {
-    new <T>(): Set<T>;
-    prototype: Set<any>;
+interface SetConstructor {
+    new (): Set<any>;
+    new <T>(values?: T[]): Set<T>;
+    readonly prototype: Set<any>;
 }
+declare var Set: SetConstructor;

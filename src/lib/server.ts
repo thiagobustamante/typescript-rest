@@ -50,11 +50,11 @@ export class Server {
 			},
 			getTargetClass: (serviceClass: Function) => {
 				let typeConstructor: Function = serviceClass;
-				if (typeConstructor['name']) {
+				if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
 					return <FunctionConstructor>typeConstructor;
 				}
 				while (typeConstructor = typeConstructor['__parent']) {
-					if (typeConstructor['name']) {
+					if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
 						return <FunctionConstructor>typeConstructor;
 					}
 				}
