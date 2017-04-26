@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/typescript-rest.svg)](https://badge.fury.io/js/typescript-rest)
+
 # REST Services for Typescript
 This is a lightweight annotation-based [expressjs](http://expressjs.com/) extension for typescript.
 
