@@ -66,6 +66,9 @@
     "lib": "release",
     "doc": "doc"
   },
+  "engines": {
+    "node": ">=5.0.0"
+  },
   "main": "release/lib/typescript-rest.js",
   "typings": "release/lib/typescript-rest.d.ts"
 }
