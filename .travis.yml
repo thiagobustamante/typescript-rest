@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - '6'
-script: npm run test:coverage
+script: nyc npm test && nyc report --reporter=text-lcov | coveralls
 deploy:
   provider: npm
   email: thiago@cruxframework.org

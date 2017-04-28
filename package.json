@@ -74,6 +74,7 @@
     "@types/request": "0.0.32",
     "@types/yamljs": "^0.2.30",
     "chai": "^3.5.0",
+    "coveralls": "^2.13.1",
     "cross-env": "^4.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.3.0",
