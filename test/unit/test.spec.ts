@@ -24,7 +24,7 @@ describe('Server Tests', () => {
         it('should provide a catalog containing the exposed paths', () => {
 			expect(Server.getPaths()).to.include.members(['/mypath', '/ioctest', '/ioctest2', '/ioctest3', '/mypath2/secondpath',
 			                                            '/asubpath/person/:id', '/headers', '/multi-param', '/context', '/upload',
-			                                            '/download', '/accept', '/accept/conflict']);
+			                                            '/download', '/download/ref', '/accept', '/accept/conflict']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
         });
     });
@@ -183,6 +183,14 @@ describe('Server Tests', () => {
                 url: 'http://localhost:5674/download'
             }, function(error, response, body) {
                 expect(response.headers['content-type']).to.eq('application/javascript');
+                expect(_.startsWith(body.toString(),'\'use strict\';')).to.eq(true);
+                done();
+            });
+        });
+        it('should return a referenced file', (done) => {
+            request({
+                url: 'http://localhost:5674/download/ref'
+            }, function(error, response, body) {
                 expect(_.startsWith(body.toString(),'\'use strict\';')).to.eq(true);
                 done();
             });

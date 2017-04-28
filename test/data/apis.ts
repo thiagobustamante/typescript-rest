@@ -195,6 +195,14 @@ class TestDownload {
             });
         });
     }
+
+    @Path('ref')
+    @GET
+    testDownloadFile2(): Promise<Return.DownloadResource> {
+        return new Promise<Return.DownloadResource>((resolve, reject)=>{
+            resolve(new Return.DownloadResource(__dirname + '/apis.ts', 'test-rest.spec.js'));
+        });
+    }
 }
 
 @Path('/accept')
