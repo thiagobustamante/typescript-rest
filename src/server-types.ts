@@ -1,18 +1,18 @@
-"use strict";
+'use strict';
 
-import * as express from "express"; 
+import * as express from 'express';
 
 /**
  * The supported HTTP methods.
  */
 export enum HttpMethod {
-	GET,
-	POST,
-	PUT,
-	DELETE,
-	HEAD,
-	OPTIONS,
-	PATCH
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    OPTIONS,
+    PATCH
 }
 
 /**
@@ -20,38 +20,38 @@ export enum HttpMethod {
  */
 export class ServiceContext {
 	/**
-	 * The resolved language to be used in the current request handling. 
+	 * The resolved language to be used in the current request handling.
 	 */
-	language: string;
+    language: string;
 	/**
-	 * The preferred media type to be used in the current request handling. 
+	 * The preferred media type to be used in the current request handling.
 	 */
-	accept: string;
+    accept: string;
 	/**
-	 * The request object. 
+	 * The request object.
 	 */
-	request: express.Request;
+    request: express.Request;
 	/**
-	 * The response object 
+	 * The response object
 	 */
-	response: express.Response; 
+    response: express.Response;
 	/**
 	 * The next function. It can be used to delegate to the next middleware
-	 * registered the processing of the current request. 
+	 * registered the processing of the current request.
 	 */
-	next: express.NextFunction;
+    next: express.NextFunction;
 }
 
 /**
  * The Base class for all HTTP errors
  */
 export abstract class HttpError extends Error {
-  constructor(name: string, 
-  			  public statusCode: number, 
-  			  public message: string) {
-    super(message);
-    this.name = name;
-  }
+    constructor(name: string,
+        public statusCode: number,
+        public message: string) {
+        super(message);
+        this.name = name;
+    }
 }
 
 /**
@@ -64,7 +64,7 @@ export abstract class ReferencedResource {
 	 * @param statusCode the response status code to be sent
 	 * @param body the body to be sent
 	 */
-	constructor(public location: string, public statusCode: number, public body?: any) {}
+    constructor(public location: string, public statusCode: number, public body?: any) { }
 }
 
 /**
@@ -74,12 +74,11 @@ export interface ServiceFactory {
 	/**
 	 * Create a new service object. Called before each request handling.
 	 */
-	create: (serviceClass: Function) => any,
+    create: (serviceClass: Function) => any;
 	/**
 	 * Return the type used to handle requests to the target service.
 	 * By default, returns the serviceClass received, but you can use this
 	 * to implement IoC integrations.
 	 */
-	getTargetClass: (serviceClass: Function) => FunctionConstructor;
+    getTargetClass: (serviceClass: Function) => FunctionConstructor;
 }
-

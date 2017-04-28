@@ -1,22 +1,22 @@
-"use strict";
+'use strict';
 
-import * as path from "path";
-import * as fs from "fs-extra";
+import * as path from 'path';
+import * as fs from 'fs-extra';
 
-import * as Errors from "./server-errors";
-import * as Return from "./server-return";
-import {Server} from "./server";
+import * as Errors from './server-errors';
+import * as Return from './server-return';
+import { Server } from './server';
 
-export * from "./decorators";
-export * from "./server-types";
-export * from "./server";
+export * from './decorators';
+export * from './server-types';
+export * from './server';
 
-export {Return};
-export {Errors};
+export { Return };
+export { Errors };
 
 const CONFIG_FILE = path.join(process.cwd(), 'rest.config');
 if (fs.existsSync(CONFIG_FILE)) {
-    let config = fs.readJSONSync(CONFIG_FILE);
+    const config = fs.readJSONSync(CONFIG_FILE);
     if (config.useIoC) {
         Server.useIoC();
     } else if (config.serviceFactory) {

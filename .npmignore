@@ -1,13 +1,3 @@
-src
-typings
-gulpfile.js
-tsconfig.json
-.DS_Store 
-.jshintrc
-.sublime-project
-.tern-project
-release/spec
-!/release
-!/doc
-package.sublime-workspace
+!dist/**
+!doc/**
 .travis.yml
