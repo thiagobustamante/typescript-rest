@@ -492,9 +492,15 @@ import {Return} from "typescript-rest";
 @Path("test")
 class TestService {
    @POST
-   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource {
+   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource<void> {
       //...
-      return new Return.NewResource(req.url + "/" + generatedId);
+      return new Return.NewResource<void>(req.url + "/" + generatedId);
+   }
+
+   @POST
+   testWithBody(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource<string> {
+      //...
+      return new Return.NewResource<string>(req.url + "/" + generatedId, 'The body of the response');
    }
 }
 ```
@@ -507,16 +513,19 @@ It is possible to specify a body to be sent in responses:
 ```typescript
 import {Return} from "typescript-rest";
 
+interface NewObject {
+  id: string;
+}
+
 @Path("test")
 class TestService {
    @POST
-   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource {
+   test(myObject: MyClass, @ContextRequest request: express.Request): Return.NewResource<NewObject> {
       //...
-      return new Return.NewResource(req.url + "/" + generatedId, {id: generatedId}); //Returns a JSON on body {id: generatedId}
+      return new Return.NewResource<NewObject>(req.url + "/" + generatedId, {id: generatedId}); //Returns a JSON on body {id: generatedId}
    }
 }
 ```
-
 
 
 You can use special types to download files:

@@ -111,8 +111,8 @@ class PersonService {
 
     @POST
     @BodyOptions({limit:'100kb'})
-    addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource {
-        return new Return.NewResource(req.url + '/' + person.id, {id: person.id});
+    addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource<{id:number}> {
+        return new Return.NewResource<{id:number}>(req.url + '/' + person.id, {id: person.id});
     }
 
     @GET

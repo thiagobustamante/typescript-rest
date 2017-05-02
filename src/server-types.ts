@@ -57,14 +57,14 @@ export abstract class HttpError extends Error {
 /**
  * Used to create a reference to a resource.
  */
-export abstract class ReferencedResource {
+export abstract class ReferencedResource<T> {
 	/**
 	 * Constructor. Receives the location of the resource.
 	 * @param location To be added to the Location header on response
 	 * @param statusCode the response status code to be sent
 	 * @param body the body to be sent
 	 */
-    constructor(public location: string, public statusCode: number, public body?: any) { }
+    constructor(public location: string, public statusCode: number, public body?: T) { }
 }
 
 /**

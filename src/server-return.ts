@@ -6,13 +6,13 @@ import { ReferencedResource } from './server-types';
  * Inform that a new resource was created. Server will
  * add a Location header and set status to 201
  */
-export class NewResource extends ReferencedResource {
+export class NewResource<T> extends ReferencedResource<T> {
 	/**
 	 * Constructor. Receives the location of the new resource created.
 	 * @param location To be added to the Location header on response
 	 * @param body To be added to the response body
 	 */
-    constructor(location: string, body?: any) {
+    constructor(location: string, body?: T) {
         super(location, 201, body);
     }
 }
@@ -22,14 +22,14 @@ export class NewResource extends ReferencedResource {
  * A Location header should inform the location where the user
  * can monitor his request processing status.
  */
-export class RequestAccepted extends ReferencedResource {
+export class RequestAccepted<T> extends ReferencedResource<T> {
 	/**
 	 * Constructor. Receives the location where information about the
 	 * request processing can be found.
 	 * @param location To be added to the Location header on response
 	 * @param body To be added to the response body
 	 */
-    constructor(location: string, body?: any) {
+    constructor(location: string, body?: T) {
         super(location, 202, body);
     }
 }
@@ -39,13 +39,13 @@ export class RequestAccepted extends ReferencedResource {
  * moved to a new location, and that future references should use a
  * new URI with their requests.
  */
-export class MovedPermanently extends ReferencedResource {
+export class MovedPermanently<T> extends ReferencedResource<T> {
 	/**
 	 * Constructor. Receives the location where the resource can be found.
 	 * @param location To be added to the Location header on response
 	 * @param body To be added to the response body
 	 */
-    constructor(location: string, body?: any) {
+    constructor(location: string, body?: T) {
         super(location, 301, body);
     }
 }
@@ -55,13 +55,13 @@ export class MovedPermanently extends ReferencedResource {
  * moved to another location, but that future references should
  * still use the original URI to access the resource.
  */
-export class MovedTemporarily extends ReferencedResource {
+export class MovedTemporarily<T> extends ReferencedResource<T> {
 	/**
 	 * Constructor. Receives the location where the resource can be found.
 	 * @param location To be added to the Location header on response
 	 * @param body To be added to the response body
 	 */
-    constructor(location: string, body?: any) {
+    constructor(location: string, body?: T) {
         super(location, 302, body);
     }
 }
