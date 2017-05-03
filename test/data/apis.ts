@@ -218,6 +218,16 @@ class AcceptTest {
     }
 
     @GET
+    @AcceptLanguage('fr')
+    @Path('fr')
+    testLanguageFr(@ContextLanguage language: string): string {
+        if (language === 'fr') {
+            return 'OK';
+        }
+        return 'NOT OK';
+    }
+
+    @GET
     @Path('types')
     @Accept('application/json')
     testAccepts(@ContextAccept type: string): string {
@@ -276,7 +286,7 @@ class ErrorService {
     @GET
     test1( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.BadRequestError('test'));
+            reject(new Errors.BadRequestError());
         });
     }
 
@@ -284,7 +294,7 @@ class ErrorService {
     @GET
     test2( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.ConflictError('test'));
+            reject(new Errors.ConflictError());
         });
     }
 
@@ -292,7 +302,7 @@ class ErrorService {
     @GET
     test3( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.ForbidenError('test'));
+            reject(new Errors.ForbidenError());
         });
     }
 
@@ -300,7 +310,7 @@ class ErrorService {
     @GET
     test4( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.GoneError('test'));
+            reject(new Errors.GoneError());
         });
     }
 
@@ -308,7 +318,7 @@ class ErrorService {
     @GET
     test5( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.InternalServerError('test'));
+            reject(new Errors.InternalServerError());
         });
     }
 
@@ -316,7 +326,7 @@ class ErrorService {
     @GET
     test6( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.MethodNotAllowedError('test'));
+            reject(new Errors.MethodNotAllowedError());
         });
     }
 
@@ -324,7 +334,7 @@ class ErrorService {
     @GET
     test7( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.NotAcceptableError('test'));
+            reject(new Errors.NotAcceptableError());
         });
     }
 
@@ -332,7 +342,7 @@ class ErrorService {
     @GET
     test8( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.NotFoundError('test'));
+            reject(new Errors.NotFoundError());
         });
     }
 
@@ -340,7 +350,7 @@ class ErrorService {
     @GET
     test9( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.NotImplementedError('test'));
+            reject(new Errors.NotImplementedError());
         });
     }
 
@@ -348,7 +358,7 @@ class ErrorService {
     @GET
     test10( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.UnauthorizedError('test'));
+            reject(new Errors.UnauthorizedError());
         });
     }
 
@@ -356,7 +366,7 @@ class ErrorService {
     @GET
     test11( p: Person): Promise<string> {
         return new Promise<string>(function(resolve, reject){
-            reject(new Errors.UnsupportedMediaTypeError('test'));
+            reject(new Errors.UnsupportedMediaTypeError());
         });
     }
 }

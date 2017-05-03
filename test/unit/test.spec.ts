@@ -209,6 +209,16 @@ describe('Server Tests', () => {
             });
         });
 
+        it('should choose language correctly, when declared on methods', (done) => {
+            request({
+                headers: { 'Accept-Language': 'fr' },
+                url: 'http://localhost:5674/accept/fr'
+            }, function(error, response, body) {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+
         it('should reject unacceptable languages', (done) => {
             request({
                 headers: { 'Accept-Language': 'fr' },
