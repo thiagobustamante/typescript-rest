@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as chai from 'chai';
 import {Server, HttpMethod} from '../../src/typescript-rest';
+import * as YAML from 'yamljs';
 
 const expect = chai.expect;
 
@@ -300,6 +301,23 @@ describe('Server Tests', () => {
                 url: 'http://localhost:5674/dateTest'
             }, function(error, response, body) {
                 expect(body).to.eq('OK');
+                done();
+            });
+        });
+    });
+
+    describe('Api Docs', () => {
+        it('should be able to send the YAML API swagger file', (done) => {
+            request.get('http://localhost:5674/api-docs/yaml', function(error, response, body) {
+                const swaggerDocument: any = YAML.parse(body);
+                expect(swaggerDocument.basePath).to.eq('/v1');
+                done();
+            });
+        });
+        it('should be able to send the JSON API swagger file', (done) => {
+            request.get('http://localhost:5674/api-docs/json', function(error, response, body) {
+                const swaggerDocument: any = JSON.parse(body);
+                expect(swaggerDocument.basePath).to.eq('/v1');
                 done();
             });
         });

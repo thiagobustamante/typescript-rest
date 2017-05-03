@@ -1,0 +1,106 @@
+basePath: /v1
+consumes:
+    - application/json
+definitions:
+    Address:
+        description: ""
+        properties:
+            street:
+                type: string
+                description: ""
+        required:
+            - street
+        type: object
+    Person:
+        description: ""
+        properties:
+            name:
+                type: string
+                description: ""
+            address:
+                $ref: '#/definitions/Address'
+        required:
+            - name
+        type: object
+info:
+    description: 'a description'
+    license:
+        name: MIT
+    title: 'Typescript-rest Test API'
+    version: '1.0'
+paths:
+    /mypath:
+        get:
+            operationId: MyServiceTest
+            produces:
+                - application/json
+            responses:
+                '200':
+                    description: Ok
+                    schema:
+                        type: string
+            description: ""
+            parameters: []
+    /mypath/secondpath:
+        get:
+            operationId: MyServiceTest2
+            produces:
+                - application/json
+            responses:
+                '200':
+                    description: Ok
+                    schema:
+                        $ref: '#/definitions/Person'
+            description: 'Esta eh a da classe'
+            parameters:
+                -
+                    description: 'Esta eh a description do param teste'
+                    in: query
+                    name: testParam
+                    required: false
+                    type: string
+    /promise:
+        get:
+            operationId: PromiseServiceTest
+            produces:
+                - application/json
+            responses:
+                '200':
+                    description: Ok
+                    schema:
+                        $ref: '#/definitions/Person'
+            description: 'Esta eh a da classe'
+            parameters:
+                -
+                    description: 'Esta eh a description do param teste'
+                    in: query
+                    name: testParam
+                    required: false
+                    type: string
+        post:
+            operationId: PromiseServiceTestPost
+            produces:
+                - application/json
+            responses:
+                '201':
+                    description: Ok
+                    schema:
+                        $ref: '#/definitions/Person'
+            description: ""
+            parameters:
+                -
+                    description: ""
+                    in: body
+                    name: obj
+                    required: true
+                    schema:
+                        $ref: '#/definitions/Person'
+produces:
+    - application/json
+swagger: '2.0'
+securityDefinitions:
+    api_key:
+        type: apiKey
+        name: access_token
+        in: query
+host: 'localhost:3000'

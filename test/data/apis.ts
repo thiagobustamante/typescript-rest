@@ -302,6 +302,7 @@ export function startApi(): Promise<void> {
         app.set('env', 'test');
         Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyService, MyService2, PersonService, 
 							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService);
+        Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);

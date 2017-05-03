@@ -4,6 +4,10 @@ import * as express from 'express';
 import 'multer';
 import { InternalServer } from './server-container';
 import { HttpMethod, ServiceFactory } from './server-types';
+import * as _ from 'lodash';
+import * as fs from 'fs-extra';
+import * as YAML from 'yamljs';
+import * as path from 'path';
 
 /**
  * The Http server main class.
@@ -123,5 +127,43 @@ export class Server {
 	 */
     static setFileLimits(limit: number) {
         InternalServer.fileLimits = limit;
+    }
+
+    /**
+     * Creates and endpoint to publish the swagger documentation.
+     * @param router Express router
+     * @param filePath the path to a swagger file (json or yaml)
+     * @param endpoint where to publish the docs
+     * @param host the hostname of the service
+     * @param schemes the schemes used by the server
+     */
+    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[]) {
+        const swaggerUi = require('swagger-ui-express');
+        if (_.startsWith(filePath, '.')) {
+            filePath = path.join(process.cwd(), filePath);
+        }
+
+        let swaggerDocument: any;
+        if (_.endsWith(filePath, '.yml') || _.endsWith(filePath, '.yaml')) {
+            swaggerDocument = YAML.load(filePath);
+        } else {
+            swaggerDocument = fs.readJSONSync(filePath);
+        }
+
+        if (host) {
+            swaggerDocument.host = host;
+        }
+        if (schemes) {
+            swaggerDocument.schemes = schemes;
+        }
+
+        router.get(path.join('/', endpoint, 'json'), (req, res, next) => {
+            res.send(swaggerDocument);
+        });
+        router.get(path.join('/', endpoint, 'yaml'), (req, res, next) => {
+            res.set('Content-Type', 'text/vnd.yaml');
+            res.send(YAML.stringify(swaggerDocument, 1000));
+        });
+        router.use(path.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 }

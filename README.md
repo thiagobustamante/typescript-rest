@@ -864,3 +864,37 @@ And export as default your serviceFactory class on ```./myServiceFactory.ts``` f
 
 It could be used to allow the usage of other libraries, like [Inversify](http://inversify.io/).
 
+## Swagger
+
+Typescript-rest can expose an endpoint with the [swagger](http://swagger.io/) documentation for your API.
+
+For example: 
+
+```typescript
+let app: express.Application = express();
+app.set('env', 'test');
+Server.buildServices(app);
+Server.swagger(app, './test/data/swagger.yaml', '/api-docs', 'localhost:5674', ['http']);
+```
+
+You can provide your swagger file as an YAML or a JSON file.
+
+Now, just access: 
+
+```
+http://localhost:5674/api-docs  // Show the swagger UI to allow interaction with the swagger file
+http://localhost:5674/api-docs/json  // Return the swagger.json file
+http://localhost:5674/api-docs/yaml  // Return the swagger.yaml file
+```
+
+To generate the swagger file, you can use the [typescript-rest-swagger](https://github.com/thiagobustamante/typescript-rest-swagger) tool.
+
+```sh
+npm install typescript-rest-swagger -g
+````
+
+```sh
+swaggerGen -c ./swaggerConfig.json
+```
+
+[typescript-rest-swagger](https://github.com/thiagobustamante/typescript-rest-swagger) tool can generate a swagger file as an YAML or a JSON file.
