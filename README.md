@@ -1,5 +1,5 @@
 [![npm version](https://badge.fury.io/js/typescript-rest.svg)](https://badge.fury.io/js/typescript-rest)
-[![Build Status](https://travis-ci.org/thiagobustamante/typescript-rest.png?branch=master)](https://travis-ci.org/thiagobustamante/typescript-rest)
+[![Build Status](https://travis-ci.org/thiagobustamante/typescript-rest.svg?branch=master)](https://travis-ci.org/thiagobustamante/typescript-rest)
 [![Coverage Status](https://coveralls.io/repos/github/thiagobustamante/typescript-rest/badge.svg?branch=master)](https://coveralls.io/github/thiagobustamante/typescript-rest?branch=master)
 
 # REST Services for Typescript
