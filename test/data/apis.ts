@@ -243,6 +243,34 @@ class AcceptTest {
     }
 }
 
+@Path('/reference')
+class ReferenceService {
+    @Path('accepted')
+    @POST
+    testAccepted( p: Person): Promise<Return.RequestAccepted<void>> {
+        return new Promise<Return.RequestAccepted<void>>(function(resolve, reject){
+            resolve(new Return.RequestAccepted<void>(''+p.id));
+        });
+    }
+
+    @Path('moved')
+    @POST
+    testMoved( p: Person): Promise<Return.MovedPermanently<void>> {
+        return new Promise<Return.MovedPermanently<void>>(function(resolve, reject){
+            resolve(new Return.MovedPermanently<void>(''+p.id));
+        });
+    }
+
+    @Path('movedtemp')
+    @POST
+    testMovedTemp( p: Person): Promise<Return.MovedTemporarily<void>> {
+        return new Promise<Return.MovedTemporarily<void>>(function(resolve, reject){
+            resolve(new Return.MovedTemporarily<void>(''+p.id));
+        });
+    }
+}
+
+
 interface DataParam {
     param1: string;
     param2: Date;
@@ -273,7 +301,7 @@ export function startApi(): Promise<void> {
         let app: express.Application = express();
         app.set('env', 'test');
         Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyService, MyService2, PersonService, 
-							TestParams, TestDownload, AcceptTest, DateTest);
+							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService);
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);

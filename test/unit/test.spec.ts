@@ -304,5 +304,43 @@ describe('Server Tests', () => {
             });
         });
     });
+
+    describe('ReferenceService', () => {
+        it('should return 202 for POST on path: /accepted', (done) => {
+            request.post({
+                body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/reference/accepted'
+            }, function(error, response, body) {
+                expect(response.statusCode).to.eq(202);
+                expect(response.headers['location']).to.eq('123');
+                done();
+            });
+        });
+
+        it('should return 301 for POST on path: /moved', (done) => {
+            request.post({
+                body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/reference/moved'
+            }, function(error, response, body) {
+                expect(response.statusCode).to.eq(301);
+                expect(response.headers['location']).to.eq('123');
+                done();
+            });
+        });
+
+        it('should return 302 for POST on path: /movedtemp', (done) => {
+            request.post({
+                body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/reference/movedtemp'
+            }, function(error, response, body) {
+                expect(response.statusCode).to.eq(302);
+                expect(response.headers['location']).to.eq('123');
+                done();
+            });
+        });
+    });
 });
 
