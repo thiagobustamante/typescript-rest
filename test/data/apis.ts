@@ -270,6 +270,97 @@ class ReferenceService {
     }
 }
 
+@Path('errors')
+class ErrorService {
+    @Path('badrequest')
+    @GET
+    test1( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.BadRequestError('test'));
+        });
+    }
+
+    @Path('conflict')
+    @GET
+    test2( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.ConflictError('test'));
+        });
+    }
+
+    @Path('forbiden')
+    @GET
+    test3( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.ForbidenError('test'));
+        });
+    }
+
+    @Path('gone')
+    @GET
+    test4( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.GoneError('test'));
+        });
+    }
+
+    @Path('internal')
+    @GET
+    test5( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.InternalServerError('test'));
+        });
+    }
+
+    @Path('method')
+    @GET
+    test6( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.MethodNotAllowedError('test'));
+        });
+    }
+
+    @Path('notacceptable')
+    @GET
+    test7( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.NotAcceptableError('test'));
+        });
+    }
+
+    @Path('notfound')
+    @GET
+    test8( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.NotFoundError('test'));
+        });
+    }
+
+    @Path('notimplemented')
+    @GET
+    test9( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.NotImplementedError('test'));
+        });
+    }
+
+    @Path('unauthorized')
+    @GET
+    test10( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.UnauthorizedError('test'));
+        });
+    }
+
+    @Path('unsupportedmedia')
+    @GET
+    test11( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.UnsupportedMediaTypeError('test'));
+        });
+    }
+}
+
 
 interface DataParam {
     param1: string;
@@ -301,7 +392,7 @@ export function startApi(): Promise<void> {
         let app: express.Application = express();
         app.set('env', 'test');
         Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyService, MyService2, PersonService, 
-							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService);
+							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService);
         Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
         server = app.listen(5674, (err: any) => {
             if (err) {

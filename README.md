@@ -26,6 +26,7 @@ It can be used to define your APIs using ES7 decorators.
     - [BodyParser Options](#bodyparser-options)
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
+  - [Swagger](#swagger)
 
 ## Installation
 
