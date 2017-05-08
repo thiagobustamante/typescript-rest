@@ -101,6 +101,12 @@ describe('Server Tests', () => {
                 done();
             });
         });
+        it('should use IoC container to instantiate the services with superclasses', (done) => {
+            request('http://localhost:5674/ioctest4', function(error, response, body) {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
     });
 
     describe('MyService2', () => {
@@ -440,5 +446,14 @@ describe('Server Tests', () => {
         });
     });
     
+
+    describe('SuperClassService', () => {
+        it('should return OK when calling a method of its super class', (done) => {
+            request('http://localhost:5674/superclass/123', function(error, response, body) {
+                expect(body).to.eq('OK_'+123);
+                done();
+            });
+        });
+    });
 });
 

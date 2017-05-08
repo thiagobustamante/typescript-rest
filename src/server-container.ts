@@ -42,9 +42,41 @@ export class InternalServer {
         const name: string = target['name'] || target.constructor['name'];
         if (!InternalServer.serverClasses.has(name)) {
             InternalServer.serverClasses.set(name, new metadata.ServiceClass(target));
+            InternalServer.inheritParentClass(name);
         }
         const serviceClass: metadata.ServiceClass = InternalServer.serverClasses.get(name);
         return serviceClass;
+    }
+
+    static inheritParentClass(name: string) {
+        const classData: metadata.ServiceClass = InternalServer.serverClasses.get(name);
+        const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
+        const parentClassData: metadata.ServiceClass = InternalServer.getServiceClass(parent);
+        if (parentClassData) {
+            if (parentClassData.methods) {
+                parentClassData.methods.forEach((value, key) => {
+                    classData.methods.set(key, _.cloneDeep(value));
+                });
+            }
+
+            if (parentClassData.properties) {
+                parentClassData.properties.forEach((value, key) => {
+                    classData.properties.set(key, _.cloneDeep(value));
+                });
+            }
+
+            if (parentClassData.languages) {
+                for (const lang of parentClassData.languages) {
+                    classData.languages.push(lang);
+                }
+            }
+
+            if (parentClassData.accepts) {
+                for (const acc of parentClassData.accepts) {
+                    classData.accepts.push(acc);
+                }
+            }
+        }
     }
 
     static registerServiceMethod(target: Function, methodName: string): metadata.ServiceMethod {
@@ -114,6 +146,11 @@ export class InternalServer {
             default:
                 throw Error(`Invalid http method for service [${serviceMethod.resolvedPath}]`);
         }
+    }
+
+    private static getServiceClass(target: Function): metadata.ServiceClass {
+        target = InternalServer.serviceFactory.getTargetClass(target);
+        return InternalServer.serverClasses.get(target['name'] || target.constructor['name']) || null;
     }
 
     private validateTargetType(targetClass: Function, types: Array<Function>): boolean {

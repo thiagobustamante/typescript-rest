@@ -15,6 +15,9 @@ export class ServiceClass {
     constructor(targetClass: any) {
         this.targetClass = targetClass;
         this.methods = new Map<string, ServiceMethod>();
+        this.properties = new Map<string, SeviceProperty>();
+        this.languages = new Array<string>();
+        this.accepts = new Array<string>();
     }
 
     targetClass: any;
@@ -25,9 +28,6 @@ export class ServiceClass {
     properties: Map<string, SeviceProperty>;
 
     addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
-        if (!this.hasProperties()) {
-            this.properties = new Map<string, SeviceProperty>();
-        }
         this.properties.set(key, { type: paramType, name: paramName, propertyType: propertyType });
     }
 

@@ -790,7 +790,7 @@ export function Param(name: string) {
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
-    classData.languages = languages;
+    classData.languages = _.union(classData.languages, languages);
 }
 
 /**
@@ -809,7 +809,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
  */
 function AcceptTypeDecorator(target: Function, accepts: string[]) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
-    classData.accepts = accepts;
+    classData.accepts = _.union(classData.accepts, accepts);
 }
 
 /**

@@ -70,6 +70,12 @@ class MyIoCService3 {
     }
 }
 
+@Path('ioctest4')
+@AutoWired
+class MyIoCService4 extends MyIoCService2 {
+}
+
+
 @Path('mypath')
 class MyService {
     @GET
@@ -395,14 +401,35 @@ class DateTest {
     }
 }
 
+@AcceptLanguage('en', 'pt-BR')
+@Accept('application/json')
+abstract class BaseApi {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    @Path(':id')
+    testCrudGet(@PathParam('id') id: string) {
+        if (context) {
+            return 'OK_'+id;
+        }
+        return 'false';
+    }
+}
+
+@Path('superclass')
+class SuperClassService extends BaseApi {
+
+}
+
 let server: any;
 
 export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         let app: express.Application = express();
         app.set('env', 'test');
-        Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyService, MyService2, PersonService, 
-							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService);
+        Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyIoCService4, MyService, MyService2, PersonService, 
+							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService, SuperClassService);
         Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
         server = app.listen(5674, (err: any) => {
             if (err) {

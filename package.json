@@ -97,7 +97,7 @@
     "url": "https://github.com/thiagobustamante/typescript-rest/issues"
   },
   "directories": {
-    "lib": "release",
+    "lib": "dist",
     "doc": "doc"
   },
   "engines": {
