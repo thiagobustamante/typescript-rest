@@ -27,6 +27,7 @@ It can be used to define your APIs using ES7 decorators.
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
   - [Swagger](#swagger)
+ - [Breaking Changes - 1.0.0](#breaking-changes)
 
 ## Installation
 
@@ -899,3 +900,33 @@ swaggerGen -c ./swaggerConfig.json
 ```
 
 [typescript-rest-swagger](https://github.com/thiagobustamante/typescript-rest-swagger) tool can generate a swagger file as an YAML or a JSON file.
+
+#Breaking Changes
+
+Starting from version 1.0.0, it is required to inform the body type on all ReferencedResources, like:
+
+```typescript
+interface NewObject {
+   id: string;
+}
+
+class TestService {
+     @POST
+    test(myObject: MyClass): Return.NewResource<NewObject> {
+        //...
+       return new Return.NewResource<NewObject>(req.url + "/" + generatedId, {id: generatedId}); //Returns a JSON on body {id: generatedId}
+     }
+  }
+```
+
+Even when you do not provide a body on a ReferencedResouce, you need to inform ```<void>```
+
+```typescript
+class TestService {
+     @POST
+    test(myObject: MyClass): Return.RequestAccepted<void> {
+        //...
+       return new Return.RequestAccepted<void>(req.url + "/" + generatedId);
+     }
+  }
+```
