@@ -910,7 +910,7 @@ swaggerGen -c ./swaggerConfig.json
 
 [typescript-rest-swagger](https://github.com/thiagobustamante/typescript-rest-swagger) tool can generate a swagger file as an YAML or a JSON file.
 
-#Breaking Changes
+# Breaking Changes
 
 Starting from version 1.0.0, it is required to inform the body type on all ReferencedResources, like:
 
