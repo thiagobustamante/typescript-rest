@@ -1,6 +1,6 @@
 {
   "name": "typescript-rest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "keywords": [
@@ -64,7 +64,6 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.10",
     "swagger-ui-express": "^1.0.7",
-    "typescript-ioc": "^0.4.0",
     "yamljs": "^0.2.10"
   },
   "devDependencies": {
@@ -86,8 +85,9 @@
     "ts-node": "^3.0.2",
     "tslint": "^5.1.0",
     "typedoc": "^0.5.10",
-    "typescript": "^2.2.2",
-    "typescript-formatter": "^5.1.3"
+    "typescript": "^2.3.2",
+    "typescript-formatter": "^5.1.3",
+    "typescript-ioc": "^0.4.0"
   },
   "repository": {
     "type": "git",
