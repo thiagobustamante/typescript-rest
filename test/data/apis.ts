@@ -5,7 +5,7 @@ import {Inject, AutoWired} from 'typescript-ioc';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 
-import {Path, Server, GET, POST, PUT,
+import {Path, Server, GET, POST, PUT, DELETE,
         PathParam, QueryParam, CookieParam, HeaderParam,
         FormParam, Param, Context, ServiceContext, ContextRequest,
         ContextResponse, ContextLanguage, ContextAccept,
@@ -95,6 +95,12 @@ class MyService2 {
     @GET
     @Path('secondpath')
     test( ): string {
+        return 'OK';
+    }
+
+    @DELETE
+    @Path('secondpath')
+    testDelete( ): string {
         return 'OK';
     }
 }

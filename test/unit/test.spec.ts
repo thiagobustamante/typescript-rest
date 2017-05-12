@@ -27,6 +27,7 @@ describe('Server Tests', () => {
 			                                            '/asubpath/person/:id', '/headers', '/multi-param', '/context', '/upload',
 			                                            '/download', '/download/ref', '/accept', '/accept/conflict']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
+            expect(Server.getHttpMethods('/mypath2/secondpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
         });
     });
 
