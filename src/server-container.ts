@@ -376,7 +376,7 @@ export class InternalServer {
             case metadata.ParamType.body:
                 return this.convertType(context.request.body, type);
             case metadata.ParamType.file:
-                const files: Array<Express.Multer.File> = context.request.files[name];
+                const files: Array<Express.Multer.File> = context.request.files?context.request.files[name]:null;
                 if (files && files.length > 0) {
                     return files[0];
                 }
