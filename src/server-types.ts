@@ -19,26 +19,26 @@ export enum HttpMethod {
  * Represents the current context of the request being handled.
  */
 export class ServiceContext {
-	/**
-	 * The resolved language to be used in the current request handling.
-	 */
+    /**
+     * The resolved language to be used in the current request handling.
+     */
     language: string;
-	/**
-	 * The preferred media type to be used in the current request handling.
-	 */
+    /**
+     * The preferred media type to be used in the current request handling.
+     */
     accept: string;
-	/**
-	 * The request object.
-	 */
+    /**
+     * The request object.
+     */
     request: express.Request;
-	/**
-	 * The response object
-	 */
+    /**
+     * The response object
+     */
     response: express.Response;
-	/**
-	 * The next function. It can be used to delegate to the next middleware
-	 * registered the processing of the current request.
-	 */
+    /**
+     * The next function. It can be used to delegate to the next middleware
+     * registered the processing of the current request.
+     */
     next: express.NextFunction;
 }
 
@@ -58,12 +58,12 @@ export abstract class HttpError extends Error {
  * Used to create a reference to a resource.
  */
 export abstract class ReferencedResource<T> {
-	/**
-	 * Constructor. Receives the location of the resource.
-	 * @param location To be added to the Location header on response
-	 * @param statusCode the response status code to be sent
-	 * @param body the body to be sent
-	 */
+    /**
+     * Constructor. Receives the location of the resource.
+     * @param location To be added to the Location header on response
+     * @param statusCode the response status code to be sent
+     * @param body the body to be sent
+     */
     constructor(public location: string, public statusCode: number, public body?: T) { }
 }
 
@@ -71,14 +71,14 @@ export abstract class ReferencedResource<T> {
  * The factory used to instantiate the object services
  */
 export interface ServiceFactory {
-	/**
-	 * Create a new service object. Called before each request handling.
-	 */
+    /**
+     * Create a new service object. Called before each request handling.
+     */
     create: (serviceClass: Function) => any;
-	/**
-	 * Return the type used to handle requests to the target service.
-	 * By default, returns the serviceClass received, but you can use this
-	 * to implement IoC integrations.
-	 */
+    /**
+     * Return the type used to handle requests to the target service.
+     * By default, returns the serviceClass received, but you can use this
+     * to implement IoC integrations.
+     */
     getTargetClass: (serviceClass: Function) => FunctionConstructor;
 }
