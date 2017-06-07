@@ -157,13 +157,13 @@ export class Server {
             swaggerDocument.schemes = schemes;
         }
 
-        router.get(path.join('/', endpoint, 'json'), (req, res, next) => {
+        router.get(path.posix.join('/', endpoint, 'json'), (req, res, next) => {
             res.send(swaggerDocument);
         });
-        router.get(path.join('/', endpoint, 'yaml'), (req, res, next) => {
+        router.get(path.posix.join('/', endpoint, 'yaml'), (req, res, next) => {
             res.set('Content-Type', 'text/vnd.yaml');
             res.send(YAML.stringify(swaggerDocument, 1000));
         });
-        router.use(path.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 }
