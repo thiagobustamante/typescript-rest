@@ -13,6 +13,7 @@ It can be used to define your APIs using ES7 decorators.
   - [Installation](#installation)
   - [Configuration](#configuration)
   - [Basic Usage](#basic-usage)
+  - [Boilerplate Project](#boilerplate-project)  
   - [Complete Guide](#complete-guide)
     - [Server](#server)
     - [@Path Decorator](#path-decorator)
@@ -85,6 +86,10 @@ That's it. You can just call now:
 ```
 GET http://localhost:3000/hello/joe
 ```
+
+## Boilerplate Project
+
+You can check [this project](https://github.com/vrudikov/typescript-rest-boilerplate) to get started.
 
 ## Complete Guide
 
