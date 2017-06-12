@@ -340,10 +340,10 @@ export class InternalServer {
                         res.sendStatus(value.statusCode);
                     }
 
-                } else if (value.then && value.constructor['name'] === 'Promise') {
-                    const self = this;
-                    value.then((val: any) => {
-                        self.sendValue(val, res, next);
+                } else if (value.then) {
+                    Promise.resolve(value)
+                    .then((val: any) => {
+                        this.sendValue(val, res, next);
                     }).catch((err: any) => {
                         next(err);
                     });
