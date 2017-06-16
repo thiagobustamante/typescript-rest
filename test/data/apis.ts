@@ -15,14 +15,16 @@ import {Path, Server, GET, POST, PUT, DELETE,
 Server.useIoC();
 
 export class Person {
-    constructor(id: number, name: string, age: number) {
+    constructor(id: number, name: string, age: number, salary: number = age * 1000) {
         this.id = id;
         this.name = name;
         this.age = age;
+        this.salary = salary;
     }
     id: number;
     name: string;
     age: number;
+    salary: number;
 }
 
 @AutoWired
@@ -117,8 +119,8 @@ class PersonService {
 
     @PUT
     @Path('/:id')
-    setPerson( person: Person): boolean {
-        return true;
+    setPerson( person: Person): number {
+        return person.salary;
     }
 
     @POST
@@ -436,6 +438,12 @@ export function startApi(): Promise<void> {
         app.set('env', 'test');
         Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyIoCService4, MyService, MyService2, PersonService, 
 							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService, SuperClassService);
+        Server.setParamConverter((value, type) => {
+            if (type.name === 'Person' && value['salary'] === 424242) {
+                value['salary'] = 434343;
+            }
+            return value;
+        });
         Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
         server = app.listen(5674, (err: any) => {
             if (err) {
