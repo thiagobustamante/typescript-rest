@@ -130,6 +130,14 @@ export class Server {
     }
 
     /**
+     * Sets converter for param values to have an ability to intercept the type that actually will be passed to service
+     * @param fn The converter
+     */
+    static setParamConverter(fn: (paramValue: any, paramType: Function) => any) {
+        InternalServer.paramConverter = fn;
+    }
+
+    /**
      * Creates and endpoint to publish the swagger documentation.
      * @param router Express router
      * @param filePath the path to a swagger file (json or yaml)

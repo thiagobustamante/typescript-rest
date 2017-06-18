@@ -40,16 +40,28 @@ describe('Server Tests', () => {
             });
         });
 
-        it('should return true for PUT on path: /asubpath/person/123', (done) => {
+        it('should return salary for PUT on path: /asubpath/person/123', (done) => {
             request.put({
                 body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/asubpath/person/123'
             }, function(error, response, body) {
-                expect(body).to.eq('true');
+                expect(body).to.eq('35000');
                 done();
             });
         });
+
+        it('should intercept salary 424242 for PUT on path: /asubpath/person/123', (done) => {
+            request.put({
+                body: JSON.stringify(new Person(123, 'Salary Person', 35, 424242)),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/asubpath/person/123'
+            }, function(error, response, body) {
+                expect(body).to.eq('434343');
+                done();
+            });
+        });
+
 
         it('should return 201 for POST on path: /asubpath/person', (done) => {
             request.post({
@@ -298,7 +310,7 @@ describe('Server Tests', () => {
                 url: 'http://localhost:5674/asubpath/person/123'
             }, function(error, response, body) {
                 expect(response.statusCode).to.eq(405);
-                const allowed: string = response.headers['allow'];
+                const allowed: string = response.headers['allow'] as string;
                 expect(allowed).to.contain('GET');
                 expect(allowed).to.contain('PUT');
                 done();
