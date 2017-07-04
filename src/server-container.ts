@@ -18,6 +18,7 @@ export class InternalServer {
     static cookiesSecret: string;
     static cookiesDecoder: (val: string) => string;
     static fileDest: string;
+    static paramConverter: (paramValue: any, paramType: Function) => any = (p, t) => p;
     static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
     static fileLimits: FileLimits;
     static serviceFactory: ServiceFactory = {
@@ -340,7 +341,7 @@ export class InternalServer {
                         res.sendStatus(value.statusCode);
                     }
 
-                } else if (value.then) {
+                } else if (value.then && value.catch) {
                     Promise.resolve(value)
                     .then((val: any) => {
                         this.sendValue(val, res, next);
@@ -414,7 +415,7 @@ export class InternalServer {
             case 'Boolean':
                 return paramValue === 'true';
             default:
-                return paramValue;
+                return InternalServer.paramConverter(paramValue, paramType);
         }
     }
 
