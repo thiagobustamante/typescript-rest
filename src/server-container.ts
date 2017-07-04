@@ -8,7 +8,7 @@ import * as metadata from './metadata';
 import * as Errors from './server-errors';
 import * as _ from 'lodash';
 
-import { HttpMethod, ServiceContext, ReferencedResource, ServiceFactory } from './server-types';
+import { HttpMethod, ServiceContext, ReferencedResource, ServiceFactory, FileLimits } from './server-types';
 import { DownloadResource, DownloadBinaryData } from './server-return';
 
 export class InternalServer {
@@ -19,7 +19,7 @@ export class InternalServer {
     static cookiesDecoder: (val: string) => string;
     static fileDest: string;
     static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
-    static fileLimits: number;
+    static fileLimits: FileLimits;
     static serviceFactory: ServiceFactory = {
         create: (serviceClass: any) => {
             return new serviceClass();

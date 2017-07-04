@@ -434,6 +434,9 @@ export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         let app: express.Application = express();
         app.set('env', 'test');
+        Server.setFileLimits({
+            fieldSize: 1024 * 1024
+        });
         Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyIoCService4, MyService, MyService2, PersonService, 
 							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService, SuperClassService);
         Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);

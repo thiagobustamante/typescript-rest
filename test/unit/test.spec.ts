@@ -298,7 +298,7 @@ describe('Server Tests', () => {
                 url: 'http://localhost:5674/asubpath/person/123'
             }, function(error, response, body) {
                 expect(response.statusCode).to.eq(405);
-                const allowed: string = response.headers['allow'];
+                const allowed: string | string[] = response.headers['allow'];
                 expect(allowed).to.contain('GET');
                 expect(allowed).to.contain('PUT');
                 done();

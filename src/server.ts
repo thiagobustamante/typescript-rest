@@ -3,7 +3,7 @@
 import * as express from 'express';
 import 'multer';
 import { InternalServer } from './server-container';
-import { HttpMethod, ServiceFactory } from './server-types';
+import { HttpMethod, ServiceFactory, FileLimits } from './server-types';
 import * as _ from 'lodash';
 import * as fs from 'fs-extra';
 import * as YAML from 'yamljs';
@@ -125,7 +125,7 @@ export class Server {
      * Set the limits of uploaded data
      * @param limit The data limit
      */
-    static setFileLimits(limit: number) {
+    static setFileLimits(limit: FileLimits) {
         InternalServer.fileLimits = limit;
     }
 
