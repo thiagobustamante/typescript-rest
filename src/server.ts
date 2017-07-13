@@ -90,11 +90,11 @@ export class Server {
 
     /**
      * Return the set oh HTTP verbs configured for the given path
-     * @param path The path to search HTTP verbs
+     * @param servicePath The path to search HTTP verbs
      */
-    static getHttpMethods(path: string): Array<HttpMethod> {
+    static getHttpMethods(servicePath: string): Array<HttpMethod> {
         const result = new Array<HttpMethod>();
-        InternalServer.getHttpMethods(path).forEach(value => {
+        InternalServer.getHttpMethods(servicePath).forEach(value => {
             result.push(value);
         });
 
