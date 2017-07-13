@@ -160,7 +160,7 @@ app.use('apis', apis);
 app.use('admin', admin);
 ```
 
-That will register all services exported by any file located under ```lib/controllers/apis``` in the ```apis``` router.
+That will register all services exported by any file located under ```lib/controllers/apis``` in the ```apis``` router and services in ```lib/controllers/admin``` in the ```admin``` router.
 
 Negation is also supported in the glob patterns:
 
