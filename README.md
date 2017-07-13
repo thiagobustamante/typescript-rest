@@ -115,6 +115,66 @@ all the routes based on the decorators used on your classes.
 So, you can use also any other expressjs feature, like error handlers, middlewares etc 
 without any restriction.  
 
+#### Registering Services
+
+When you call: 
+
+```typescript
+Server.buildServices(app);
+```
+
+The service will expose all services that can be found in the imported module into the express router provided. But is possible to choose which services you want to expose.
+
+```typescript
+import * as express from "express";
+import {Server} from "typescript-rest";
+import {ServiceOne} from "./service-one";
+import {ServiceTwo} from "./service-two";
+import {ServiceThree} from "./service-three";
+
+let app: express.Application = express();
+Server.buildServices(app, ServiceOne, ServiceTwo, ServiceThree);
+```
+
+It is possible to use multiples routers:
+
+
+```typescript
+Server.buildServices(adminRouter, ...adminApi);
+Server.buildServices(app, ServiceOne);
+```
+
+And it is, also, possible to use glob expressions to point where your services are:
+
+```typescript
+const app = express();
+
+const apis = express.Router();
+const admin = express.Router();
+
+Server.loadServices(apis, 'lib/controllers/apis/*');
+Server.loadServices(admin, 'lib/controllers/admin/*');
+
+app.use('apis', apis);
+app.use('admin', admin);
+```
+
+That will register all services exported by any file located under ```lib/controllers/apis``` in the ```apis``` router.
+
+Negation is also supported in the glob patterns:
+
+```typescript
+  Server.loadServices(app, ['lib/controllers/*', '!**/exclude*']); 
+  // includes all controllers, excluding that one which name starts with 'exclude'
+```
+
+And it is possilbe to inform a base folder for the patterns: 
+
+```typescript
+  Server.loadServices(app, 'controllers/*', `${__dirname}/..`]); 
+  // Inform a folder as origin for the patterns
+```
+
 ### @Path Decorator
 
 The @Path decorator allow us to define a router path for a given endpoint.
