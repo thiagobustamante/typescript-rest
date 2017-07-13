@@ -733,6 +733,8 @@ class MyOwnError extends HttpError {
 }
 ```
 
+You must remember that all uncaught errors are handled by a expressjs [error handler](http://expressjs.com/en/guide/error-handling.html#the-default-error-handler). You could want to customize it to allow you to inform how the errors will be delivered to your users. For more on this (for those who wants, for example, to send JSON errors), take a look at [this question](https://github.com/thiagobustamante/typescript-rest/issues/16);
+
 ### BodyParser Options
 
 If you need to inform any options to the body parser, you can use the @BodyOptions decorator.
