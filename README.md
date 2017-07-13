@@ -16,6 +16,7 @@ It can be used to define your APIs using ES7 decorators.
   - [Boilerplate Project](#boilerplate-project)  
   - [Complete Guide](#complete-guide)
     - [Server](#server)
+      - [Registering Services](#registering-services)
     - [@Path Decorator](#path-decorator)
       - [Path Parameters](#path-parameters)
     - [Http Methods](#http-methods)
@@ -123,7 +124,7 @@ When you call:
 Server.buildServices(app);
 ```
 
-The service will expose all services that can be found in the imported module into the express router provided. But is possible to choose which services you want to expose.
+The service will expose all services that can be found in the imported module into the express router provided. But it is possible to choose which services you want to expose.
 
 ```typescript
 import * as express from "express";
