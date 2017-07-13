@@ -1,7 +1,8 @@
 'use strict';
 /* tslint:disable */
 import 'mocha';
-import {startApi, stopApi, Person} from '../data/apis';
+import * as express from 'express';
+import {Person} from '../data/apis';
 import * as request from 'request';
 import * as fs from 'fs';
 import * as _ from 'lodash';
@@ -11,6 +12,37 @@ import * as YAML from 'yamljs';
 
 const expect = chai.expect;
 
+let server: any;
+
+export function startApi(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        let app: express.Application = express();
+        app.set('env', 'test');
+        Server.setFileLimits({
+            fieldSize: 1024 * 1024
+        });
+        Server.loadServices(app, ['test/data/*', '!**/*.yaml'], `${__dirname}/../..`);
+        Server.setParamConverter((value, type) => {
+            if (type.name === 'Person' && value['salary'] === 424242) {
+                value['salary'] = 434343;
+            }
+            return value;
+        });
+        Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
+        server = app.listen(5674, (err: any) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve();
+        });
+    });
+}
+
+export function stopApi(){
+    if (server) {
+        server.close();
+    }
+}
 describe('Server Tests', () => {
 
     before(() => {

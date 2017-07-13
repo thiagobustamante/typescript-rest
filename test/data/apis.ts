@@ -28,13 +28,13 @@ export class Person {
 }
 
 @AutoWired
-class InjectableObject {
+export class InjectableObject {
 
 }
 
 @AutoWired
 @Path('ioctest')
-class MyIoCService {
+export class MyIoCService {
     @Inject
     private injectedObject: InjectableObject
     
@@ -46,7 +46,7 @@ class MyIoCService {
 
 @Path('ioctest2')
 @AutoWired
-class MyIoCService2 {
+export class MyIoCService2 {
     @Inject
     private injectedObject: InjectableObject
     
@@ -59,7 +59,7 @@ class MyIoCService2 {
 
 @Path('ioctest3')
 @AutoWired
-class MyIoCService3 {
+export class MyIoCService3 {
     private injectedObject: InjectableObject
 
     constructor(@Inject injectedObject: InjectableObject) {
@@ -74,12 +74,12 @@ class MyIoCService3 {
 
 @Path('ioctest4')
 @AutoWired
-class MyIoCService4 extends MyIoCService2 {
+export class MyIoCService4 extends MyIoCService2 {
 }
 
 
 @Path('mypath')
-class MyService {
+export class MyService {
     @GET
     test( ): string {
         return 'OK';
@@ -93,7 +93,7 @@ class MyService {
 }
 
 @Path('mypath2')
-class MyService2 {
+export class MyService2 {
     @GET
     @Path('secondpath')
     test( ): string {
@@ -108,7 +108,7 @@ class MyService2 {
 }
 
 @Path('/asubpath/person')
-class PersonService {
+export class PersonService {
     @Path(':id')
     @GET
     getPerson( @PathParam('id') id: number): Promise<Person> {
@@ -141,7 +141,7 @@ class PersonService {
     }
 }
 
-class TestParams {
+export class TestParams {
     
     @Context
     context: ServiceContext;
@@ -197,7 +197,7 @@ class TestParams {
 }
 
 @Path('download')
-class TestDownload {
+export class TestDownload {
     @GET
     testDownloadFile(): Promise<Return.DownloadBinaryData> {
         return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
@@ -221,7 +221,7 @@ class TestDownload {
 
 @Path('/accept')
 @AcceptLanguage('en', 'pt-BR')
-class AcceptTest {
+export class AcceptTest {
 
     @GET
     testLanguage(@ContextLanguage language: string): string {
@@ -268,7 +268,7 @@ class AcceptTest {
 }
 
 @Path('/reference')
-class ReferenceService {
+export class ReferenceService {
     @Path('accepted')
     @POST
     testAccepted( p: Person): Promise<Return.RequestAccepted<void>> {
@@ -295,7 +295,7 @@ class ReferenceService {
 }
 
 @Path('errors')
-class ErrorService {
+export class ErrorService {
     @Path('badrequest')
     @GET
     test1( p: Person): Promise<string> {
@@ -386,13 +386,13 @@ class ErrorService {
 }
 
 
-interface DataParam {
+export interface DataParam {
     param1: string;
     param2: Date;
 }
 
 @Path('dateTest')
-class DateTest {
+export class DateTest {
 
     @POST
     @BodyOptions({reviver:(key: string, value: any) =>{
@@ -411,7 +411,7 @@ class DateTest {
 
 @AcceptLanguage('en', 'pt-BR')
 @Accept('application/json')
-abstract class BaseApi {
+export abstract class BaseApi {
     @Context
     context: ServiceContext;
 
@@ -426,39 +426,7 @@ abstract class BaseApi {
 }
 
 @Path('superclass')
-class SuperClassService extends BaseApi {
+export class SuperClassService extends BaseApi {
 
 }
 
-let server: any;
-
-export function startApi(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        let app: express.Application = express();
-        app.set('env', 'test');
-        Server.setFileLimits({
-            fieldSize: 1024 * 1024
-        });
-        Server.buildServices(app, MyIoCService, MyIoCService2, MyIoCService3, MyIoCService4, MyService, MyService2, PersonService, 
-							TestParams, TestDownload, AcceptTest, DateTest, ReferenceService, ErrorService, SuperClassService);
-        Server.setParamConverter((value, type) => {
-            if (type.name === 'Person' && value['salary'] === 424242) {
-                value['salary'] = 434343;
-            }
-            return value;
-        });
-        Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
-        server = app.listen(5674, (err: any) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve();
-        });
-    });
-}
-
-export function stopApi(){
-    if (server) {
-        server.close();
-    }
-}

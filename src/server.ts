@@ -21,6 +21,27 @@ export class Server {
         iternalServer.buildServices(types);
     }
 
+    static loadServices(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
+        const importedTypes: Array<Function> = [];
+        const requireGlob = require('require-glob');
+        baseDir = baseDir || process.cwd();
+        const loadedModules: Array<any> = requireGlob.sync(patterns, {
+            cwd: baseDir
+        });
+
+        _.values(loadedModules).forEach(serviceModule => {
+            _.values(serviceModule).forEach((service: Function) => {
+                importedTypes.push(service);
+            });
+        });
+
+        try {
+            Server.buildServices(router, ...importedTypes);
+        } catch (e) {
+            throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
+        }
+    }
+
     /**
      * Return all paths accepted by the Server
      */
