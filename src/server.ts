@@ -21,6 +21,16 @@ export class Server {
         iternalServer.buildServices(types);
     }
 
+    /**
+     * An alias for Server.loadServices()
+     */
+    static loadControllers(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
+        Server.loadServices(router, patterns, baseDir);
+    }
+
+    /**
+     * Load all services from the files that matches the patterns provided
+     */
     static loadServices(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
         const importedTypes: Array<Function> = [];
         const requireGlob = require('require-glob');

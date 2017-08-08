@@ -21,7 +21,7 @@ export function startApi(): Promise<void> {
         Server.setFileLimits({
             fieldSize: 1024 * 1024
         });
-        Server.loadServices(app, ['test/data/*', '!**/*.yaml'], `${__dirname}/../..`);
+        Server.loadControllers(app, ['test/data/*', '!**/*.yaml'], `${__dirname}/../..`);
         Server.setParamConverter((value, type) => {
             if (type.name === 'Person' && value['salary'] === 424242) {
                 value['salary'] = 434343;
