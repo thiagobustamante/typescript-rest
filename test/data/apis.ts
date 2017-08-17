@@ -430,3 +430,20 @@ export class SuperClassService extends BaseApi {
 
 }
 
+@AutoWired
+@Path('async/test')
+export class MyAsyncService {
+    @GET
+    async test( ) {
+        let result = await this.aPromiseMethod();
+        return result;
+    }
+
+    private aPromiseMethod() {
+        return new Promise<string>((resolve, reject) => {
+            setTimeout(() => {
+                resolve('OK');
+            }, 10);
+        });
+    }
+}

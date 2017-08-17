@@ -666,6 +666,40 @@ class TestService {
 It is important to observe that you can inform your return type explicitly or not, as you can see 
 in the above example.  
 
+You can also use ```async``` and ```await```:
+
+```typescript
+@Path('async')
+export class MyAsyncService {
+    @GET
+    @Path('test')
+    async test( ) {
+        let result = await this.aPromiseMethod();
+        return result;
+    }
+
+    @GET
+    @Path('test2')
+    async test2( ) {
+        try {
+            let result = await this.aPromiseMethod();
+            return result;
+        } catch (e) {
+            // log error here, if you want
+            throw e;
+        }
+    }
+
+    private aPromiseMethod() {
+        return new Promise<string>((resolve, reject) => {
+            setTimeout(() => {
+                resolve('OK');
+            }, 10);
+        });
+    }
+}
+```
+
 ### Errors
 
 This library provide some Error classes to map the problems that you may want to report to your clients.

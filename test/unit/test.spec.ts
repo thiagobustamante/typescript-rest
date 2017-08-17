@@ -57,7 +57,7 @@ describe('Server Tests', () => {
         it('should provide a catalog containing the exposed paths', () => {
 			expect(Server.getPaths()).to.include.members(['/mypath', '/ioctest', '/ioctest2', '/ioctest3', '/mypath2/secondpath',
 			                                            '/asubpath/person/:id', '/headers', '/multi-param', '/context', '/upload',
-			                                            '/download', '/download/ref', '/accept', '/accept/conflict']);
+			                                            '/download', '/download/ref', '/accept', '/accept/conflict', '/async/test']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
             expect(Server.getHttpMethods('/mypath2/secondpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
         });
@@ -499,6 +499,15 @@ describe('Server Tests', () => {
                 done();
             });
         });
-    });
+    });    
+
+    describe('MyAsyncService', () => {
+        it('should support async and await on REST methods', (done) => {
+            request('http://localhost:5674/async/test', (error, response, body) => {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+    });    
 });
 
