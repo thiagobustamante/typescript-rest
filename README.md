@@ -709,7 +709,7 @@ Type | Description
 ---- | -----------
 BadRequestError | Used to report errors with status code 400. 
 UnauthorizedError | Used to report errors with status code 401. 
-ForbidenError | Used to report errors with status code 403. 
+ForbiddenError | Used to report errors with status code 403. 
 NotFoundError | Used to report errors with status code 404. 
 MethodNotAllowedError | Used to report errors with status code 405. 
 NotAcceptableError | Used to report errors with status code 406. 
