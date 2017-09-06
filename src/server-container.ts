@@ -345,6 +345,7 @@ export class InternalServer {
                     Promise.resolve(value)
                     .then((val: any) => {
                         this.sendValue(val, res, next);
+                        return null;
                     }).catch((err: any) => {
                         next(err);
                     });
