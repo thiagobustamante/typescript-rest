@@ -27,15 +27,22 @@ export class UnauthorizedError extends HttpError {
 }
 
 /**
- * Represents a FORBIDEN error. The server understood the request, but is refusing to
+ * Represents a FORBIDDEN error. The server understood the request, but is refusing to
  * fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
  */
-export class ForbidenError extends HttpError {
+export class ForbiddenError extends HttpError {
     constructor(message?: string) {
-        super('ForbidenError', 403, message || 'Forbiden');
-        // Object.setPrototypeOf(this, ForbidenError.prototype);
-        // this['__proto__'] = ForbidenError.prototype;
+        super('ForbiddenError', 403, message || 'Forbidden');
         Object.setPrototypeOf(this, ForbidenError.prototype);
+    }
+}
+
+/**
+ * @deprecated use ForbiddenError instead
+ */
+export class ForbidenError extends ForbiddenError {
+    constructor(message?: string) {
+        super(message);
     }
 }
 
