@@ -24,7 +24,7 @@
     "prepublish": "npm run build",
     "deploy": "npm version patch && npm publish",
     "postversion": "git push origin master",
-    "pretest": "cross-env NODE_ENV=test npm build && npm run lint",
+    "pretest": "cross-env NODE_ENV=test npm run build && npm run lint",
     "test": "cross-env NODE_ENV=test mocha",
     "test:coverage": "nyc npm test",
     "tsc": "tsc",
