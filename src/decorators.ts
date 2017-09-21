@@ -588,7 +588,7 @@ export function FileParam(name: string) {
  *   @ POST
  *   @ Path('id')
  *   addAvatar(@ PathParam('id') id: string,
- *             @ FilesParam('avatar') Array<file>: Express.Multer.File) {
+ *             @ FilesParam('avatar[]') files: Array<Express.Multer.File>) {
  *      // ...
  *   }
  * }
