@@ -88,5 +88,5 @@ export class DownloadBinaryData {
      * @param mimeType The mime-type to be passed on Content-Type header.
      * @param fileName The file name
      */
-    constructor(public content: Buffer, public mimeType: string, public fileName: string) { }
+    constructor(public content: Buffer, public mimeType: string, public fileName?: string) { }
 }

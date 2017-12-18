@@ -326,11 +326,18 @@ export class InternalServer {
                 if (value.filePath && value instanceof DownloadResource) {
                     res.download(value.filePath, value.fileName);
                 } else if (value instanceof DownloadBinaryData) {
-                    res.writeHead(200, {
-                        'Content-Length': value.content.length,
-                        'Content-Type': value.mimeType,
-                        'Content-disposition': 'attachment;filename=' + value.fileName
-                    });
+                    if (value.fileName) {
+                        res.writeHead(200, {
+                            'Content-Length': value.content.length,
+                            'Content-Type': value.mimeType,
+                            'Content-disposition': 'attachment;filename=' + value.fileName
+                        });
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Length': value.content.length,
+                            'Content-Type': value.mimeType
+                        });
+                    }
                     res.end(value.content);
                 } else if (value.location && value instanceof ReferencedResource) {
                     res.set('Location', value.location);
