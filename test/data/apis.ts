@@ -186,6 +186,22 @@ export class TestParams {
         }
     }
 
+    @GET
+    @Path('default-query')
+    testDefaultQuery( @QueryParam('limit') limit: number = 20,
+                      @QueryParam('prefix') prefix: string = 'default',
+                      @QueryParam('expand') expand: boolean = true): string {
+        return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
+    }
+
+    @GET
+    @Path('optional-query')
+    testOptionalQuery( @QueryParam('limit') limit?: number,
+                       @QueryParam('prefix') prefix?: string,
+                       @QueryParam('expand') expand?: boolean): string {
+        return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
+    }
+
     @POST
     @Path('upload')
     testUploadFile( @FileParam('myFile') file: Express.Multer.File, 

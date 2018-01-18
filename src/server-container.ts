@@ -419,9 +419,9 @@ export class InternalServer {
         const serializedType = paramType['name'];
         switch (serializedType) {
             case 'Number':
-                return paramValue ? parseFloat(paramValue) : 0;
+                return paramValue === undefined ? paramValue : parseFloat(paramValue);
             case 'Boolean':
-                return paramValue === 'true';
+                return paramValue === undefined ? paramValue : paramValue === 'true';
             default:
                 return InternalServer.paramConverter(paramValue, paramType);
         }

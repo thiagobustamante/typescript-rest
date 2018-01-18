@@ -228,6 +228,60 @@ describe('Server Tests', () => {
             form.append('myField', 'my_value');
             form.append('myFile', fs.createReadStream(__dirname + '/test.spec.ts'), 'test-rest.spec.ts');
         });
+
+        it('should use sent value for query param that defines a default', (done) => {
+            request({
+                url: 'http://localhost:5674/default-query?limit=5&prefix=test&expand=false'
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:5|prefix:test|expand:false');
+                done();
+            });
+        });
+
+        it('should use provided default value for missing query param', (done) => {
+            request({
+                url: 'http://localhost:5674/default-query'
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:20|prefix:default|expand:true');
+                done();
+            });
+        });
+
+        it('should handle empty string value for default parameter', (done) => {
+            request({
+                url: 'http://localhost:5674/default-query?limit=&prefix=&expand='
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:NaN|prefix:|expand:false');
+                done();
+            });
+        });
+
+        it('should use sent value for optional query param', (done) => {
+            request({
+                url: 'http://localhost:5674/optional-query?limit=5&prefix=test&expand=false'
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:5|prefix:test|expand:false');
+                done();
+            });
+        });
+
+        it('should use undefined as value for missing optional query param', (done) => {
+            request({
+                url: 'http://localhost:5674/optional-query'
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:undefined|prefix:undefined|expand:undefined');
+                done();
+            });
+        });
+
+        it('should handle empty string value for optional parameter', (done) => {
+            request({
+                url: 'http://localhost:5674/optional-query?limit=&prefix=&expand='
+            }, function(error, response, body) {
+                expect(body).to.eq('limit:NaN|prefix:|expand:false');
+                done();
+            });
+        });
     });
     describe('TestDownload', () => {
         it('should return a file', (done) => {
