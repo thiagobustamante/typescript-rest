@@ -10,7 +10,7 @@ import {Path, Server, GET, POST, PUT, DELETE,
         FormParam, Param, Context, ServiceContext, ContextRequest,
         ContextResponse, ContextLanguage, ContextAccept,
         ContextNext, AcceptLanguage, Accept, FileParam,
-        Errors, Return, BodyOptions} from '../../src/typescript-rest';
+        Errors, Return, BodyOptions, Abstract} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -25,6 +25,63 @@ export class Person {
     name: string;
     age: number;
     salary: number;
+}
+
+@AcceptLanguage('en', 'pt-BR')
+@Accept('application/json')
+@Abstract
+export abstract class BaseApi {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    @Path(':id')
+    testCrudGet(@PathParam('id') id: string) {
+        if (context) {
+            return 'OK_'+id;
+        }
+        return 'false';
+    }
+
+    @GET
+    @Path('overload/:id')
+    testOverloadGet(@PathParam('id') id: string) {
+        if (context) {
+            return 'OK_'+id;
+        }
+        return 'false';
+    }
+
+    @PUT
+    @Path('overload/:id')
+    testOverloadPut(@PathParam('id') id: string) {
+        if (context) {
+            return 'OK_'+id;
+        }
+        return 'false';
+    }
+    
+}
+
+@Path('superclass')
+export class SuperClassService extends BaseApi {
+    @GET
+    @Path('overload/:id')
+    testOverloadGet(@PathParam('id') id: string) {
+        if (context) {
+            return 'superclass_OK_'+id;
+        }
+        return 'false';
+    }
+
+    @PUT
+    @Path('overload/:id')
+    testOverloadPut(@PathParam('id') id: string) {
+        if (context) {
+            return 'superclass_OK_'+id;
+        }
+        return 'false';
+    }
 }
 
 @AutoWired
@@ -423,27 +480,6 @@ export class DateTest {
         }
         return 'NOT OK';
     }
-}
-
-@AcceptLanguage('en', 'pt-BR')
-@Accept('application/json')
-export abstract class BaseApi {
-    @Context
-    context: ServiceContext;
-
-    @GET
-    @Path(':id')
-    testCrudGet(@PathParam('id') id: string) {
-        if (context) {
-            return 'OK_'+id;
-        }
-        return 'false';
-    }
-}
-
-@Path('superclass')
-export class SuperClassService extends BaseApi {
-
 }
 
 @AutoWired

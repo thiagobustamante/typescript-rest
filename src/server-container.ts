@@ -98,11 +98,13 @@ export class InternalServer {
             types = types.map(type => InternalServer.serviceFactory.getTargetClass(type));
         }
         InternalServer.serverClasses.forEach(classData => {
-            classData.methods.forEach(method => {
-                if (this.validateTargetType(classData.targetClass, types)) {
-                    this.buildService(classData, method);
-                }
-            });
+            if (!classData.isAbstract) {
+                classData.methods.forEach(method => {
+                    if (this.validateTargetType(classData.targetClass, types)) {
+                        this.buildService(classData, method);
+                    }
+                });
+            }
         });
         InternalServer.pathsResolved = true;
         this.handleNotAllowedMethods();

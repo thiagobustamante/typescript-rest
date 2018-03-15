@@ -786,6 +786,30 @@ export function Param(name: string) {
 }
 
 /**
+ * Mark the annotated service class as an abstract service. Abstract services has none of its
+ * methods exposed as rest enpoints, even if the class is in the services list to be exposed.
+ *
+ * For example:
+ *
+ * ```
+ * @ Abstract
+ * abstract class PeopleService {
+ *   @ GET
+ *   getPeople(@ Param('name') name: string) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * No endpoint will be registered for PeopleService. It is useful if you only plain that subclasses of
+ * PeopleService exposes the getPeople method.
+ */
+export function Abstract(target: Function) {
+    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    classData.isAbstract = true;
+}
+
+/**
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
@@ -828,7 +852,9 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
  */
 function PathTypeDecorator(target: Function, path: string) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
-    classData.path = path;
+    if (classData) {
+        classData.path = path;
+    }
 }
 
 /**
@@ -875,9 +901,9 @@ function processHttpVerb(target: any, propertyKey: string,
     httpMethod: HttpMethod) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        if (serviceMethod.httpMethod) {
+        if (serviceMethod.httpMethod && serviceMethod.httpMethod !== httpMethod) {
             throw new Error('Method is already annotated with @' +
-                serviceMethod.httpMethod +
+                HttpMethod[serviceMethod.httpMethod] +
                 '. You can only map a method to one HTTP verb.');
         }
         serviceMethod.httpMethod = httpMethod;

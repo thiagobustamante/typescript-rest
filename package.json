@@ -1,6 +1,6 @@
 {
   "name": "typescript-rest",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "keywords": [
@@ -65,17 +65,17 @@
     "yamljs": "^0.2.10"
   },
   "devDependencies": {
-    "@types/chai": "^3.5.1",
+    "@types/chai": "^4.1.2",
     "@types/fs-extra": "0.0.37",
     "@types/lodash": "^4.14.102",
     "@types/mocha": "^2.2.48",
     "@types/request": "0.0.32",
     "@types/yamljs": "^0.2.30",
-    "chai": "^3.5.0",
+    "chai": "^4.1.2",
     "coveralls": "^2.13.1",
     "cross-env": "^4.0.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.3.0",
+    "mocha": "^3.5.0",
     "nyc": "^10.2.0",
     "request": "^2.81.0",
     "rimraf": "^2.6.1",

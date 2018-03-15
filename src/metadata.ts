@@ -26,6 +26,7 @@ export class ServiceClass {
     languages: Array<string>;
     accepts: Array<string>;
     properties: Map<string, SeviceProperty>;
+    isAbstract: boolean = false;
 
     addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
         this.properties.set(key, { type: paramType, name: paramName, propertyType: propertyType });

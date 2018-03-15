@@ -26,7 +26,7 @@ export interface FileLimits {
  * The supported HTTP methods.
  */
 export enum HttpMethod {
-    GET,
+    GET = 1,
     POST,
     PUT,
     DELETE,

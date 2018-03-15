@@ -553,6 +553,19 @@ describe('Server Tests', () => {
                 done();
             });
         });
+
+        it('should return OK when calling an overloaded method of its super class', (done) => {
+            request('http://localhost:5674/superclass/overload/123', function(error, response, body) {
+                expect(body).to.eq('superclass_OK_'+123);
+                done();
+            });
+        });
+        it('should return OK when calling an overloaded PUT method of its super class', (done) => {
+            request.put('http://localhost:5674/superclass/overload/123', function(error, response, body) {
+                expect(body).to.eq('superclass_OK_'+123);
+                done();
+            });
+        });
     });    
 
     describe('MyAsyncService', () => {

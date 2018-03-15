@@ -8,6 +8,10 @@ This is a lightweight annotation-based [expressjs](http://expressjs.com/) extens
 
 It can be used to define your APIs using ES7 decorators.
 
+**Project Sponsors**
+
+This project is supported by [Leanty](https://github.com/Leanty/)'s team and is widely used by its main product: The [Tree Gateway](http://www.treegateway.org) API Gateway.
+
 **Table of Contents** 
 
 - [REST Services for Typescript](#)
@@ -29,6 +33,7 @@ It can be used to define your APIs using ES7 decorators.
     - [BodyParser Options](#bodyparser-options)
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
+    - [Inheritance and abstract services](#inheritance-and-abstract-services)    
   - [Swagger](#swagger)
  - [Breaking Changes - 1.0.0](#breaking-changes)
 
@@ -977,6 +982,99 @@ You can also use the ```serviceFactory``` property in rest.config file to config
 And export as default your serviceFactory class on ```./myServiceFactory.ts``` file.
 
 It could be used to allow the usage of other libraries, like [Inversify](http://inversify.io/).
+
+
+### Inheritance and abstract services
+
+It is possible to extends services like you do with normal typescript classes:
+
+```typescript
+@Path('users')
+class Users{
+  @GET
+  getUsers() {
+    return [];
+  }
+}
+
+@Path('superusers')
+class SuperUsers{
+  @GET
+  @Path('privilegies')
+  getPrivilegies() {
+    return [];
+  }
+}
+```
+
+It will expose the following endpoints:
+
+ - ```GET http://<my-host>/users```
+ - ```GET http://<my-host>/superusers```
+ - ```GET http://<my-host>/superusers/privilegies```
+
+**A note about abstract classes**
+
+A common scenario is to create an abstract class that contains some methods to be inherited by other concrete classes, like:
+
+```typescript
+abstract class MyCrudService<T> {
+
+  @GET
+  @Path(':id')
+  abstract getEntity(): Promise<T>;
+}
+
+@Path('users')
+class MyUserService<User> {
+
+  @GET
+  @Path(':id')
+  async getEntity(): Promise<User> {
+    return myUser;
+  }
+}
+```
+
+MyCrudService, in this scenario, is a service class that contains some exposed methods (methods that are declared to be exposed as endpoints). However, the intent here is not to expose the method for MyCrudService directly (I don't want an endpoint ```GET http://<myhost>/123``` exposed). We want that only its sublclasses have the methods exposed (```GET http://<myhost>/users/123```).
+
+The fact that MyCrudService is an abstract class is not enough to typescript-rest library realize that its methods should not be exposed (Once it is compiled to javascript, it becomes a regular class). So you need to explicitly specify that this class should not expose any endpoint directly. It can be implemented using the ```@Abstract``` decorator:
+
+```typescript
+@Abstract
+abstract class MyCrudService<T> {
+
+  @GET
+  @Path(':id')
+  abstract getEntity(): Promise<T>;
+}
+
+@Path('users')
+class MyUserService<User> {
+
+  @GET
+  @Path(':id')
+  async getEntity(): Promise<User> {
+    return myUser;
+  }
+}
+```
+
+Even if MyCrudService was not a typescript abstract class, if it is decorated with ```@Abstract```, its methods will not be exposed as endpoints.
+
+If you don't want to use ```@Abstract```, another way to achieve the same goal is to specify which services you want to expose:
+
+```typescript
+let app: express.Application = express();
+Server.buildServices(app, MyUserService);
+```
+
+or 
+
+```typescript
+let app: express.Application = express();
+Server.loadServices(apis, 'lib/controllers/apis/impl/*');
+```
 
 ## Swagger
 
