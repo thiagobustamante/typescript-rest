@@ -579,13 +579,21 @@ describe('Server Tests', () => {
 
     describe('MyPreprocessedService', () => {
         it('should validate before handling the request', (done) => {
-            request.post('http://localhost:5674/preprocessor/test', { body: { userId: 0 }}, (error, response, body) => {
+            request.post({
+                body: JSON.stringify({ userId: 0 }),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/test'
+            }, function(error, response, body) {
                 expect(body).to.eq('true');
                 done();
             });
         });
         it('should fail validation when body is invalid', (done) => {
-            request.post('http://localhost:5674/preprocessor/test', { body: {}}, (error, response, body) => {
+            request.post({
+                body: JSON.stringify({}),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/test'
+            }, function(error, response, body) {
                 expect(response.statusCode).to.eq(400);
                 done();
             });

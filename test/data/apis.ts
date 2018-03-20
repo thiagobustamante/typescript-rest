@@ -514,9 +514,8 @@ export class MyPreprocessedService {
 }
 
 function validator(req: express.Request): ValidatedRequest {
-    let ret: ValidatedRequest
-    Object.assign(ret, req)
-    if (req.body["userId"]) {
+    let ret: ValidatedRequest = req as ValidatedRequest
+    if (req.body["userId"] != undefined) {
         ret.validated = true
         return ret
     } else {
