@@ -508,7 +508,7 @@ export class MyPreprocessedService {
     @Path('test')
     @POST
     @Preprocessor(validator)
-    test(body) {
+    test(body: any) {
         return this.request.validated
     }
 }
