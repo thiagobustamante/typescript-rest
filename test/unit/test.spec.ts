@@ -586,7 +586,7 @@ describe('Server Tests', () => {
         });
         it('should fail validation when body is invalid', (done) => {
             request.post('http://localhost:5674/preprocessor/test', { body: {}}, (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
+                expect(response.statusCode).to.eq(400);
                 done();
             });
         });
