@@ -56,6 +56,7 @@ export class ServiceMethod {
     accepts: Array<string>;
     resolvedLanguages: Array<string>;
     resolvedAccepts: Array<string>;
+    processors: Array<Function>;
 }
 
 /**

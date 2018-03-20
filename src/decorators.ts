@@ -49,6 +49,18 @@ export function Path(path: string) {
     };
 }
 
+export function Preprocessor(preprocessor: Function) {
+    return function(...args: any[]) {
+        args = _.without(args, undefined);
+        console.log('halo')
+        if (args.length === 3 && typeof args[2] === 'object') {
+            return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
+        }
+
+        throw new Error('Invalid @Path Decorator declaration.');
+    };
+}
+
 /**
  * A decorator to tell the [[Server]] that a class or a method
  * should only accept requests from clients that accepts one of
@@ -865,6 +877,17 @@ function PathMethodDecorator(target: any, propertyKey: string,
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.path = path;
+    }
+}
+
+function PreprocessorMethodDecorator(target: any, propertyKey: string,
+    descriptor: PropertyDescriptor, preprocessor: Function) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    if (serviceMethod) {
+        if (!serviceMethod.processors) {
+            serviceMethod.processors = [];
+        }
+        serviceMethod.processors.push(preprocessor);
     }
 }
 

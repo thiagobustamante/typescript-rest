@@ -295,6 +295,11 @@ export class InternalServer {
     private callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
         req: express.Request, res: express.Response, next: express.NextFunction) {
         const context: ServiceContext = new ServiceContext();
+        if (serviceMethod.processors) {
+            for(const processor of serviceMethod.processors) {
+                req = processor(req);
+            }
+        }
         context.request = req;
         context.response = res;
         context.next = next;
