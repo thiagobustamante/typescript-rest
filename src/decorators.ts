@@ -52,12 +52,11 @@ export function Path(path: string) {
 export function Preprocessor(preprocessor: Function) {
     return function(...args: any[]) {
         args = _.without(args, undefined);
-        console.log('halo')
         if (args.length === 3 && typeof args[2] === 'object') {
             return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
         }
 
-        throw new Error('Invalid @Path Decorator declaration.');
+        throw new Error('Invalid @Preprocessor Decorator declaration.');
     };
 }
 
