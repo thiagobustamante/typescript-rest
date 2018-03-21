@@ -176,7 +176,7 @@ export class Server {
      * @param host the hostname of the service
      * @param schemes the schemes used by the server
      */
-    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[]) {
+    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[], swaggerUiOptions?: object) {
         const swaggerUi = require('swagger-ui-express');
         if (_.startsWith(filePath, '.')) {
             filePath = path.join(process.cwd(), filePath);
@@ -203,6 +203,6 @@ export class Server {
             res.set('Content-Type', 'text/vnd.yaml');
             res.send(YAML.stringify(swaggerDocument, 1000));
         });
-        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
     }
 }
