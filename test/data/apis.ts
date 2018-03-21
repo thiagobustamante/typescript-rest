@@ -511,11 +511,39 @@ export class MyPreprocessedService {
     test(body: any) {
         return this.request.validated
     }
+
+    @Path('asynctest')
+    @POST
+    @Preprocessor(asyncValidator1)
+    @Preprocessor(asyncValidator2) // multiple preprocessors needed to test async
+    asynctest(body: any) {
+        return this.request.validated
+    }
 }
 
 function validator(req: express.Request): ValidatedRequest {
     let ret: ValidatedRequest = req as ValidatedRequest
     if (req.body["userId"] != undefined) {
+        ret.validated = true
+        return ret
+    } else {
+        throw new Errors.BadRequestError('userId not present')
+    }
+}
+
+async function asyncValidator1(req: express.Request): Promise<ValidatedRequest> {
+    let ret: ValidatedRequest = req as ValidatedRequest
+    if (req.body["userId"] != undefined) {
+        ret.validated = false
+        return ret
+    } else {
+        throw new Errors.BadRequestError('userId not present')
+    }
+}
+
+async function asyncValidator2(req: ValidatedRequest): Promise<ValidatedRequest> {
+    let ret: ValidatedRequest = req
+    if (req.body["userId"] != undefined && req.validated === false) {
         ret.validated = true
         return ret
     } else {

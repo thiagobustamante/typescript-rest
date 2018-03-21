@@ -886,7 +886,7 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
         if (!serviceMethod.processors) {
             serviceMethod.processors = [];
         }
-        serviceMethod.processors.push(preprocessor);
+        serviceMethod.processors.unshift(preprocessor);
     }
 }
 
