@@ -34,7 +34,7 @@ This project is supported by [Leanty](https://github.com/Leanty/)'s team and is 
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
     - [Inheritance and abstract services](#inheritance-and-abstract-services)    
-    - [Preprocessors] (#preprocessors)
+    - [Preprocessors](#preprocessors)
   - [Swagger](#swagger)
  - [Breaking Changes - 1.0.0](#breaking-changes)
 
