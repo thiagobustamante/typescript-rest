@@ -110,9 +110,21 @@ export class InternalServer {
         this.handleNotAllowedMethods();
     }
 
+    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<express.Request> {
+        let request = req;
+        for (const processor of processors) {
+            request = await Promise.resolve(processor(request));
+        }
+        return request;
+    }
+
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
+            if (serviceMethod.processors) {
+                this.runPreprocessors(serviceMethod.processors, req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
+            } else {
+                this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
+            }
         };
 
         if (!serviceMethod.resolvedPath) {

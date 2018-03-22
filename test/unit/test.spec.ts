@@ -576,5 +576,48 @@ describe('Server Tests', () => {
             });
         });
     });    
+
+    describe('MyPreprocessedService', () => {
+        it('should validate before handling the request (sync)', (done) => {
+            request.post({
+                body: JSON.stringify({ userId: 0 }),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/test'
+            }, function(error, response, body) {
+                expect(body).to.eq('true');
+                done();
+            });
+        });
+        it('should fail validation when body is invalid (sync)', (done) => {
+            request.post({
+                body: JSON.stringify({}),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/test'
+            }, function(error, response, body) {
+                expect(response.statusCode).to.eq(400);
+                done();
+            });
+        });
+        it('should validate before handling the request (async)', (done) => {
+            request.post({
+                body: JSON.stringify({ userId: 0 }),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/asynctest'
+            }, function(error, response, body) {
+                expect(body).to.eq('true');
+                done();
+            });
+        });
+        it('should fail validation when body is invalid (async)', (done) => {
+            request.post({
+                body: JSON.stringify({}),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/preprocessor/asynctest'
+            }, function(error, response, body) {
+                expect(response.statusCode).to.eq(400);
+                done();
+            });
+        });
+    });    
 });
 

@@ -34,6 +34,7 @@ This project is supported by [Leanty](https://github.com/Leanty/)'s team and is 
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
     - [Inheritance and abstract services](#inheritance-and-abstract-services)    
+    - [Preprocessors](#preprocessors)
   - [Swagger](#swagger)
  - [Breaking Changes - 1.0.0](#breaking-changes)
 
@@ -1074,6 +1075,32 @@ or
 ```typescript
 let app: express.Application = express();
 Server.loadServices(apis, 'lib/controllers/apis/impl/*');
+```
+
+### Preprocessors
+
+It is possible to add a function to process the request before the handler on an endpoint by endpoint basis. This can be used to add a validator or authenticator to your application without including it in the body of the handler.
+
+```typescript
+function validator(req: express.Request): express.Request {
+  if (req.body.userId != undefined) {
+    throw new Errors.BadRequestError("userId not present");
+  } else {
+    req.body.user = Users.get(req.body.userId)
+    return req
+  }
+}
+
+@Path('users')
+export class UserHandler {
+  
+  @Path('email')
+  @POST
+  @Preprocessor(validator)
+  setEmail(body: any) {
+    // will have body.user
+  }
+}
 ```
 
 ## Swagger

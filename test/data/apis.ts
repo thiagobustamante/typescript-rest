@@ -10,7 +10,7 @@ import {Path, Server, GET, POST, PUT, DELETE,
         FormParam, Param, Context, ServiceContext, ContextRequest,
         ContextResponse, ContextLanguage, ContextAccept,
         ContextNext, AcceptLanguage, Accept, FileParam,
-        Errors, Return, BodyOptions, Abstract} from '../../src/typescript-rest';
+        Errors, Return, BodyOptions, Abstract, Preprocessor} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -498,4 +498,59 @@ export class MyAsyncService {
             }, 10);
         });
     }
+}
+
+@Path('preprocessor')
+export class MyPreprocessedService {
+    @ContextRequest
+    request: ValidatedRequest
+
+    @Path('test')
+    @POST
+    @Preprocessor(validator)
+    test(body: any) {
+        return this.request.validated
+    }
+
+    @Path('asynctest')
+    @POST
+    @Preprocessor(asyncValidator1)
+    @Preprocessor(asyncValidator2) // multiple preprocessors needed to test async
+    asynctest(body: any) {
+        return this.request.validated
+    }
+}
+
+function validator(req: express.Request): ValidatedRequest {
+    let ret: ValidatedRequest = req as ValidatedRequest
+    if (req.body["userId"] != undefined) {
+        ret.validated = true
+        return ret
+    } else {
+        throw new Errors.BadRequestError('userId not present')
+    }
+}
+
+async function asyncValidator1(req: express.Request): Promise<ValidatedRequest> {
+    let ret: ValidatedRequest = req as ValidatedRequest
+    if (req.body["userId"] != undefined) {
+        ret.validated = false
+        return ret
+    } else {
+        throw new Errors.BadRequestError('userId not present')
+    }
+}
+
+async function asyncValidator2(req: ValidatedRequest): Promise<ValidatedRequest> {
+    let ret: ValidatedRequest = req
+    if (req.body["userId"] != undefined && req.validated === false) {
+        ret.validated = true
+        return ret
+    } else {
+        throw new Errors.BadRequestError('userId not present')
+    }
+}
+
+interface ValidatedRequest extends express.Request {
+    validated: boolean
 }
