@@ -14,8 +14,8 @@ export * from './server';
 export { Return };
 export { Errors };
 
-const CONFIG_FILE = path.join(process.cwd(), 'rest.config');
-if (fs.existsSync(CONFIG_FILE)) {
+const CONFIG_FILE = searchConfigFile();
+if (CONFIG_FILE && fs.existsSync(CONFIG_FILE)) {
     const config = fs.readJSONSync(CONFIG_FILE);
     if (config.useIoC) {
         Server.useIoC();
@@ -26,4 +26,16 @@ if (fs.existsSync(CONFIG_FILE)) {
         const serviceFactory = require(config.serviceFactory);
         Server.registerServiceFactory(serviceFactory);
     }
+}
+
+function searchConfigFile() {
+    let configFile = path.join(__dirname, 'rest.config');
+    const ROOT = path.join('/', 'rest.config');
+    while (!fs.existsSync(configFile)) {
+        if (configFile === ROOT) {
+            return null;
+        }
+        configFile = path.normalize(path.join(path.dirname(configFile), '..', 'rest.config'));
+    }
+    return configFile;
 }
