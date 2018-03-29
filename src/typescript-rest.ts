@@ -30,12 +30,12 @@ if (CONFIG_FILE && fs.existsSync(CONFIG_FILE)) {
 
 function searchConfigFile() {
     let configFile = path.join(__dirname, 'rest.config');
-    const ROOT = path.join('/', 'rest.config');
     while (!fs.existsSync(configFile)) {
-        if (configFile === ROOT) {
+        const fileOnParent = path.normalize(path.join(path.dirname(configFile), '..', 'rest.config'));
+        if (configFile === fileOnParent) {
             return null;
         }
-        configFile = path.normalize(path.join(path.dirname(configFile), '..', 'rest.config'));
-    }
+        configFile = fileOnParent;
+}
     return configFile;
 }
