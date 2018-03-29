@@ -76,9 +76,10 @@ export class Server {
      * Configure the Server to use [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc)
      * to instantiate the service objects.
      * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
+     * @param es6 if true, import typescript-ioc/es6
      */
-    static useIoC() {
-        const ioc = require('typescript-ioc');
+    static useIoC(es6?: boolean) {
+        const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
         Server.registerServiceFactory({
             create: (serviceClass) => {
                 return ioc.Container.get(serviceClass);
