@@ -1126,6 +1126,24 @@ http://localhost:5674/api-docs/json  // Return the swagger.json file
 http://localhost:5674/api-docs/yaml  // Return the swagger.yaml file
 ```
 
+If needed, you can provide options to customize the Swagger UI:
+
+```typescript
+const swaggerUiOptions = {
+  customSiteTitle: 'My Awesome Docs',
+  swaggerOptions: {
+    validatorUrl: null,
+    oauth2RedirectUrl: 'http://example.com/oauth2-redirect.html',
+    oauth: {
+      clientId: 'my-default-client-id'
+    }
+  }
+};
+Server.swagger(app, './swagger.yaml', '/api-docs', undefined, ['http'], swaggerUiOptions);
+```
+
+> See [`swagger-ui-express`](https://github.com/scottie1984/swagger-ui-express) for more options and [`swagger-ui`](https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md) for more `swaggerOptions`. Note: Not all `swagger-ui` options are supported. Specifically, any options with a `Function` value will not work.
+
 To generate the swagger file, you can use the [typescript-rest-swagger](https://github.com/thiagobustamante/typescript-rest-swagger) tool.
 
 ```sh

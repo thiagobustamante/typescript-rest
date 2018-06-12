@@ -76,9 +76,10 @@ export class Server {
      * Configure the Server to use [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc)
      * to instantiate the service objects.
      * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
+     * @param es6 if true, import typescript-ioc/es6
      */
-    static useIoC() {
-        const ioc = require('typescript-ioc');
+    static useIoC(es6?: boolean) {
+        const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
         Server.registerServiceFactory({
             create: (serviceClass) => {
                 return ioc.Container.get(serviceClass);
@@ -176,7 +177,7 @@ export class Server {
      * @param host the hostname of the service
      * @param schemes the schemes used by the server
      */
-    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[]) {
+    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[], swaggerUiOptions?: object) {
         const swaggerUi = require('swagger-ui-express');
         if (_.startsWith(filePath, '.')) {
             filePath = path.join(process.cwd(), filePath);
@@ -203,6 +204,6 @@ export class Server {
             res.set('Content-Type', 'text/vnd.yaml');
             res.send(YAML.stringify(swaggerDocument, 1000));
         });
-        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
     }
 }
