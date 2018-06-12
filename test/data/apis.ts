@@ -501,6 +501,7 @@ export class MyAsyncService {
 }
 
 @Path('preprocessor')
+@Preprocessor(addThing)
 export class MyPreprocessedService {
     @ContextRequest
     request: ValidatedRequest
@@ -521,9 +522,15 @@ export class MyPreprocessedService {
     }
 }
 
-function validator(req: express.Request): ValidatedRequest {
+function addThing(req: express.Request): RequestWithThing {
+    let ret: RequestWithThing = req as RequestWithThing
+    ret.thing = true
+    return ret
+}
+
+function validator(req: RequestWithThing): ValidatedRequest {
     let ret: ValidatedRequest = req as ValidatedRequest
-    if (req.body["userId"] != undefined) {
+    if (req.body["userId"] != undefined && req.thing) {
         ret.validated = true
         return ret
     } else {
@@ -531,7 +538,7 @@ function validator(req: express.Request): ValidatedRequest {
     }
 }
 
-async function asyncValidator1(req: express.Request): Promise<ValidatedRequest> {
+async function asyncValidator1(req: RequestWithThing): Promise<ValidatedRequest> {
     let ret: ValidatedRequest = req as ValidatedRequest
     if (req.body["userId"] != undefined) {
         ret.validated = false
@@ -551,6 +558,10 @@ async function asyncValidator2(req: ValidatedRequest): Promise<ValidatedRequest>
     }
 }
 
-interface ValidatedRequest extends express.Request {
+interface RequestWithThing extends express.Request {
+    thing: boolean
+}
+
+interface ValidatedRequest extends RequestWithThing {
     validated: boolean
 }
