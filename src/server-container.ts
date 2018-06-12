@@ -120,8 +120,8 @@ export class InternalServer {
 
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (serviceMethod.processors) {
-                this.runPreprocessors(serviceMethod.processors, req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
+            if (serviceMethod.processors || serviceClass.processors) {
+                this.runPreprocessors(serviceClass.processors.concat(serviceMethod.processors), req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
             } else {
                 this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
             }

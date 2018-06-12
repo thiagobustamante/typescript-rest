@@ -2,6 +2,8 @@
 
 import { HttpMethod } from './server-types';
 
+export type PreprocessorFunction = (req: Express.Request) => Express.Request;
+
 export interface SeviceProperty {
     type: ParamType;
     name: string;
@@ -22,6 +24,7 @@ export class ServiceClass {
 
     targetClass: any;
     path: string;
+    processors: Array<PreprocessorFunction>;
     methods: Map<string, ServiceMethod>;
     languages: Array<string>;
     accepts: Array<string>;
@@ -56,7 +59,7 @@ export class ServiceMethod {
     accepts: Array<string>;
     resolvedLanguages: Array<string>;
     resolvedAccepts: Array<string>;
-    processors: Array<Function>;
+    processors: Array<PreprocessorFunction>;
 }
 
 /**

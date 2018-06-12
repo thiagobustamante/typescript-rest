@@ -52,7 +52,9 @@ export function Path(path: string) {
 export function Preprocessor(preprocessor: Function) {
     return function(...args: any[]) {
         args = _.without(args, undefined);
-        if (args.length === 3 && typeof args[2] === 'object') {
+        if (args.length === 1) {
+            return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
+        } else if (args.length === 3 && typeof args[2] === 'object') {
             return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
         }
 
@@ -879,8 +881,24 @@ function PathMethodDecorator(target: any, propertyKey: string,
     }
 }
 
+/**
+ * Decorator processor for [[Preprocessor]] decorator on classes
+ */
+function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
+    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    if (classData) {
+        if (!classData.processors) {
+            classData.processors = [];
+        }
+        classData.processors.unshift(preprocessor);
+    }
+}
+
+/**
+ * Decorator processor for [[Preprocessor]] decorator on methods
+ */
 function PreprocessorMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, preprocessor: Function) {
+    descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         if (!serviceMethod.processors) {

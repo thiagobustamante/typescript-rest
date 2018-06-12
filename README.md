@@ -1103,6 +1103,21 @@ export class UserHandler {
 }
 ```
 
+Preprocessors can also be added to a class, applying it to all endpoints on the class
+
+```typescript
+@Path('users')
+@Preprocessor(validator)
+export class UserHandler {
+  
+  @Path('email')
+  @POST
+  setEmail(body: any) {
+    // will have body.user
+  }
+}
+```
+
 ## Swagger
 
 Typescript-rest can expose an endpoint with the [swagger](http://swagger.io/) documentation for your API.
