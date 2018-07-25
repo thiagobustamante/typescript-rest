@@ -265,7 +265,6 @@ export class InternalServer {
             });
             result.push(this.getUploader().fields(options));
         }
-        
         return result;
     }
 
