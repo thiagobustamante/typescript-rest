@@ -49,6 +49,16 @@ export function Path(path: string) {
     };
 }
 
+export function Security(roles: string[]) {
+    return function(...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            return SecurityDecorator.apply(this, [args[0], args[1], args[2], roles]);
+        }
+        throw new Error('Invalid @Security Decorator declaration.');
+    };
+}
+
 export function Preprocessor(preprocessor: Function) {
     return function(...args: any[]) {
         args = _.without(args, undefined);
@@ -878,6 +888,17 @@ function PathMethodDecorator(target: any, propertyKey: string,
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.path = path;
+    }
+}
+
+/**
+ * Decorator processor for [[Security]] decorator on methods
+ */
+function SecurityDecorator(target: any, propertyKey: string,
+    descriptor: PropertyDescriptor, roles: string[]) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    if (serviceMethod) { // does not intercept constructor
+        serviceMethod.security = roles;
     }
 }
 

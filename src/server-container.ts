@@ -7,8 +7,16 @@ import * as multer from 'multer';
 import * as metadata from './metadata';
 import * as Errors from './server-errors';
 import * as _ from 'lodash';
+import * as acl from './server-acl';
 
-import { HttpMethod, ServiceContext, ReferencedResource, ServiceFactory, FileLimits } from './server-types';
+import {
+    HttpMethod,
+    ServiceContext,
+    ReferencedResource,
+    ServiceFactory,
+    FileLimits,
+    HTTP_METHOD_STRING
+} from './server-types';
 import { DownloadResource, DownloadBinaryData } from './server-return';
 
 export class InternalServer {
@@ -134,6 +142,10 @@ export class InternalServer {
         }
 
         const middleware: Array<express.RequestHandler> = this.buildServiceMiddleware(serviceMethod);
+        if (serviceMethod.security && serviceMethod.security.length > 0) {
+            acl.invokeRolesPolicies(serviceMethod.security, serviceMethod.resolvedPath, HTTP_METHOD_STRING[serviceMethod.httpMethod]);
+            middleware.push(acl.isAllowed);
+        }
         let args: any[] = [serviceMethod.resolvedPath];
         args = args.concat(middleware);
         args.push(handler);
@@ -253,7 +265,6 @@ export class InternalServer {
             });
             result.push(this.getUploader().fields(options));
         }
-
         return result;
     }
 
@@ -366,12 +377,12 @@ export class InternalServer {
 
                 } else if (value.then && value.catch) {
                     Promise.resolve(value)
-                    .then((val: any) => {
-                        this.sendValue(val, res, next);
-                        return null;
-                    }).catch((err: any) => {
-                        next(err);
-                    });
+                        .then((val: any) => {
+                            this.sendValue(val, res, next);
+                            return null;
+                        }).catch((err: any) => {
+                            next(err);
+                        });
                 } else {
                     res.json(value);
                 }

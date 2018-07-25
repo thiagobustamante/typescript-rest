@@ -35,6 +35,17 @@ export enum HttpMethod {
     PATCH
 }
 
+// FIXME: get better solution
+export const HTTP_METHOD_STRING = {
+    1: 'get',
+    2: 'post',
+    3: 'put',
+    4: 'delete',
+    5: 'head',
+    6: 'options',
+    7: 'patch'
+};
+
 /**
  * Represents the current context of the request being handled.
  */
