@@ -9,10 +9,6 @@ interface Request extends express.Request {
 }
 
 export const invokeRolesPolicies = function (roles: string[], resources: string, permissions: string) {
-    console.log('setup roles policy resources:', resources);
-    console.log('setup roles policy permissions:', permissions);
-    console.log('setup roles policy roles:', roles);
-
     serverAcl.allow([{
         roles: roles,
         // tslint:disable-next-line:object-literal-sort-keys
@@ -28,8 +24,6 @@ export const invokeRolesPolicies = function (roles: string[], resources: string,
  * Check If Admin Policy Allows
  */
 export const isAllowed = function (req: Request, res: express.Response, next: express.NextFunction) {
-    console.log('validate roles USER=', req.user);
-
     const roles = (req.user) ? req.user.roles : ['guest'];
     // Check for user roles
     serverAcl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, allow) {

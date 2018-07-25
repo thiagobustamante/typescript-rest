@@ -52,7 +52,6 @@ export function Path(path: string) {
 export function Security(roles: string[]) {
     return function(...args: any[]) {
         args = _.without(args, undefined);
-        console.log('Security args:', args);
         if (args.length === 3 && typeof args[2] === 'object') {
             return SecurityDecorator.apply(this, [args[0], args[1], args[2], roles]);
         }
