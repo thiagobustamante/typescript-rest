@@ -619,5 +619,31 @@ describe('Server Tests', () => {
             });
         });
     });    
+    
+    describe('MySecurityService', () => {
+        const baseUrl = `http://localhost:5674/security`;
+        it('should allow to access the guest request with guest permission', (done) => {
+            request.post({
+                body: JSON.stringify({ userId: 0 }),
+                headers: { 'content-type': 'application/json' },
+                url: `${baseUrl}/testGuest`
+            }, function(error, response, body) {
+                expect(body).to.eq('true');
+                done();
+            });
+        });
+
+        it('should disallow to access the admin request with guest permission', (done) => {
+            request.post({
+                body: JSON.stringify({ userId: 0 }),
+                headers: { 'content-type': 'application/json' },
+                url: `${baseUrl}/testAdmin`
+            }, function(error, response, body) {
+                body = JSON.parse(body);
+                expect(body.message).to.eq('User is not authorized');
+                done();
+            });
+        });
+    });
 });
 

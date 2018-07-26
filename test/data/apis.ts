@@ -10,7 +10,7 @@ import {Path, Server, GET, POST, PUT, DELETE,
         FormParam, Param, Context, ServiceContext, ContextRequest,
         ContextResponse, ContextLanguage, ContextAccept,
         ContextNext, AcceptLanguage, Accept, FileParam,
-        Errors, Return, BodyOptions, Abstract, Preprocessor} from '../../src/typescript-rest';
+        Errors, Return, BodyOptions, Abstract, Preprocessor, Security} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -522,6 +522,26 @@ export class MyPreprocessedService {
     }
 }
 
+@Path('security')
+export class MySecurityService {
+    @ContextRequest
+    request: SecurityRequest;
+
+    @Path('testGuest')
+    @POST
+    @Security(['guest'])
+    testGuestSecurity(body: any) {
+        return true;
+    }
+
+    @Path('testAdmin')
+    @POST
+    @Security(['admin'])
+    testAdminSecurity(body: any) {
+        return true;
+    }
+}
+
 function addThing(req: express.Request): RequestWithThing {
     let ret: RequestWithThing = req as RequestWithThing
     ret.thing = true
@@ -564,4 +584,8 @@ interface RequestWithThing extends express.Request {
 
 interface ValidatedRequest extends RequestWithThing {
     validated: boolean
+}
+
+interface SecurityRequest extends express.Request {
+    user: any;
 }
