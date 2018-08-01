@@ -456,6 +456,14 @@ export class ErrorService {
             reject(new Errors.UnsupportedMediaTypeError());
         });
     }
+
+    @Path('unprocessableentity')
+    @GET
+    test12( p: Person): Promise<string> {
+        return new Promise<string>(function(resolve, reject){
+            reject(new Errors.UnprocessableEntityError());
+        });
+    }
 }
 
 

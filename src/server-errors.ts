@@ -148,3 +148,15 @@ export class NotImplementedError extends HttpError {
         Object.setPrototypeOf(this, NotImplementedError.prototype);
     }
 }
+
+/**
+ * Represents a UNPROCESSABLE ENTITY error. The server understands the content type of the request entity
+ * (hence a 415 Unsupported Media Type status code is inappropriate), and the syntax of the request entity is correct
+ * (thus a 400 Bad Request status code is inappropriate) but was unable to process the contained instructions.
+ */
+export class UnprocessableEntityError extends HttpError {
+    constructor(message?: string) {
+        super('UnprocessableEntityError', 422, message || 'Unprocessable Entity');
+        Object.setPrototypeOf(this, UnprocessableEntityError.prototype);
+    }
+}

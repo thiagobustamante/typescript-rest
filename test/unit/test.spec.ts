@@ -543,6 +543,13 @@ describe('Server Tests', () => {
                 done();
             });
         });
+
+        it('should be able to send 422', (done) => {
+            request.get('http://localhost:5674/errors/unprocessableentity', function(error, response, body) {
+                expect(response.statusCode).to.eq(422);
+                done();
+            });
+        });
     });
     
 
