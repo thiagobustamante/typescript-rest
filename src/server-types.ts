@@ -94,7 +94,7 @@ export interface ServiceFactory {
     /**
      * Create a new service object. Called before each request handling.
      */
-    create: (serviceClass: Function) => any;
+    create: (serviceClass: Function, context: ServiceContext) => any;
     /**
      * Return the type used to handle requests to the target service.
      * By default, returns the serviceClass received, but you can use this
