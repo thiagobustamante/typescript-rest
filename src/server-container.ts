@@ -297,7 +297,7 @@ export class InternalServer {
     }
 
     private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
-        const serviceObject = InternalServer.serviceFactory.create(serviceClass.targetClass);
+        const serviceObject = InternalServer.serviceFactory.create(serviceClass.targetClass, context);
         if (serviceClass.hasProperties()) {
             serviceClass.properties.forEach((property, key) => {
                 serviceObject[key] = this.processParameter(property.type, context, property.name, property.propertyType);
