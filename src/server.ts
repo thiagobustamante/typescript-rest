@@ -22,6 +22,13 @@ export class Server {
     }
 
     /**
+     * Define passportAuth strategy
+     */
+    static passportAuth(strategy: string, roleKey: string = 'roles') {
+        InternalServer.passportAuth(strategy, roleKey);
+    }
+
+    /**
      * An alias for Server.loadServices()
      */
     static loadControllers(router: express.Router, patterns: string | Array<string>, baseDir?: string) {

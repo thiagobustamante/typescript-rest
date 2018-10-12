@@ -10,6 +10,8 @@ import * as _ from 'lodash';
 
 import { HttpMethod, ServiceContext, ReferencedResource, ServiceFactory, FileLimits } from './server-types';
 import { DownloadResource, DownloadBinaryData } from './server-return';
+import * as passport from 'passport';
+import { NextFunction, Request, Response } from 'express';
 
 export class InternalServer {
     static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
@@ -29,12 +31,19 @@ export class InternalServer {
             return <FunctionConstructor>serviceClass;
         }
     };
+    static passportStrategy: string;
+    static roleKey: string;
 
     router: express.Router;
     upload: multer.Instance;
 
     constructor(router: express.Router) {
         this.router = router;
+    }
+
+    static passportAuth(strategy: string, roleKey: string) {
+        InternalServer.passportStrategy = strategy;
+        InternalServer.roleKey = roleKey;
     }
 
     static registerServiceClass(target: Function): metadata.ServiceClass {
@@ -135,6 +144,22 @@ export class InternalServer {
 
         const middleware: Array<express.RequestHandler> = this.buildServiceMiddleware(serviceMethod);
         let args: any[] = [serviceMethod.resolvedPath];
+        let roles: string[] = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
+            .filter((role) => !!role);
+        if (InternalServer.passportStrategy && roles.length) {
+            args = [...args, passport.authenticate(InternalServer.passportStrategy)];
+        }
+        roles = roles.filter((role) => role !== '*');
+        if (roles.length) {
+            args = [...args, function(req: Request, res: Response, next: NextFunction) {
+                if (req.user[InternalServer.roleKey].some((role: string) => roles.indexOf(role) >= 0)) {
+                    next();
+                } else {
+                    res.status(403).send('Forbidden');
+                }
+            }];
+        }
+
         args = args.concat(middleware);
         args.push(handler);
         switch (serviceMethod.httpMethod) {
