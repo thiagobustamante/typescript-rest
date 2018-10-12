@@ -366,12 +366,12 @@ export class InternalServer {
 
                 } else if (value.then && value.catch) {
                     Promise.resolve(value)
-                    .then((val: any) => {
-                        this.sendValue(val, res, next);
-                        return null;
-                    }).catch((err: any) => {
-                        next(err);
-                    });
+                        .then((val: any) => {
+                            this.sendValue(val, res, next);
+                            return null;
+                        }).catch((err: any) => {
+                            next(err);
+                        });
                 } else {
                     res.json(value);
                 }
@@ -401,12 +401,14 @@ export class InternalServer {
             case metadata.ParamType.body:
                 return this.convertType(context.request.body, type);
             case metadata.ParamType.file:
-                const files: Array<Express.Multer.File> = context.request.files?context.request.files[name]:null;
+                // @ts-ignore
+                const files: Array<Express.Multer.File> = context.request.files ? context.request.files[name] : null;
                 if (files && files.length > 0) {
                     return files[0];
                 }
                 return null;
             case metadata.ParamType.files:
+                // @ts-ignore
                 return context.request.files[name];
             case metadata.ParamType.form:
                 return this.convertType(context.request.body[name], type);

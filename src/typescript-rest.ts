@@ -36,6 +36,6 @@ function searchConfigFile() {
             return null;
         }
         configFile = fileOnParent;
-}
+    }
     return configFile;
 }
