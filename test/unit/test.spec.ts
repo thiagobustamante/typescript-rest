@@ -638,7 +638,7 @@ describe('Server Tests', () => {
     });
 
     describe('Options', () => {
-        it('should HEAD', (done) => {
+        it('should OPTIONS', (done) => {
            request({
                url: 'http://localhost:5674/options',
                method: 'OPTIONS',
@@ -651,7 +651,7 @@ describe('Server Tests', () => {
     });
 
     describe('Patch', () => {
-        it('should HEAD', (done) => {
+        it('should PATCH', (done) => {
             request.patch('http://localhost:5674/patch', function(error, response, body) {
                 expect(response.statusCode).to.eq(200);
                 expect(body).to.eq('OK');
