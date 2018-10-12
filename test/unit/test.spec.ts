@@ -60,6 +60,7 @@ describe('Server Tests', () => {
 			                                            '/download', '/download/ref', '/accept', '/accept/conflict', '/async/test']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
             expect(Server.getHttpMethods('/mypath2/secondpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
+            expect(Server.getHttpMethods('/mypath2/thirdpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
         });
     });
 

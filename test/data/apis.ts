@@ -6,11 +6,12 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 
 import {Path, Server, GET, POST, PUT, DELETE,
-        PathParam, QueryParam, CookieParam, HeaderParam,
-        FormParam, Param, Context, ServiceContext, ContextRequest,
-        ContextResponse, ContextLanguage, ContextAccept,
-        ContextNext, AcceptLanguage, Accept, FileParam,
-        Errors, Return, BodyOptions, Abstract, Preprocessor} from '../../src/typescript-rest';
+    PathParam, QueryParam, CookieParam, HeaderParam,
+    FormParam, Param, Context, ServiceContext, ContextRequest,
+    ContextResponse, ContextLanguage, ContextAccept,
+    ContextNext, AcceptLanguage, Accept, FileParam,
+    Errors, Return, BodyOptions, Abstract, Preprocessor,
+    GETMapping, PUTMapping, DELETEMapping, POSTMapping} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -34,8 +35,7 @@ export abstract class BaseApi {
     @Context
     context: ServiceContext;
 
-    @GET
-    @Path(':id')
+    @GETMapping(':id')
     testCrudGet(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -43,8 +43,7 @@ export abstract class BaseApi {
         return 'false';
     }
 
-    @GET
-    @Path('overload/:id')
+    @GETMapping('overload/:id')
     testOverloadGet(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -52,8 +51,7 @@ export abstract class BaseApi {
         return 'false';
     }
 
-    @PUT
-    @Path('overload/:id')
+    @PUTMapping('overload/:id')
     testOverloadPut(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -160,6 +158,16 @@ export class MyService2 {
     @DELETE
     @Path('secondpath')
     testDelete( ): string {
+        return 'OK';
+    }
+
+    @GETMapping('thirdpath')
+    test2( ): string {
+        return 'OK';
+    }
+
+    @DELETEMapping('thirdpath')
+    testDelete2( ): string {
         return 'OK';
     }
 }
@@ -331,8 +339,7 @@ export class AcceptTest {
     }
 
 
-    @POST
-    @Path('conflict')
+    @POSTMapping('conflict')
     testConflictAsync(): Promise<string> {
         return new Promise<string>(function(resolve, reject){
             throw new Errors.ConflictError('test of conflict');
