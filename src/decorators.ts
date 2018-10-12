@@ -386,11 +386,11 @@ export function GET(target: any, propertyKey: string,
  * GET http://mydomain/people/list
  * ```
  */
-export function GETMapping(path: string) {
+export function GETMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.GET);
+            GET(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -447,11 +447,11 @@ export function POST(target: any, propertyKey: string,
  * POST http://mydomain/people/add
  * ```
  */
-export function POSTMapping(path: string) {
+export function POSTMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.POST);
+            POST(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -509,11 +509,11 @@ export function PUT(target: any, propertyKey: string,
  * PUT http://mydomain/people/123
  * ```
  */
-export function PUTMapping(path: string) {
+export function PUTMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.PUT);
+            PUT(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -571,11 +571,11 @@ export function DELETE(target: any, propertyKey: string,
  * PUT http://mydomain/people/123
  * ```
  */
-export function DELETEMapping(path: string) {
+export function DELETEMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.DELETE);
+            DELETE(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -632,11 +632,11 @@ export function HEAD(target: any, propertyKey: string,
  * HEAD http://mydomain/people/list
  * ```
  */
-export function HEADMapping(path: string) {
+export function HEADMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.HEAD);
+            HEAD(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -693,11 +693,11 @@ export function OPTIONS(target: any, propertyKey: string,
  * OPTIONS http://mydomain/people/list
  * ```
  */
-export function OPTIONSMapping(path: string) {
+export function OPTIONSMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.OPTIONS);
+            OPTIONS(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 
@@ -755,11 +755,11 @@ export function PATCH(target: any, propertyKey: string,
  * PATCH http://mydomain/people/123
  * ```
  */
-export function PATCHMapping(path: string) {
+export function PATCHMapping(path: string = '/') {
     return function (...args: any[]) {
         args = _.without(args, undefined);
         if (args.length === 3 && typeof args[2] === 'object') {
-            processHttpVerb(args[0], args[1], HttpMethod.PATCH);
+            PATCH(args[0], args[1], args[2]);
             return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
         }
 

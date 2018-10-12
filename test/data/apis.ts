@@ -11,7 +11,8 @@ import {Path, Server, GET, POST, PUT, DELETE,
     ContextResponse, ContextLanguage, ContextAccept,
     ContextNext, AcceptLanguage, Accept, FileParam,
     Errors, Return, BodyOptions, Abstract, Preprocessor,
-    GETMapping, PUTMapping, DELETEMapping, POSTMapping} from '../../src/typescript-rest';
+    GETMapping, PUTMapping, DELETEMapping, POSTMapping,
+    HEADMapping, OPTIONSMapping, PATCHMapping} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -534,6 +535,30 @@ export class MyPreprocessedService {
     @Preprocessor(asyncValidator2) // multiple preprocessors needed to test async
     asynctest(body: any) {
         return this.request.validated
+    }
+}
+
+@Path('heads')
+export class HeadsPath {
+    @HEADMapping()
+    test(): string {
+        return 'OK';
+    }
+}
+
+@Path('options')
+export class OptionsPath {
+    @OPTIONSMapping()
+    test(): string {
+        return 'OK';
+    }
+}
+
+@Path('patch')
+export class PatchPath {
+    @PATCHMapping()
+    test(): string {
+        return 'OK';
     }
 }
 

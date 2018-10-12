@@ -626,6 +626,38 @@ describe('Server Tests', () => {
                 done();
             });
         });
-    });    
+    });
+
+    describe('Head', () => {
+        it('should HEAD', (done) => {
+           request.head('http://localhost:5674/heads', function(error, response, body) {
+               expect(response.statusCode).to.eq(200);
+               done();
+           });
+        });
+    });
+
+    describe('Options', () => {
+        it('should HEAD', (done) => {
+           request({
+               url: 'http://localhost:5674/options',
+               method: 'OPTIONS',
+           }, function(error, response, body) {
+               expect(response.statusCode).to.eq(200);
+               expect(body).to.eq('OK');
+               done();
+           });
+        });
+    });
+
+    describe('Patch', () => {
+        it('should HEAD', (done) => {
+            request.patch('http://localhost:5674/patch', function(error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+    });
 });
 
