@@ -9,6 +9,48 @@ import * as _ from 'lodash';
 import * as chai from 'chai';
 import {Server, HttpMethod} from '../../src/typescript-rest';
 import * as YAML from 'yamljs';
+import * as Passport from 'passport';
+import {ExtractJwt, Strategy, StrategyOptions} from 'passport-jwt';
+import * as jwt from 'jsonwebtoken';
+
+const JWT_SECRET: string = 'some-jwt-secret';
+
+const jwtConfig: StrategyOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: Buffer.from(JWT_SECRET, 'base64'),
+};
+
+export interface JwtUser {
+    username: string;
+    roles: string[];
+}
+
+export interface JwtUserPayload {
+    sub: string;
+    auth: string;
+}
+
+export function PassportInitialize() {
+    Passport.use(new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
+        const user: JwtUser = {
+            username: payload.sub,
+            roles: payload.auth.split(','),
+        };
+        done(null, user);
+    }));
+
+    Passport.serializeUser((user: JwtUser, done: (a: null, b: string) => void) => {
+        done(null, JSON.stringify(user));
+    });
+
+    Passport.deserializeUser((user: string, done: (a: null, b: JwtUser) => void) => {
+        done(null, JSON.parse(user));
+    });
+}
+
+export function generateJwt() {
+    return jwt.sign({ sub: 'admin', auth: 'ROLE_ADMIN,ROLE_USER' }, Buffer.from(JWT_SECRET, 'base64'), { algorithm: 'HS512' });
+}
 
 const expect = chai.expect;
 
@@ -18,6 +60,10 @@ export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         let app: express.Application = express();
         app.set('env', 'test');
+        PassportInitialize();
+        app.use(Passport.initialize());
+        app.use(Passport.session());
+        Server.passportAuth('jwt', 'roles');
         Server.setFileLimits({
             fieldSize: 1024 * 1024
         });
@@ -625,6 +671,159 @@ describe('Server Tests', () => {
                 done();
             });
         });
-    });    
+    });
+
+    describe('Authorization', () => {
+        it('should not authorize without header', (done) => {
+            request('http://localhost:5674/authorization', function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should not authorize with wrong token', (done) => {
+            request('http://localhost:5674/authorization', {
+                headers: {
+                    'Authorization': 'Bearer xx'
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should authorize with header', (done) => {
+            request('http://localhost:5674/authorization', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                done();
+            });
+        });
+    });
+
+    describe('Authorization Admin', () => {
+        it('should not authorize without header', (done) => {
+            request('http://localhost:5674/admin', function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should not authorize with wrong token', (done) => {
+            request('http://localhost:5674/admin', {
+                headers: {
+                    'Authorization': 'Bearer xx'
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should authorize with header', (done) => {
+            request('http://localhost:5674/admin', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                done();
+            });
+        });
+    });
+
+    describe('Authorization XAdmin', () => {
+        it('should not authorize without header', (done) => {
+            request('http://localhost:5674/xadmin', function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should not authorize with wrong token', (done) => {
+            request('http://localhost:5674/xadmin', {
+                headers: {
+                    'Authorization': 'Bearer xx'
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should not authorize with header and without appropiate role', (done) => {
+            request('http://localhost:5674/xadmin', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(403);
+                expect(body).to.eq('Forbidden');
+                done();
+            });
+        });
+    });
+
+    describe('SubAuthorization', () => {
+        it('should work in "public" methods', (done) => {
+            request('http://localhost:5674/subauthorization/public', function (error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+        it('should not authorize without header', (done) => {
+            request.post('http://localhost:5674/subauthorization/profile', function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should not authorize with wrong token', (done) => {
+            request.post('http://localhost:5674/subauthorization/profile', {
+                headers: {
+                    'Authorization': 'Bearer xx'
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(401);
+                expect(body).to.eq('Unauthorized');
+                done();
+            });
+        });
+        it('should authorize with header', (done) => {
+            request.post('http://localhost:5674/subauthorization/profile', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                done();
+            });
+        });
+        it('should authorize in GET method', (done) => {
+            request('http://localhost:5674/subauthorization/profile', function (error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+        it('should not authorize in PUT method', (done) => {
+            request.put('http://localhost:5674/subauthorization/profile', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, function (error, response, body) {
+                expect(response.statusCode).to.eq(403);
+                expect(body).to.eq('Forbidden');
+                done();
+            });
+        });
+    });
 });
 
