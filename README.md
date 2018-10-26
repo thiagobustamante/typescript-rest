@@ -24,6 +24,7 @@ This project is supported by [Leanty](https://github.com/Leanty/)'s team and is 
       - [Registering Services](#registering-services)
     - [@Path Decorator](#path-decorator)
       - [Path Parameters](#path-parameters)
+    - [@Security Decorator](#security-decorator)
     - [Http Methods](#http-methods)
     - [Parameters](#parameters)
     - [Service Context](#service-context)
@@ -288,6 +289,43 @@ req.params: { "from": "LAX", "to": "SFO" }
 Route path: /plantae/:genus.:species
 Request URL: http://localhost:3000/plantae/Prunus.persica
 req.params: { "genus": "Prunus", "species": "persica" }
+```
+
+### @Security Decorator
+
+The @Security decorator allow us to define a authorization for a given endpoint.
+Security is using [passport](https://github.com/jaredhanson/passport) and it can be configured using
+`passportAuth` method in `Server`
+
+```typescript
+Server.passportAuth(strategy, roleKey);
+```
+
+- strategy: is part of passport configuration
+- roleKey: by default "*roles*", it is part of user object format
+
+Some examples:
+
+```typescript
+@Security()
+class HelloService {
+    @Security("ROLE_ADMIN")
+    admin() {}
+
+    authorized() {}
+}
+```
+
+```typescript
+@Security("ROLE_USER")
+class TestService {
+}
+```
+
+```typescript
+@Security(["ROLE_ADMIN", "ROLE_USER"])
+class AuthService {
+}
 ```
 
 ### Http Methods
