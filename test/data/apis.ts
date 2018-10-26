@@ -6,11 +6,12 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 
 import {Path, Server, GET, POST, PUT, DELETE,
-        PathParam, QueryParam, CookieParam, HeaderParam,
-        FormParam, Param, Context, ServiceContext, ContextRequest,
-        ContextResponse, ContextLanguage, ContextAccept,
-        ContextNext, AcceptLanguage, Accept, FileParam,
-        Errors, Return, BodyOptions, Abstract, Preprocessor} from '../../src/typescript-rest';
+    PathParam, QueryParam, CookieParam, HeaderParam,
+    FormParam, Param, Context, ServiceContext, ContextRequest,
+    ContextResponse, ContextLanguage, ContextAccept,
+    ContextNext, AcceptLanguage, Accept, FileParam,
+    Errors, Return, BodyOptions, Abstract, Preprocessor, Security} from '../../src/typescript-rest';
+import {JwtUser} from "../unit/test.spec";
 
 Server.useIoC();
 
@@ -527,6 +528,74 @@ export class MyPreprocessedService {
     @Preprocessor(asyncValidator2) // multiple preprocessors needed to test async
     asynctest(body: any) {
         return this.request.validated
+    }
+}
+
+@Path('authorization')
+@Security()
+export class AuthenticatePath {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    test( ): JwtUser {
+        return this.context.request.user;
+    }
+}
+
+@Path('admin')
+@Security('ROLE_ADMIN')
+export class AuthenticateAdminPath {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    test( ): JwtUser {
+        return this.context.request.user;
+    }
+}
+
+@Path('xadmin')
+@Security('ROLE_NOT_EXISTING')
+export class AuthenticateXAdminPath {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    test( ): JwtUser {
+        return this.context.request.user;
+    }
+}
+
+@Path('subauthorization')
+export class SubAuthenticatePath {
+    @Context
+    context: ServiceContext;
+
+    @GET
+    @Path('public')
+    test( ): string {
+        return 'OK';
+    }
+
+    @POST
+    @Path('profile')
+    @Security(['ROLE_ADMIN', 'ROLE_USER'])
+    test3( ): JwtUser {
+        return this.context.request.user;
+    }
+
+    @GET
+    @Path('profile')
+    test2( ): string {
+        return 'OK';
+    }
+
+    @PUT
+    @Path('profile')
+    @Security('ROLE_NOT_EXISTING')
+    test4( ): JwtUser {
+        return this.context.request.user;
     }
 }
 

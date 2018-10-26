@@ -51,6 +51,55 @@ export function Path(path: string) {
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
+ * should include a determined role
+ * or all authorized users (token) using passport
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * @ Security()
+ * class PeopleService {
+ *   @ PUT
+ *   @ Path(':id', true)
+ *   @ Security(['ROLE_ADMIN'])
+ *   savePerson(person:Person) {
+ *      // ...
+ *   }
+ *
+ *   @ GET
+ *   @ Path(':id', true)
+ *   getPerson():Person {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create services that listen for requests like:
+ *
+ * ```
+ * PUT http://mydomain/people/123 (Only for ADMIN roles) or
+ * GET http://mydomain/people/123 (For all authorized users)
+ * ```
+ */
+export function Security(roles: string | string[] = ['*']) {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (typeof roles !== 'object') {
+            roles = [roles];
+        }
+        if (args.length === 1) {
+            return SecurityTypeDecorator.apply(this, [args[0], roles]);
+        } else if (args.length === 3 && typeof args[2] === 'object') {
+            return SecurityMethodDecorator.apply(this, [args[0], args[1], args[2], roles]);
+        }
+
+        throw new Error('Invalid @Security Decorator declaration.');
+    };
+}
+
+/**
+ * A decorator to tell the [[Server]] that a class or a method
  * should include a pre-processor in its request pipelines.
  *
  * For example:
@@ -907,6 +956,27 @@ function PathMethodDecorator(target: any, propertyKey: string,
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.path = path;
+    }
+}
+
+/**
+ * Decorator processor for [[Security]] decorator on classes
+ */
+function SecurityTypeDecorator(target: Function, roles: string[]) {
+    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    if (classData) {
+        classData.roles = roles;
+    }
+}
+
+/**
+ * Decorator processor for [[Security]] decorator on methods
+ */
+function SecurityMethodDecorator(target: any, propertyKey: string,
+    descriptor: PropertyDescriptor, roles: string[]) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    if (serviceMethod) { // does not intercept constructor
+        serviceMethod.roles = roles;
     }
 }
 
