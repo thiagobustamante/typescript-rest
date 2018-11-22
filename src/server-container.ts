@@ -213,8 +213,12 @@ export class InternalServer {
             });
             const allowed: string = allowedMethods.join(', ');
             this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                res.set('Allow', allowed);
-                throw new Errors.MethodNotAllowedError();
+                if (allowedMethods.indexOf(req.method) > -1){
+                    next();
+                } else {
+                    res.set('Allow', allowed);
+                    throw new Errors.MethodNotAllowedError();
+                }
             });
         });
     }
