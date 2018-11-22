@@ -119,24 +119,23 @@ export class InternalServer {
         this.handleNotAllowedMethods();
     }
 
-    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<express.Request> {
-        let request = req;
+    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<void> {
         for (const processor of processors) {
-            request = await Promise.resolve(processor(request));
+            await Promise.resolve(processor(req));
         }
-        return request;
     }
 
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (serviceMethod.processors || serviceClass.processors) {
-                serviceClass.processors = serviceClass.processors || [];
-                serviceMethod.processors = serviceMethod.processors || [];
-                this.runPreprocessors(serviceClass.processors.concat(serviceMethod.processors), req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
-            } else {
-                this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
-                next();
-            }
+            Promise.resolve().then(() => {
+                if (serviceMethod.processors || serviceClass.processors) {
+                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
+                    return this.runPreprocessors(allPreprocessors, req);
+                }
+                return null;
+            }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
+            .then(() => next())
+            .catch(err => next(err));
         };
 
         if (!serviceMethod.resolvedPath) {
@@ -213,7 +212,7 @@ export class InternalServer {
             });
             const allowed: string = allowedMethods.join(', ');
             this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                if (allowedMethods.indexOf(req.method) > -1){
+                if (allowedMethods.indexOf(req.method) > -1) {
                     next();
                 } else {
                     res.set('Allow', allowed);
@@ -336,7 +335,7 @@ export class InternalServer {
         return serviceObject;
     }
 
-    private callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
+    private async callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
         req: express.Request, res: express.Response, next: express.NextFunction) {
         const context: ServiceContext = new ServiceContext();
         context.request = req;
@@ -349,10 +348,10 @@ export class InternalServer {
         const toCall = serviceClass.targetClass.prototype[serviceMethod.name] || serviceClass.targetClass[serviceMethod.name];
         const result = toCall.apply(serviceObject, args);
         this.processResponseHeaders(serviceMethod, context);
-        this.sendValue(result, res, next);
+        await this.sendValue(result, res, next);
     }
 
-    private sendValue(value: any, res: express.Response, next: express.NextFunction) {
+    private async sendValue(value: any, res: express.Response, next: express.NextFunction) {
         switch (typeof value) {
             case 'number':
                 res.send(value.toString());
@@ -395,13 +394,8 @@ export class InternalServer {
                     }
 
                 } else if (value.then && value.catch) {
-                    Promise.resolve(value)
-                    .then((val: any) => {
-                        this.sendValue(val, res, next);
-                        return null;
-                    }).catch((err: any) => {
-                        next(err);
-                    });
+                    const val = await Promise.resolve(value);
+                    this.sendValue(val, res, next);
                 } else {
                     res.json(value);
                 }
