@@ -369,7 +369,7 @@ export class InternalServer {
                 break;
             default:
                 if (value.filePath && value instanceof DownloadResource) {
-                    res.download(value.filePath, value.fileName);
+                    await this.downloadResToPromise(res, value);
                 } else if (value instanceof DownloadBinaryData) {
                     if (value.fileName) {
                         res.writeHead(200, {
@@ -392,14 +392,25 @@ export class InternalServer {
                     } else {
                         res.sendStatus(value.statusCode);
                     }
-
                 } else if (value.then && value.catch) {
-                    const val = await Promise.resolve(value);
-                    this.sendValue(val, res, next);
+                    const val = await value;
+                    await this.sendValue(val, res, next);
                 } else {
                     res.json(value);
                 }
         }
+    }
+
+    private downloadResToPromise(res: express.Response, value: DownloadResource) {
+        return new Promise((resolve, reject) => {
+            res.download(value.filePath, value.filePath, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     private buildArgumentsList(serviceMethod: metadata.ServiceMethod, context: ServiceContext) {
