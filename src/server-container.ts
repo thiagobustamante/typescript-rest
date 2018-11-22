@@ -135,6 +135,7 @@ export class InternalServer {
                 this.runPreprocessors(serviceClass.processors.concat(serviceMethod.processors), req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
             } else {
                 this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
+                next();
             }
         };
 
