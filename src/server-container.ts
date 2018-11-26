@@ -212,7 +212,7 @@ export class InternalServer {
             });
             const allowed: string = allowedMethods.join(', ');
             this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                if (allowedMethods.indexOf(req.method) > -1) {
+                if (res.headersSent || allowedMethods.indexOf(req.method) > -1) {
                     next();
                 } else {
                     res.set('Allow', allowed);
