@@ -343,6 +343,16 @@ The following decorators can be used:
   - @OPTIONS
   - @HEAD
 
+Also exists mapping options to use @Path and @Method together:
+
+  - @GETMapping 
+  - @POSTMapping
+  - @PUTMapping
+  - @PATCHMapping
+  - @DELETEMapping
+  - @OPTIONSMapping
+  - @HEADMapping
+
 Some examples:
 
 ```typescript
@@ -361,6 +371,28 @@ class UserService {
 
    @PUT
    @Path(":userId")
+   saveUser(@PathParam("userId"), user: User): void {
+      //...
+   }
+}
+```
+
+Using mappings:
+
+```typescript
+@Path("/users")
+class UserService {
+   @GET
+   getUsers(): Promise<Array<User>> {
+      //...
+   }
+
+   @GETMapping(":userId")
+   getUser(@PathParam("userId")): Promise<User> {
+      //...
+   }
+
+   @PUTMapping(":userId")
    saveUser(@PathParam("userId"), user: User): void {
       //...
    }

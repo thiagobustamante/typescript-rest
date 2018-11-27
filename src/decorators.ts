@@ -415,6 +415,40 @@ export function GET(target: any, propertyKey: string,
 
 /**
  * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP GET requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ GETMapping('/list')
+ *   getPeople() {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * GET http://mydomain/people/list
+ * ```
+ */
+export function GETMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            GET(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @GETMapping Decorator declaration.');
+    };
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
  * should be called to process HTTP POST requests.
  *
  * For example:
@@ -438,6 +472,40 @@ export function GET(target: any, propertyKey: string,
 export function POST(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.POST);
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP POST requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ POSTMapping('/add')
+ *   addPerson() {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * POST http://mydomain/people/add
+ * ```
+ */
+export function POSTMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            POST(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @POSTMapping Decorator declaration.');
+    };
 }
 
 /**
@@ -470,6 +538,40 @@ export function PUT(target: any, propertyKey: string,
 
 /**
  * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP PUT requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ PUTMapping(':id')
+ *   savePerson(person: Person) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * PUT http://mydomain/people/123
+ * ```
+ */
+export function PUTMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            PUT(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @PUTMapping Decorator declaration.');
+    };
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
  * should be called to process HTTP DELETE requests.
  *
  * For example:
@@ -494,6 +596,40 @@ export function PUT(target: any, propertyKey: string,
 export function DELETE(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.DELETE);
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP DELETE requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ DELETEMapping(':id')
+ *   removePerson(@ PathParam('id')id: string) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * PUT http://mydomain/people/123
+ * ```
+ */
+export function DELETEMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            DELETE(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @DELETEMapping Decorator declaration.');
+    };
 }
 
 /**
@@ -525,6 +661,40 @@ export function HEAD(target: any, propertyKey: string,
 
 /**
  * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP HEAD requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ HEADMapping('/list')
+ *   headPerson() {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * HEAD http://mydomain/people/list
+ * ```
+ */
+export function HEADMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            HEAD(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @HEADMapping Decorator declaration.');
+    };
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
  * should be called to process HTTP OPTIONS requests.
  *
  * For example:
@@ -548,6 +718,40 @@ export function HEAD(target: any, propertyKey: string,
 export function OPTIONS(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.OPTIONS);
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP OPTIONS requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ OPTIONSMapping('/list')
+ *   optionsPerson() {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * OPTIONS http://mydomain/people/list
+ * ```
+ */
+export function OPTIONSMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            OPTIONS(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @OPTIONSMapping Decorator declaration.');
+    };
 }
 
 /**
@@ -576,6 +780,40 @@ export function OPTIONS(target: any, propertyKey: string,
 export function PATCH(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
     processHttpVerb(target, propertyKey, HttpMethod.PATCH);
+}
+
+/**
+ * A decorator to tell the [[Server]] that a method
+ * should be called to process HTTP PATCH requests for specific path.
+ *
+ * For example:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ PATCHMapping(':id')
+ *   savePerson(person: Person) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ *
+ * Will create a service that listen for requests like:
+ *
+ * ```
+ * PATCH http://mydomain/people/123
+ * ```
+ */
+export function PATCHMapping(path: string = '/') {
+    return function (...args: any[]) {
+        args = _.without(args, undefined);
+        if (args.length === 3 && typeof args[2] === 'object') {
+            PATCH(args[0], args[1], args[2]);
+            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        }
+
+        throw new Error('Invalid @PATCHMapping Decorator declaration.');
+    };
 }
 
 /**

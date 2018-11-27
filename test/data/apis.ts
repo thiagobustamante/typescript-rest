@@ -10,7 +10,9 @@ import {Path, Server, GET, POST, PUT, DELETE,
     FormParam, Param, Context, ServiceContext, ContextRequest,
     ContextResponse, ContextLanguage, ContextAccept,
     ContextNext, AcceptLanguage, Accept, FileParam,
-    Errors, Return, BodyOptions, Abstract, Preprocessor, Security} from '../../src/typescript-rest';
+    Errors, Return, BodyOptions, Abstract, Preprocessor, Security,
+    GETMapping, PUTMapping, DELETEMapping, POSTMapping,
+    HEADMapping, OPTIONSMapping, PATCHMapping} from '../../src/typescript-rest';
 import {JwtUser} from "../unit/test.spec";
 
 Server.useIoC();
@@ -35,8 +37,7 @@ export abstract class BaseApi {
     @Context
     context: ServiceContext;
 
-    @GET
-    @Path(':id')
+    @GETMapping(':id')
     testCrudGet(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -44,8 +45,7 @@ export abstract class BaseApi {
         return 'false';
     }
 
-    @GET
-    @Path('overload/:id')
+    @GETMapping('overload/:id')
     testOverloadGet(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -53,8 +53,7 @@ export abstract class BaseApi {
         return 'false';
     }
 
-    @PUT
-    @Path('overload/:id')
+    @PUTMapping('overload/:id')
     testOverloadPut(@PathParam('id') id: string) {
         if (context) {
             return 'OK_'+id;
@@ -161,6 +160,16 @@ export class MyService2 {
     @DELETE
     @Path('secondpath')
     testDelete( ): string {
+        return 'OK';
+    }
+
+    @GETMapping('thirdpath')
+    test2( ): string {
+        return 'OK';
+    }
+
+    @DELETEMapping('thirdpath')
+    testDelete2( ): string {
         return 'OK';
     }
 }
@@ -332,8 +341,7 @@ export class AcceptTest {
     }
 
 
-    @POST
-    @Path('conflict')
+    @POSTMapping('conflict')
     testConflictAsync(): Promise<string> {
         return new Promise<string>(function(resolve, reject){
             throw new Errors.ConflictError('test of conflict');
@@ -596,6 +604,30 @@ export class SubAuthenticatePath {
     @Security('ROLE_NOT_EXISTING')
     test4( ): JwtUser {
         return this.context.request.user;
+    }
+}
+
+@Path('heads')
+export class HeadsPath {
+    @HEADMapping()
+    test(): string {
+        return 'OK';
+    }
+}
+
+@Path('options')
+export class OptionsPath {
+    @OPTIONSMapping()
+    test(): string {
+        return 'OK';
+    }
+}
+
+@Path('patch')
+export class PatchPath {
+    @PATCHMapping()
+    test(): string {
+        return 'OK';
     }
 }
 

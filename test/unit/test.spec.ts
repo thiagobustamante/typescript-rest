@@ -106,6 +106,7 @@ describe('Server Tests', () => {
 			                                            '/download', '/download/ref', '/accept', '/accept/conflict', '/async/test']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
             expect(Server.getHttpMethods('/mypath2/secondpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
+            expect(Server.getHttpMethods('/mypath2/thirdpath')).to.have.members([HttpMethod.GET, HttpMethod.DELETE]);
         });
     });
 
@@ -821,6 +822,38 @@ describe('Server Tests', () => {
             }, function (error, response, body) {
                 expect(response.statusCode).to.eq(403);
                 expect(body).to.eq('Forbidden');
+                done();
+            });
+        });
+    });
+
+    describe('Head', () => {
+        it('should HEAD', (done) => {
+           request.head('http://localhost:5674/heads', function(error, response, body) {
+               expect(response.statusCode).to.eq(200);
+               done();
+           });
+        });
+    });
+
+    describe('Options', () => {
+        it('should OPTIONS', (done) => {
+           request({
+               url: 'http://localhost:5674/options',
+               method: 'OPTIONS',
+           }, function(error, response, body) {
+               expect(response.statusCode).to.eq(200);
+               expect(body).to.eq('OK');
+               done();
+           });
+        });
+    });
+
+    describe('Patch', () => {
+        it('should PATCH', (done) => {
+            request.patch('http://localhost:5674/patch', function(error, response, body) {
+                expect(response.statusCode).to.eq(200);
+                expect(body).to.eq('OK');
                 done();
             });
         });
