@@ -33,6 +33,7 @@ export class InternalServer {
     };
     static passportStrategy: string;
     static roleKey: string;
+    static session: boolean;
 
     router: express.Router;
     upload: multer.Instance;
@@ -41,7 +42,7 @@ export class InternalServer {
         this.router = router;
     }
 
-    static passportAuth(strategy: string, roleKey: string) {
+    static passportAuth(strategy: string, roleKey: string, session: boolean) {
         InternalServer.passportStrategy = strategy;
         InternalServer.roleKey = roleKey;
     }
@@ -147,7 +148,7 @@ export class InternalServer {
         let roles: string[] = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
             .filter((role) => !!role);
         if (InternalServer.passportStrategy && roles.length) {
-            args = [...args, passport.authenticate(InternalServer.passportStrategy)];
+            args = [...args, passport.authenticate(InternalServer.passportStrategy, { session: InternalServer.session })];
         }
         roles = roles.filter((role) => role !== '*');
         if (roles.length) {

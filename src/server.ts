@@ -24,8 +24,8 @@ export class Server {
     /**
      * Define passportAuth strategy
      */
-    static passportAuth(strategy: string, roleKey: string = 'roles') {
-        InternalServer.passportAuth(strategy, roleKey);
+    static passportAuth(strategy: string, roleKey: string = 'roles', session: boolean = false) {
+        InternalServer.passportAuth(strategy, roleKey, session);
     }
 
     /**
