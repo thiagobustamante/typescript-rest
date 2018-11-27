@@ -119,23 +119,23 @@ export class InternalServer {
         this.handleNotAllowedMethods();
     }
 
-    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<express.Request> {
-        let request = req;
+    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<void> {
         for (const processor of processors) {
-            request = await Promise.resolve(processor(request));
+            await Promise.resolve(processor(req));
         }
-        return request;
     }
 
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (serviceMethod.processors || serviceClass.processors) {
-                serviceClass.processors = serviceClass.processors || [];
-                serviceMethod.processors = serviceMethod.processors || [];
-                this.runPreprocessors(serviceClass.processors.concat(serviceMethod.processors), req).then((request) => this.callTargetEndPoint(serviceClass, serviceMethod, request, res, next)).catch((err: any) => next(err));
-            } else {
-                this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
-            }
+            Promise.resolve().then(() => {
+                if (serviceMethod.processors || serviceClass.processors) {
+                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
+                    return this.runPreprocessors(allPreprocessors, req);
+                }
+                return null;
+            }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
+            .then(() => next())
+            .catch(err => next(err));
         };
 
         if (!serviceMethod.resolvedPath) {
@@ -212,8 +212,12 @@ export class InternalServer {
             });
             const allowed: string = allowedMethods.join(', ');
             this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                res.set('Allow', allowed);
-                throw new Errors.MethodNotAllowedError();
+                if (res.headersSent || allowedMethods.indexOf(req.method) > -1) {
+                    next();
+                } else {
+                    res.set('Allow', allowed);
+                    throw new Errors.MethodNotAllowedError();
+                }
             });
         });
     }
@@ -331,7 +335,7 @@ export class InternalServer {
         return serviceObject;
     }
 
-    private callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
+    private async callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
         req: express.Request, res: express.Response, next: express.NextFunction) {
         const context: ServiceContext = new ServiceContext();
         context.request = req;
@@ -344,10 +348,10 @@ export class InternalServer {
         const toCall = serviceClass.targetClass.prototype[serviceMethod.name] || serviceClass.targetClass[serviceMethod.name];
         const result = toCall.apply(serviceObject, args);
         this.processResponseHeaders(serviceMethod, context);
-        this.sendValue(result, res, next);
+        await this.sendValue(result, res, next);
     }
 
-    private sendValue(value: any, res: express.Response, next: express.NextFunction) {
+    private async sendValue(value: any, res: express.Response, next: express.NextFunction) {
         switch (typeof value) {
             case 'number':
                 res.send(value.toString());
@@ -365,7 +369,7 @@ export class InternalServer {
                 break;
             default:
                 if (value.filePath && value instanceof DownloadResource) {
-                    res.download(value.filePath, value.fileName);
+                    await this.downloadResToPromise(res, value);
                 } else if (value instanceof DownloadBinaryData) {
                     if (value.fileName) {
                         res.writeHead(200, {
@@ -388,19 +392,25 @@ export class InternalServer {
                     } else {
                         res.sendStatus(value.statusCode);
                     }
-
                 } else if (value.then && value.catch) {
-                    Promise.resolve(value)
-                    .then((val: any) => {
-                        this.sendValue(val, res, next);
-                        return null;
-                    }).catch((err: any) => {
-                        next(err);
-                    });
+                    const val = await value;
+                    await this.sendValue(val, res, next);
                 } else {
                     res.json(value);
                 }
         }
+    }
+
+    private downloadResToPromise(res: express.Response, value: DownloadResource) {
+        return new Promise((resolve, reject) => {
+            res.download(value.filePath, value.filePath, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     private buildArgumentsList(serviceMethod: metadata.ServiceMethod, context: ServiceContext) {
