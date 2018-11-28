@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import * as fs from 'fs-extra';
 import * as YAML from 'yamljs';
 import * as path from 'path';
+import { AuthenticateOptions } from 'passport';
 
 /**
  * The Http server main class.
@@ -24,8 +25,8 @@ export class Server {
     /**
      * Define passportAuth strategy
      */
-    static passportAuth(strategy: string, roleKey: string = 'roles', session: boolean = false) {
-        InternalServer.passportAuth(strategy, roleKey, session);
+    static passportAuth(strategy: string, roleKey: string = 'roles', options: AuthenticateOptions = {}) {
+        InternalServer.passportAuth(strategy, roleKey, options);
     }
 
     /**

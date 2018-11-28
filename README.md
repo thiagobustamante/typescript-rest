@@ -298,12 +298,12 @@ Security is using [passport](https://github.com/jaredhanson/passport) and it can
 `passportAuth` method in `Server`
 
 ```typescript
-Server.passportAuth(strategy, roleKey, session);
+Server.passportAuth(strategy, roleKey, options);
 ```
 
 - strategy: is part of passport configuration
 - roleKey: by default "*roles*", it is part of user object format
-- session: by default false, enables or disables passport session state and will require a user serialization and deserilization function if enabled
+- options: by default an empty object of type passport.AuthenticateOptions. Allows configuration of passport configuration such as session, successRedirect or failureRedirect etc.
 
 Some examples:
 
