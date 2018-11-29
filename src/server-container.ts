@@ -127,15 +127,19 @@ export class InternalServer {
 
     buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            Promise.resolve().then(() => {
-                if (serviceMethod.processors || serviceClass.processors) {
-                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
-                    return this.runPreprocessors(allPreprocessors, req);
-                }
-                return null;
-            }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
-            .then(() => next())
-            .catch(err => next(err));
+            if (res.headersSent) {
+                next();
+            } else {
+                Promise.resolve().then(() => {
+                    if (serviceMethod.processors || serviceClass.processors) {
+                        const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
+                        return this.runPreprocessors(allPreprocessors, req);
+                    }
+                    return null;
+                }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
+                .then(() => next())
+                .catch(err => next(err));
+            }
         };
 
         if (!serviceMethod.resolvedPath) {
