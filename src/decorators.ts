@@ -1,10 +1,10 @@
 'use strict';
 
+import * as _ from 'lodash';
+import 'reflect-metadata';
+import * as metadata from './metadata';
 import { InternalServer } from './server-container';
 import { HttpMethod } from './server-types';
-import * as metadata from './metadata';
-import 'reflect-metadata';
-import * as _ from 'lodash';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
@@ -37,7 +37,7 @@ import * as _ from 'lodash';
  * ```
  */
 export function Path(path: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
             return PathTypeDecorator.apply(this, [args[0], path]);
@@ -82,8 +82,8 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles: string | string[] = ['*']) {
-    return function (...args: any[]) {
+export function Security(roles: string | Array<string> = ['*']) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (typeof roles !== 'object') {
             roles = [roles];
@@ -111,7 +111,7 @@ export function Security(roles: string | string[] = ['*']) {
  *      req.body.user = Users.get(req.body.userId)
  *      return req
  *   }
- *}
+ * }
  * ```
  * And:
  *
@@ -128,7 +128,7 @@ export function Security(roles: string | string[] = ['*']) {
  * ```
  */
 export function Preprocessor(preprocessor: Function) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
             return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
@@ -160,8 +160,8 @@ export function Preprocessor(preprocessor: Function) {
  *
  * If the language requested is not supported, a status code 406 returned
  */
-export function AcceptLanguage(...languages: string[]) {
-    return function (...args: any[]) {
+export function AcceptLanguage(...languages: Array<string>) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
             return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
@@ -193,8 +193,8 @@ export function AcceptLanguage(...languages: string[]) {
  *
  * If the mime type requested is not supported, a status code 406 returned
  */
-export function Accept(...accepts: string[]) {
-    return function (...args: any[]) {
+export function Accept(...accepts: Array<string>) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
             return AcceptTypeDecorator.apply(this, [args[0], accepts]);
@@ -217,15 +217,15 @@ export function Accept(...accepts: string[]) {
  * @ Path('context')
  * class TestService {
  *   @ Context
-	 context: ServiceContext;
- *       // ...
+ *   context: ServiceContext;
+ *   // ...
  * }
  * ```
  *
  * The field context on the above class will point to the current
  * [[ServiceContext]] instance.
  */
-export function Context(...args: any[]) {
+export function Context(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -248,15 +248,15 @@ export function Context(...args: any[]) {
  * @ Path('context')
  * class TestService {
  *   @ ContextRequest
-	 request: express.Request;
- *       // ...
+ *   request: express.Request;
+ *   // ...
  * }
  * ```
  *
  * The field request on the above class will point to the current
  * request.
  */
-export function ContextRequest(...args: any[]) {
+export function ContextRequest(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_request, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -279,15 +279,15 @@ export function ContextRequest(...args: any[]) {
  * @ Path('context')
  * class TestService {
  *   @ ContextResponse
-	 response: express.Response;
- *       // ...
+ *   response: express.Response;
+ *   // ...
  * }
  * ```
  *
  * The field response on the above class will point to the current
  * response object.
  */
-export function ContextResponse(...args: any[]) {
+export function ContextResponse(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_response, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -318,7 +318,7 @@ export function ContextResponse(...args: any[]) {
  * The next function can be used to delegate to the next registered
  * middleware the current request processing.
  */
-export function ContextNext(...args: any[]) {
+export function ContextNext(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_next, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -346,7 +346,7 @@ export function ContextNext(...args: any[]) {
  * }
  * ```
  */
-export function ContextLanguage(...args: any[]) {
+export function ContextLanguage(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -374,7 +374,7 @@ export function ContextLanguage(...args: any[]) {
  * }
  * ```
  */
-export function ContextAccept(...args: any[]) {
+export function ContextAccept(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_accept, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -618,7 +618,7 @@ export function BodyOptions(options: any) {
  * And pass 123 as the id argument on getPerson method's call.
  */
 export function PathParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.path, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -654,7 +654,7 @@ export function PathParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FileParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.file, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -690,7 +690,7 @@ export function FileParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FilesParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.files, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -728,7 +728,7 @@ export function FilesParam(name: string) {
  * And pass 'joe' as the name argument on getPerson method's call.
  */
 export function QueryParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.query, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -761,7 +761,7 @@ export function QueryParam(name: string) {
  * header called 'header' to the header argument on getPerson method's call.
  */
 export function HeaderParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.header, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -794,7 +794,7 @@ export function HeaderParam(name: string) {
  * cookie called 'cookie' to the cookie argument on getPerson method's call.
  */
 export function CookieParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.cookie, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -828,7 +828,7 @@ export function CookieParam(name: string) {
  * method's call.
  */
 export function FormParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.form, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -863,7 +863,7 @@ export function FormParam(name: string) {
  * received in the current request.
  */
 export function Param(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.param, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -903,7 +903,7 @@ export function Abstract(target: Function) {
 /**
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
-function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
+function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
     classData.languages = _.union(classData.languages, languages);
 }
@@ -912,7 +912,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
  * Decorator processor for [[AcceptLanguage]] decorator on methods
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, languages: string[]) {
+    descriptor: PropertyDescriptor, languages: Array<string>) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.languages = languages;
@@ -922,7 +922,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
 /**
  * Decorator processor for [[Accept]] decorator on classes
  */
-function AcceptTypeDecorator(target: Function, accepts: string[]) {
+function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
     classData.accepts = _.union(classData.accepts, accepts);
 }
@@ -931,7 +931,7 @@ function AcceptTypeDecorator(target: Function, accepts: string[]) {
  * Decorator processor for [[Accept]] decorator on methods
  */
 function AcceptMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, accepts: string[]) {
+    descriptor: PropertyDescriptor, accepts: Array<string>) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.accepts = accepts;
@@ -962,7 +962,7 @@ function PathMethodDecorator(target: any, propertyKey: string,
 /**
  * Decorator processor for [[Security]] decorator on classes
  */
-function SecurityTypeDecorator(target: Function, roles: string[]) {
+function SecurityTypeDecorator(target: Function, roles: Array<string>) {
     const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
     if (classData) {
         classData.roles = roles;
@@ -973,7 +973,7 @@ function SecurityTypeDecorator(target: Function, roles: string[]) {
  * Decorator processor for [[Security]] decorator on methods
  */
 function SecurityMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, roles: string[]) {
+    descriptor: PropertyDescriptor, roles: Array<string>) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.roles = roles;
