@@ -764,7 +764,6 @@ describe('Server Tests', () => {
                 }
             }, function (error, response, body) {
                 expect(response.statusCode).to.eq(403);
-                expect(body).to.eq('Forbidden');
                 done();
             });
         });
@@ -781,7 +780,6 @@ describe('Server Tests', () => {
         it('should not authorize without header', (done) => {
             request.post('http://localhost:5674/subauthorization/profile', function (error, response, body) {
                 expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
                 done();
             });
         });
@@ -792,7 +790,6 @@ describe('Server Tests', () => {
                 }
             }, function (error, response, body) {
                 expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
                 done();
             });
         });
@@ -821,7 +818,6 @@ describe('Server Tests', () => {
                 }
             }, function (error, response, body) {
                 expect(response.statusCode).to.eq(403);
-                expect(body).to.eq('Forbidden');
                 done();
             });
         });
