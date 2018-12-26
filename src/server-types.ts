@@ -102,3 +102,21 @@ export interface ServiceFactory {
      */
     getTargetClass: (serviceClass: Function) => FunctionConstructor;
 }
+
+/**
+ * An optional authenticator for rest services
+ */
+export interface ServiceAuthenticator {
+    /**
+     * Get the user list of roles.
+     */
+    getRoles: (req: express.Request) => Array<string>;
+    /**
+     * Initialize the authenticator
+     */
+    initialize(router: express.Router): void;
+    /**
+     * Retrieve the middleware used to authenticate users.
+     */
+    getMiddleware(): express.RequestHandler;
+}

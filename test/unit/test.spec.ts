@@ -7,9 +7,8 @@ import * as request from 'request';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as chai from 'chai';
-import { Server, HttpMethod } from '../../src/typescript-rest';
+import { Server, HttpMethod, PassportAuthenticator } from '../../src/typescript-rest';
 import * as YAML from 'yamljs';
-import * as Passport from 'passport';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 
@@ -31,21 +30,20 @@ export interface JwtUserPayload {
 }
 
 export function PassportInitialize() {
-    Passport.use(new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
+    const strategy = new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
         const user: JwtUser = {
             username: payload.sub,
             roles: payload.auth.split(','),
         };
         done(null, user);
+    });
+
+    Server.registerAuthenticator(new PassportAuthenticator(strategy, {
+        serializeUser: (user: JwtUser) => {
+            return JSON.stringify(user);
+        },
+        deserializeUser: (user: string) => JSON.parse(user)
     }));
-
-    Passport.serializeUser((user: JwtUser, done: (a: null, b: string) => void) => {
-        done(null, JSON.stringify(user));
-    });
-
-    Passport.deserializeUser((user: string, done: (a: null, b: JwtUser) => void) => {
-        done(null, JSON.parse(user));
-    });
 }
 
 export function generateJwt() {
@@ -61,9 +59,6 @@ export function startApi(): Promise<void> {
         let app: express.Application = express();
         app.set('env', 'test');
         PassportInitialize();
-        app.use(Passport.initialize());
-        app.use(Passport.session());
-        Server.passportAuth('jwt', 'roles');
         Server.setFileLimits({
             fieldSize: 1024 * 1024
         });

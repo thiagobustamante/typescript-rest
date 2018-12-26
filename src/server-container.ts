@@ -9,9 +9,8 @@ import * as metadata from './metadata';
 import * as Errors from './server-errors';
 
 import { NextFunction, Request, Response } from 'express';
-import * as passport from 'passport';
 import { DownloadBinaryData, DownloadResource } from './server-return';
-import { FileLimits, HttpMethod, ReferencedResource, ServiceContext, ServiceFactory } from './server-types';
+import { FileLimits, HttpMethod, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from './server-types';
 
 export class InternalServer {
     public static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
@@ -22,6 +21,7 @@ export class InternalServer {
     public static fileDest: string;
     public static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
     public static fileLimits: FileLimits;
+    public static authenticator: ServiceAuthenticator;
     public static serviceFactory: ServiceFactory = {
         create: (serviceClass: any) => {
             return new serviceClass();
@@ -31,13 +31,7 @@ export class InternalServer {
         }
     };
     public static passportStrategy: string;
-    public static roleKey: string;
     public static paramConverter: (paramValue: any, paramType: Function) => any = (p, t) => p;
-
-    public static passportAuth(strategy: string, roleKey: string) {
-        InternalServer.passportStrategy = strategy;
-        InternalServer.roleKey = roleKey;
-    }
 
     public static registerServiceClass(target: Function): metadata.ServiceClass {
         InternalServer.pathsResolved = false;
@@ -209,6 +203,9 @@ export class InternalServer {
         if (types) {
             types = types.map(type => InternalServer.serviceFactory.getTargetClass(type));
         }
+        if (InternalServer.authenticator) {
+            InternalServer.authenticator.initialize(this.router);
+        }
         InternalServer.serverClasses.forEach(classData => {
             if (!classData.isAbstract) {
                 classData.methods.forEach(method => {
@@ -229,26 +226,15 @@ export class InternalServer {
     }
 
     public buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
-        const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            Promise.resolve().then(() => {
-                if (serviceMethod.processors || serviceClass.processors) {
-                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
-                    return this.runPreprocessors(allPreprocessors, req);
-                }
-                return null;
-            }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
-                .then(() => next())
-                .catch(err => next(err));
-        };
 
         if (!serviceMethod.resolvedPath) {
             InternalServer.resolveProperties(serviceClass, serviceMethod);
         }
 
         let args: Array<any> = [serviceMethod.resolvedPath];
-        args = args.concat(this.buildSecurityMiddleware(serviceClass, serviceMethod));
-        args = args.concat(this.buildServiceMiddleware(serviceMethod));
-        args.push(handler);
+        args = args.concat(this.buildSecurityMiddlewares(serviceClass, serviceMethod));
+        args = args.concat(this.buildParserMiddlewares(serviceMethod));
+        args.push(this.buildServiceMiddleware(serviceMethod, serviceClass));
         switch (serviceMethod.httpMethod) {
             case HttpMethod.GET:
                 this.router.get.apply(this.router, args);
@@ -325,28 +311,45 @@ export class InternalServer {
         return this.upload;
     }
 
-    private buildSecurityMiddleware(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
+    private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod, serviceClass: metadata.ServiceClass) {
+        return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            try {
+                if (serviceMethod.processors || serviceClass.processors) {
+                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
+                    await this.runPreprocessors(allPreprocessors, req);
+                }
+                await this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
+                next();
+            }
+            catch (err) {
+                next(err);
+            }
+        };
+    }
+
+    private buildSecurityMiddlewares(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         let roles: Array<string> = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
             .filter((role) => !!role);
-        if (InternalServer.passportStrategy && roles.length) {
-            result.push(passport.authenticate(InternalServer.passportStrategy));
-        }
-        roles = roles.filter((role) => role !== '*');
-        if (roles.length) {
-            result.push((req: Request, res: Response, next: NextFunction) => {
-                if (req.user[InternalServer.roleKey].some((role: string) => roles.indexOf(role) >= 0)) {
-                    next();
-                } else {
-                    throw new Errors.ForbiddenError();
-                }
-            });
+        if (InternalServer.authenticator && roles.length) {
+            result.push(InternalServer.authenticator.getMiddleware());
+            roles = roles.filter((role) => role !== '*');
+            if (roles.length) {
+                result.push((req: Request, res: Response, next: NextFunction) => {
+                    const requestRoles = InternalServer.authenticator.getRoles(req);
+                    if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
+                        next();
+                    } else {
+                        throw new Errors.ForbiddenError();
+                    }
+                });
+            }
         }
 
         return result;
     }
 
-    private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
+    private buildParserMiddlewares(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
         if (serviceMethod.mustParseCookies) {

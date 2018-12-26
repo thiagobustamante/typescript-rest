@@ -10,6 +10,7 @@ import * as Return from './server-return';
 export * from './decorators';
 export * from './server-types';
 export * from './server';
+export * from './passport-authenticator';
 
 export { Return };
 export { Errors };

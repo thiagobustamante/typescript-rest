@@ -7,7 +7,7 @@ import 'multer';
 import * as path from 'path';
 import * as YAML from 'yamljs';
 import { InternalServer } from './server-container';
-import { FileLimits, HttpMethod, ServiceFactory } from './server-types';
+import { FileLimits, HttpMethod, ServiceAuthenticator, ServiceFactory } from './server-types';
 
 /**
  * The Http server main class.
@@ -19,13 +19,6 @@ export class Server {
     public static buildServices(router: express.Router, ...types: Array<any>) {
         const iternalServer: InternalServer = new InternalServer(router);
         iternalServer.buildServices(types);
-    }
-
-    /**
-     * Define passportAuth strategy
-     */
-    public static passportAuth(strategy: string, roleKey: string = 'roles') {
-        InternalServer.passportAuth(strategy, roleKey);
     }
 
     /**
@@ -77,6 +70,14 @@ export class Server {
      */
     public static registerServiceFactory(serviceFactory: ServiceFactory) {
         InternalServer.serviceFactory = serviceFactory;
+    }
+
+    /**
+     * Register a service authenticator. It will be used to authenticate users before the service method
+     * invocations occurs.
+     */
+    public static registerAuthenticator(authenticator: ServiceAuthenticator) {
+        InternalServer.authenticator = authenticator;
     }
 
     /**
