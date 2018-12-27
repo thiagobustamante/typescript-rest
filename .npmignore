@@ -1,13 +1,8 @@
-!dist/**
-!doc/**
+!dist/
 .travis.yml
-.DS_Store
-.vscode
-.nyc_output
-coverage
 *.log
 npm-debug.log*
 tsconfig.json
-tsfmt.json
 tslint.json
 test
+stryker.conf.json

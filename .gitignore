@@ -1,10 +1,7 @@
+node_modules/
+dist/
+.vscode/
+reports/
+.nyc_output/
 .DS_Store
-dist
-doc
-node_modules
-.vscode
-.nyc_output
-coverage
 *.log
-npm-debug.log*
-reports
