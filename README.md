@@ -30,12 +30,12 @@ This project is supported by [Leanty](https://github.com/Leanty/)'s team and is 
     - [Service Context](#service-context)
     - [Service Return](#service-return)
       - [Asynchronous services](#asynchronous-services)
+    - [Preprocessors](#preprocessors)
     - [Errors](#errors)
     - [BodyParser Options](#bodyparser-options)
     - [Types and languages](#types-and-languages)
     - [IoC](#ioc)
     - [Inheritance and abstract services](#inheritance-and-abstract-services)    
-    - [Preprocessors](#preprocessors)
   - [Swagger](#swagger)
  - [Breaking Changes - 1.0.0](#breaking-changes)
 
@@ -293,30 +293,27 @@ req.params: { "genus": "Prunus", "species": "persica" }
 
 ### @Security Decorator
 
-The @Security decorator allow us to define a authorization for a given endpoint.
-Security is using [passport](https://github.com/jaredhanson/passport) and it can be configured using
-`passportAuth` method in `Server`
-
-```typescript
-Server.passportAuth(strategy, roleKey);
-```
-
-- strategy: is part of passport configuration
-- roleKey: by default "*roles*", it is part of user object format
+The @Security decorator allow us to define an authorization control for a given endpoint.
 
 Some examples:
 
 ```typescript
-@Security()
+@Path('hello')
 class HelloService {
+    @GET
+    @Path('admin')
     @Security("ROLE_ADMIN")
-    admin() {}
+    public adminOnlyMethod() {
+      // Only user with ROLE_ADMIN role can access
+    }
 
-    authorized() {}
+    @GET
+    public publicMethod() {}
 }
 ```
 
 ```typescript
+@Path('hello')
 @Security("ROLE_USER")
 class TestService {
 }
@@ -325,8 +322,58 @@ class TestService {
 ```typescript
 @Security(["ROLE_ADMIN", "ROLE_USER"])
 class AuthService {
+    // Only user with ROLE_ADMIN or ROLE_USER role can access
 }
 ```
+
+To inform typescript-rest server how to authenticate and validate user roles, you need to register
+an authentication service, using ```Server.registerAuthenticator``` method. 
+
+We provide a [passport](https://github.com/jaredhanson/passport) authentication service included in the library distribution:
+
+Examples:
+
+```typescript
+    Server.registerAuthenticator(new PassportAuthenticator(strategy);
+```
+
+```typescript
+    const strategy = new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
+        const user: JwtUser = {
+            roles: payload.auth.split(','),
+            username: payload.sub
+        };
+        done(null, user);
+    });
+
+    Server.registerAuthenticator(new PassportAuthenticator(strategy, {
+        deserializeUser: (user: string) => JSON.parse(user),
+        serializeUser: (user: JwtUser) => {
+            return JSON.stringify(user);
+        }
+    }));
+```
+
+```typescript
+    const strategy = new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
+        const user: JwtUser = {
+            roles: payload.auth.split(','),
+            username: payload.sub
+        };
+        done(null, user);
+    });
+
+    Server.registerAuthenticator(new PassportAuthenticator(strategy, {
+      authOptions: {
+        session: false,
+        failWithError: false
+      }
+    }));
+```
+
+If you don't want to use passport, it is possible to use other authentication service. Just 
+implement the ```ServiceAuthenticator``` interface and register it with ```Server.registerAuthenticator``` method.
+
 
 ### Http Methods
 
@@ -745,6 +792,44 @@ export class MyAsyncService {
 }
 ```
 
+### Preprocessors
+
+It is possible to add a function to process the request before the handler on an endpoint by endpoint basis. This can be used to add a validator to your application without including it in the body of the handler.
+
+```typescript
+function validator(req: express.Request): express.Request {
+  if (!req.body.userId) {
+    throw new Errors.BadRequestError("userId not present");
+  } 
+}
+
+@Path('users')
+export class UserHandler {
+  
+  @Path('email')
+  @POST
+  @Preprocessor(validator)
+  setEmail(body: any) {
+    // will have body.userId
+  }
+}
+```
+
+Preprocessors can also be added to a class, applying it to all endpoints on the class
+
+```typescript
+@Path('users')
+@Preprocessor(validator)
+export class UserHandler {
+  
+  @Path('email')
+  @POST
+  setEmail(body: any) {
+    // will have body.user
+  }
+}
+```
+
 ### Errors
 
 This library provide some Error classes to map the problems that you may want to report to your clients.
@@ -1113,44 +1198,6 @@ or
 ```typescript
 let app: express.Application = express();
 Server.loadServices(apis, 'lib/controllers/apis/impl/*');
-```
-
-### Preprocessors
-
-It is possible to add a function to process the request before the handler on an endpoint by endpoint basis. This can be used to add a validator to your application without including it in the body of the handler.
-
-```typescript
-function validator(req: express.Request): express.Request {
-  if (!req.body.userId) {
-    throw new Errors.BadRequestError("userId not present");
-  } 
-}
-
-@Path('users')
-export class UserHandler {
-  
-  @Path('email')
-  @POST
-  @Preprocessor(validator)
-  setEmail(body: any) {
-    // will have body.userId
-  }
-}
-```
-
-Preprocessors can also be added to a class, applying it to all endpoints on the class
-
-```typescript
-@Path('users')
-@Preprocessor(validator)
-export class UserHandler {
-  
-  @Path('email')
-  @POST
-  setEmail(body: any) {
-    // will have body.user
-  }
-}
 ```
 
 ## Swagger
