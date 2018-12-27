@@ -571,7 +571,7 @@ When an object is returned, it is sent as a json serialized string into the resp
 ```typescript
 @GET
 @Path(":id")
-getPerson(@PathParam(":id") id: number): Person {
+getPerson(@PathParam("id") id: number): Person {
   return new Person(id);
 }
 ```

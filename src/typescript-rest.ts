@@ -1,15 +1,16 @@
 'use strict';
 
-import * as path from 'path';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 
+import { Server } from './server';
 import * as Errors from './server-errors';
 import * as Return from './server-return';
-import { Server } from './server';
 
 export * from './decorators';
 export * from './server-types';
 export * from './server';
+export * from './passport-authenticator';
 
 export { Return };
 export { Errors };
