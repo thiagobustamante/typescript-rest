@@ -1117,16 +1117,13 @@ Server.loadServices(apis, 'lib/controllers/apis/impl/*');
 
 ### Preprocessors
 
-It is possible to add a function to process the request before the handler on an endpoint by endpoint basis. This can be used to add a validator or authenticator to your application without including it in the body of the handler.
+It is possible to add a function to process the request before the handler on an endpoint by endpoint basis. This can be used to add a validator to your application without including it in the body of the handler.
 
 ```typescript
 function validator(req: express.Request): express.Request {
-  if (req.body.userId != undefined) {
+  if (!req.body.userId) {
     throw new Errors.BadRequestError("userId not present");
-  } else {
-    req.body.user = Users.get(req.body.userId)
-    return req
-  }
+  } 
 }
 
 @Path('users')
@@ -1136,7 +1133,7 @@ export class UserHandler {
   @POST
   @Preprocessor(validator)
   setEmail(body: any) {
-    // will have body.user
+    // will have body.userId
   }
 }
 ```

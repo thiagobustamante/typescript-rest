@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import 'reflect-metadata';
 import * as metadata from './metadata';
 import { InternalServer } from './server-container';
-import { HttpMethod } from './server-types';
+import { HttpMethod, ServicePreProcessor } from './server-types';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
@@ -105,12 +105,9 @@ export function Security(roles: string | Array<string> = ['*']) {
  * For example:
  * ```
  * function validator(req: express.Request): express.Request {
- *   if (req.body.userId != undefined) {
+ *   if (!req.body.userId) {
  *      throw new Errors.BadRequestError("userId not present");
- *   } else {
- *      req.body.user = Users.get(req.body.userId)
- *      return req
- *   }
+ *   } 
  * }
  * ```
  * And:
@@ -127,7 +124,7 @@ export function Security(roles: string | Array<string> = ['*']) {
  * }
  * ```
  */
-export function Preprocessor(preprocessor: Function) {
+export function Preprocessor(preprocessor: ServicePreProcessor) {
     return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {

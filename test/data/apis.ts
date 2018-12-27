@@ -1,17 +1,18 @@
 'use strict';
 /* tslint:disable */
 import * as express from 'express';
-import {Inject, AutoWired} from 'typescript-ioc';
+import { Inject, AutoWired } from 'typescript-ioc';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 
-import {Path, Server, GET, POST, PUT, DELETE,
+import {
+    Path, Server, GET, POST, PUT, DELETE,
     PathParam, QueryParam, CookieParam, HeaderParam,
     FormParam, Param, Context, ServiceContext, ContextRequest,
     ContextResponse, ContextLanguage, ContextAccept,
     ContextNext, AcceptLanguage, Accept, FileParam,
-    Errors, Return, BodyOptions, Abstract, Preprocessor, Security} from '../../src/typescript-rest';
-import {JwtUser} from "../unit/test.spec";
+    Errors, Return, BodyOptions, Abstract
+} from '../../src/typescript-rest';
 
 Server.useIoC();
 
@@ -39,7 +40,7 @@ export abstract class BaseApi {
     @Path(':id')
     testCrudGet(@PathParam('id') id: string) {
         if (context) {
-            return 'OK_'+id;
+            return 'OK_' + id;
         }
         return 'false';
     }
@@ -48,7 +49,7 @@ export abstract class BaseApi {
     @Path('overload/:id')
     testOverloadGet(@PathParam('id') id: string) {
         if (context) {
-            return 'OK_'+id;
+            return 'OK_' + id;
         }
         return 'false';
     }
@@ -57,11 +58,11 @@ export abstract class BaseApi {
     @Path('overload/:id')
     testOverloadPut(@PathParam('id') id: string) {
         if (context) {
-            return 'OK_'+id;
+            return 'OK_' + id;
         }
         return 'false';
     }
-    
+
 }
 
 @Path('superclass')
@@ -70,7 +71,7 @@ export class SuperClassService extends BaseApi {
     @Path('overload/:id')
     testOverloadGet(@PathParam('id') id: string) {
         if (context) {
-            return 'superclass_OK_'+id;
+            return 'superclass_OK_' + id;
         }
         return 'false';
     }
@@ -79,7 +80,7 @@ export class SuperClassService extends BaseApi {
     @Path('overload/:id')
     testOverloadPut(@PathParam('id') id: string) {
         if (context) {
-            return 'superclass_OK_'+id;
+            return 'superclass_OK_' + id;
         }
         return 'false';
     }
@@ -95,10 +96,10 @@ export class InjectableObject {
 export class MyIoCService {
     @Inject
     private injectedObject: InjectableObject
-    
+
     @GET
-    test( ): string {
-        return (this.injectedObject)?'OK':'NOT OK';
+    test(): string {
+        return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
 
@@ -107,10 +108,10 @@ export class MyIoCService {
 export class MyIoCService2 {
     @Inject
     private injectedObject: InjectableObject
-    
+
     @GET
-    test( ): string {
-        return (this.injectedObject)?'OK':'NOT OK';
+    test(): string {
+        return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
 
@@ -125,8 +126,8 @@ export class MyIoCService3 {
     }
 
     @GET
-    test( ): string {
-        return (this.injectedObject)?'OK':'NOT OK';
+    test(): string {
+        return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
 
@@ -139,13 +140,13 @@ export class MyIoCService4 extends MyIoCService2 {
 @Path('mypath')
 export class MyService {
     @GET
-    test( ): string {
+    test(): string {
         return 'OK';
     }
 
     @GET
     @Path('secondpath')
-    test2( ): string {
+    test2(): string {
         return 'OK';
     }
 }
@@ -154,13 +155,13 @@ export class MyService {
 export class MyService2 {
     @GET
     @Path('secondpath')
-    test( ): string {
+    test(): string {
         return 'OK';
     }
 
     @DELETE
     @Path('secondpath')
-    testDelete( ): string {
+    testDelete(): string {
         return 'OK';
     }
 }
@@ -169,27 +170,27 @@ export class MyService2 {
 export class PersonService {
     @Path(':id')
     @GET
-    getPerson( @PathParam('id') id: number): Promise<Person> {
-        return new Promise<Person>(function(resolve, reject){
+    getPerson(@PathParam('id') id: number): Promise<Person> {
+        return new Promise<Person>(function (resolve, reject) {
             resolve(new Person(id, 'Fulano de Tal número ' + id.toString(), 35));
         });
     }
 
     @PUT
     @Path('/:id')
-    setPerson( person: Person): number {
+    setPerson(person: Person): number {
         return person.salary;
     }
 
     @POST
-    @BodyOptions({limit:'100kb'})
-    addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource<{id:number}> {
-        return new Return.NewResource<{id:number}>(req.url + '/' + person.id, {id: person.id});
+    @BodyOptions({ limit: '100kb' })
+    addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource<{ id: number }> {
+        return new Return.NewResource<{ id: number }>(req.url + '/' + person.id, { id: person.id });
     }
 
     @GET
-    getAll( @QueryParam('start') start: number, 
-            @QueryParam('size') size: number): Person[] {
+    getAll(@QueryParam('start') start: number,
+        @QueryParam('size') size: number): Person[] {
         let result: Array<Person> = new Array<Person>();
 
         for (let i: number = start; i < (start + size); i++) {
@@ -200,7 +201,7 @@ export class PersonService {
 }
 
 export class TestParams {
-    
+
     @Context
     context: ServiceContext;
 
@@ -215,20 +216,20 @@ export class TestParams {
 
     @GET
     @Path('headers')
-    testHeaders( @HeaderParam('my-header') header: string,
-                 @CookieParam('my-cookie') cookie: string): string {
-        return 'cookie: ' + cookie + '|header: '+header;
+    testHeaders(@HeaderParam('my-header') header: string,
+        @CookieParam('my-cookie') cookie: string): string {
+        return 'cookie: ' + cookie + '|header: ' + header;
     }
 
     @POST
     @Path('multi-param')
-    testMultiParam( @Param('param') param: string): string {
+    testMultiParam(@Param('param') param: string): string {
         return param;
     }
 
     @GET
     @Path('context')
-    testContext( @QueryParam('q') q: string,
+    testContext(@QueryParam('q') q: string,
         @ContextRequest request: express.Request,
         @ContextResponse response: express.Response,
         @ContextNext next: express.NextFunction): void {
@@ -238,7 +239,7 @@ export class TestParams {
             if (q === '123') {
                 response.send(true);
             }
-            else{
+            else {
                 response.send(false);
             }
         }
@@ -246,27 +247,27 @@ export class TestParams {
 
     @GET
     @Path('default-query')
-    testDefaultQuery( @QueryParam('limit') limit: number = 20,
-                      @QueryParam('prefix') prefix: string = 'default',
-                      @QueryParam('expand') expand: boolean = true): string {
+    testDefaultQuery(@QueryParam('limit') limit: number = 20,
+        @QueryParam('prefix') prefix: string = 'default',
+        @QueryParam('expand') expand: boolean = true): string {
         return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
     }
 
     @GET
     @Path('optional-query')
-    testOptionalQuery( @QueryParam('limit') limit?: number,
-                       @QueryParam('prefix') prefix?: string,
-                       @QueryParam('expand') expand?: boolean): string {
+    testOptionalQuery(@QueryParam('limit') limit?: number,
+        @QueryParam('prefix') prefix?: string,
+        @QueryParam('expand') expand?: boolean): string {
         return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
     }
 
     @POST
     @Path('upload')
-    testUploadFile( @FileParam('myFile') file: Express.Multer.File, 
-                    @FormParam('myField') myField: string): boolean {
-        return (file 
-         && (_.startsWith(file.buffer.toString(),'\'use strict\';')) 
-         && (myField === 'my_value'));
+    testUploadFile(@FileParam('myFile') file: Express.Multer.File,
+        @FormParam('myField') myField: string): boolean {
+        return (file
+            && (_.startsWith(file.buffer.toString(), '\'use strict\';'))
+            && (myField === 'my_value'));
     }
 }
 
@@ -274,8 +275,8 @@ export class TestParams {
 export class TestDownload {
     @GET
     testDownloadFile(): Promise<Return.DownloadBinaryData> {
-        return new Promise<Return.DownloadBinaryData>((resolve, reject)=>{
-            fs.readFile(__dirname + '/apis.ts', (err, data)=>{
+        return new Promise<Return.DownloadBinaryData>((resolve, reject) => {
+            fs.readFile(__dirname + '/apis.ts', (err, data) => {
                 if (err) {
                     return reject(err);
                 }
@@ -287,7 +288,7 @@ export class TestDownload {
     @Path('ref')
     @GET
     testDownloadFile2(): Promise<Return.DownloadResource> {
-        return new Promise<Return.DownloadResource>((resolve, reject)=>{
+        return new Promise<Return.DownloadResource>((resolve, reject) => {
             resolve(new Return.DownloadResource(__dirname + '/apis.ts', 'test-rest.spec.js'));
         });
     }
@@ -335,7 +336,7 @@ export class AcceptTest {
     @POST
     @Path('conflict')
     testConflictAsync(): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+        return new Promise<string>(function (resolve, reject) {
             throw new Errors.ConflictError('test of conflict');
         });
     }
@@ -345,25 +346,25 @@ export class AcceptTest {
 export class ReferenceService {
     @Path('accepted')
     @POST
-    testAccepted( p: Person): Promise<Return.RequestAccepted<void>> {
-        return new Promise<Return.RequestAccepted<void>>(function(resolve, reject){
-            resolve(new Return.RequestAccepted<void>(''+p.id));
+    testAccepted(p: Person): Promise<Return.RequestAccepted<void>> {
+        return new Promise<Return.RequestAccepted<void>>(function (resolve, reject) {
+            resolve(new Return.RequestAccepted<void>('' + p.id));
         });
     }
 
     @Path('moved')
     @POST
-    testMoved( p: Person): Promise<Return.MovedPermanently<void>> {
-        return new Promise<Return.MovedPermanently<void>>(function(resolve, reject){
-            resolve(new Return.MovedPermanently<void>(''+p.id));
+    testMoved(p: Person): Promise<Return.MovedPermanently<void>> {
+        return new Promise<Return.MovedPermanently<void>>(function (resolve, reject) {
+            resolve(new Return.MovedPermanently<void>('' + p.id));
         });
     }
 
     @Path('movedtemp')
     @POST
-    testMovedTemp( p: Person): Promise<Return.MovedTemporarily<void>> {
-        return new Promise<Return.MovedTemporarily<void>>(function(resolve, reject){
-            resolve(new Return.MovedTemporarily<void>(''+p.id));
+    testMovedTemp(p: Person): Promise<Return.MovedTemporarily<void>> {
+        return new Promise<Return.MovedTemporarily<void>>(function (resolve, reject) {
+            resolve(new Return.MovedTemporarily<void>('' + p.id));
         });
     }
 }
@@ -372,96 +373,96 @@ export class ReferenceService {
 export class ErrorService {
     @Path('badrequest')
     @GET
-    test1( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test1(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.BadRequestError());
         });
     }
 
     @Path('conflict')
     @GET
-    test2( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test2(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.ConflictError());
         });
     }
 
     @Path('forbiden')
     @GET
-    test3( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test3(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.ForbidenError());
         });
     }
 
     @Path('gone')
     @GET
-    test4( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test4(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.GoneError());
         });
     }
 
     @Path('internal')
     @GET
-    test5( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test5(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.InternalServerError());
         });
     }
 
     @Path('method')
     @GET
-    test6( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test6(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.MethodNotAllowedError());
         });
     }
 
     @Path('notacceptable')
     @GET
-    test7( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test7(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotAcceptableError());
         });
     }
 
     @Path('notfound')
     @GET
-    test8( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test8(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotFoundError());
         });
     }
 
     @Path('notimplemented')
     @GET
-    test9( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test9(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotImplementedError());
         });
     }
 
     @Path('unauthorized')
     @GET
-    test10( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test10(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnauthorizedError());
         });
     }
 
     @Path('unsupportedmedia')
     @GET
-    test11( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test11(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnsupportedMediaTypeError());
         });
     }
 
     @Path('unprocessableentity')
     @GET
-    test12( p: Person): Promise<string> {
-        return new Promise<string>(function(resolve, reject){
+    test12(p: Person): Promise<string> {
+        return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnprocessableEntityError());
         });
     }
@@ -477,14 +478,16 @@ export interface DataParam {
 export class DateTest {
 
     @POST
-    @BodyOptions({reviver:(key: string, value: any) =>{
-        if (key == 'param2') {
-            return new Date(value);
+    @BodyOptions({
+        reviver: (key: string, value: any) => {
+            if (key == 'param2') {
+                return new Date(value);
+            }
+            return value;
         }
-        return value;
-    }})
+    })
     testData(param: DataParam) {
-        if ((param.param2 instanceof Date) && (param.param2.toString() === param.param1)){
+        if ((param.param2 instanceof Date) && (param.param2.toString() === param.param1)) {
             return 'OK';
         }
         return 'NOT OK';
@@ -495,7 +498,7 @@ export class DateTest {
 @Path('async/test')
 export class MyAsyncService {
     @GET
-    async test( ) {
+    async test() {
         let result = await this.aPromiseMethod();
         return result;
     }
@@ -507,138 +510,4 @@ export class MyAsyncService {
             }, 10);
         });
     }
-}
-
-@Path('preprocessor')
-@Preprocessor(addThing)
-export class MyPreprocessedService {
-    @ContextRequest
-    request: ValidatedRequest
-
-    @Path('test')
-    @POST
-    @Preprocessor(validator)
-    test(body: any) {
-        return this.request.validated
-    }
-
-    @Path('asynctest')
-    @POST
-    @Preprocessor(asyncValidator1)
-    @Preprocessor(asyncValidator2) // multiple preprocessors needed to test async
-    asynctest(body: any) {
-        return this.request.validated
-    }
-}
-
-@Path('authorization')
-@Security()
-export class AuthenticatePath {
-    @Context
-    context: ServiceContext;
-
-    @GET
-    test( ): JwtUser {
-        return this.context.request.user;
-    }
-}
-
-@Path('admin')
-@Security('ROLE_ADMIN')
-export class AuthenticateAdminPath {
-    @Context
-    context: ServiceContext;
-
-    @GET
-    test( ): JwtUser {
-        return this.context.request.user;
-    }
-}
-
-@Path('xadmin')
-@Security('ROLE_NOT_EXISTING')
-export class AuthenticateXAdminPath {
-    @Context
-    context: ServiceContext;
-
-    @GET
-    test( ): JwtUser {
-        return this.context.request.user;
-    }
-}
-
-@Path('subauthorization')
-export class SubAuthenticatePath {
-    @Context
-    context: ServiceContext;
-
-    @GET
-    @Path('public')
-    test( ): string {
-        return 'OK';
-    }
-
-    @POST
-    @Path('profile')
-    @Security(['ROLE_ADMIN', 'ROLE_USER'])
-    test3( ): JwtUser {
-        return this.context.request.user;
-    }
-
-    @GET
-    @Path('profile')
-    test2( ): string {
-        return 'OK';
-    }
-
-    @PUT
-    @Path('profile')
-    @Security('ROLE_NOT_EXISTING')
-    test4( ): JwtUser {
-        return this.context.request.user;
-    }
-}
-
-function addThing(req: express.Request): RequestWithThing {
-    let ret: RequestWithThing = req as RequestWithThing
-    ret.thing = true
-    return ret
-}
-
-function validator(req: RequestWithThing): ValidatedRequest {
-    let ret: ValidatedRequest = req as ValidatedRequest
-    if (req.body["userId"] != undefined && req.thing) {
-        ret.validated = true
-        return ret
-    } else {
-        throw new Errors.BadRequestError('userId not present')
-    }
-}
-
-async function asyncValidator1(req: RequestWithThing): Promise<ValidatedRequest> {
-    let ret: ValidatedRequest = req as ValidatedRequest
-    if (req.body["userId"] != undefined) {
-        ret.validated = false
-        return ret
-    } else {
-        throw new Errors.BadRequestError('userId not present')
-    }
-}
-
-async function asyncValidator2(req: ValidatedRequest): Promise<ValidatedRequest> {
-    let ret: ValidatedRequest = req
-    if (req.body["userId"] != undefined && req.validated === false) {
-        ret.validated = true
-        return ret
-    } else {
-        throw new Errors.BadRequestError('userId not present')
-    }
-}
-
-interface RequestWithThing extends express.Request {
-    thing: boolean
-}
-
-interface ValidatedRequest extends RequestWithThing {
-    validated: boolean
 }
