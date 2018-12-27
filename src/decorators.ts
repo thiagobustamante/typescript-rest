@@ -581,7 +581,7 @@ export function PATCH(target: any, propertyKey: string,
  * [[bodyParser]](https://www.npmjs.com/package/body-parser)
  */
 export function BodyOptions(options: any) {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             serviceMethod.bodyParserOptions = options;

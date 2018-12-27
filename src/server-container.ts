@@ -548,6 +548,7 @@ export class InternalServer {
                 }
                 return null;
             case metadata.ParamType.files:
+                // @ts-ignore
                 return context.request.files[name];
             case metadata.ParamType.form:
                 return this.convertType(context.request.body[name], type);
