@@ -367,7 +367,8 @@ Examples:
       authOptions: {
         session: false,
         failWithError: false
-      }
+      },
+      rolesKey: 'security.roles' // change the name of the property used to access the user role(s)
     }));
 ```
 

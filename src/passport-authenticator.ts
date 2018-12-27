@@ -6,7 +6,7 @@ import { ServiceAuthenticator } from './server-types';
 
 export interface PassportAuthenticatorOptions {
     authOptions?: passport.AuthenticateOptions;
-    roleKey?: string;
+    rolesKey?: string;
     strategyName?: string;
     serializeUser?: (user: any) => string | Promise<string>;
     deserializeUser?: (user: string) => any;
@@ -28,8 +28,8 @@ export class PassportAuthenticator implements ServiceAuthenticator {
     }
 
     public getRoles(req: express.Request): Array<string> {
-        const roleKey = this.options.roleKey || 'roles';
-        return req.user[roleKey];
+        const roleKey = this.options.rolesKey || 'roles';
+        return _.castArray(_.get(req.user, roleKey, []));
     }
 
     public initialize(router: express.Router): void {
