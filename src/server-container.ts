@@ -494,7 +494,7 @@ export class InternalServer {
                     res.set('Location', value.location);
                     if (value.body) {
                         res.status(value.statusCode);
-                        this.sendValue(value.body, res, next);
+                        await this.sendValue(value.body, res, next);
                     } else {
                         res.sendStatus(value.statusCode);
                     }
