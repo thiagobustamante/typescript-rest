@@ -54,7 +54,7 @@ describe('Server Tests', () => {
 
     describe('Server', () => {
         it('should provide a catalog containing the exposed paths', (done) => {
-            expect(Server.getPaths()).to.include.members(['/mypath', '/ioctest', '/ioctest2', '/ioctest3', '/mypath2/secondpath',
+            expect(Server.getPaths()).to.include.members(['/mypath', '/mypath2/secondpath',
                 '/asubpath/person/:id', '/headers', '/multi-param', '/context', '/upload',
                 '/download', '/download/ref', '/accept', '/accept/conflict', '/async/test']);
             expect(Server.getHttpMethods('/asubpath/person/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
@@ -127,33 +127,6 @@ describe('Server Tests', () => {
         });
     });
 
-    describe('MyIoCService', () => {
-        it('should use IoC container to instantiate the services', (done) => {
-            request('http://localhost:5674/ioctest', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-        it('should use IoC container to instantiate the services, does not carrying about the decorators order', (done) => {
-            request('http://localhost:5674/ioctest2', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-        it('should use IoC container to instantiate the services with injected params on constructor', (done) => {
-            request('http://localhost:5674/ioctest3', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-        it('should use IoC container to instantiate the services with superclasses', (done) => {
-            request('http://localhost:5674/ioctest4', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-    });
-
     describe('MyService2', () => {
         it('should configure a path on method ', (done) => {
             request('http://localhost:5674/mypath2/secondpath', function (error, response, body) {
@@ -162,7 +135,6 @@ describe('Server Tests', () => {
             });
         });
     });
-
 
     describe('TestParams', () => {
         it('should parse header and cookies correclty', (done) => {

@@ -1,20 +1,17 @@
 'use strict';
 /* tslint:disable */
 import * as express from 'express';
-import { Inject, AutoWired } from 'typescript-ioc';
 import * as fs from 'fs';
 import * as _ from 'lodash';
 
 import {
-    Path, Server, GET, POST, PUT, DELETE,
+    Path, GET, POST, PUT, DELETE,
     PathParam, QueryParam, CookieParam, HeaderParam,
     FormParam, Param, Context, ServiceContext, ContextRequest,
     ContextResponse, ContextLanguage, ContextAccept,
     ContextNext, AcceptLanguage, Accept, FileParam,
     Errors, Return, BodyOptions, Abstract
 } from '../../src/typescript-rest';
-
-Server.useIoC();
 
 export class Person {
     constructor(id: number, name: string, age: number, salary: number = age * 1000) {
@@ -85,57 +82,6 @@ export class SuperClassService extends BaseApi {
         return 'false';
     }
 }
-
-@AutoWired
-export class InjectableObject {
-
-}
-
-@AutoWired
-@Path('ioctest')
-export class MyIoCService {
-    @Inject
-    private injectedObject: InjectableObject
-
-    @GET
-    test(): string {
-        return (this.injectedObject) ? 'OK' : 'NOT OK';
-    }
-}
-
-@Path('ioctest2')
-@AutoWired
-export class MyIoCService2 {
-    @Inject
-    private injectedObject: InjectableObject
-
-    @GET
-    test(): string {
-        return (this.injectedObject) ? 'OK' : 'NOT OK';
-    }
-}
-
-
-@Path('ioctest3')
-@AutoWired
-export class MyIoCService3 {
-    private injectedObject: InjectableObject
-
-    constructor(@Inject injectedObject: InjectableObject) {
-        this.injectedObject = injectedObject;
-    }
-
-    @GET
-    test(): string {
-        return (this.injectedObject) ? 'OK' : 'NOT OK';
-    }
-}
-
-@Path('ioctest4')
-@AutoWired
-export class MyIoCService4 extends MyIoCService2 {
-}
-
 
 @Path('mypath')
 export class MyService {
@@ -494,7 +440,6 @@ export class DateTest {
     }
 }
 
-@AutoWired
 @Path('async/test')
 export class MyAsyncService {
     @GET
