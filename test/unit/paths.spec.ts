@@ -139,7 +139,7 @@ describe('Paths Tests', () => {
         });
     });
 
-    describe('SuperClassService', () => {
+    describe('Service on Subclass', () => {
         it('should return OK when calling a method of its super class', (done) => {
             request('http://localhost:5674/superclasspath/123', function (error, response, body) {
                 expect(body).to.eq('OK_' + 123);
