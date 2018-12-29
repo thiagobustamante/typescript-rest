@@ -16,6 +16,14 @@ export class PathTestService {
         return 'OK';
     }
 }
+export class PathOnlyOnMethodTestService {
+    @GET
+    @Path('methodpath')
+    public test(): string {
+        return 'OK';
+    }
+}
+
 @Path('pathtest2')
 export class SubPathTestService {
     @GET
@@ -94,8 +102,8 @@ describe('Paths Tests', () => {
 
     describe('Server', () => {
         it('should provide a catalog containing the exposed paths', (done) => {
-            expect(Server.getPaths()).to.include.members(['/pathtest', '/pathtest',
-                '/pathtest2/secondpath', '/superclasspath/overload/:id']);
+            expect(Server.getPaths()).to.include.members(['/pathtest', '/pathtest2',
+                '/methodpath', '/pathtest2/secondpath', '/superclasspath/overload/:id']);
             expect(Server.getPaths()).to.not.include.members(['/overload/:id']);
             expect(Server.getHttpMethods('/pathtest')).to.have.members([HttpMethod.GET]);
             expect(Server.getHttpMethods('/pathtest2/secondpath')).to.have.members([HttpMethod.GET]);
@@ -119,6 +127,12 @@ describe('Paths Tests', () => {
         });
         it('should be able to build a composed path bwetween class and method', (done) => {
             request('http://localhost:5674/pathtest2/secondpath', function (error, response, body) {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+        it('should be able to register services with present only on methods of a class', (done) => {
+            request('http://localhost:5674/methodpath', function (error, response, body) {
                 expect(body).to.eq('OK');
                 done();
             });
@@ -153,7 +167,8 @@ export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         const app: express.Application = express();
         app.set('env', 'test');
-        Server.buildServices(app, PathTestService, SubPathTestService, SuperClassService);
+        Server.buildServices(app, PathTestService, PathOnlyOnMethodTestService,
+            SubPathTestService, SuperClassService);
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);
