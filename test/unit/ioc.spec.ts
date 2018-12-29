@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
 import { AutoWired, Inject } from 'typescript-ioc';
-import { GET, Path, Server } from '../../src/typescript-rest';
+import { DefaultServiceFactory, GET, Path, Server } from '../../src/typescript-rest';
 const expect = chai.expect;
 
 Server.useIoC();
@@ -114,6 +114,7 @@ function startApi(): Promise<void> {
 
 function stopApi() {
     if (server) {
+        Server.registerServiceFactory(new DefaultServiceFactory());
         server.close();
     }
 }
