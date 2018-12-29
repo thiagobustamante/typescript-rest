@@ -1,12 +1,12 @@
 'use strict';
-/* tslint:disable */
-import 'mocha';
-import * as express from 'express';
-import * as request from 'request';
-import * as _ from 'lodash';
+
 import * as chai from 'chai';
-import { Server, Path, GET } from '../../src/typescript-rest';
+import * as express from 'express';
+import * as _ from 'lodash';
+import 'mocha';
+import * as request from 'request';
 import { AutoWired, Inject } from 'typescript-ioc';
+import { GET, Path, Server } from '../../src/typescript-rest';
 const expect = chai.expect;
 
 Server.useIoC();
@@ -18,10 +18,10 @@ export class InjectableObject { }
 @Path('ioctest')
 export class IoCService {
     @Inject
-    private injectedObject: InjectableObject
+    private injectedObject: InjectableObject;
 
     @GET
-    test(): string {
+    public test(): string {
         return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
@@ -30,10 +30,10 @@ export class IoCService {
 @AutoWired
 export class IoCService2 {
     @Inject
-    private injectedObject: InjectableObject
+    private injectedObject: InjectableObject;
 
     @GET
-    test(): string {
+    public test(): string {
         return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
@@ -41,14 +41,14 @@ export class IoCService2 {
 @Path('ioctest3')
 @AutoWired
 export class IoCService3 {
-    private injectedObject: InjectableObject
+    private injectedObject: InjectableObject;
 
     constructor(@Inject injectedObject: InjectableObject) {
         this.injectedObject = injectedObject;
     }
 
     @GET
-    test(): string {
+    public test(): string {
         return (this.injectedObject) ? 'OK' : 'NOT OK';
     }
 }
@@ -100,7 +100,7 @@ let server: any;
 
 function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        let app: express.Application = express();
+        const app: express.Application = express();
         app.set('env', 'test');
         Server.buildServices(app, IoCService, IoCService2, IoCService3, IoCService4);
         server = app.listen(5674, (err: any) => {

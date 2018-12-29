@@ -12,8 +12,17 @@ import { NextFunction, Request, Response } from 'express';
 import { DownloadBinaryData, DownloadResource } from './server-return';
 import { FileLimits, HttpMethod, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from './server-types';
 
+export class DefaultServiceFactory implements ServiceFactory {
+    public create(serviceClass: any) {
+        return new serviceClass();
+    }
+    public getTargetClass(serviceClass: Function) {
+        return serviceClass as FunctionConstructor;
+    }
+}
+
 export class InternalServer {
-    public static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
+    public static serverClasses: Map<Function, metadata.ServiceClass> = new Map<Function, metadata.ServiceClass>();
     public static paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
     public static pathsResolved: boolean = false;
     public static cookiesSecret: string;
@@ -22,31 +31,23 @@ export class InternalServer {
     public static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
     public static fileLimits: FileLimits;
     public static authenticator: ServiceAuthenticator;
-    public static serviceFactory: ServiceFactory = {
-        create: (serviceClass: any) => {
-            return new serviceClass();
-        },
-        getTargetClass: (serviceClass: Function) => {
-            return serviceClass as FunctionConstructor;
-        }
-    };
+    public static serviceFactory: ServiceFactory = new DefaultServiceFactory();
     public static passportStrategy: string;
     public static paramConverter: (paramValue: any, paramType: Function) => any = (p, t) => p;
 
     public static registerServiceClass(target: Function): metadata.ServiceClass {
         InternalServer.pathsResolved = false;
         target = InternalServer.serviceFactory.getTargetClass(target);
-        const name: string = target['name'] || target.constructor['name'];
-        if (!InternalServer.serverClasses.has(name)) {
-            InternalServer.serverClasses.set(name, new metadata.ServiceClass(target));
-            InternalServer.inheritParentClass(name);
+        if (!InternalServer.serverClasses.has(target)) {
+            InternalServer.serverClasses.set(target, new metadata.ServiceClass(target));
+            InternalServer.inheritParentClass(target);
         }
-        const serviceClass: metadata.ServiceClass = InternalServer.serverClasses.get(name);
+        const serviceClass: metadata.ServiceClass = InternalServer.serverClasses.get(target);
         return serviceClass;
     }
 
-    public static inheritParentClass(name: string) {
-        const classData: metadata.ServiceClass = InternalServer.serverClasses.get(name);
+    public static inheritParentClass(target: Function) {
+        const classData: metadata.ServiceClass = InternalServer.serverClasses.get(target);
         const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
         const parentClassData: metadata.ServiceClass = InternalServer.getServiceClass(parent);
         if (parentClassData) {
@@ -120,7 +121,7 @@ export class InternalServer {
 
     private static getServiceClass(target: Function): metadata.ServiceClass {
         target = InternalServer.serviceFactory.getTargetClass(target);
-        return InternalServer.serverClasses.get(target['name'] || target.constructor['name']) || null;
+        return InternalServer.serverClasses.get(target) || null;
     }
 
     private static resolveLanguages(serviceClass: metadata.ServiceClass,

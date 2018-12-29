@@ -14,12 +14,13 @@ export * from './passport-authenticator';
 
 export { Return };
 export { Errors };
+export { DefaultServiceFactory } from './server-container';
 
 const CONFIG_FILE = searchConfigFile();
 if (CONFIG_FILE && fs.existsSync(CONFIG_FILE)) {
     const config = fs.readJSONSync(CONFIG_FILE);
     if (config.useIoC) {
-        Server.useIoC();
+        Server.useIoC(config.es6);
     } else if (config.serviceFactory) {
         if (config.serviceFactory.indexOf('.') === 0) {
             config.serviceFactory = path.join(process.cwd(), config.serviceFactory);
