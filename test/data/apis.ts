@@ -1,15 +1,14 @@
 'use strict';
 /* tslint:disable */
 import * as express from 'express';
-import * as fs from 'fs';
 import * as _ from 'lodash';
 
 import {
     Path, GET, POST, PUT, DELETE,
-    PathParam, QueryParam, CookieParam, HeaderParam,
-    FormParam, Param, Context, ServiceContext, ContextRequest,
-    ContextResponse, ContextLanguage, ContextAccept,
-    ContextNext, AcceptLanguage, Accept, FileParam,
+    PathParam, QueryParam,
+    Context, ServiceContext, ContextRequest,
+    ContextLanguage, ContextAccept,
+    AcceptLanguage, Accept,
     Errors, Return, BodyOptions, Abstract
 } from '../../src/typescript-rest';
 
@@ -143,100 +142,6 @@ export class PersonService {
             result.push(new Person(i, 'Fulano de Tal número ' + i.toString(), 35));
         }
         return result;
-    }
-}
-
-export class TestParams {
-
-    @Context
-    context: ServiceContext;
-
-    @HeaderParam('my-header')
-    private myHeader: ServiceContext;
-
-    @GET
-    @Path('myheader')
-    testMyHeader(): string {
-        return 'header: ' + this.myHeader;
-    }
-
-    @GET
-    @Path('headers')
-    testHeaders(@HeaderParam('my-header') header: string,
-        @CookieParam('my-cookie') cookie: string): string {
-        return 'cookie: ' + cookie + '|header: ' + header;
-    }
-
-    @POST
-    @Path('multi-param')
-    testMultiParam(@Param('param') param: string): string {
-        return param;
-    }
-
-    @GET
-    @Path('context')
-    testContext(@QueryParam('q') q: string,
-        @ContextRequest request: express.Request,
-        @ContextResponse response: express.Response,
-        @ContextNext next: express.NextFunction): void {
-
-        if (request && response && next) {
-            response.status(201);
-            if (q === '123') {
-                response.send(true);
-            }
-            else {
-                response.send(false);
-            }
-        }
-    }
-
-    @GET
-    @Path('default-query')
-    testDefaultQuery(@QueryParam('limit') limit: number = 20,
-        @QueryParam('prefix') prefix: string = 'default',
-        @QueryParam('expand') expand: boolean = true): string {
-        return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
-    }
-
-    @GET
-    @Path('optional-query')
-    testOptionalQuery(@QueryParam('limit') limit?: number,
-        @QueryParam('prefix') prefix?: string,
-        @QueryParam('expand') expand?: boolean): string {
-        return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
-    }
-
-    @POST
-    @Path('upload')
-    testUploadFile(@FileParam('myFile') file: Express.Multer.File,
-        @FormParam('myField') myField: string): boolean {
-        return (file
-            && (_.startsWith(file.buffer.toString(), '\'use strict\';'))
-            && (myField === 'my_value'));
-    }
-}
-
-@Path('download')
-export class TestDownload {
-    @GET
-    testDownloadFile(): Promise<Return.DownloadBinaryData> {
-        return new Promise<Return.DownloadBinaryData>((resolve, reject) => {
-            fs.readFile(__dirname + '/apis.ts', (err, data) => {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(new Return.DownloadBinaryData(data, 'application/javascript', 'test-rest.spec.js'))
-            });
-        });
-    }
-
-    @Path('ref')
-    @GET
-    testDownloadFile2(): Promise<Return.DownloadResource> {
-        return new Promise<Return.DownloadResource>((resolve, reject) => {
-            resolve(new Return.DownloadResource(__dirname + '/apis.ts', 'test-rest.spec.js'));
-        });
     }
 }
 
