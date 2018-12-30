@@ -3,9 +3,11 @@
 import * as chai from 'chai';
 import * as _ from 'lodash';
 import 'mocha';
+import * as path from 'path';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
+
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -82,6 +84,22 @@ describe('ServerConfig', () => {
 
         expect(serverStub.useIoC).to.not.have.been.called;
         expect(serverStub.registerServiceFactory).to.have.been.calledOnceWithExactly(config.serviceFactory);
+    });
+
+    it('should use a custom service factory configured with relative path', async () => {
+        const config = {
+            serviceFactory: './myCustomFactory'
+        };
+        const expectedServicePath = path.join(process.cwd(), config.serviceFactory);
+
+        fsStub.existsSync.onCall(0).returns(false);
+        fsStub.existsSync.onCall(1).returns(true);
+        fsStub.existsSync.onCall(2).returns(true);
+        fsStub.readJSONSync.returns(config);
+        ServerConfig.configure();
+
+        expect(serverStub.useIoC).to.not.have.been.called;
+        expect(serverStub.registerServiceFactory).to.have.been.calledOnceWithExactly(expectedServicePath);
     });
 
     it('should not use ioc if an error occur while searching for config file', async () => {
