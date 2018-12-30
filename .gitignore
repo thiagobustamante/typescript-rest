@@ -1,7 +1,7 @@
-node_modules/
-dist/
-.vscode/
-reports/
-.nyc_output/
+node_modules
+dist
+.vscode
+reports
+.nyc_output
 .DS_Store
 *.log
