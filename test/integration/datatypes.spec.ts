@@ -25,6 +25,10 @@ export class Person {
         this.salary = salary;
     }
 }
+export interface DataParam {
+    param1: string;
+    param2: Date;
+}
 
 @Path("testparams")
 export class TestParamsService {
@@ -54,6 +58,24 @@ export class TestParamsService {
     public addPerson(@ContextRequest req: express.Request, person: Person): Return.NewResource<{ id: number }> {
         return new Return.NewResource<{ id: number }>(req.url + '/' + person.id, { id: person.id });
     }
+
+    @POST
+    @Path('/date')
+    @BodyOptions({
+        reviver: (key: string, value: any) => {
+            if (key === 'param2') {
+                return new Date(value);
+            }
+            return value;
+        }
+    })
+    public testData(param: DataParam) {
+        if ((param.param2 instanceof Date) && (param.param2.toString() === param.param1)) {
+            return 'OK';
+        }
+        return 'NOT OK';
+    }
+
 
     @GET
     @Path('/people')
@@ -217,6 +239,20 @@ describe('Data Types Tests', () => {
             });
         });
 
+        it('should be able to send a Date into a json object ', (done) => {
+            const date = new Date();
+            request.post({
+                body: {
+                    param1: date.toString(),
+                    param2: date
+                },
+                json: true,
+                url: 'http://localhost:5674/testparams/date'
+            }, (error, response, body) => {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
     });
 
     describe('A rest Service', () => {
@@ -281,7 +317,7 @@ describe('Data Types Tests', () => {
             });
             const form = req.form();
             form.append('myField', 'my_value');
-            form.append('myFile', fs.createReadStream(__dirname + '/test.spec.ts'), 'test-rest.spec.ts');
+            form.append('myFile', fs.createReadStream(__dirname + '/datatypes.spec.ts'), 'test-rest.spec.ts');
         });
 
         it('should use sent value for query param that defines a default', (done) => {
@@ -360,12 +396,12 @@ describe('Data Types Tests', () => {
 
     describe('Param Converters', () => {
         it('should intercept parameters', (done) => {
-            Server.setParamConverter((param: Person, type: Function) => {
-                if (type === Person && param.salary === 424242) {
+            Server.addParameterConverter((param: Person) => {
+                if (param.salary === 424242) {
                     param.salary = 434343;
                 }
                 return param;
-            });
+            }, Person);
             const person = new Person(123, 'Person 123', 35, 424242);
             request.put({
                 body: JSON.stringify(person),
@@ -374,6 +410,7 @@ describe('Data Types Tests', () => {
             }, (error, response, body) => {
                 const receivedPerson = JSON.parse(body);
                 expect(receivedPerson.salary).to.equals(434343);
+                Server.removeParameterConverter(Person);
                 done();
             });
         });

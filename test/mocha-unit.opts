@@ -1,0 +1,6 @@
+--require ts-node/register
+--require source-map-support/register
+--full-trace
+--bail
+--timeout 25000
+test/unit/**/*.spec.ts

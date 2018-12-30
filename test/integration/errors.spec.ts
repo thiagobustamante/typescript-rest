@@ -6,7 +6,6 @@ import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
 import { Errors, GET, Path, Server } from '../../src/typescript-rest';
-import { Person } from '../data/apis';
 
 const expect = chai.expect;
 
@@ -14,7 +13,7 @@ const expect = chai.expect;
 export class ErrorService {
     @Path('badrequest')
     @GET
-    public test1(p: Person): Promise<string> {
+    public test1(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.BadRequestError());
         });
@@ -22,7 +21,7 @@ export class ErrorService {
 
     @Path('conflict')
     @GET
-    public test2(p: Person): Promise<string> {
+    public test2(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.ConflictError());
         });
@@ -30,7 +29,7 @@ export class ErrorService {
 
     @Path('forbiden')
     @GET
-    public test3(p: Person): Promise<string> {
+    public test3(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.ForbidenError());
         });
@@ -38,7 +37,7 @@ export class ErrorService {
 
     @Path('gone')
     @GET
-    public test4(p: Person): Promise<string> {
+    public test4(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.GoneError());
         });
@@ -46,7 +45,7 @@ export class ErrorService {
 
     @Path('internal')
     @GET
-    public test5(p: Person): Promise<string> {
+    public test5(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.InternalServerError());
         });
@@ -54,7 +53,7 @@ export class ErrorService {
 
     @Path('method')
     @GET
-    public test6(p: Person): Promise<string> {
+    public test6(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.MethodNotAllowedError());
         });
@@ -62,7 +61,7 @@ export class ErrorService {
 
     @Path('notacceptable')
     @GET
-    public test7(p: Person): Promise<string> {
+    public test7(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotAcceptableError());
         });
@@ -70,7 +69,7 @@ export class ErrorService {
 
     @Path('notfound')
     @GET
-    public test8(p: Person): Promise<string> {
+    public test8(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotFoundError());
         });
@@ -78,7 +77,7 @@ export class ErrorService {
 
     @Path('notimplemented')
     @GET
-    public test9(p: Person): Promise<string> {
+    public test9(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.NotImplementedError());
         });
@@ -86,7 +85,7 @@ export class ErrorService {
 
     @Path('unauthorized')
     @GET
-    public test10(p: Person): Promise<string> {
+    public test10(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnauthorizedError());
         });
@@ -94,7 +93,7 @@ export class ErrorService {
 
     @Path('unsupportedmedia')
     @GET
-    public test11(p: Person): Promise<string> {
+    public test11(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnsupportedMediaTypeError());
         });
@@ -102,10 +101,16 @@ export class ErrorService {
 
     @Path('unprocessableentity')
     @GET
-    public test12(p: Person): Promise<string> {
+    public test12(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
             reject(new Errors.UnprocessableEntityError());
         });
+    }
+
+    @GET
+    @Path('sync/badrequest')
+    public test13(p: string): Promise<string> {
+        throw new Errors.BadRequestError();
     }
 }
 
@@ -122,6 +127,12 @@ describe('Errors Tests', () => {
     describe('Error Service', () => {
         it('should be able to send 400', (done) => {
             request.get('http://localhost:5674/errors/badrequest', (error, response, body) => {
+                expect(response.statusCode).to.eq(400);
+                done();
+            });
+        });
+        it('should be able to send 400', (done) => {
+            request.get('http://localhost:5674/errors/sync/badrequest', (error, response, body) => {
                 expect(response.statusCode).to.eq(400);
                 done();
             });

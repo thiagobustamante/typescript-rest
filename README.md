@@ -1256,6 +1256,8 @@ swaggerGen -c ./swaggerConfig.json
 
 # Breaking Changes
 
+## From 0.X to 1.X
+
 Starting from version 1.0.0, it is required to inform the body type on all ReferencedResources, like:
 
 ```typescript
@@ -1283,3 +1285,7 @@ class TestService {
      }
   }
 ```
+
+## From 1.X to 2.X
+
+Starting from version 2.0.0, the method ```Server.setParamConverter``` was removed and replaced by ```Server.addParameterConverter```.

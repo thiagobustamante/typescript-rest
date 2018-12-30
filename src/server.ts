@@ -7,7 +7,7 @@ import 'multer';
 import * as path from 'path';
 import * as YAML from 'yamljs';
 import { InternalServer } from './server-container';
-import { FileLimits, HttpMethod, ServiceAuthenticator, ServiceFactory } from './server-types';
+import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from './server-types';
 
 /**
  * The Http server main class.
@@ -17,7 +17,8 @@ export class Server {
      * Create the routes for all classes decorated with our decorators
      */
     public static buildServices(router: express.Router, ...types: Array<any>) {
-        const iternalServer: InternalServer = new InternalServer(router);
+        const iternalServer = InternalServer.get();
+        iternalServer.router = router;
         iternalServer.buildServices(types);
     }
 
@@ -57,7 +58,7 @@ export class Server {
      */
     public static getPaths(): Array<string> {
         const result = new Array<string>();
-        InternalServer.getPaths().forEach(value => {
+        InternalServer.get().getPaths().forEach(value => {
             result.push(value);
         });
 
@@ -68,8 +69,15 @@ export class Server {
      * Register a custom serviceFactory. It will be used to instantiate the service Objects
      * If You plan to use a custom serviceFactory, You must ensure to call this method before any typescript-rest service declaration.
      */
-    public static registerServiceFactory(serviceFactory: ServiceFactory) {
-        InternalServer.serviceFactory = serviceFactory;
+    public static registerServiceFactory(serviceFactory: ServiceFactory | string) {
+        let factory: ServiceFactory;
+        if (typeof serviceFactory === 'string') {
+            factory = require(serviceFactory);
+        } else {
+            factory = serviceFactory as ServiceFactory;
+        }
+
+        InternalServer.get().serviceFactory = factory;
     }
 
     /**
@@ -77,7 +85,7 @@ export class Server {
      * invocations occurs.
      */
     public static registerAuthenticator(authenticator: ServiceAuthenticator) {
-        InternalServer.authenticator = authenticator;
+        InternalServer.get().authenticator = authenticator;
     }
 
     /**
@@ -115,7 +123,7 @@ export class Server {
      */
     public static getHttpMethods(servicePath: string): Array<HttpMethod> {
         const result = new Array<HttpMethod>();
-        InternalServer.getHttpMethods(servicePath).forEach(value => {
+        InternalServer.get().getHttpMethods(servicePath).forEach(value => {
             result.push(value);
         });
 
@@ -128,7 +136,7 @@ export class Server {
      * @param secret the secret used to sign
      */
     public static setCookiesSecret(secret: string) {
-        InternalServer.cookiesSecret = secret;
+        InternalServer.get().cookiesSecret = secret;
     }
 
     /**
@@ -143,7 +151,7 @@ export class Server {
      * @param decoder The decoder function
      */
     public static setCookiesDecoder(decoder: (val: string) => string) {
-        InternalServer.cookiesDecoder = decoder;
+        InternalServer.get().cookiesDecoder = decoder;
     }
 
     /**
@@ -151,7 +159,7 @@ export class Server {
      * @param dest Destination folder
      */
     public static setFileDest(dest: string) {
-        InternalServer.fileDest = dest;
+        InternalServer.get().fileDest = dest;
     }
 
     /**
@@ -160,7 +168,7 @@ export class Server {
      */
     public static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
         callback: (error: Error, acceptFile: boolean) => void) => void) {
-        InternalServer.fileFilter = filter;
+        InternalServer.get().fileFilter = filter;
     }
 
     /**
@@ -168,15 +176,24 @@ export class Server {
      * @param limit The data limit
      */
     public static setFileLimits(limit: FileLimits) {
-        InternalServer.fileLimits = limit;
+        InternalServer.get().fileLimits = limit;
     }
 
     /**
-     * Sets converter for param values to have an ability to intercept the type that actually will be passed to service
-     * @param fn The converter
+     * Adds a converter for param values to have an ability to intercept the type that actually will be passed to service
+     * @param converter The converter
+     * @param type The target type that needs to be converted
      */
-    public static setParamConverter(fn: (paramValue: any, paramType: Function) => any) {
-        InternalServer.paramConverter = fn;
+    public static addParameterConverter(converter: ParameterConverter, type: Function): void {
+        InternalServer.get().paramConverters.set(type, converter);
+    }
+
+    /**
+     * Remove the converter associated with the given type.
+     * @param type The target type that needs to be converted
+     */
+    public static removeParameterConverter(type: Function): void {
+        InternalServer.get().paramConverters.delete(type);
     }
 
     /**

@@ -581,8 +581,8 @@ export function PATCH(target: any, propertyKey: string,
  * [[bodyParser]](https://www.npmjs.com/package/body-parser)
  */
 export function BodyOptions(options: any) {
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             serviceMethod.bodyParserOptions = options;
         }
@@ -893,7 +893,7 @@ export function Param(name: string) {
  * PeopleService exposes the getPeople method.
  */
 export function Abstract(target: Function) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.isAbstract = true;
 }
 
@@ -901,7 +901,7 @@ export function Abstract(target: Function) {
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.languages = _.union(classData.languages, languages);
 }
 
@@ -910,7 +910,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>)
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, languages: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.languages = languages;
     }
@@ -920,7 +920,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Accept]] decorator on classes
  */
 function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.accepts = _.union(classData.accepts, accepts);
 }
 
@@ -929,7 +929,7 @@ function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
  */
 function AcceptMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, accepts: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.accepts = accepts;
     }
@@ -939,7 +939,7 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Path]] decorator on classes
  */
 function PathTypeDecorator(target: Function, path: string) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
         classData.path = path;
     }
@@ -950,7 +950,7 @@ function PathTypeDecorator(target: Function, path: string) {
  */
 function PathMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, path: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.path = path;
     }
@@ -960,7 +960,7 @@ function PathMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Security]] decorator on classes
  */
 function SecurityTypeDecorator(target: Function, roles: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
         classData.roles = roles;
     }
@@ -971,7 +971,7 @@ function SecurityTypeDecorator(target: Function, roles: Array<string>) {
  */
 function SecurityMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, roles: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.roles = roles;
     }
@@ -981,7 +981,7 @@ function SecurityMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Preprocessor]] decorator on classes
  */
 function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
         if (!classData.processors) {
             classData.processors = [];
@@ -995,7 +995,7 @@ function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.Prep
  */
 function PreprocessorMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         if (!serviceMethod.processors) {
             serviceMethod.processors = [];
@@ -1009,7 +1009,7 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
  */
 function processDecoratedParameter(target: Object, propertyKey: string, parameterIndex: number,
     paramType: metadata.ParamType, name: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
 
@@ -1025,7 +1025,7 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
  * Decorator processor for annotations on properties
  */
 function processDecoratedProperty(target: Function, key: string, paramType: metadata.ParamType, paramName: string) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target.constructor);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target.constructor);
     const propertyType = Reflect.getMetadata('design:type', target, key);
     classData.addProperty(key, paramType, paramName, propertyType);
 }
@@ -1035,7 +1035,7 @@ function processDecoratedProperty(target: Function, key: string, paramType: meta
  */
 function processHttpVerb(target: any, propertyKey: string,
     httpMethod: HttpMethod) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         if (serviceMethod.httpMethod && serviceMethod.httpMethod !== httpMethod) {
             throw new Error('Method is already annotated with @' +

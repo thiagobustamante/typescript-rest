@@ -122,3 +122,4 @@ export interface ServiceAuthenticator {
 }
 
 export type ServicePreProcessor = (req: express.Request) => void;
+export type ParameterConverter = (paramValue: any) => any;
