@@ -81,4 +81,64 @@ describe('Server Errors', () => {
         expect(error.statusCode).to.equals(501);
         expect(error.message).to.equals('Not Implemented');
     });
+
+    it('should support custom message for BadRequestError', async () => {
+        const error = new Errors.BadRequestError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for UnauthorizedError', async () => {
+        const error = new Errors.UnauthorizedError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for ForbiddenError', async () => {
+        const error = new Errors.ForbiddenError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for NotFoundError', async () => {
+        const error = new Errors.NotFoundError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for MethodNotAllowedError', async () => {
+        const error = new Errors.MethodNotAllowedError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for NotAcceptableError', async () => {
+        const error = new Errors.NotAcceptableError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for ConflictError', async () => {
+        const error = new Errors.ConflictError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for GoneError', async () => {
+        const error = new Errors.GoneError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for UnsupportedMediaTypeError', async () => {
+        const error = new Errors.UnsupportedMediaTypeError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for UnprocessableEntityError', async () => {
+        const error = new Errors.UnprocessableEntityError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for InternalServerError', async () => {
+        const error = new Errors.InternalServerError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
+
+    it('should support custom message for NotImplementedError', async () => {
+        const error = new Errors.NotImplementedError('Custom Message');
+        expect(error.message).to.equals('Custom Message');
+    });
 });
