@@ -19,12 +19,6 @@ export function startApi(): Promise<void> {
             fieldSize: 1024 * 1024
         });
         Server.loadControllers(app, ['test/data/*', '!**/*.yaml'], `${__dirname}/../..`);
-        Server.setParamConverter((value, type) => {
-            if (type.name === 'Person' && value['salary'] === 424242) {
-                value['salary'] = 434343;
-            }
-            return value;
-        });
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);
@@ -59,79 +53,6 @@ describe('Server Tests', () => {
     //         done();
     //     });
     // });
-
-    describe('PersonService', () => {
-        it('should return the person (123) for GET on path: /asubpath/person/123', (done) => {
-            request('http://localhost:5674/asubpath/person/123', function (error, response, body) {
-                const result: Person = JSON.parse(body);
-                expect(result.id).to.eq(123);
-                done();
-            });
-        });
-
-        it('should return salary for PUT on path: /asubpath/person/123', (done) => {
-            request.put({
-                body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
-                headers: { 'content-type': 'application/json' },
-                url: 'http://localhost:5674/asubpath/person/123'
-            }, function (error, response, body) {
-                expect(body).to.eq('35000');
-                done();
-            });
-        });
-
-        it('should intercept salary 424242 for PUT on path: /asubpath/person/123', (done) => {
-            request.put({
-                body: JSON.stringify(new Person(123, 'Salary Person', 35, 424242)),
-                headers: { 'content-type': 'application/json' },
-                url: 'http://localhost:5674/asubpath/person/123'
-            }, function (error, response, body) {
-                expect(body).to.eq('434343');
-                done();
-            });
-        });
-
-
-        it('should return 201 for POST on path: /asubpath/person', (done) => {
-            request.post({
-                body: JSON.stringify(new Person(123, 'Fulano de Tal número 123', 35)),
-                headers: { 'content-type': 'application/json' },
-                url: 'http://localhost:5674/asubpath/person'
-            }, function (error, response, body) {
-                expect(response.statusCode).to.eq(201);
-                expect(response.headers['location']).to.eq('/asubpath/person/123');
-                const result: Person = JSON.parse(body);
-                expect(result.id).to.eq(123);
-                done();
-            });
-        });
-
-        it('should return an array with 3 elements for GET on path: /asubpath/person?start=0&size=3', (done) => {
-            request('http://localhost:5674/asubpath/person?start=0&size=3', function (error, response, body) {
-                const result: Array<Person> = JSON.parse(body);
-                expect(result.length).to.eq(3);
-                done();
-            });
-        });
-    });
-
-    describe('MyService', () => {
-        it('should configure a path without an initial /', (done) => {
-            request('http://localhost:5674/mypath', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-    });
-
-    describe('MyService2', () => {
-        it('should configure a path on method ', (done) => {
-            request('http://localhost:5674/mypath2/secondpath', function (error, response, body) {
-                expect(body).to.eq('OK');
-                done();
-            });
-        });
-    });
 
     describe('AcceptTest', () => {
         it('should choose language correctly', (done) => {

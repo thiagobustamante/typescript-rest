@@ -357,6 +357,30 @@ describe('Data Types Tests', () => {
             });
         });
     });
+
+    describe('Param Converters', () => {
+        it('should intercept parameters', (done) => {
+            Server.setParamConverter((param: Person, type: Function) => {
+                if (type === Person && param.salary === 424242) {
+                    param.salary = 434343;
+                }
+                return param;
+            });
+            const person = new Person(123, 'Person 123', 35, 424242);
+            request.put({
+                body: JSON.stringify(person),
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/testparams/people/123'
+            }, (error, response, body) => {
+                const receivedPerson = JSON.parse(body);
+                expect(receivedPerson.salary).to.equals(434343);
+                done();
+            });
+        });
+    });
+
+
+
 });
 
 let server: any;
