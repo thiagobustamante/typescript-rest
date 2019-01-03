@@ -1,67 +1,67 @@
 'use strict';
 
-import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as express from 'express';
+import * as _ from 'lodash';
 import * as multer from 'multer';
 import * as metadata from './metadata';
 import * as Errors from './server-errors';
-import * as _ from 'lodash';
 
-import { HttpMethod, ServiceContext, ReferencedResource, ServiceFactory, FileLimits } from './server-types';
-import { DownloadResource, DownloadBinaryData } from './server-return';
-import * as passport from 'passport';
 import { NextFunction, Request, Response } from 'express';
+import { DownloadBinaryData, DownloadResource } from './server-return';
+import { FileLimits, HttpMethod, ParameterConverter, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from './server-types';
+
+export class DefaultServiceFactory implements ServiceFactory {
+    public create(serviceClass: any) {
+        return new serviceClass();
+    }
+    public getTargetClass(serviceClass: Function) {
+        return serviceClass as FunctionConstructor;
+    }
+}
 
 export class InternalServer {
-    static serverClasses: Map<string, metadata.ServiceClass> = new Map<string, metadata.ServiceClass>();
-    static paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
-    static pathsResolved: boolean = false;
-    static cookiesSecret: string;
-    static cookiesDecoder: (val: string) => string;
-    static fileDest: string;
-    static paramConverter: (paramValue: any, paramType: Function) => any = (p, t) => p;
-    static fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
-    static fileLimits: FileLimits;
-    static serviceFactory: ServiceFactory = {
-        create: (serviceClass: any) => {
-            return new serviceClass();
-        },
-        getTargetClass: (serviceClass: Function) => {
-            return <FunctionConstructor>serviceClass;
-        }
-    };
-    static passportStrategy: string;
-    static roleKey: string;
-
-    router: express.Router;
-    upload: multer.Instance;
-
-    constructor(router: express.Router) {
-        this.router = router;
+    public static get(): InternalServer {
+        return InternalServer.instance;
     }
 
-    static passportAuth(strategy: string, roleKey: string) {
-        InternalServer.passportStrategy = strategy;
-        InternalServer.roleKey = roleKey;
-    }
+    private static instance: InternalServer = new InternalServer();
 
-    static registerServiceClass(target: Function): metadata.ServiceClass {
-        InternalServer.pathsResolved = false;
-        target = InternalServer.serviceFactory.getTargetClass(target);
-        const name: string = target['name'] || target.constructor['name'];
-        if (!InternalServer.serverClasses.has(name)) {
-            InternalServer.serverClasses.set(name, new metadata.ServiceClass(target));
-            InternalServer.inheritParentClass(name);
+    private static defaultParamConverter: ParameterConverter = (p: any) => p;
+
+    public cookiesSecret: string;
+    public cookiesDecoder: (val: string) => string;
+    public fileDest: string;
+    public fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
+    public fileLimits: FileLimits;
+    public authenticator: ServiceAuthenticator;
+    public serviceFactory: ServiceFactory = new DefaultServiceFactory();
+    public paramConverters: Map<Function, ParameterConverter> = new Map<Function, ParameterConverter>();
+    public router: express.Router;
+
+    private upload: multer.Instance;
+    private serverClasses: Map<Function, metadata.ServiceClass> = new Map<Function, metadata.ServiceClass>();
+    private paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
+    private pathsResolved: boolean = false;
+
+    private constructor() { }
+
+    public registerServiceClass(target: Function): metadata.ServiceClass {
+        this.pathsResolved = false;
+        target = this.serviceFactory.getTargetClass(target);
+        if (!this.serverClasses.has(target)) {
+            this.serverClasses.set(target, new metadata.ServiceClass(target));
+            this.inheritParentClass(target);
         }
-        const serviceClass: metadata.ServiceClass = InternalServer.serverClasses.get(name);
+        const serviceClass: metadata.ServiceClass = this.serverClasses.get(target);
         return serviceClass;
     }
 
-    static inheritParentClass(name: string) {
-        const classData: metadata.ServiceClass = InternalServer.serverClasses.get(name);
+    public inheritParentClass(target: Function) {
+        const classData: metadata.ServiceClass = this.serverClasses.get(target);
         const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
-        const parentClassData: metadata.ServiceClass = InternalServer.getServiceClass(parent);
+        const parentClassData: metadata.ServiceClass = this.getServiceClass(parent);
         if (parentClassData) {
             if (parentClassData.methods) {
                 parentClassData.methods.forEach((value, key) => {
@@ -76,23 +76,19 @@ export class InternalServer {
             }
 
             if (parentClassData.languages) {
-                for (const lang of parentClassData.languages) {
-                    classData.languages.push(lang);
-                }
+                classData.languages = _.union(classData.languages, parentClassData.languages);
             }
 
             if (parentClassData.accepts) {
-                for (const acc of parentClassData.accepts) {
-                    classData.accepts.push(acc);
-                }
+                classData.accepts = _.union(classData.accepts, parentClassData.accepts);
             }
         }
     }
 
-    static registerServiceMethod(target: Function, methodName: string): metadata.ServiceMethod {
+    public registerServiceMethod(target: Function, methodName: string): metadata.ServiceMethod {
         if (methodName) {
-            InternalServer.pathsResolved = false;
-            const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+            this.pathsResolved = false;
+            const classData: metadata.ServiceClass = this.registerServiceClass(target);
             if (!classData.methods.has(methodName)) {
                 classData.methods.set(methodName, new metadata.ServiceMethod());
             }
@@ -102,11 +98,43 @@ export class InternalServer {
         return null;
     }
 
-    buildServices(types?: Array<Function>) {
-        if (types) {
-            types = types.map(type => InternalServer.serviceFactory.getTargetClass(type));
+    public resolveAllPaths() {
+        if (!this.pathsResolved) {
+            this.paths.clear();
+            this.serverClasses.forEach(classData => {
+                classData.methods.forEach(method => {
+                    if (!method.resolvedPath) {
+                        this.resolveProperties(classData, method);
+                    }
+                });
+            });
+            this.pathsResolved = true;
         }
-        InternalServer.serverClasses.forEach(classData => {
+    }
+
+    public getPaths(): Set<string> {
+        this.resolveAllPaths();
+        const result = new Set<string>();
+        this.paths.forEach((value, key) => {
+            result.add(key);
+        });
+        return result;
+    }
+
+    public getHttpMethods(path: string): Set<HttpMethod> {
+        this.resolveAllPaths();
+        const methods: Set<HttpMethod> = this.paths.get(path);
+        return methods || new Set<HttpMethod>();
+    }
+
+    public buildServices(types?: Array<Function>) {
+        if (types) {
+            types = types.map(type => this.serviceFactory.getTargetClass(type));
+        }
+        if (this.authenticator) {
+            this.authenticator.initialize(this.router);
+        }
+        this.serverClasses.forEach(classData => {
             if (!classData.isAbstract) {
                 classData.methods.forEach(method => {
                     if (this.validateTargetType(classData.targetClass, types)) {
@@ -115,57 +143,26 @@ export class InternalServer {
                 });
             }
         });
-        InternalServer.pathsResolved = true;
+        this.pathsResolved = true;
         this.handleNotAllowedMethods();
     }
 
-    async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<void> {
+    public async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<void> {
         for (const processor of processors) {
             await Promise.resolve(processor(req));
         }
     }
 
-    buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
-        const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            if (res.headersSent) {
-                next();
-            } else {
-                Promise.resolve().then(() => {
-                    if (serviceMethod.processors || serviceClass.processors) {
-                        const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
-                        return this.runPreprocessors(allPreprocessors, req);
-                    }
-                    return null;
-                }).then(() => this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next))
-                .then(() => next())
-                .catch(err => next(err));
-            }
-        };
+    public buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
 
         if (!serviceMethod.resolvedPath) {
-            InternalServer.resolveProperties(serviceClass, serviceMethod);
+            this.resolveProperties(serviceClass, serviceMethod);
         }
 
-        const middleware: Array<express.RequestHandler> = this.buildServiceMiddleware(serviceMethod);
-        let args: any[] = [serviceMethod.resolvedPath];
-        let roles: string[] = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
-            .filter((role) => !!role);
-        if (InternalServer.passportStrategy && roles.length) {
-            args = [...args, passport.authenticate(InternalServer.passportStrategy)];
-        }
-        roles = roles.filter((role) => role !== '*');
-        if (roles.length) {
-            args = [...args, function(req: Request, res: Response, next: NextFunction) {
-                if (req.user[InternalServer.roleKey].some((role: string) => roles.indexOf(role) >= 0)) {
-                    next();
-                } else {
-                    res.status(403).send('Forbidden');
-                }
-            }];
-        }
-
-        args = args.concat(middleware);
-        args.push(handler);
+        let args: Array<any> = [serviceMethod.resolvedPath];
+        args = args.concat(this.buildSecurityMiddlewares(serviceClass, serviceMethod));
+        args = args.concat(this.buildParserMiddlewares(serviceMethod));
+        args.push(this.buildServiceMiddleware(serviceMethod, serviceClass));
         switch (serviceMethod.httpMethod) {
             case HttpMethod.GET:
                 this.router.get.apply(this.router, args);
@@ -194,9 +191,59 @@ export class InternalServer {
         }
     }
 
-    private static getServiceClass(target: Function): metadata.ServiceClass {
-        target = InternalServer.serviceFactory.getTargetClass(target);
-        return InternalServer.serverClasses.get(target['name'] || target.constructor['name']) || null;
+    private getServiceClass(target: Function): metadata.ServiceClass {
+        target = this.serviceFactory.getTargetClass(target);
+        return this.serverClasses.get(target) || null;
+    }
+
+    private resolveLanguages(serviceClass: metadata.ServiceClass,
+        serviceMethod: metadata.ServiceMethod): void {
+
+        const resolvedLanguages = _.union(serviceClass.languages, serviceMethod.languages);
+        if (resolvedLanguages.length > 0) {
+            serviceMethod.resolvedLanguages = resolvedLanguages;
+        }
+    }
+
+    private resolveAccepts(serviceClass: metadata.ServiceClass,
+        serviceMethod: metadata.ServiceMethod): void {
+        const resolvedAccepts = _.union(serviceClass.accepts, serviceMethod.accepts);
+        if (resolvedAccepts.length > 0) {
+            serviceMethod.resolvedAccepts = resolvedAccepts;
+        }
+    }
+
+    private resolveProperties(serviceClass: metadata.ServiceClass,
+        serviceMethod: metadata.ServiceMethod): void {
+        this.resolveLanguages(serviceClass, serviceMethod);
+        this.resolveAccepts(serviceClass, serviceMethod);
+        this.resolvePath(serviceClass, serviceMethod);
+    }
+
+    private resolvePath(serviceClass: metadata.ServiceClass,
+        serviceMethod: metadata.ServiceMethod): void {
+        const classPath: string = serviceClass.path ? serviceClass.path.trim() : '';
+
+        let resolvedPath = _.startsWith(classPath, '/') ? classPath : '/' + classPath;
+        if (_.endsWith(resolvedPath, '/')) {
+            resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
+        }
+
+        if (serviceMethod.path) {
+            const methodPath: string = serviceMethod.path.trim();
+            resolvedPath = resolvedPath + (_.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
+        }
+
+        let declaredHttpMethods: Set<HttpMethod> = this.paths.get(resolvedPath);
+        if (!declaredHttpMethods) {
+            declaredHttpMethods = new Set<HttpMethod>();
+            this.paths.set(resolvedPath, declaredHttpMethods);
+        }
+        if (declaredHttpMethods.has(serviceMethod.httpMethod)) {
+            throw Error(`Duplicated declaration for path [${resolvedPath}], method [${serviceMethod.httpMethod}].`);
+        }
+        declaredHttpMethods.add(serviceMethod.httpMethod);
+        serviceMethod.resolvedPath = resolvedPath;
     }
 
     private validateTargetType(targetClass: Function, types: Array<Function>): boolean {
@@ -207,9 +254,9 @@ export class InternalServer {
     }
 
     private handleNotAllowedMethods() {
-        const paths: Set<string> = InternalServer.getPaths();
+        const paths: Set<string> = this.getPaths();
         paths.forEach((path) => {
-            const supported: Set<HttpMethod> = InternalServer.getHttpMethods(path);
+            const supported: Set<HttpMethod> = this.getHttpMethods(path);
             const allowedMethods: Array<string> = new Array<string>();
             supported.forEach((method: HttpMethod) => {
                 allowedMethods.push(HttpMethod[method]);
@@ -229,14 +276,14 @@ export class InternalServer {
     private getUploader(): multer.Instance {
         if (!this.upload) {
             const options: multer.Options = {};
-            if (InternalServer.fileDest) {
-                options.dest = InternalServer.fileDest;
+            if (this.fileDest) {
+                options.dest = this.fileDest;
             }
-            if (InternalServer.fileFilter) {
-                options.fileFilter = InternalServer.fileFilter;
+            if (this.fileFilter) {
+                options.fileFilter = this.fileFilter;
             }
-            if (InternalServer.fileLimits) {
-                options.limits = InternalServer.fileLimits;
+            if (this.fileLimits) {
+                options.limits = this.fileLimits;
             }
             if (options.dest) {
                 this.upload = multer(options);
@@ -247,16 +294,58 @@ export class InternalServer {
         return this.upload;
     }
 
-    private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
+    private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod, serviceClass: metadata.ServiceClass) {
+        return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            if (res.headersSent) {
+                next();
+            } else {
+                try {
+                    if (serviceMethod.preProcessors || serviceClass.preProcessors) {
+                        const allPreprocessors = [...serviceClass.preProcessors || [], ...serviceMethod.preProcessors || []];
+                        await this.runPreprocessors(allPreprocessors, req);
+                    }
+                    await this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
+                    next();
+                }
+                catch (err) {
+                    next(err);
+                }
+            }
+        };
+    }
+
+    private buildSecurityMiddlewares(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
+        const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
+        let roles: Array<string> = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
+            .filter((role) => !!role);
+        if (this.authenticator && roles.length) {
+            result.push(this.authenticator.getMiddleware());
+            roles = roles.filter((role) => role !== '*');
+            if (roles.length) {
+                result.push((req: Request, res: Response, next: NextFunction) => {
+                    const requestRoles = this.authenticator.getRoles(req);
+                    if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
+                        next();
+                    } else {
+                        throw new Errors.ForbiddenError();
+                    }
+                });
+            }
+        }
+
+        return result;
+    }
+
+    private buildParserMiddlewares(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
         if (serviceMethod.mustParseCookies) {
             const args = [];
-            if (InternalServer.cookiesSecret) {
-                args.push(InternalServer.cookiesSecret);
+            if (this.cookiesSecret) {
+                args.push(this.cookiesSecret);
             }
-            if (InternalServer.cookiesDecoder) {
-                args.push({ decode: InternalServer.cookiesDecoder });
+            if (this.cookiesDecoder) {
+                args.push({ decode: this.cookiesDecoder });
             }
             result.push(cookieParser.apply(this, args));
         }
@@ -306,10 +395,10 @@ export class InternalServer {
         if (serviceMethod.resolvedLanguages) {
             const lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
             if (lang) {
-                context.language = <string>lang;
+                context.language = lang as string;
             }
         } else {
-            const languages: string[] = context.request.acceptsLanguages();
+            const languages: Array<string> = context.request.acceptsLanguages();
             if (languages && languages.length > 0) {
                 context.language = languages[0];
             }
@@ -318,7 +407,7 @@ export class InternalServer {
         if (serviceMethod.resolvedAccepts) {
             const accept: any = context.request.accepts(serviceMethod.resolvedAccepts);
             if (accept) {
-                context.accept = <string>accept;
+                context.accept = accept as string;
             } else {
                 throw new Errors.NotAcceptableError('Accept');
             }
@@ -330,7 +419,7 @@ export class InternalServer {
     }
 
     private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
-        const serviceObject = InternalServer.serviceFactory.create(serviceClass.targetClass, context);
+        const serviceObject = this.serviceFactory.create(serviceClass.targetClass, context);
         if (serviceClass.hasProperties()) {
             serviceClass.properties.forEach((property, key) => {
                 serviceObject[key] = this.processParameter(property.type, context, property.name, property.propertyType);
@@ -392,7 +481,7 @@ export class InternalServer {
                     res.set('Location', value.location);
                     if (value.body) {
                         res.status(value.statusCode);
-                        this.sendValue(value.body, res, next);
+                        await this.sendValue(value.body, res, next);
                     } else {
                         res.sendStatus(value.statusCode);
                     }
@@ -440,12 +529,14 @@ export class InternalServer {
             case metadata.ParamType.body:
                 return this.convertType(context.request.body, type);
             case metadata.ParamType.file:
-                const files: Array<Express.Multer.File> = context.request.files?context.request.files[name]:null;
+                // @ts-ignore
+                const files: Array<Express.Multer.File> = context.request.files ? context.request.files[name] : null;
                 if (files && files.length > 0) {
                     return files[0];
                 }
                 return null;
             case metadata.ParamType.files:
+                // @ts-ignore
                 return context.request.files[name];
             case metadata.ParamType.form:
                 return this.convertType(context.request.body[name], type);
@@ -466,7 +557,7 @@ export class InternalServer {
             case metadata.ParamType.context_accept_language:
                 return context.language;
             default:
-                throw Error('Invalid parameter type');
+                throw new Errors.BadRequestError('Invalid parameter type');
         }
     }
 
@@ -478,105 +569,12 @@ export class InternalServer {
             case 'Boolean':
                 return paramValue === undefined ? paramValue : paramValue === 'true';
             default:
-                return InternalServer.paramConverter(paramValue, paramType);
-        }
-    }
+                let converter = this.paramConverters.get(paramType);
+                if (!converter) {
+                    converter = InternalServer.defaultParamConverter;
+                }
 
-    static resolveAllPaths() {
-        if (!InternalServer.pathsResolved) {
-            InternalServer.paths.clear();
-            InternalServer.serverClasses.forEach(classData => {
-                classData.methods.forEach(method => {
-                    if (!method.resolvedPath) {
-                        InternalServer.resolveProperties(classData, method);
-                    }
-                });
-            });
-            InternalServer.pathsResolved = true;
+                return converter(paramValue);
         }
-    }
-
-    static getPaths(): Set<string> {
-        InternalServer.resolveAllPaths();
-        const result = new Set<string>();
-        InternalServer.paths.forEach((value, key) => {
-            result.add(key);
-        });
-        return result;
-    }
-
-    static getHttpMethods(path: string): Set<HttpMethod> {
-        InternalServer.resolveAllPaths();
-        const methods: Set<HttpMethod> = InternalServer.paths.get(path);
-        return methods || new Set<HttpMethod>();
-    }
-
-    private static resolveLanguages(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
-        const resolvedLanguages = new Array<string>();
-        if (serviceClass.languages) {
-            serviceClass.languages.forEach(lang => {
-                resolvedLanguages.push(lang);
-            });
-        }
-        if (serviceMethod.languages) {
-            serviceMethod.languages.forEach(lang => {
-                resolvedLanguages.push(lang);
-            });
-        }
-        if (resolvedLanguages.length > 0) {
-            serviceMethod.resolvedLanguages = resolvedLanguages;
-        }
-    }
-
-    private static resolveAccepts(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
-        const resolvedAccepts = new Array<string>();
-        if (serviceClass.accepts) {
-            serviceClass.accepts.forEach(accept => {
-                resolvedAccepts.push(accept);
-            });
-        }
-        if (serviceMethod.accepts) {
-            serviceMethod.accepts.forEach(accept => {
-                resolvedAccepts.push(accept);
-            });
-        }
-        if (resolvedAccepts.length > 0) {
-            serviceMethod.resolvedAccepts = resolvedAccepts;
-        }
-    }
-
-    private static resolveProperties(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
-        InternalServer.resolveLanguages(serviceClass, serviceMethod);
-        InternalServer.resolveAccepts(serviceClass, serviceMethod);
-        InternalServer.resolvePath(serviceClass, serviceMethod);
-    }
-
-    private static resolvePath(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
-        const classPath: string = serviceClass.path ? serviceClass.path.trim() : '';
-
-        let resolvedPath = _.startsWith(classPath, '/') ? classPath : '/' + classPath;
-        if (_.endsWith(resolvedPath, '/')) {
-            resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
-        }
-
-        if (serviceMethod.path) {
-            const methodPath: string = serviceMethod.path.trim();
-            resolvedPath = resolvedPath + (_.startsWith(methodPath, '/') ? methodPath : '/' + methodPath);
-        }
-
-        let declaredHttpMethods: Set<HttpMethod> = InternalServer.paths.get(resolvedPath);
-        if (!declaredHttpMethods) {
-            declaredHttpMethods = new Set<HttpMethod>();
-            InternalServer.paths.set(resolvedPath, declaredHttpMethods);
-        }
-        if (declaredHttpMethods.has(serviceMethod.httpMethod)) {
-            throw Error(`Duplicated declaration for path [${resolvedPath}], method [${serviceMethod.httpMethod}].`);
-        }
-        declaredHttpMethods.add(serviceMethod.httpMethod);
-        serviceMethod.resolvedPath = resolvedPath;
     }
 }

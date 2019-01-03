@@ -42,24 +42,24 @@ export class ServiceContext {
     /**
      * The resolved language to be used in the current request handling.
      */
-    language: string;
+    public language: string;
     /**
      * The preferred media type to be used in the current request handling.
      */
-    accept: string;
+    public accept: string;
     /**
      * The request object.
      */
-    request: express.Request;
+    public request: express.Request;
     /**
      * The response object
      */
-    response: express.Response;
+    public response: express.Response;
     /**
      * The next function. It can be used to delegate to the next middleware
      * registered the processing of the current request.
      */
-    next: express.NextFunction;
+    public next: express.NextFunction;
 }
 
 /**
@@ -102,3 +102,24 @@ export interface ServiceFactory {
      */
     getTargetClass: (serviceClass: Function) => FunctionConstructor;
 }
+
+/**
+ * An optional authenticator for rest services
+ */
+export interface ServiceAuthenticator {
+    /**
+     * Get the user list of roles.
+     */
+    getRoles: (req: express.Request) => Array<string>;
+    /**
+     * Initialize the authenticator
+     */
+    initialize(router: express.Router): void;
+    /**
+     * Retrieve the middleware used to authenticate users.
+     */
+    getMiddleware(): express.RequestHandler;
+}
+
+export type ServicePreProcessor = (req: express.Request) => void;
+export type ParameterConverter = (paramValue: any) => any;

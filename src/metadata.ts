@@ -14,29 +14,27 @@ export interface SeviceProperty {
  * Metadata for REST service classes
  */
 export class ServiceClass {
+
+    public targetClass: any;
+    public path: string;
+    public roles: Array<string>;
+    public preProcessors: Array<PreprocessorFunction>;
+    public methods: Map<string, ServiceMethod>;
+    public languages: Array<string>;
+    public accepts: Array<string>;
+    public properties: Map<string, SeviceProperty>;
+    public isAbstract: boolean = false;
     constructor(targetClass: any) {
         this.targetClass = targetClass;
         this.methods = new Map<string, ServiceMethod>();
         this.properties = new Map<string, SeviceProperty>();
-        this.languages = new Array<string>();
-        this.accepts = new Array<string>();
     }
 
-    targetClass: any;
-    path: string;
-    roles: string[];
-    processors: Array<PreprocessorFunction>;
-    methods: Map<string, ServiceMethod>;
-    languages: Array<string>;
-    accepts: Array<string>;
-    properties: Map<string, SeviceProperty>;
-    isAbstract: boolean = false;
-
-    addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
+    public addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
         this.properties.set(key, { type: paramType, name: paramName, propertyType: propertyType });
     }
 
-    hasProperties(): boolean {
+    public hasProperties(): boolean {
         return (this.properties && this.properties.size > 0);
     }
 }
@@ -45,51 +43,51 @@ export class ServiceClass {
  * Metadata for REST service methods
  */
 export class ServiceMethod {
-    name: string;
-    path: string;
-    roles: string[];
-    resolvedPath: string;
-    httpMethod: HttpMethod;
-    parameters: Array<MethodParam> = new Array<MethodParam>();
-    mustParseCookies: boolean = false;
-    files: Array<FileParam> = new Array<FileParam>();
-    mustParseBody: boolean = false;
-    bodyParserOptions: any;
-    mustParseForms: boolean = false;
-    acceptMultiTypedParam: boolean = false;
-    languages: Array<string>;
-    accepts: Array<string>;
-    resolvedLanguages: Array<string>;
-    resolvedAccepts: Array<string>;
-    processors: Array<PreprocessorFunction>;
+    public name: string;
+    public path: string;
+    public roles: Array<string>;
+    public resolvedPath: string;
+    public httpMethod: HttpMethod;
+    public parameters: Array<MethodParam> = new Array<MethodParam>();
+    public mustParseCookies: boolean = false;
+    public files: Array<FileParam> = new Array<FileParam>();
+    public mustParseBody: boolean = false;
+    public bodyParserOptions: any;
+    public mustParseForms: boolean = false;
+    public acceptMultiTypedParam: boolean = false;
+    public languages: Array<string>;
+    public accepts: Array<string>;
+    public resolvedLanguages: Array<string>;
+    public resolvedAccepts: Array<string>;
+    public preProcessors: Array<PreprocessorFunction>;
 }
 
 /**
  * Metadata for File parameters on REST methods
  */
 export class FileParam {
+
+    public name: string;
+    public singleFile: boolean;
     constructor(name: string, singleFile: boolean) {
         this.name = name;
         this.singleFile = singleFile;
     }
-
-    name: string;
-    singleFile: boolean;
 }
 
 /**
  * Metadata for REST service method parameters
  */
 export class MethodParam {
+
+    public name: string;
+    public type: Function;
+    public paramType: ParamType;
     constructor(name: string, type: Function, paramType: ParamType) {
         this.name = name;
         this.type = type;
         this.paramType = paramType;
     }
-
-    name: string;
-    type: Function;
-    paramType: ParamType;
 }
 
 /**

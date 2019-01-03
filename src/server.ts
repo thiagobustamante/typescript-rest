@@ -1,13 +1,13 @@
 'use strict';
 
 import * as express from 'express';
-import 'multer';
-import { InternalServer } from './server-container';
-import { HttpMethod, ServiceFactory, FileLimits } from './server-types';
-import * as _ from 'lodash';
 import * as fs from 'fs-extra';
-import * as YAML from 'yamljs';
+import * as _ from 'lodash';
+import 'multer';
 import * as path from 'path';
+import * as YAML from 'yamljs';
+import { InternalServer } from './server-container';
+import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from './server-types';
 
 /**
  * The Http server main class.
@@ -16,29 +16,23 @@ export class Server {
     /**
      * Create the routes for all classes decorated with our decorators
      */
-    static buildServices(router: express.Router, ...types: any[]) {
-        const iternalServer: InternalServer = new InternalServer(router);
+    public static buildServices(router: express.Router, ...types: Array<any>) {
+        const iternalServer = InternalServer.get();
+        iternalServer.router = router;
         iternalServer.buildServices(types);
-    }
-
-    /**
-     * Define passportAuth strategy
-     */
-    static passportAuth(strategy: string, roleKey: string = 'roles') {
-        InternalServer.passportAuth(strategy, roleKey);
     }
 
     /**
      * An alias for Server.loadServices()
      */
-    static loadControllers(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
+    public static loadControllers(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
         Server.loadServices(router, patterns, baseDir);
     }
 
     /**
      * Load all services from the files that matches the patterns provided
      */
-    static loadServices(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
+    public static loadServices(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
         const importedTypes: Array<Function> = [];
         const requireGlob = require('require-glob');
         baseDir = baseDir || process.cwd();
@@ -62,9 +56,9 @@ export class Server {
     /**
      * Return all paths accepted by the Server
      */
-    static getPaths(): Array<string> {
+    public static getPaths(): Array<string> {
         const result = new Array<string>();
-        InternalServer.getPaths().forEach(value => {
+        InternalServer.get().getPaths().forEach(value => {
             result.push(value);
         });
 
@@ -75,8 +69,23 @@ export class Server {
      * Register a custom serviceFactory. It will be used to instantiate the service Objects
      * If You plan to use a custom serviceFactory, You must ensure to call this method before any typescript-rest service declaration.
      */
-    static registerServiceFactory(serviceFactory: ServiceFactory) {
-        InternalServer.serviceFactory = serviceFactory;
+    public static registerServiceFactory(serviceFactory: ServiceFactory | string) {
+        let factory: ServiceFactory;
+        if (typeof serviceFactory === 'string') {
+            factory = require(serviceFactory);
+        } else {
+            factory = serviceFactory as ServiceFactory;
+        }
+
+        InternalServer.get().serviceFactory = factory;
+    }
+
+    /**
+     * Register a service authenticator. It will be used to authenticate users before the service method
+     * invocations occurs.
+     */
+    public static registerAuthenticator(authenticator: ServiceAuthenticator) {
+        InternalServer.get().authenticator = authenticator;
     }
 
     /**
@@ -85,7 +94,7 @@ export class Server {
      * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
      * @param es6 if true, import typescript-ioc/es6
      */
-    static useIoC(es6?: boolean) {
+    public static useIoC(es6?: boolean) {
         const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
         Server.registerServiceFactory({
             create: (serviceClass) => {
@@ -94,12 +103,14 @@ export class Server {
             getTargetClass: (serviceClass: Function) => {
                 let typeConstructor: any = serviceClass;
                 if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
-                    return <FunctionConstructor>typeConstructor;
+                    return typeConstructor as FunctionConstructor;
                 }
-                while (typeConstructor = typeConstructor['__parent']) {
+                typeConstructor = typeConstructor['__parent'];
+                while (typeConstructor) {
                     if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
-                        return <FunctionConstructor>typeConstructor;
+                        return typeConstructor as FunctionConstructor;
                     }
+                    typeConstructor = typeConstructor['__parent'];
                 }
                 throw TypeError('Can not identify the base Type for requested target');
             }
@@ -110,9 +121,9 @@ export class Server {
      * Return the set oh HTTP verbs configured for the given path
      * @param servicePath The path to search HTTP verbs
      */
-    static getHttpMethods(servicePath: string): Array<HttpMethod> {
+    public static getHttpMethods(servicePath: string): Array<HttpMethod> {
         const result = new Array<HttpMethod>();
-        InternalServer.getHttpMethods(servicePath).forEach(value => {
+        InternalServer.get().getHttpMethods(servicePath).forEach(value => {
             result.push(value);
         });
 
@@ -124,8 +135,8 @@ export class Server {
      * will not parse signed cookies.
      * @param secret the secret used to sign
      */
-    static setCookiesSecret(secret: string) {
-        InternalServer.cookiesSecret = secret;
+    public static setCookiesSecret(secret: string) {
+        InternalServer.get().cookiesSecret = secret;
     }
 
     /**
@@ -139,41 +150,50 @@ export class Server {
      * cookie value will be returned as the cookie's value.
      * @param decoder The decoder function
      */
-    static setCookiesDecoder(decoder: (val: string) => string) {
-        InternalServer.cookiesDecoder = decoder;
+    public static setCookiesDecoder(decoder: (val: string) => string) {
+        InternalServer.get().cookiesDecoder = decoder;
     }
 
     /**
      * Set where to store the uploaded files
      * @param dest Destination folder
      */
-    static setFileDest(dest: string) {
-        InternalServer.fileDest = dest;
+    public static setFileDest(dest: string) {
+        InternalServer.get().fileDest = dest;
     }
 
     /**
      * Set a Function to control which files are accepted to upload
      * @param filter The filter function
      */
-    static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
+    public static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
         callback: (error: Error, acceptFile: boolean) => void) => void) {
-        InternalServer.fileFilter = filter;
+        InternalServer.get().fileFilter = filter;
     }
 
     /**
      * Set the limits of uploaded data
      * @param limit The data limit
      */
-    static setFileLimits(limit: FileLimits) {
-        InternalServer.fileLimits = limit;
+    public static setFileLimits(limit: FileLimits) {
+        InternalServer.get().fileLimits = limit;
     }
 
     /**
-     * Sets converter for param values to have an ability to intercept the type that actually will be passed to service
-     * @param fn The converter
+     * Adds a converter for param values to have an ability to intercept the type that actually will be passed to service
+     * @param converter The converter
+     * @param type The target type that needs to be converted
      */
-    static setParamConverter(fn: (paramValue: any, paramType: Function) => any) {
-        InternalServer.paramConverter = fn;
+    public static addParameterConverter(converter: ParameterConverter, type: Function): void {
+        InternalServer.get().paramConverters.set(type, converter);
+    }
+
+    /**
+     * Remove the converter associated with the given type.
+     * @param type The target type that needs to be converted
+     */
+    public static removeParameterConverter(type: Function): void {
+        InternalServer.get().paramConverters.delete(type);
     }
 
     /**
@@ -184,7 +204,7 @@ export class Server {
      * @param host the hostname of the service
      * @param schemes the schemes used by the server
      */
-    static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: string[], swaggerUiOptions?: object) {
+    public static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: Array<string>, swaggerUiOptions?: object) {
         const swaggerUi = require('swagger-ui-express');
         if (_.startsWith(filePath, '.')) {
             filePath = path.join(process.cwd(), filePath);

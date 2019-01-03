@@ -1,10 +1,10 @@
 'use strict';
 
-import { InternalServer } from './server-container';
-import { HttpMethod } from './server-types';
-import * as metadata from './metadata';
-import 'reflect-metadata';
 import * as _ from 'lodash';
+import 'reflect-metadata';
+import * as metadata from './metadata';
+import { InternalServer } from './server-container';
+import { HttpMethod, ServicePreProcessor } from './server-types';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
@@ -37,7 +37,7 @@ import * as _ from 'lodash';
  * ```
  */
 export function Path(path: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
             return PathTypeDecorator.apply(this, [args[0], path]);
@@ -82,12 +82,10 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles: string | string[] = ['*']) {
-    return function (...args: any[]) {
+export function Security(roles?: string | Array<string>) {
+    return function (...args: Array<any>) {
+        roles = _.castArray(roles || '*');
         args = _.without(args, undefined);
-        if (typeof roles !== 'object') {
-            roles = [roles];
-        }
         if (args.length === 1) {
             return SecurityTypeDecorator.apply(this, [args[0], roles]);
         } else if (args.length === 3 && typeof args[2] === 'object') {
@@ -105,13 +103,10 @@ export function Security(roles: string | string[] = ['*']) {
  * For example:
  * ```
  * function validator(req: express.Request): express.Request {
- *   if (req.body.userId != undefined) {
+ *   if (!req.body.userId) {
  *      throw new Errors.BadRequestError("userId not present");
- *   } else {
- *      req.body.user = Users.get(req.body.userId)
- *      return req
- *   }
- *}
+ *   } 
+ * }
  * ```
  * And:
  *
@@ -127,13 +122,15 @@ export function Security(roles: string | string[] = ['*']) {
  * }
  * ```
  */
-export function Preprocessor(preprocessor: Function) {
-    return function (...args: any[]) {
+export function Preprocessor(preprocessor: ServicePreProcessor) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
-        if (args.length === 1) {
-            return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
+        if (preprocessor) {
+            if (args.length === 1) {
+                return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
+            }
         }
 
         throw new Error('Invalid @Preprocessor Decorator declaration.');
@@ -160,13 +157,16 @@ export function Preprocessor(preprocessor: Function) {
  *
  * If the language requested is not supported, a status code 406 returned
  */
-export function AcceptLanguage(...languages: string[]) {
-    return function (...args: any[]) {
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
+export function AcceptLanguage(...languages: Array<string>) {
+    return function (...args: Array<any>) {
+        languages = _.compact(languages);
+        if (languages.length) {
+            args = _.without(args, undefined);
+            if (args.length === 1) {
+                return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
+            }
         }
 
         throw new Error('Invalid @AcceptLanguage Decorator declaration.');
@@ -193,15 +193,17 @@ export function AcceptLanguage(...languages: string[]) {
  *
  * If the mime type requested is not supported, a status code 406 returned
  */
-export function Accept(...accepts: string[]) {
-    return function (...args: any[]) {
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            return AcceptTypeDecorator.apply(this, [args[0], accepts]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
+export function Accept(...accepts: Array<string>) {
+    return function (...args: Array<any>) {
+        accepts = _.compact(accepts);
+        if (accepts.length) {
+            args = _.without(args, undefined);
+            if (args.length === 1) {
+                return AcceptTypeDecorator.apply(this, [args[0], accepts]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
+            }
         }
-
         throw new Error('Invalid @Accept Decorator declaration.');
     };
 }
@@ -217,15 +219,15 @@ export function Accept(...accepts: string[]) {
  * @ Path('context')
  * class TestService {
  *   @ Context
-	 context: ServiceContext;
- *       // ...
+ *   context: ServiceContext;
+ *   // ...
  * }
  * ```
  *
  * The field context on the above class will point to the current
  * [[ServiceContext]] instance.
  */
-export function Context(...args: any[]) {
+export function Context(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -248,15 +250,15 @@ export function Context(...args: any[]) {
  * @ Path('context')
  * class TestService {
  *   @ ContextRequest
-	 request: express.Request;
- *       // ...
+ *   request: express.Request;
+ *   // ...
  * }
  * ```
  *
  * The field request on the above class will point to the current
  * request.
  */
-export function ContextRequest(...args: any[]) {
+export function ContextRequest(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_request, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -279,15 +281,15 @@ export function ContextRequest(...args: any[]) {
  * @ Path('context')
  * class TestService {
  *   @ ContextResponse
-	 response: express.Response;
- *       // ...
+ *   response: express.Response;
+ *   // ...
  * }
  * ```
  *
  * The field response on the above class will point to the current
  * response object.
  */
-export function ContextResponse(...args: any[]) {
+export function ContextResponse(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_response, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -318,7 +320,7 @@ export function ContextResponse(...args: any[]) {
  * The next function can be used to delegate to the next registered
  * middleware the current request processing.
  */
-export function ContextNext(...args: any[]) {
+export function ContextNext(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_next, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -346,7 +348,7 @@ export function ContextNext(...args: any[]) {
  * }
  * ```
  */
-export function ContextLanguage(...args: any[]) {
+export function ContextLanguage(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -374,7 +376,7 @@ export function ContextLanguage(...args: any[]) {
  * }
  * ```
  */
-export function ContextAccept(...args: any[]) {
+export function ContextAccept(...args: Array<any>) {
     args = _.without(args, undefined);
     const newArgs = args.concat([metadata.ParamType.context_accept, null]);
     if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -585,7 +587,7 @@ export function PATCH(target: any, propertyKey: string,
  */
 export function BodyOptions(options: any) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+        const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             serviceMethod.bodyParserOptions = options;
         }
@@ -618,7 +620,7 @@ export function BodyOptions(options: any) {
  * And pass 123 as the id argument on getPerson method's call.
  */
 export function PathParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.path, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -654,7 +656,7 @@ export function PathParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FileParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.file, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -690,7 +692,7 @@ export function FileParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FilesParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.files, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -728,7 +730,7 @@ export function FilesParam(name: string) {
  * And pass 'joe' as the name argument on getPerson method's call.
  */
 export function QueryParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.query, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -761,7 +763,7 @@ export function QueryParam(name: string) {
  * header called 'header' to the header argument on getPerson method's call.
  */
 export function HeaderParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.header, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -794,7 +796,7 @@ export function HeaderParam(name: string) {
  * cookie called 'cookie' to the cookie argument on getPerson method's call.
  */
 export function CookieParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.cookie, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -828,7 +830,7 @@ export function CookieParam(name: string) {
  * method's call.
  */
 export function FormParam(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.form, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -863,7 +865,7 @@ export function FormParam(name: string) {
  * received in the current request.
  */
 export function Param(name: string) {
-    return function (...args: any[]) {
+    return function (...args: Array<any>) {
         args = _.without(args, undefined);
         const newArgs = args.concat([metadata.ParamType.param, name]);
         if (args.length < 3 || typeof args[2] === 'undefined') {
@@ -896,15 +898,15 @@ export function Param(name: string) {
  * PeopleService exposes the getPeople method.
  */
 export function Abstract(target: Function) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.isAbstract = true;
 }
 
 /**
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
-function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.languages = _.union(classData.languages, languages);
 }
 
@@ -912,18 +914,18 @@ function AcceptLanguageTypeDecorator(target: Function, languages: string[]) {
  * Decorator processor for [[AcceptLanguage]] decorator on methods
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, languages: string[]) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    descriptor: PropertyDescriptor, languages: Array<string>) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        serviceMethod.languages = languages;
+        serviceMethod.languages = _.union(serviceMethod.languages, languages);
     }
 }
 
 /**
  * Decorator processor for [[Accept]] decorator on classes
  */
-function AcceptTypeDecorator(target: Function, accepts: string[]) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     classData.accepts = _.union(classData.accepts, accepts);
 }
 
@@ -931,10 +933,10 @@ function AcceptTypeDecorator(target: Function, accepts: string[]) {
  * Decorator processor for [[Accept]] decorator on methods
  */
 function AcceptMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, accepts: string[]) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    descriptor: PropertyDescriptor, accepts: Array<string>) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        serviceMethod.accepts = accepts;
+        serviceMethod.accepts = _.union(serviceMethod.accepts, accepts);
     }
 }
 
@@ -942,7 +944,7 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Path]] decorator on classes
  */
 function PathTypeDecorator(target: Function, path: string) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
         classData.path = path;
     }
@@ -953,7 +955,7 @@ function PathTypeDecorator(target: Function, path: string) {
  */
 function PathMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, path: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.path = path;
     }
@@ -962,8 +964,8 @@ function PathMethodDecorator(target: any, propertyKey: string,
 /**
  * Decorator processor for [[Security]] decorator on classes
  */
-function SecurityTypeDecorator(target: Function, roles: string[]) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+function SecurityTypeDecorator(target: Function, roles: Array<string>) {
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
         classData.roles = roles;
     }
@@ -973,8 +975,8 @@ function SecurityTypeDecorator(target: Function, roles: string[]) {
  * Decorator processor for [[Security]] decorator on methods
  */
 function SecurityMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, roles: string[]) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    descriptor: PropertyDescriptor, roles: Array<string>) {
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.roles = roles;
     }
@@ -984,12 +986,12 @@ function SecurityMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Preprocessor]] decorator on classes
  */
 function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
-        if (!classData.processors) {
-            classData.processors = [];
+        if (!classData.preProcessors) {
+            classData.preProcessors = [];
         }
-        classData.processors.unshift(preprocessor);
+        classData.preProcessors.unshift(preprocessor);
     }
 }
 
@@ -998,12 +1000,12 @@ function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.Prep
  */
 function PreprocessorMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
-        if (!serviceMethod.processors) {
-            serviceMethod.processors = [];
+        if (!serviceMethod.preProcessors) {
+            serviceMethod.preProcessors = [];
         }
-        serviceMethod.processors.unshift(preprocessor);
+        serviceMethod.preProcessors.unshift(preprocessor);
     }
 }
 
@@ -1012,7 +1014,7 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
  */
 function processDecoratedParameter(target: Object, propertyKey: string, parameterIndex: number,
     paramType: metadata.ParamType, name: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
 
@@ -1028,7 +1030,7 @@ function processDecoratedParameter(target: Object, propertyKey: string, paramete
  * Decorator processor for annotations on properties
  */
 function processDecoratedProperty(target: Function, key: string, paramType: metadata.ParamType, paramName: string) {
-    const classData: metadata.ServiceClass = InternalServer.registerServiceClass(target.constructor);
+    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target.constructor);
     const propertyType = Reflect.getMetadata('design:type', target, key);
     classData.addProperty(key, paramType, paramName, propertyType);
 }
@@ -1038,7 +1040,7 @@ function processDecoratedProperty(target: Function, key: string, paramType: meta
  */
 function processHttpVerb(target: any, propertyKey: string,
     httpMethod: HttpMethod) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         if (serviceMethod.httpMethod && serviceMethod.httpMethod !== httpMethod) {
             throw new Error('Method is already annotated with @' +

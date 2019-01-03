@@ -1,9 +1,7 @@
-.DS_Store
-dist
-doc
 node_modules
+dist
 .vscode
+reports
 .nyc_output
-coverage
+.DS_Store
 *.log
-npm-debug.log*
