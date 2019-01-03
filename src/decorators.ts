@@ -159,11 +159,14 @@ export function Preprocessor(preprocessor: ServicePreProcessor) {
  */
 export function AcceptLanguage(...languages: Array<string>) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
+        languages = _.compact(languages);
+        if (languages.length) {
+            args = _.without(args, undefined);
+            if (args.length === 1) {
+                return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
+            }
         }
 
         throw new Error('Invalid @AcceptLanguage Decorator declaration.');
@@ -912,7 +915,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, languages: Array<string>) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        serviceMethod.languages = languages;
+        serviceMethod.languages = _.union(serviceMethod.languages, languages);
     }
 }
 

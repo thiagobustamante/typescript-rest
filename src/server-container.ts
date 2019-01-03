@@ -76,9 +76,7 @@ export class InternalServer {
             }
 
             if (parentClassData.languages) {
-                for (const lang of parentClassData.languages) {
-                    classData.languages.push(lang);
-                }
+                classData.languages = _.union(classData.languages, parentClassData.languages);
             }
 
             if (parentClassData.accepts) {
@@ -202,17 +200,8 @@ export class InternalServer {
 
     private resolveLanguages(serviceClass: metadata.ServiceClass,
         serviceMethod: metadata.ServiceMethod): void {
-        const resolvedLanguages = new Array<string>();
-        if (serviceClass.languages) {
-            serviceClass.languages.forEach(lang => {
-                resolvedLanguages.push(lang);
-            });
-        }
-        if (serviceMethod.languages) {
-            serviceMethod.languages.forEach(lang => {
-                resolvedLanguages.push(lang);
-            });
-        }
+
+        const resolvedLanguages = _.union(serviceClass.languages, serviceMethod.languages);
         if (resolvedLanguages.length > 0) {
             serviceMethod.resolvedLanguages = resolvedLanguages;
         }

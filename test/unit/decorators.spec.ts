@@ -173,4 +173,52 @@ describe('Decorators', () => {
             }).to.throw('Invalid @Preprocessor Decorator declaration.');
         });
     });
+
+    describe('AcceptLanguage Decorator', () => {
+        it('should add an accepted language to all methods of a class', () => {
+            decorators.AcceptLanguage('en')(TestService);
+
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.languages).to.have.length(1);
+            expect(serviceClass.languages).to.include.members(['en']);
+        });
+
+        it('should add an accepted language to methods of a class', () => {
+            decorators.AcceptLanguage('en')(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+            expect(serviceMethod.languages).to.have.length(1);
+            expect(serviceMethod.languages).to.include.members(['en']);
+        });
+
+        it('should throw an error if misused', () => {
+            expect(() => {
+                decorators.AcceptLanguage('en')(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
+            }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
+        });
+
+        it('should ignore falsey values of accepted languages', () => {
+            decorators.AcceptLanguage(null, 'en', undefined, 0, false, 'pt')(TestService);
+
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.languages).to.have.length(2);
+            expect(serviceClass.languages).to.include.members(['en', 'pt']);
+        });
+
+        it('should throw an error if receives undefined', () => {
+            expect(() => {
+                decorators.AcceptLanguage(undefined)(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+            }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
+        });
+
+        it('should throw an error if receives nothing', () => {
+            expect(() => {
+                decorators.AcceptLanguage()(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+            }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
+        });
+    });
 });

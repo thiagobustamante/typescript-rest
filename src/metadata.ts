@@ -28,7 +28,6 @@ export class ServiceClass {
         this.targetClass = targetClass;
         this.methods = new Map<string, ServiceMethod>();
         this.properties = new Map<string, SeviceProperty>();
-        this.languages = new Array<string>();
         this.accepts = new Array<string>();
     }
 
