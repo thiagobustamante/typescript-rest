@@ -82,8 +82,9 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles: string | Array<string> = ['*']) {
+export function Security(roles: string | Array<string>) {
     return function (...args: Array<any>) {
+        roles = _.castArray(roles || '*');
         args = _.without(args, undefined);
         if (typeof roles !== 'object') {
             roles = [roles];
@@ -127,10 +128,12 @@ export function Security(roles: string | Array<string> = ['*']) {
 export function Preprocessor(preprocessor: ServicePreProcessor) {
     return function (...args: Array<any>) {
         args = _.without(args, undefined);
-        if (args.length === 1) {
-            return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
+        if (preprocessor) {
+            if (args.length === 1) {
+                return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
+            }
         }
 
         throw new Error('Invalid @Preprocessor Decorator declaration.');
@@ -983,10 +986,10 @@ function SecurityMethodDecorator(target: any, propertyKey: string,
 function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
     const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
     if (classData) {
-        if (!classData.processors) {
-            classData.processors = [];
+        if (!classData.preProcessors) {
+            classData.preProcessors = [];
         }
-        classData.processors.unshift(preprocessor);
+        classData.preProcessors.unshift(preprocessor);
     }
 }
 
@@ -997,10 +1000,10 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
-        if (!serviceMethod.processors) {
-            serviceMethod.processors = [];
+        if (!serviceMethod.preProcessors) {
+            serviceMethod.preProcessors = [];
         }
-        serviceMethod.processors.unshift(preprocessor);
+        serviceMethod.preProcessors.unshift(preprocessor);
     }
 }
 

@@ -18,7 +18,7 @@ export class ServiceClass {
     public targetClass: any;
     public path: string;
     public roles: Array<string>;
-    public processors: Array<PreprocessorFunction>;
+    public preProcessors: Array<PreprocessorFunction>;
     public methods: Map<string, ServiceMethod>;
     public languages: Array<string>;
     public accepts: Array<string>;
@@ -61,7 +61,7 @@ export class ServiceMethod {
     public accepts: Array<string>;
     public resolvedLanguages: Array<string>;
     public resolvedAccepts: Array<string>;
-    public processors: Array<PreprocessorFunction>;
+    public preProcessors: Array<PreprocessorFunction>;
 }
 
 /**

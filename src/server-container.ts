@@ -320,8 +320,8 @@ export class InternalServer {
     private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod, serviceClass: metadata.ServiceClass) {
         return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
             try {
-                if (serviceMethod.processors || serviceClass.processors) {
-                    const allPreprocessors = [...serviceClass.processors || [], ...serviceMethod.processors || []];
+                if (serviceMethod.preProcessors || serviceClass.preProcessors) {
+                    const allPreprocessors = [...serviceClass.preProcessors || [], ...serviceMethod.preProcessors || []];
                     await this.runPreprocessors(allPreprocessors, req);
                 }
                 await this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
