@@ -8,7 +8,6 @@ import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 
-
 chai.use(sinonChai);
 const expect = chai.expect;
 
