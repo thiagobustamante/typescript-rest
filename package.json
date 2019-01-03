@@ -43,6 +43,7 @@
     ],
     "reporter": [
       "text-summary",
+      "json",
       "html"
     ],
     "report-dir": "./reports/coverage",
