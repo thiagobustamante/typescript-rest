@@ -80,9 +80,7 @@ export class InternalServer {
             }
 
             if (parentClassData.accepts) {
-                for (const acc of parentClassData.accepts) {
-                    classData.accepts.push(acc);
-                }
+                classData.accepts = _.union(classData.accepts, parentClassData.accepts);
             }
         }
     }
@@ -209,17 +207,7 @@ export class InternalServer {
 
     private resolveAccepts(serviceClass: metadata.ServiceClass,
         serviceMethod: metadata.ServiceMethod): void {
-        const resolvedAccepts = new Array<string>();
-        if (serviceClass.accepts) {
-            serviceClass.accepts.forEach(accept => {
-                resolvedAccepts.push(accept);
-            });
-        }
-        if (serviceMethod.accepts) {
-            serviceMethod.accepts.forEach(accept => {
-                resolvedAccepts.push(accept);
-            });
-        }
+        const resolvedAccepts = _.union(serviceClass.accepts, serviceMethod.accepts);
         if (resolvedAccepts.length > 0) {
             serviceMethod.resolvedAccepts = resolvedAccepts;
         }

@@ -195,13 +195,15 @@ export function AcceptLanguage(...languages: Array<string>) {
  */
 export function Accept(...accepts: Array<string>) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            return AcceptTypeDecorator.apply(this, [args[0], accepts]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
+        accepts = _.compact(accepts);
+        if (accepts.length) {
+            args = _.without(args, undefined);
+            if (args.length === 1) {
+                return AcceptTypeDecorator.apply(this, [args[0], accepts]);
+            } else if (args.length === 3 && typeof args[2] === 'object') {
+                return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
+            }
         }
-
         throw new Error('Invalid @Accept Decorator declaration.');
     };
 }
@@ -934,7 +936,7 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, accepts: Array<string>) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        serviceMethod.accepts = accepts;
+        serviceMethod.accepts = _.union(serviceMethod.accepts, accepts);
     }
 }
 

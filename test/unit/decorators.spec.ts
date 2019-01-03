@@ -221,4 +221,53 @@ describe('Decorators', () => {
             }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
         });
     });
+
+    describe('Accept Decorator', () => {
+        it('should add an accepted content type to all methods of a class', () => {
+            decorators.Accept('application/json')(TestService);
+
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.accepts).to.have.length(1);
+            expect(serviceClass.accepts).to.include.members(['application/json']);
+        });
+
+        it('should add an accepted content type to methods of a class', () => {
+            decorators.Accept('application/json')(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+            expect(serviceMethod.accepts).to.have.length(1);
+            expect(serviceMethod.accepts).to.include.members(['application/json']);
+        });
+
+        it('should throw an error if misused', () => {
+            expect(() => {
+                decorators.Accept('application/json')(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
+            }).to.throw('Invalid @Accept Decorator declaration.');
+        });
+
+        it('should ignore falsey values of content types', () => {
+            decorators.Accept(null, 'application/json', undefined, 0, false, 'application/xml')
+                (TestService);
+
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.accepts).to.have.length(2);
+            expect(serviceClass.accepts).to.include.members(['application/json', 'application/xml']);
+        });
+
+        it('should throw an error if receives undefined', () => {
+            expect(() => {
+                decorators.Accept(undefined)(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+            }).to.throw('Invalid @Accept Decorator declaration.');
+        });
+
+        it('should throw an error if receives nothing', () => {
+            expect(() => {
+                decorators.Accept()(TestService.prototype, 'test',
+                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+            }).to.throw('Invalid @Accept Decorator declaration.');
+        });
+    });
 });
