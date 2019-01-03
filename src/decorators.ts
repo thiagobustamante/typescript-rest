@@ -86,9 +86,6 @@ export function Security(roles?: string | Array<string>) {
     return function (...args: Array<any>) {
         roles = _.castArray(roles || '*');
         args = _.without(args, undefined);
-        if (typeof roles !== 'object') {
-            roles = [roles];
-        }
         if (args.length === 1) {
             return SecurityTypeDecorator.apply(this, [args[0], roles]);
         } else if (args.length === 3 && typeof args[2] === 'object') {
