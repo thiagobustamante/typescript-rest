@@ -82,7 +82,7 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles: string | Array<string>) {
+export function Security(roles?: string | Array<string>) {
     return function (...args: Array<any>) {
         roles = _.castArray(roles || '*');
         args = _.without(args, undefined);
