@@ -290,7 +290,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.Context(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context, null);
         });
 
         it('should bind the request context to one method parameter', () => {
@@ -314,7 +314,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.ContextRequest(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_request);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context_request, null);
         });
 
         it('should bind the current request to one method parameter', () => {
@@ -338,7 +338,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.ContextResponse(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_response);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context_response, null);
         });
 
         it('should bind the current response to one method parameter', () => {
@@ -362,7 +362,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.ContextNext(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_next);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context_next, null);
         });
 
         it('should bind the next function to one method parameter', () => {
@@ -386,7 +386,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.ContextLanguage(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept_language);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept_language, null);
         });
 
         it('should bind the context language to one method parameter', () => {
@@ -410,7 +410,7 @@ describe('Decorators', () => {
             const propertyName = 'property';
             decorators.ContextAccept(TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept);
+            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept, null);
         });
 
         it('should bind the context accept to one method parameter', () => {
@@ -429,7 +429,67 @@ describe('Decorators', () => {
         });
     });
 
-    function validateDecoratedProperty(propertyName: string, paramType: metadata.ParamType) {
+    [
+        { name: 'PathParam', paramType: metadata.ParamType.path },
+        { name: 'FileParam', paramType: metadata.ParamType.file },
+        { name: 'FilesParam', paramType: metadata.ParamType.files },
+        { name: 'QueryParam', paramType: metadata.ParamType.query },
+        { name: 'HeaderParam', paramType: metadata.ParamType.header },
+        { name: 'CookieParam', paramType: metadata.ParamType.cookie },
+        { name: 'FormParam', paramType: metadata.ParamType.form },
+        { name: 'Param', paramType: metadata.ParamType.param }
+    ].forEach(test => {
+        describe(`${test.name} Decorator`, () => {
+            it(`should bind a ${test.name} to one service property`, () => {
+                const propertyName = 'property';
+                const name = 'name';
+                decorators[test.name](name)(TestService, propertyName);
+
+                validateDecoratedProperty(propertyName, test.paramType, name);
+            });
+
+            it(`should bind a ${test.name} to one method parameter`, () => {
+                const paramName = 'param1';
+                const name = 'name';
+                reflectGetOwnMetadata.returns([ServiceContext]);
+                decorators[test.name](name)(TestService, paramName, 0);
+
+                validateDecoratedParameter(paramName, 1);
+                validateServiceMethodParameter(ServiceContext, test.paramType, 0, name);
+            });
+
+            it('should throw an error if misused', () => {
+                expect(() => {
+                    decorators[test.name]('name')(TestService, 'param1', 0, 'extra-param');
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
+
+            it('should throw an error if receives empty name', () => {
+                const paramName = 'param1';
+                const name: string = '';
+                expect(() => {
+                    decorators[test.name](name)(TestService, paramName, 0);
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
+
+            it('should throw an error if receives null name', () => {
+                const paramName = 'param1';
+                const name: string = null;
+                expect(() => {
+                    decorators[test.name](name)(TestService, paramName, 0);
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
+
+            it('should throw an error if receives undefined name', () => {
+                const paramName = 'param1';
+                const name: string = undefined;
+                expect(() => {
+                    decorators[test.name](name)(TestService, paramName, 0);
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
+        });
+    });
+    function validateDecoratedProperty(propertyName: string, paramType: metadata.ParamType, name: string) {
         expect(serverStub.registerServiceClass).to.have.been
             .calledOnceWithExactly(TestService.constructor);
         expect(reflectGetMetadata).to.have.been
@@ -437,7 +497,7 @@ describe('Decorators', () => {
 
         expect(serviceClass.properties).to.have.key(propertyName);
         const property = serviceClass.properties.get(propertyName);
-        expect(property.name).to.be.null;
+        expect(property.name).to.be.equals(name);
         expect(property.propertyType).to.be.equals(propertyType);
         expect(property.type).to.be.equals(paramType);
     }

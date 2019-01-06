@@ -621,12 +621,15 @@ export function BodyOptions(options: any) {
  */
 export function PathParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.path, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.path, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
 
         throw new Error('Invalid @PathParam Decorator declaration.');
@@ -657,14 +660,16 @@ export function PathParam(name: string) {
  */
 export function FileParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.file, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.file, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @FileParam Decorator declaration.');
     };
 }
@@ -693,14 +698,16 @@ export function FileParam(name: string) {
  */
 export function FilesParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.files, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.files, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @FilesParam Decorator declaration.');
     };
 }
@@ -731,14 +738,16 @@ export function FilesParam(name: string) {
  */
 export function QueryParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.query, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.query, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @QueryParam Decorator declaration.');
     };
 }
@@ -764,14 +773,16 @@ export function QueryParam(name: string) {
  */
 export function HeaderParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.header, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.header, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @HeaderParam Decorator declaration.');
     };
 }
@@ -797,14 +808,16 @@ export function HeaderParam(name: string) {
  */
 export function CookieParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.cookie, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.cookie, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @CookieParam Decorator declaration.');
     };
 }
@@ -831,14 +844,16 @@ export function CookieParam(name: string) {
  */
 export function FormParam(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.form, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.form, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @FormParam Decorator declaration.');
     };
 }
@@ -866,14 +881,16 @@ export function FormParam(name: string) {
  */
 export function Param(name: string) {
     return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        const newArgs = args.concat([metadata.ParamType.param, name]);
-        if (args.length < 3 || typeof args[2] === 'undefined') {
-            return processDecoratedProperty.apply(this, newArgs);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return processDecoratedParameter.apply(this, newArgs);
+        name = name ? name.trim() : '';
+        if (name) {
+            args = _.without(args, undefined);
+            const newArgs = args.concat([metadata.ParamType.param, name]);
+            if (args.length < 3 || typeof args[2] === 'undefined') {
+                return processDecoratedProperty.apply(this, newArgs);
+            } else if (args.length === 3 && typeof args[2] === 'number') {
+                return processDecoratedParameter.apply(this, newArgs);
+            }
         }
-
         throw new Error('Invalid @Param Decorator declaration.');
     };
 }
