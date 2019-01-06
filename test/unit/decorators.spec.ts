@@ -415,7 +415,6 @@ describe('Decorators', () => {
                     .calledOnceWithExactly('design:paramtypes', TestService, methodName);
 
                 expect(serviceMethod.httpMethod).to.be.equals(test.method);
-                expect(serviceMethod.httpMethod).to.be.equals(test.method);
             });
 
             it(`should bind the HTTP ${test.name} verb to one service method with a body param`, () => {
@@ -537,6 +536,28 @@ describe('Decorators', () => {
                 expect(testMethod.acceptMultiTypedParam).to.be.false;
             });
 
+            it(`should bind the HTTP ${test.name} verb to one service method with a multiples params`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(`${name}1`, String, metadata.ParamType.cookie),
+                    new metadata.MethodParam(`${name}2`, String, metadata.ParamType.path),
+                    new metadata.MethodParam(`${name}3`, String, metadata.ParamType.param),
+                    new metadata.MethodParam(`${name}4`, String, metadata.ParamType.body)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.true;
+                expect(testMethod.mustParseCookies).to.be.true;
+                expect(testMethod.mustParseForms).to.be.false;
+                expect(testMethod.acceptMultiTypedParam).to.be.true;
+            });
+
             it('should throw an error if more than one body param', () => {
                 const methodName = 'test';
                 const name = 'para-name';
@@ -554,7 +575,7 @@ describe('Decorators', () => {
                 }).to.throw('Can not use more than one body parameter on the same method.');
             });
 
-            it('should throw an error if more has a body and a form param', () => {
+            it('should throw an error if has a body and a form param', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
@@ -571,7 +592,7 @@ describe('Decorators', () => {
                 }).to.throw('Can not use form parameters with a body parameter on the same method.');
             });
 
-            it('should throw an error if more has a form and a body param', () => {
+            it('should throw an error if has a form and a body param', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
@@ -586,11 +607,34 @@ describe('Decorators', () => {
                     decorators[test.name](TestService, methodName,
                         Object.getOwnPropertyDescriptor(TestService, methodName));
                 }).to.throw('Can not use form parameters with a body parameter on the same method.');
-            });            // it('should throw an error if misused', () => {
-            //     expect(() => {
-            //         decorators[test.name](TestService, 'param1', 0, 'extra-param');
-            //     }).to.throw(`Invalid @${test.name} Decorator declaration.`);
-            // });
+            });
+        });
+    });
+
+    describe('Multiple Verb Decorators', () => {
+        it(`should throw an error if present on same method`, () => {
+            const methodName = 'test';
+
+            expect(() => {
+                decorators.GET(TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+                decorators.POST(TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+            }).to.throw('Method is already annotated with @GET. You can only map a method to one HTTP verb.');
+        });
+
+        it(`should ignore duplications of the same HTTP verb annotation`, () => {
+            const methodName = 'test';
+
+            decorators.GET(TestService, methodName,
+                Object.getOwnPropertyDescriptor(TestService, methodName));
+            decorators.GET(TestService, methodName,
+                Object.getOwnPropertyDescriptor(TestService, methodName));
+
+            expect(reflectGetOwnMetadata).to.have.been
+                .calledOnceWithExactly('design:paramtypes', TestService, methodName);
+
+            expect(serviceMethod.httpMethod).to.be.equals(HttpMethod.GET);
         });
     });
 

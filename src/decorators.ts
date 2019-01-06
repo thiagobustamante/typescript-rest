@@ -1065,13 +1065,14 @@ function processHttpVerb(target: any, propertyKey: string,
     httpMethod: HttpMethod) {
     const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
-        if (serviceMethod.httpMethod && serviceMethod.httpMethod !== httpMethod) {
+        if (!serviceMethod.httpMethod) {
+            serviceMethod.httpMethod = httpMethod;
+            processServiceMethod(target, propertyKey, serviceMethod);
+        } else if (serviceMethod.httpMethod !== httpMethod) {
             throw new Error('Method is already annotated with @' +
                 HttpMethod[serviceMethod.httpMethod] +
                 '. You can only map a method to one HTTP verb.');
         }
-        serviceMethod.httpMethod = httpMethod;
-        processServiceMethod(target, propertyKey, serviceMethod);
     }
 }
 
