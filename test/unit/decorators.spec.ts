@@ -285,147 +285,36 @@ describe('Decorators', () => {
         });
     });
 
-    describe('Context Decorator', () => {
-        it('should bind the request context to one service property', () => {
-            const propertyName = 'property';
-            decorators.Context(TestService, propertyName);
+    [
+        { name: 'Context', paramType: metadata.ParamType.context },
+        { name: 'ContextRequest', paramType: metadata.ParamType.context_request },
+        { name: 'ContextResponse', paramType: metadata.ParamType.context_response },
+        { name: 'ContextNext', paramType: metadata.ParamType.context_next },
+        { name: 'ContextLanguage', paramType: metadata.ParamType.context_accept_language },
+        { name: 'ContextAccept', paramType: metadata.ParamType.context_accept }
+    ].forEach(test => {
+        describe(`${test.name} Decorator`, () => {
+            it(`should bind the @${test.name} to one service property`, () => {
+                const propertyName = 'property';
+                decorators[test.name](TestService, propertyName);
 
-            validateDecoratedProperty(propertyName, metadata.ParamType.context, null);
-        });
+                validateDecoratedProperty(propertyName, test.paramType, null);
+            });
 
-        it('should bind the request context to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.Context(TestService, paramName, 0);
+            it(`should bind the @${test.name} to one method parameter`, () => {
+                const paramName = 'param1';
+                reflectGetOwnMetadata.returns([ServiceContext]);
+                decorators[test.name](TestService, paramName, 0);
 
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context, 0, null);
-        });
+                validateDecoratedParameter(paramName, 1);
+                validateServiceMethodParameter(ServiceContext, test.paramType, 0, null);
+            });
 
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.Context(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @Context Decorator declaration.');
-        });
-    });
-
-    describe('ContextRequest Decorator', () => {
-        it('should bind the current request to one service property', () => {
-            const propertyName = 'property';
-            decorators.ContextRequest(TestService, propertyName);
-
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_request, null);
-        });
-
-        it('should bind the current request to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.ContextRequest(TestService, paramName, 0);
-
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context_request, 0, null);
-        });
-
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.ContextRequest(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @ContextRequest Decorator declaration.');
-        });
-    });
-
-    describe('ContextResponse Decorator', () => {
-        it('should bind the current response to one service property', () => {
-            const propertyName = 'property';
-            decorators.ContextResponse(TestService, propertyName);
-
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_response, null);
-        });
-
-        it('should bind the current response to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.ContextResponse(TestService, paramName, 0);
-
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context_response, 0, null);
-        });
-
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.ContextResponse(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @ContextResponse Decorator declaration.');
-        });
-    });
-
-    describe('ContextNext Decorator', () => {
-        it('should bind the next function to one service property', () => {
-            const propertyName = 'property';
-            decorators.ContextNext(TestService, propertyName);
-
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_next, null);
-        });
-
-        it('should bind the next function to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.ContextNext(TestService, paramName, 0);
-
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context_next, 0, null);
-        });
-
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.ContextNext(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @ContextNext Decorator declaration.');
-        });
-    });
-
-    describe('ContextLanguage Decorator', () => {
-        it('should bind the context language to one service property', () => {
-            const propertyName = 'property';
-            decorators.ContextLanguage(TestService, propertyName);
-
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept_language, null);
-        });
-
-        it('should bind the context language to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.ContextLanguage(TestService, paramName, 0);
-
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context_accept_language, 0, null);
-        });
-
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.ContextLanguage(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @ContextLanguage Decorator declaration.');
-        });
-    });
-
-    describe('ContextAccept Decorator', () => {
-        it('should bind the context accept to one service property', () => {
-            const propertyName = 'property';
-            decorators.ContextAccept(TestService, propertyName);
-
-            validateDecoratedProperty(propertyName, metadata.ParamType.context_accept, null);
-        });
-
-        it('should bind the context accept to one method parameter', () => {
-            const paramName = 'param1';
-            reflectGetOwnMetadata.returns([ServiceContext]);
-            decorators.ContextAccept(TestService, paramName, 0);
-
-            validateDecoratedParameter(paramName, 1);
-            validateServiceMethodParameter(ServiceContext, metadata.ParamType.context_accept, 0, null);
-        });
-
-        it('should throw an error if misused', () => {
-            expect(() => {
-                decorators.ContextAccept(TestService, 'param1', 0, 'extra-param');
-            }).to.throw('Invalid @ContextAccept Decorator declaration.');
+            it('should throw an error if misused', () => {
+                expect(() => {
+                    decorators[test.name](TestService, 'param1', 0, 'extra-param');
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
         });
     });
 
