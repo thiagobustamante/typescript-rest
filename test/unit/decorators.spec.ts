@@ -329,7 +329,7 @@ describe('Decorators', () => {
         { name: 'Param', paramType: metadata.ParamType.param }
     ].forEach(test => {
         describe(`${test.name} Decorator`, () => {
-            it(`should bind a ${test.name} to one service property`, () => {
+            it(`should bind a @${test.name} to one service property`, () => {
                 const propertyName = 'property';
                 const name = 'name';
                 decorators[test.name](name)(TestService, propertyName);
@@ -337,7 +337,7 @@ describe('Decorators', () => {
                 validateDecoratedProperty(propertyName, test.paramType, name);
             });
 
-            it(`should bind a ${test.name} to one method parameter`, () => {
+            it(`should bind a @${test.name} to one method parameter`, () => {
                 const paramName = 'param1';
                 const name = 'name';
                 reflectGetOwnMetadata.returns([ServiceContext]);
