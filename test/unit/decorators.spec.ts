@@ -9,7 +9,7 @@ import 'reflect-metadata';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
 import * as metadata from '../../src/metadata';
-import { ServiceContext } from '../../src/server-types';
+import { HttpMethod, ServiceContext } from '../../src/server-types';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -390,6 +390,207 @@ describe('Decorators', () => {
             expect(() => {
                 decorators.Abstract(TestService, 'extra-param');
             }).to.throw(`Invalid @Abstract Decorator declaration.`);
+        });
+    });
+
+    [
+        { name: 'GET', method: HttpMethod.GET },
+        { name: 'POST', method: HttpMethod.POST },
+        { name: 'PUT', method: HttpMethod.PUT },
+        { name: 'DELETE', method: HttpMethod.DELETE },
+        { name: 'HEAD', method: HttpMethod.HEAD },
+        { name: 'OPTIONS', method: HttpMethod.OPTIONS },
+        { name: 'PATCH', method: HttpMethod.PATCH }
+    ].forEach(test => {
+        describe(`${test.name} Decorator`, () => {
+            it(`should bind the HTTP ${test.name} verb to one service method`, () => {
+                const methodName = 'test';
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(serverStub.registerServiceMethod).to.have.been
+                    .calledOnceWithExactly(TestService.constructor, methodName);
+                expect(reflectGetOwnMetadata).to.have.been
+                    .calledOnceWithExactly('design:paramtypes', TestService, methodName);
+
+                expect(serviceMethod.httpMethod).to.be.equals(test.method);
+                expect(serviceMethod.httpMethod).to.be.equals(test.method);
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a body param`, () => {
+                const methodName = 'test';
+
+                reflectGetOwnMetadata.returns([String]);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(serviceMethod.mustParseBody).to.be.true;
+                expect(serviceMethod.mustParseCookies).to.be.false;
+                expect(serviceMethod.mustParseForms).to.be.false;
+                expect(serviceMethod.acceptMultiTypedParam).to.be.false;
+                expect(serviceMethod.parameters).to.have.length(1);
+                expect(serviceMethod.parameters[0].name).to.be.null;
+                expect(serviceMethod.parameters[0].type).to.be.equals(String);
+                expect(serviceMethod.parameters[0].paramType).to.be.equals(metadata.ParamType.body);
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a cookie param`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(name, String, metadata.ParamType.cookie)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.false;
+                expect(testMethod.mustParseCookies).to.be.true;
+                expect(testMethod.mustParseForms).to.be.false;
+                expect(testMethod.acceptMultiTypedParam).to.be.false;
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a file param`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(name, String, metadata.ParamType.file)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.false;
+                expect(testMethod.mustParseCookies).to.be.false;
+                expect(testMethod.mustParseForms).to.be.false;
+                expect(testMethod.acceptMultiTypedParam).to.be.false;
+                expect(testMethod.files).to.have.length(1);
+                expect(testMethod.files[0].name).to.be.equals(name);
+                expect(testMethod.files[0].singleFile).to.be.true;
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a files param`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(name, String, metadata.ParamType.files)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.false;
+                expect(testMethod.mustParseCookies).to.be.false;
+                expect(testMethod.mustParseForms).to.be.false;
+                expect(testMethod.acceptMultiTypedParam).to.be.false;
+                expect(testMethod.files).to.have.length(1);
+                expect(testMethod.files[0].name).to.be.equals(name);
+                expect(testMethod.files[0].singleFile).to.be.false;
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a multi type param`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(name, String, metadata.ParamType.param)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.false;
+                expect(testMethod.mustParseCookies).to.be.false;
+                expect(testMethod.mustParseForms).to.be.false;
+                expect(testMethod.acceptMultiTypedParam).to.be.true;
+            });
+
+            it(`should bind the HTTP ${test.name} verb to one service method with a form param`, () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters.push(
+                    new metadata.MethodParam(name, String, metadata.ParamType.form)
+                );
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                decorators[test.name](TestService, methodName,
+                    Object.getOwnPropertyDescriptor(TestService, methodName));
+
+                expect(testMethod.mustParseBody).to.be.false;
+                expect(testMethod.mustParseCookies).to.be.false;
+                expect(testMethod.mustParseForms).to.be.true;
+                expect(testMethod.acceptMultiTypedParam).to.be.false;
+            });
+
+            it('should throw an error if more than one body param', () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.body));
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.body));
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                expect(() => {
+                    decorators[test.name](TestService, methodName,
+                        Object.getOwnPropertyDescriptor(TestService, methodName));
+                }).to.throw('Can not use more than one body parameter on the same method.');
+            });
+
+            it('should throw an error if more has a body and a form param', () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.body));
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.form));
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                expect(() => {
+                    decorators[test.name](TestService, methodName,
+                        Object.getOwnPropertyDescriptor(TestService, methodName));
+                }).to.throw('Can not use form parameters with a body parameter on the same method.');
+            });
+
+            it('should throw an error if more has a form and a body param', () => {
+                const methodName = 'test';
+                const name = 'para-name';
+
+                const testMethod = new metadata.ServiceMethod();
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.form));
+                testMethod.parameters
+                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.body));
+                serverStub.registerServiceMethod.returns(testMethod);
+
+                expect(() => {
+                    decorators[test.name](TestService, methodName,
+                        Object.getOwnPropertyDescriptor(TestService, methodName));
+                }).to.throw('Can not use form parameters with a body parameter on the same method.');
+            });            // it('should throw an error if misused', () => {
+            //     expect(() => {
+            //         decorators[test.name](TestService, 'param1', 0, 'extra-param');
+            //     }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            // });
         });
     });
 
