@@ -914,9 +914,15 @@ export function Param(name: string) {
  * No endpoint will be registered for PeopleService. It is useful if you only plain that subclasses of
  * PeopleService exposes the getPeople method.
  */
-export function Abstract(target: Function) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
-    classData.isAbstract = true;
+export function Abstract(...args: Array<any>) {
+    args = _.without(args, undefined);
+    if (args.length === 1) {
+        const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(args[0]);
+        classData.isAbstract = true;
+    }
+    else {
+        throw new Error('Invalid @Abstract Decorator declaration.');
+    }
 }
 
 /**

@@ -378,6 +378,21 @@ describe('Decorators', () => {
             });
         });
     });
+
+    describe('Abstract Decorator', () => {
+        it('should bind a class, markint it as Abstract', () => {
+            decorators.Abstract(TestService);
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.isAbstract).to.be.true;
+        });
+
+        it('should throw an error if misused', () => {
+            expect(() => {
+                decorators.Abstract(TestService, 'extra-param');
+            }).to.throw(`Invalid @Abstract Decorator declaration.`);
+        });
+    });
+
     function validateDecoratedProperty(propertyName: string, paramType: metadata.ParamType, name: string) {
         expect(serverStub.registerServiceClass).to.have.been
             .calledOnceWithExactly(TestService.constructor);
