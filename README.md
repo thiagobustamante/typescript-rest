@@ -1,6 +1,7 @@
 [![npm version](https://badge.fury.io/js/typescript-rest.svg)](https://badge.fury.io/js/typescript-rest)
 [![Build Status](https://travis-ci.org/thiagobustamante/typescript-rest.svg?branch=master)](https://travis-ci.org/thiagobustamante/typescript-rest)
 [![Coverage Status](https://codecov.io/gh/thiagobustamante/typescript-rest/branch/master/graph/badge.svg)](https://codecov.io/gh/thiagobustamante/typescript-rest)
+[![Mutation testing badge](https://badge.stryker-mutator.io/github.com/thiagobustamante/typescript-rest/master)](https://thiagobustamante.github.io/typescript-rest/mutation/html/)
 [![Known Vulnerabilities](https://snyk.io/test/github/thiagobustamante/typescript-rest/badge.svg?targetFile=package.json)](https://snyk.io/test/github/thiagobustamante/typescript-rest?targetFile=package.json)
 [![BCH compliance](https://bettercodehub.com/edge/badge/thiagobustamante/typescript-rest?branch=master)](https://bettercodehub.com/)
 

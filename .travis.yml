@@ -1,15 +1,32 @@
 language: node_js
 node_js:
 - '6'
+- '8'
+- '10'
 script: 
+  - npm run test:mutation
   - npm run test:coverage
   - codecov -f ./reports/coverage/*.json
 deploy:
-  provider: npm
-  email: thiago@cruxframework.org
-  skip_cleanup: true
-  api_key:
-    secure: JgJhhsQvA9+lsDX6Krvh6TT+9wES53akhuhMkntcwNO8YHL4Mkl7y3sqCLnR92ri+AuIsmm/FZ5hxClLEIKPDkObLn4AXpI1WP4cAuh1s6TyUjqgOII3gx3lV0tZhLqol2bD9fIp/x9gaONGQCRHTVgWDVFP611U86XJ7fZxyUtpIqVxVTTxFCTv0BkipMl/mjGrb3YquF2C0S6gyN6lXiBfsN0Chf+hogOvSRSnnK2ObhGcvKZ2IF4NYHTs1X4AD+iRsFVmYGxIY52YGWQDyICDheOgEJjQOWl1+ca3FPvKS6lQzYpkhpsCRAGa2lquWWQeUKh8b2buoKaQePNcQqowdOQGGHmBpirUbomnQlKPLqq3Jmc2stnp12YQh9JbSvVQkrYKM3V/j2plaPzbrWoSepzxfCmzy9LRl2kBhcnKiZdciXkIqwHyqXHQL9FSyxrDDHrkFIVJAQwFkX5rGvHB9x4PRbV+orJym+rj+kSLXSD0j3G0k6CcGyW4OzQr3yOCSETRiat05aX7V+77Bp33BMNxH8m8gKFHuSwvWfHaRpQngwqR1ziVZ4XTbe4lCF2wLR0h6JdR03JrSjhZgEpAjfwhKkWjAMBN1VUOJP5gTIGZF0k8oDPTH6OTOl9B6q0L5RsFsJs83tXehwPFtqQdfJ6mXcXked5o2rbB7SE=
+  provider: pages
+  skip-cleanup: true
+  local-dir: reports
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
   on:
-    tags: true
-    repo: thiagobustamante/typescript-rest
+    branch: master
+    node: '10'
+jobs:
+  include:
+  - stage: npm release
+    node_js: '10'
+    script: npm run build
+    deploy:
+      provider: npm
+      email: thiago@cruxframework.org
+      skip_cleanup: true
+      api_key:
+        secure: JgJhhsQvA9+lsDX6Krvh6TT+9wES53akhuhMkntcwNO8YHL4Mkl7y3sqCLnR92ri+AuIsmm/FZ5hxClLEIKPDkObLn4AXpI1WP4cAuh1s6TyUjqgOII3gx3lV0tZhLqol2bD9fIp/x9gaONGQCRHTVgWDVFP611U86XJ7fZxyUtpIqVxVTTxFCTv0BkipMl/mjGrb3YquF2C0S6gyN6lXiBfsN0Chf+hogOvSRSnnK2ObhGcvKZ2IF4NYHTs1X4AD+iRsFVmYGxIY52YGWQDyICDheOgEJjQOWl1+ca3FPvKS6lQzYpkhpsCRAGa2lquWWQeUKh8b2buoKaQePNcQqowdOQGGHmBpirUbomnQlKPLqq3Jmc2stnp12YQh9JbSvVQkrYKM3V/j2plaPzbrWoSepzxfCmzy9LRl2kBhcnKiZdciXkIqwHyqXHQL9FSyxrDDHrkFIVJAQwFkX5rGvHB9x4PRbV+orJym+rj+kSLXSD0j3G0k6CcGyW4OzQr3yOCSETRiat05aX7V+77Bp33BMNxH8m8gKFHuSwvWfHaRpQngwqR1ziVZ4XTbe4lCF2wLR0h6JdR03JrSjhZgEpAjfwhKkWjAMBN1VUOJP5gTIGZF0k8oDPTH6OTOl9B6q0L5RsFsJs83tXehwPFtqQdfJ6mXcXked5o2rbB7SE=
+      on:
+        tags: true
+        repo: thiagobustamante/typescript-rest
