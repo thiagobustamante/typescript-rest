@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html><head><title>server-types.ts
+ - Stryker report</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="strykerResources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="strykerResources/highlightjs/styles/default.css">
+<link rel="stylesheet" href="strykerResources/stryker.css"></head>
+<body><img class="stryker-image" alt="Stryker" src="strykerResources/stryker-80x80.png">
+<div class="container-fluid"><div class="row"><div class="col-lg-12"><h1 class="display-4">server-types.ts
+ 
+<small class="text-muted">- Stryker report</small></h1></div></div>
+<ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html">All files</a></li>
+<li class="breadcrumb-item active">server-types.ts</li></ol>
+<div class="row"><div class="col-lg-12"><div class="row"><div class="col-sm-11"><table class="table table-sm table-hover table-bordered table-no-top"><thead><tr><th style="width: 20%"><div><span>File / Directory</span></div></th>
+<th colspan="2"><div><span>Mutation score</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Killed</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Survived</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Timeout</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># No coverage</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Runtime errors</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Transpile errors</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total detected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total undetected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total mutants</span></div></th></tr></thead>
+<tbody><tr><td>server-types.ts</td>
+<td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
+%</div></div></td>
+<th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">1</td>
+<td class="text-center">0</td>
+<th class="text-center">0</th>
+<th class="text-center">0</th>
+<th class="text-center">1</th></tr>
+</tbody></table></div></div>
+<div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
+
+
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
+RuntimeError
+ 
+(1)</label></div>
+
+<a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
+<pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
+
+import * as express from &#039;express&#039;;
+
+/**
+ * Limits for file uploads
+ */
+export interface FileLimits {
+    /** Max field name size (Default: 100 bytes) */
+    fieldNameSize?: number;
+    /** Max field value size (Default: 1MB) */
+    fieldSize?: number;
+    /** Max number of non- file fields (Default: Infinity) */
+    fields?: number;
+    /** For multipart forms, the max file size (in bytes)(Default: Infinity) */
+    fileSize?: number;
+    /** For multipart forms, the max number of file fields (Default: Infinity) */
+    files?: number;
+    /** For multipart forms, the max number of parts (fields + files)(Default: Infinity) */
+    parts?: number;
+    /** For multipart forms, the max number of header key=&gt; value pairs to parse Default: 2000(same as node&#039;s http). */
+    headerPairs?: number;
+}
+
+/**
+ * The supported HTTP methods.
+ */
+export enum HttpMethod {
+    GET = 1,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    OPTIONS,
+    PATCH
+}
+
+/**
+ * Represents the current context of the request being handled.
+ */
+export class ServiceContext {
+    /**
+     * The resolved language to be used in the current request handling.
+     */
+    public language: string;
+    /**
+     * The preferred media type to be used in the current request handling.
+     */
+    public accept: string;
+    /**
+     * The request object.
+     */
+    public request: express.Request;
+    /**
+     * The response object
+     */
+    public response: express.Response;
+    /**
+     * The next function. It can be used to delegate to the next middleware
+     * registered the processing of the current request.
+     */
+    public next: express.NextFunction;
+}
+
+/**
+ * The Base class for all HTTP errors
+ */
+export abstract class HttpError extends Error {
+    constructor(name: string,
+        public statusCode: number,
+        public message: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
+        super(message);
+        this.name = name;
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Used to create a reference to a resource.
+ */
+export abstract class ReferencedResource&lt;T&gt; {
+    /**
+     * Constructor. Receives the location of the resource.
+     * @param location To be added to the Location header on response
+     * @param statusCode the response status code to be sent
+     * @param body the body to be sent
+     */
+    constructor(public location: string, public statusCode: number, public body?: T) { }
+}
+
+/**
+ * The factory used to instantiate the object services
+ */
+export interface ServiceFactory {
+    /**
+     * Create a new service object. Called before each request handling.
+     */
+    create: (serviceClass: Function, context: ServiceContext) =&gt; any;
+    /**
+     * Return the type used to handle requests to the target service.
+     * By default, returns the serviceClass received, but you can use this
+     * to implement IoC integrations.
+     */
+    getTargetClass: (serviceClass: Function) =&gt; FunctionConstructor;
+}
+
+/**
+ * An optional authenticator for rest services
+ */
+export interface ServiceAuthenticator {
+    /**
+     * Get the user list of roles.
+     */
+    getRoles: (req: express.Request) =&gt; Array&lt;string&gt;;
+    /**
+     * Initialize the authenticator
+     */
+    initialize(router: express.Router): void;
+    /**
+     * Retrieve the middleware used to authenticate users.
+     */
+    getMiddleware(): express.RequestHandler;
+}
+
+export type ServicePreProcessor = (req: express.Request) =&gt; void;
+export type ParameterConverter = (paramValue: any) =&gt; any;</span>
+</code></pre></div>
+<div class="col-lg-5"><table class="table table-sm table-hover mutant-table"><thead><tr><th>#</th>
+<th>Mutator</th>
+<th>State</th>
+<th>Location</th>
+<th>Original</th>
+<th>Replacement</th></tr></thead>
+<tbody><tr><th>0</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>70
+:
+32</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr></tbody></table></div></div></div></div>
+<footer>Generated with stryker-html-reporter generator. Visit the 
+<a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
+<script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
+<script src="strykerResources/jquery/dist/jquery.slim.min.js" defer="defer"></script>
+<script src="strykerResources/bootstrap/js/bootstrap.min.js" defer="defer"></script>
+<script src="strykerResources/stryker.js" defer="defer"></script></body></html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html><head><title>server-errors.ts
+ - Stryker report</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="strykerResources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="strykerResources/highlightjs/styles/default.css">
+<link rel="stylesheet" href="strykerResources/stryker.css"></head>
+<body><img class="stryker-image" alt="Stryker" src="strykerResources/stryker-80x80.png">
+<div class="container-fluid"><div class="row"><div class="col-lg-12"><h1 class="display-4">server-errors.ts
+ 
+<small class="text-muted">- Stryker report</small></h1></div></div>
+<ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html">All files</a></li>
+<li class="breadcrumb-item active">server-errors.ts</li></ol>
+<div class="row"><div class="col-lg-12"><div class="row"><div class="col-sm-11"><table class="table table-sm table-hover table-bordered table-no-top"><thead><tr><th style="width: 20%"><div><span>File / Directory</span></div></th>
+<th colspan="2"><div><span>Mutation score</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Killed</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Survived</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Timeout</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># No coverage</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Runtime errors</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Transpile errors</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total detected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total undetected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total mutants</span></div></th></tr></thead>
+<tbody><tr><td>server-errors.ts</td>
+<td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
+%</div></div></td>
+<th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">1</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">48</td>
+<td class="text-center">0</td>
+<th class="text-center">1</th>
+<th class="text-center">0</th>
+<th class="text-center">49</th></tr>
+</tbody></table></div></div>
+<div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="1" type="checkbox">
+Killed
+ 
+(1)</label></div>
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
+RuntimeError
+ 
+(48)</label></div>
+
+<a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
+<pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
+
+import { HttpError } from &#039;./server-types&#039;;
+
+/**
+ * Represents a BAD REQUEST error. The request could not be understood by the
+ * server due to malformed syntax. The client SHOULD NOT repeat the request
+ * without modifications.
+ */
+export class BadRequestError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">&quot;&quot;</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">&#039;BadRequestError&#039;</span></span><span class="bg-null">, 400, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">&amp;&amp;</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">&quot;&quot;</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">&#039;Bad Request&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, BadRequestError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents an UNAUTHORIZED error. The request requires user authentication. The response
+ * MUST include a WWW-Authenticate header field containing a challenge applicable to the
+ * requested resource.
+ */
+export class UnauthorizedError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">{}</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">&quot;&quot;</span><span class="stryker-original-code" data-mutant="5"><span class="bg-null">&#039;UnauthorizedError&#039;</span></span><span class="bg-null">, 401, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">&amp;&amp;</span><span class="stryker-original-code" data-mutant="6"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">&quot;&quot;</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">&#039;Unauthorized&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, UnauthorizedError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a FORBIDDEN error. The server understood the request, but is refusing to
+ * fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
+ */
+export class ForbiddenError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">{}</span><span class="stryker-original-code" data-mutant="8"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">&quot;&quot;</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">&#039;ForbiddenError&#039;</span></span><span class="bg-null">, 403, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">&amp;&amp;</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">&quot;&quot;</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">&#039;Forbidden&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, ForbidenError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * @deprecated use ForbiddenError instead
+ */
+export class ForbidenError extends ForbiddenError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">{}</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">{
+        super(message);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a NOT FOUND error. The server has not found anything matching
+ * the Request-URI. No indication is given of whether the condition is temporary
+ * or permanent. The 410 (GoneError) status code SHOULD be used if the server knows,
+ * through some internally configurable mechanism, that an old resource is permanently
+ * unavailable and has no forwarding address.
+ *
+ * This error is commonly used when
+ * the server does not wish to reveal exactly why the request has been refused,
+ * or when no other response is applicable.
+ */
+export class NotFoundError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">{}</span><span class="stryker-original-code" data-mutant="13"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">&quot;&quot;</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">&#039;NotFoundError&#039;</span></span><span class="bg-null">, 404, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">&amp;&amp;</span><span class="stryker-original-code" data-mutant="15"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">&quot;&quot;</span><span class="stryker-original-code" data-mutant="16"><span class="bg-null">&#039;Not Found&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, NotFoundError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a METHOD NOT ALLOWED error. The method specified in the Request-Line is not allowed for
+ * the resource identified by the Request-URI. The response MUST include an Allow header
+ * containing a list of valid methods for the requested resource.
+ */
+export class MethodNotAllowedError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">{}</span><span class="stryker-original-code" data-mutant="17"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">&quot;&quot;</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">&#039;MethodNotAllowedError&#039;</span></span><span class="bg-null">, 405, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">&amp;&amp;</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">&quot;&quot;</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">&#039;Method Not Allowed&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, MethodNotAllowedError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a NOT ACCEPTABLE error. The resource identified by the request is only capable of
+ * generating response entities which have content characteristics not acceptable according
+ * to the accept headers sent in the request.
+ */
+export class NotAcceptableError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">{}</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">&quot;&quot;</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">&#039;NotAcceptableError&#039;</span></span><span class="bg-null">, 406, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">&amp;&amp;</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">&quot;&quot;</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">&#039;Not Acceptable&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, NotAcceptableError.prototype);
+    }</span></span><span class="bg-null">
+}
+/**
+ * Represents a CONFLICT error. The request could not be completed due to a
+ * conflict with the current state of the resource.
+ */
+export class ConflictError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">{}</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">&quot;&quot;</span><span class="stryker-original-code" data-mutant="26"><span class="bg-null">&#039;ConflictError&#039;</span></span><span class="bg-null">, 409, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">&amp;&amp;</span><span class="stryker-original-code" data-mutant="27"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">&quot;&quot;</span><span class="stryker-original-code" data-mutant="28"><span class="bg-null">&#039;Conflict&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, ConflictError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a GONE error. The requested resource is no longer available at the server
+ * and no forwarding address is known. This condition is expected to be considered
+ * permanent. Clients with link editing capabilities SHOULD delete references to
+ * the Request-URI after user approval. If the server does not know, or has
+ * no facility to determine, whether or not the condition is permanent, the
+ * error 404 (NotFoundError) SHOULD be used instead. This response is
+ * cacheable unless indicated otherwise.
+ */
+export class GoneError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">{}</span><span class="stryker-original-code" data-mutant="29"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">&quot;&quot;</span><span class="stryker-original-code" data-mutant="30"><span class="bg-null">&#039;GoneError&#039;</span></span><span class="bg-null">, 410, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">&amp;&amp;</span><span class="stryker-original-code" data-mutant="31"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">&quot;&quot;</span><span class="stryker-original-code" data-mutant="32"><span class="bg-null">&#039;Gone&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, GoneError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents an UNSUPPORTED MEDIA TYPE error. The server is refusing to service the request
+ * because the entity of the request is in a format not supported by the requested resource
+ * for the requested method.
+ */
+export class UnsupportedMediaTypeError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="33"><span class="badge badge-secondary">33</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="33">{}</span><span class="stryker-original-code" data-mutant="33"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="34"><span class="badge badge-secondary">34</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="34">&quot;&quot;</span><span class="stryker-original-code" data-mutant="34"><span class="bg-null">&#039;UnsupportedMediaTypeError&#039;</span></span><span class="bg-null">, 415, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: Killed" data-mutant-status-annotation="success" data-mutant-status="1" data-mutant="35"><span class="badge badge-success">35</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="35">&amp;&amp;</span><span class="stryker-original-code" data-mutant="35"><span class="bg-success-light">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="36"><span class="badge badge-secondary">36</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="36">&quot;&quot;</span><span class="stryker-original-code" data-mutant="36"><span class="bg-null">&#039;Unsupported Media Type&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, UnsupportedMediaTypeError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents an INTERNAL SERVER error. The server encountered an unexpected condition
+ * which prevented it from fulfilling the request.
+ */
+export class InternalServerError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="37"><span class="badge badge-secondary">37</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="37">{}</span><span class="stryker-original-code" data-mutant="37"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="38"><span class="badge badge-secondary">38</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="38">&quot;&quot;</span><span class="stryker-original-code" data-mutant="38"><span class="bg-null">&#039;InternalServerError&#039;</span></span><span class="bg-null">, 500, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="39"><span class="badge badge-secondary">39</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="39">&amp;&amp;</span><span class="stryker-original-code" data-mutant="39"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="40"><span class="badge badge-secondary">40</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="40">&quot;&quot;</span><span class="stryker-original-code" data-mutant="40"><span class="bg-null">&#039;Internal Server Error&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, InternalServerError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a NOT IMPLEMENTED error. The server does not support the functionality required
+ *  to fulfill the request. This is the appropriate response when the server does not recognize
+ * the request method and is not capable of supporting it for any resource.
+ */
+export class NotImplementedError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="41"><span class="badge badge-secondary">41</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="41">{}</span><span class="stryker-original-code" data-mutant="41"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="42"><span class="badge badge-secondary">42</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="42">&quot;&quot;</span><span class="stryker-original-code" data-mutant="42"><span class="bg-null">&#039;NotImplementedError&#039;</span></span><span class="bg-null">, 501, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="43"><span class="badge badge-secondary">43</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="43">&amp;&amp;</span><span class="stryker-original-code" data-mutant="43"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="44"><span class="badge badge-secondary">44</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="44">&quot;&quot;</span><span class="stryker-original-code" data-mutant="44"><span class="bg-null">&#039;Not Implemented&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, NotImplementedError.prototype);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Represents a UNPROCESSABLE ENTITY error. The server understands the content type of the request entity
+ * (hence a 415 Unsupported Media Type status code is inappropriate), and the syntax of the request entity is correct
+ * (thus a 400 Bad Request status code is inappropriate) but was unable to process the contained instructions.
+ */
+export class UnprocessableEntityError extends HttpError {
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="45"><span class="badge badge-secondary">45</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="45">{}</span><span class="stryker-original-code" data-mutant="45"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="46"><span class="badge badge-secondary">46</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="46">&quot;&quot;</span><span class="stryker-original-code" data-mutant="46"><span class="bg-null">&#039;UnprocessableEntityError&#039;</span></span><span class="bg-null">, 422, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="47"><span class="badge badge-secondary">47</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="47">&amp;&amp;</span><span class="stryker-original-code" data-mutant="47"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="48"><span class="badge badge-secondary">48</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="48">&quot;&quot;</span><span class="stryker-original-code" data-mutant="48"><span class="bg-null">&#039;Unprocessable Entity&#039;</span></span><span class="bg-null">);
+        Object.setPrototypeOf(this, UnprocessableEntityError.prototype);
+    }</span></span><span class="bg-null">
+}</span>
+</code></pre></div>
+<div class="col-lg-5"><table class="table table-sm table-hover mutant-table"><thead><tr><th>#</th>
+<th>Mutator</th>
+<th>State</th>
+<th>Location</th>
+<th>Original</th>
+<th>Replacement</th></tr></thead>
+<tbody><tr><th>0</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>10
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>1</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>11
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>2</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>11
+:
+46</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>3</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>11
+:
+49</td>
+<td><code>'           '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>4</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>22
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>5</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>23
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>6</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>23
+:
+48</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>7</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>23
+:
+51</td>
+<td><code>'            '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>8</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>33
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>9</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>34
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>10</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>34
+:
+45</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>11</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>34
+:
+48</td>
+<td><code>'         '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>12</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>43
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>13</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>60
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>14</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>61
+:
+14</td>
+<td><code>'             '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>15</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>61
+:
+44</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>16</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>61
+:
+47</td>
+<td><code>'         '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>17</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>72
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>18</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>73
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>19</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>73
+:
+52</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>20</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>73
+:
+55</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>21</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>84
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>22</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>85
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>23</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>85
+:
+49</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>24</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>85
+:
+52</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>25</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>94
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>26</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>95
+:
+14</td>
+<td><code>'             '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>27</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>95
+:
+44</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>28</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>95
+:
+47</td>
+<td><code>'        '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>29</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>110
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>30</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>111
+:
+14</td>
+<td><code>'         '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>31</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>111
+:
+40</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>32</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>111
+:
+43</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>33</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>122
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>34</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>123
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>35</th>
+<td>BinaryExpression</td>
+<td>Killed</td>
+<td>123
+:
+56</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>36</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>123
+:
+59</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>37</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>133
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>38</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>134
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>39</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>134
+:
+50</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>40</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>134
+:
+53</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>41</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>145
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>42</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>146
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>43</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>146
+:
+50</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>44</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>146
+:
+53</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>45</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>157
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>46</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>158
+:
+14</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>47</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>158
+:
+55</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>48</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>158
+:
+58</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr></tbody></table></div></div></div></div>
+<footer>Generated with stryker-html-reporter generator. Visit the 
+<a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
+<script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
+<script src="strykerResources/jquery/dist/jquery.slim.min.js" defer="defer"></script>
+<script src="strykerResources/bootstrap/js/bootstrap.min.js" defer="defer"></script>
+<script src="strykerResources/stryker.js" defer="defer"></script></body></html>

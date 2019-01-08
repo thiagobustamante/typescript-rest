@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html><head><title>metadata.ts
+ - Stryker report</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="strykerResources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="strykerResources/highlightjs/styles/default.css">
+<link rel="stylesheet" href="strykerResources/stryker.css"></head>
+<body><img class="stryker-image" alt="Stryker" src="strykerResources/stryker-80x80.png">
+<div class="container-fluid"><div class="row"><div class="col-lg-12"><h1 class="display-4">metadata.ts
+ 
+<small class="text-muted">- Stryker report</small></h1></div></div>
+<ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html">All files</a></li>
+<li class="breadcrumb-item active">metadata.ts</li></ol>
+<div class="row"><div class="col-lg-12"><div class="row"><div class="col-sm-11"><table class="table table-sm table-hover table-bordered table-no-top"><thead><tr><th style="width: 20%"><div><span>File / Directory</span></div></th>
+<th colspan="2"><div><span>Mutation score</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Killed</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Survived</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Timeout</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># No coverage</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Runtime errors</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Transpile errors</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total detected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total undetected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total mutants</span></div></th></tr></thead>
+<tbody><tr><td>metadata.ts</td>
+<td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
+%</div></div></td>
+<th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">15</td>
+<td class="text-center">0</td>
+<th class="text-center">0</th>
+<th class="text-center">0</th>
+<th class="text-center">15</th></tr>
+</tbody></table></div></div>
+<div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
+
+
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
+RuntimeError
+ 
+(15)</label></div>
+
+<a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
+<pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
+
+import { HttpMethod } from &#039;./server-types&#039;;
+
+export type PreprocessorFunction = (req: Express.Request) =&gt; Express.Request;
+
+export interface SeviceProperty {
+    type: ParamType;
+    name: string;
+    propertyType: any;
+}
+
+/**
+ * Metadata for REST service classes
+ */
+export class ServiceClass {
+
+    public targetClass: any;
+    public path: string;
+    public roles: Array&lt;string&gt;;
+    public preProcessors: Array&lt;PreprocessorFunction&gt;;
+    public methods: Map&lt;string, ServiceMethod&gt;;
+    public languages: Array&lt;string&gt;;
+    public accepts: Array&lt;string&gt;;
+    public properties: Map&lt;string, SeviceProperty&gt;;
+    public isAbstract: boolean = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">true</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">false</span></span><span class="bg-null">;
+    constructor(targetClass: any) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">{}</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">{
+        this.targetClass = targetClass;
+        this.methods = new Map&lt;string, ServiceMethod&gt;();
+        this.properties = new Map&lt;string, SeviceProperty&gt;();
+    }</span></span><span class="bg-null">
+
+    public addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">{}</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">{
+        this.properties.set(key, { type: paramType, name: paramName, propertyType: propertyType });
+    }</span></span><span class="bg-null">
+
+    public hasProperties(): boolean </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">{}</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">{
+        return (this.properties </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">||</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">&amp;&amp;</span></span><span class="bg-null"> this.properties.size </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">&lt;=</span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">&gt;=</span><span class="stryker-original-code" data-mutant="5"><span class="stryker-original-code" data-mutant="6"><span class="bg-null">&gt;</span></span></span><span class="bg-null"> 0);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Metadata for REST service methods
+ */
+export class ServiceMethod {
+    public name: string;
+    public path: string;
+    public roles: Array&lt;string&gt;;
+    public resolvedPath: string;
+    public httpMethod: HttpMethod;
+    public parameters: Array&lt;MethodParam&gt; = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayNewExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">new Array([])</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">new Array&lt;MethodParam&gt;()</span></span><span class="bg-null">;
+    public mustParseCookies: boolean = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">true</span><span class="stryker-original-code" data-mutant="8"><span class="bg-null">false</span></span><span class="bg-null">;
+    public files: Array&lt;FileParam&gt; = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayNewExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">new Array([])</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">new Array&lt;FileParam&gt;()</span></span><span class="bg-null">;
+    public mustParseBody: boolean = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">true</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">false</span></span><span class="bg-null">;
+    public bodyParserOptions: any;
+    public mustParseForms: boolean = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">true</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">false</span></span><span class="bg-null">;
+    public acceptMultiTypedParam: boolean = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">true</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">false</span></span><span class="bg-null">;
+    public languages: Array&lt;string&gt;;
+    public accepts: Array&lt;string&gt;;
+    public resolvedLanguages: Array&lt;string&gt;;
+    public resolvedAccepts: Array&lt;string&gt;;
+    public preProcessors: Array&lt;PreprocessorFunction&gt;;
+}
+
+/**
+ * Metadata for File parameters on REST methods
+ */
+export class FileParam {
+
+    public name: string;
+    public singleFile: boolean;
+    constructor(name: string, singleFile: boolean) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">{}</span><span class="stryker-original-code" data-mutant="13"><span class="bg-null">{
+        this.name = name;
+        this.singleFile = singleFile;
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Metadata for REST service method parameters
+ */
+export class MethodParam {
+
+    public name: string;
+    public type: Function;
+    public paramType: ParamType;
+    constructor(name: string, type: Function, paramType: ParamType) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">{}</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">{
+        this.name = name;
+        this.type = type;
+        this.paramType = paramType;
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Enumeration of accepted parameter types
+ */
+export enum ParamType {
+    path,
+    query,
+    header,
+    cookie,
+    form,
+    body,
+    param,
+    file,
+    files,
+    context,
+    context_request,
+    context_response,
+    context_next,
+    context_accept,
+    context_accept_language
+}</span>
+</code></pre></div>
+<div class="col-lg-5"><table class="table table-sm table-hover mutant-table"><thead><tr><th>#</th>
+<th>Mutator</th>
+<th>State</th>
+<th>Location</th>
+<th>Original</th>
+<th>Replacement</th></tr></thead>
+<tbody><tr><th>0</th>
+<td>BooleanSubstitution</td>
+<td>RuntimeError</td>
+<td>25
+:
+33</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>1</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>26
+:
+34</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>2</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>32
+:
+96</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>3</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>36
+:
+36</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>4</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>37
+:
+32</td>
+<td><code>&&</code></td>
+<td><code>||</code></td></tr>
+<tr><th>5</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>37
+:
+56</td>
+<td><code>></code></td>
+<td><code><=</code></td></tr>
+<tr><th>6</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>37
+:
+56</td>
+<td><code>></code></td>
+<td><code>>=</code></td></tr>
+<tr><th>7</th>
+<td>ArrayNewExpression</td>
+<td>RuntimeError</td>
+<td>50
+:
+44</td>
+<td><code><           >()</code></td>
+<td><code>([])</code></td></tr>
+<tr><th>8</th>
+<td>BooleanSubstitution</td>
+<td>RuntimeError</td>
+<td>51
+:
+39</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>9</th>
+<td>ArrayNewExpression</td>
+<td>RuntimeError</td>
+<td>52
+:
+37</td>
+<td><code><         >()</code></td>
+<td><code>([])</code></td></tr>
+<tr><th>10</th>
+<td>BooleanSubstitution</td>
+<td>RuntimeError</td>
+<td>53
+:
+36</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>11</th>
+<td>BooleanSubstitution</td>
+<td>RuntimeError</td>
+<td>55
+:
+37</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>12</th>
+<td>BooleanSubstitution</td>
+<td>RuntimeError</td>
+<td>56
+:
+44</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>13</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>71
+:
+51</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>14</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>85
+:
+68</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr></tbody></table></div></div></div></div>
+<footer>Generated with stryker-html-reporter generator. Visit the 
+<a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
+<script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
+<script src="strykerResources/jquery/dist/jquery.slim.min.js" defer="defer"></script>
+<script src="strykerResources/bootstrap/js/bootstrap.min.js" defer="defer"></script>
+<script src="strykerResources/stryker.js" defer="defer"></script></body></html>

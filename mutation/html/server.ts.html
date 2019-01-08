@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html><head><title>server.ts
+ - Stryker report</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="strykerResources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="strykerResources/highlightjs/styles/default.css">
+<link rel="stylesheet" href="strykerResources/stryker.css"></head>
+<body><img class="stryker-image" alt="Stryker" src="strykerResources/stryker-80x80.png">
+<div class="container-fluid"><div class="row"><div class="col-lg-12"><h1 class="display-4">server.ts
+ 
+<small class="text-muted">- Stryker report</small></h1></div></div>
+<ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html">All files</a></li>
+<li class="breadcrumb-item active">server.ts</li></ol>
+<div class="row"><div class="col-lg-12"><div class="row"><div class="col-sm-11"><table class="table table-sm table-hover table-bordered table-no-top"><thead><tr><th style="width: 20%"><div><span>File / Directory</span></div></th>
+<th colspan="2"><div><span>Mutation score</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Killed</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Survived</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Timeout</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># No coverage</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Runtime errors</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Transpile errors</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total detected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total undetected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total mutants</span></div></th></tr></thead>
+<tbody><tr><td>server.ts</td>
+<td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
+%</div></div></td>
+<th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">88</td>
+<td class="text-center">0</td>
+<th class="text-center">0</th>
+<th class="text-center">0</th>
+<th class="text-center">88</th></tr>
+</tbody></table></div></div>
+<div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
+
+
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
+RuntimeError
+ 
+(88)</label></div>
+
+<a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
+<pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
+
+import * as express from &#039;express&#039;;
+import * as fs from &#039;fs-extra&#039;;
+import * as _ from &#039;lodash&#039;;
+import &#039;multer&#039;;
+import * as path from &#039;path&#039;;
+import * as YAML from &#039;yamljs&#039;;
+import { InternalServer } from &#039;./server-container&#039;;
+import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from &#039;./server-types&#039;;
+
+/**
+ * The Http server main class.
+ */
+export class Server {
+    /**
+     * Create the routes for all classes decorated with our decorators
+     */
+    public static buildServices(router: express.Router, ...types: Array&lt;any&gt;) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
+        const iternalServer = InternalServer.get();
+        iternalServer.router = router;
+        iternalServer.buildServices(types);
+    }</span></span><span class="bg-null">
+
+    /**
+     * An alias for Server.loadServices()
+     */
+    public static loadControllers(router: express.Router, patterns: string | Array&lt;string&gt;, baseDir?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">{}</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">{
+        Server.loadServices(router, patterns, baseDir);
+    }</span></span><span class="bg-null">
+
+    /**
+     * Load all services from the files that matches the patterns provided
+     */
+    public static loadServices(router: express.Router, patterns: string | Array&lt;string&gt;, baseDir?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">{}</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">{
+        const importedTypes: Array&lt;Function&gt; = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">[&#039;Stryker was here&#039;]</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">[]</span></span><span class="bg-null">;
+        const requireGlob = require(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">&quot;&quot;</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">&#039;require-glob&#039;</span></span><span class="bg-null">);
+        baseDir = baseDir </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">&amp;&amp;</span><span class="stryker-original-code" data-mutant="5"><span class="bg-null">||</span></span><span class="bg-null"> process.cwd();
+        const loadedModules: Array&lt;any&gt; = requireGlob.sync(patterns, {
+            cwd: baseDir
+        });
+
+        _.values(loadedModules).forEach(serviceModule =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">{}</span><span class="stryker-original-code" data-mutant="6"><span class="bg-null">{
+            _.values(serviceModule).forEach((service: Function) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">{}</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">{
+                importedTypes.push(service);
+            }</span></span><span class="bg-null">);
+        }</span></span><span class="bg-null">);
+
+        try </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">{}</span><span class="stryker-original-code" data-mutant="8"><span class="bg-null">{
+            Server.buildServices(router, ...importedTypes);
+        }</span></span><span class="bg-null"> catch (e) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">{}</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">{
+            throw new TypeError(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">&quot;&quot;</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`</span></span><span class="bg-null">);
+        }</span></span><span class="bg-null">
+    }</span></span><span class="bg-null">
+
+    /**
+     * Return all paths accepted by the Server
+     */
+    public static getPaths(): Array&lt;string&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">{}</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">{
+        const result = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayNewExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">new Array([])</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">new Array&lt;string&gt;()</span></span><span class="bg-null">;
+        InternalServer.get().getPaths().forEach(value =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">{}</span><span class="stryker-original-code" data-mutant="13"><span class="bg-null">{
+            result.push(value);
+        }</span></span><span class="bg-null">);
+
+        return result;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Register a custom serviceFactory. It will be used to instantiate the service Objects
+     * If You plan to use a custom serviceFactory, You must ensure to call this method before any typescript-rest service declaration.
+     */
+    public static registerServiceFactory(serviceFactory: ServiceFactory | string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">{}</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">{
+        let factory: ServiceFactory;
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">false</span><span class="stryker-original-code" data-mutant="15"><span class="stryker-original-code" data-mutant="16"><span class="bg-null">typeof serviceFactory </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">!==</span><span class="stryker-original-code" data-mutant="17"><span class="bg-null">===</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">&quot;&quot;</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">&#039;string&#039;</span></span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">{}</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">{
+            factory = require(serviceFactory);
+        }</span></span><span class="bg-null"> else </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">{}</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">{
+            factory = serviceFactory as ServiceFactory;
+        }</span></span><span class="bg-null">
+
+        InternalServer.get().serviceFactory = factory;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Register a service authenticator. It will be used to authenticate users before the service method
+     * invocations occurs.
+     */
+    public static registerAuthenticator(authenticator: ServiceAuthenticator) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">{}</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">{
+        InternalServer.get().authenticator = authenticator;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Configure the Server to use [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc)
+     * to instantiate the service objects.
+     * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
+     * @param es6 if true, import typescript-ioc/es6
+     */
+    public static useIoC(es6?: boolean) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">{}</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">{
+        const ioc = require(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">true</span><span class="stryker-original-code" data-mutant="23"><span class="stryker-original-code" data-mutant="24"><span class="bg-null">es6</span></span></span><span class="bg-null"> ? </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">&quot;&quot;</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">&#039;typescript-ioc/es6&#039;</span></span><span class="bg-null"> : </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">&quot;&quot;</span><span class="stryker-original-code" data-mutant="26"><span class="bg-null">&#039;typescript-ioc&#039;</span></span><span class="bg-null">);
+        Server.registerServiceFactory({
+            create: (serviceClass) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">{}</span><span class="stryker-original-code" data-mutant="27"><span class="bg-null">{
+                return ioc.Container.get(serviceClass);
+            }</span></span><span class="bg-null">,
+            getTargetClass: (serviceClass: Function) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">{}</span><span class="stryker-original-code" data-mutant="28"><span class="bg-null">{
+                let typeConstructor: any = serviceClass;
+                if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">false</span><span class="stryker-original-code" data-mutant="29"><span class="stryker-original-code" data-mutant="30"><span class="bg-null">typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">&quot;&quot;</span><span class="stryker-original-code" data-mutant="31"><span class="bg-null">&#039;name&#039;</span></span><span class="bg-null">] </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">||</span><span class="stryker-original-code" data-mutant="32"><span class="bg-null">&amp;&amp;</span></span><span class="bg-null"> typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="33"><span class="badge badge-secondary">33</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="33">&quot;&quot;</span><span class="stryker-original-code" data-mutant="33"><span class="bg-null">&#039;name&#039;</span></span><span class="bg-null">] </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="34"><span class="badge badge-secondary">34</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="34">===</span><span class="stryker-original-code" data-mutant="34"><span class="bg-null">!==</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="35"><span class="badge badge-secondary">35</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="35">&quot;&quot;</span><span class="stryker-original-code" data-mutant="35"><span class="bg-null">&#039;ioc_wrapper&#039;</span></span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="36"><span class="badge badge-secondary">36</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="36">{}</span><span class="stryker-original-code" data-mutant="36"><span class="bg-null">{
+                    return typeConstructor as FunctionConstructor;
+                }</span></span><span class="bg-null">
+                typeConstructor = typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="37"><span class="badge badge-secondary">37</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="37">&quot;&quot;</span><span class="stryker-original-code" data-mutant="37"><span class="bg-null">&#039;__parent&#039;</span></span><span class="bg-null">];
+                while (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="WhileStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="38"><span class="badge badge-secondary">38</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="38">false</span><span class="stryker-original-code" data-mutant="38"><span class="bg-null">typeConstructor</span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="39"><span class="badge badge-secondary">39</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="39">{}</span><span class="stryker-original-code" data-mutant="39"><span class="bg-null">{
+                    if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="40"><span class="badge badge-secondary">40</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="40">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="41"><span class="badge badge-secondary">41</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="41">false</span><span class="stryker-original-code" data-mutant="40"><span class="stryker-original-code" data-mutant="41"><span class="bg-null">typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="42"><span class="badge badge-secondary">42</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="42">&quot;&quot;</span><span class="stryker-original-code" data-mutant="42"><span class="bg-null">&#039;name&#039;</span></span><span class="bg-null">] </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="43"><span class="badge badge-secondary">43</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="43">||</span><span class="stryker-original-code" data-mutant="43"><span class="bg-null">&amp;&amp;</span></span><span class="bg-null"> typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="44"><span class="badge badge-secondary">44</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="44">&quot;&quot;</span><span class="stryker-original-code" data-mutant="44"><span class="bg-null">&#039;name&#039;</span></span><span class="bg-null">] </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="45"><span class="badge badge-secondary">45</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="45">===</span><span class="stryker-original-code" data-mutant="45"><span class="bg-null">!==</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="46"><span class="badge badge-secondary">46</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="46">&quot;&quot;</span><span class="stryker-original-code" data-mutant="46"><span class="bg-null">&#039;ioc_wrapper&#039;</span></span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="47"><span class="badge badge-secondary">47</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="47">{}</span><span class="stryker-original-code" data-mutant="47"><span class="bg-null">{
+                        return typeConstructor as FunctionConstructor;
+                    }</span></span><span class="bg-null">
+                    typeConstructor = typeConstructor[</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="48"><span class="badge badge-secondary">48</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="48">&quot;&quot;</span><span class="stryker-original-code" data-mutant="48"><span class="bg-null">&#039;__parent&#039;</span></span><span class="bg-null">];
+                }</span></span><span class="bg-null">
+                throw TypeError(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="49"><span class="badge badge-secondary">49</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="49">&quot;&quot;</span><span class="stryker-original-code" data-mutant="49"><span class="bg-null">&#039;Can not identify the base Type for requested target&#039;</span></span><span class="bg-null">);
+            }</span></span><span class="bg-null">
+        });
+    }</span></span><span class="bg-null">
+
+    /**
+     * Return the set oh HTTP verbs configured for the given path
+     * @param servicePath The path to search HTTP verbs
+     */
+    public static getHttpMethods(servicePath: string): Array&lt;HttpMethod&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="50"><span class="badge badge-secondary">50</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="50">{}</span><span class="stryker-original-code" data-mutant="50"><span class="bg-null">{
+        const result = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayNewExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="51"><span class="badge badge-secondary">51</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="51">new Array([])</span><span class="stryker-original-code" data-mutant="51"><span class="bg-null">new Array&lt;HttpMethod&gt;()</span></span><span class="bg-null">;
+        InternalServer.get().getHttpMethods(servicePath).forEach(value =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="52"><span class="badge badge-secondary">52</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="52">{}</span><span class="stryker-original-code" data-mutant="52"><span class="bg-null">{
+            result.push(value);
+        }</span></span><span class="bg-null">);
+
+        return result;
+    }</span></span><span class="bg-null">
+
+    /**
+     * A string used for signing cookies. This is optional and if not specified,
+     * will not parse signed cookies.
+     * @param secret the secret used to sign
+     */
+    public static setCookiesSecret(secret: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="53"><span class="badge badge-secondary">53</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="53">{}</span><span class="stryker-original-code" data-mutant="53"><span class="bg-null">{
+        InternalServer.get().cookiesSecret = secret;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Specifies a function that will be used to decode a cookie&#039;s value.
+     * This function can be used to decode a previously-encoded cookie value
+     * into a JavaScript string.
+     * The default function is the global decodeURIComponent, which will decode
+     * any URL-encoded sequences into their byte representations.
+     *
+     * NOTE: if an error is thrown from this function, the original, non-decoded
+     * cookie value will be returned as the cookie&#039;s value.
+     * @param decoder The decoder function
+     */
+    public static setCookiesDecoder(decoder: (val: string) =&gt; string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="54"><span class="badge badge-secondary">54</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="54">{}</span><span class="stryker-original-code" data-mutant="54"><span class="bg-null">{
+        InternalServer.get().cookiesDecoder = decoder;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Set where to store the uploaded files
+     * @param dest Destination folder
+     */
+    public static setFileDest(dest: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="55"><span class="badge badge-secondary">55</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="55">{}</span><span class="stryker-original-code" data-mutant="55"><span class="bg-null">{
+        InternalServer.get().fileDest = dest;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Set a Function to control which files are accepted to upload
+     * @param filter The filter function
+     */
+    public static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
+        callback: (error: Error, acceptFile: boolean) =&gt; void) =&gt; void) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="56"><span class="badge badge-secondary">56</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="56">{}</span><span class="stryker-original-code" data-mutant="56"><span class="bg-null">{
+        InternalServer.get().fileFilter = filter;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Set the limits of uploaded data
+     * @param limit The data limit
+     */
+    public static setFileLimits(limit: FileLimits) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="57"><span class="badge badge-secondary">57</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="57">{}</span><span class="stryker-original-code" data-mutant="57"><span class="bg-null">{
+        InternalServer.get().fileLimits = limit;
+    }</span></span><span class="bg-null">
+
+    /**
+     * Adds a converter for param values to have an ability to intercept the type that actually will be passed to service
+     * @param converter The converter
+     * @param type The target type that needs to be converted
+     */
+    public static addParameterConverter(converter: ParameterConverter, type: Function): void </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="58"><span class="badge badge-secondary">58</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="58">{}</span><span class="stryker-original-code" data-mutant="58"><span class="bg-null">{
+        InternalServer.get().paramConverters.set(type, converter);
+    }</span></span><span class="bg-null">
+
+    /**
+     * Remove the converter associated with the given type.
+     * @param type The target type that needs to be converted
+     */
+    public static removeParameterConverter(type: Function): void </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="59"><span class="badge badge-secondary">59</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="59">{}</span><span class="stryker-original-code" data-mutant="59"><span class="bg-null">{
+        InternalServer.get().paramConverters.delete(type);
+    }</span></span><span class="bg-null">
+
+    /**
+     * Creates and endpoint to publish the swagger documentation.
+     * @param router Express router
+     * @param filePath the path to a swagger file (json or yaml)
+     * @param endpoint where to publish the docs
+     * @param host the hostname of the service
+     * @param schemes the schemes used by the server
+     */
+    public static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: Array&lt;string&gt;, swaggerUiOptions?: object) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="60"><span class="badge badge-secondary">60</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="60">{}</span><span class="stryker-original-code" data-mutant="60"><span class="bg-null">{
+        const swaggerUi = require(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="61"><span class="badge badge-secondary">61</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="61">&quot;&quot;</span><span class="stryker-original-code" data-mutant="61"><span class="bg-null">&#039;swagger-ui-express&#039;</span></span><span class="bg-null">);
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="62"><span class="badge badge-secondary">62</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="62">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="63"><span class="badge badge-secondary">63</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="63">false</span><span class="stryker-original-code" data-mutant="62"><span class="stryker-original-code" data-mutant="63"><span class="bg-null">_.startsWith(filePath, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="64"><span class="badge badge-secondary">64</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="64">&quot;&quot;</span><span class="stryker-original-code" data-mutant="64"><span class="bg-null">&#039;.&#039;</span></span><span class="bg-null">)</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="65"><span class="badge badge-secondary">65</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="65">{}</span><span class="stryker-original-code" data-mutant="65"><span class="bg-null">{
+            filePath = path.join(process.cwd(), filePath);
+        }</span></span><span class="bg-null">
+
+        let swaggerDocument: any;
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="66"><span class="badge badge-secondary">66</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="66">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="67"><span class="badge badge-secondary">67</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="67">false</span><span class="stryker-original-code" data-mutant="66"><span class="stryker-original-code" data-mutant="67"><span class="bg-null">_.endsWith(filePath, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="68"><span class="badge badge-secondary">68</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="68">&quot;&quot;</span><span class="stryker-original-code" data-mutant="68"><span class="bg-null">&#039;.yml&#039;</span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="69"><span class="badge badge-secondary">69</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="69">&amp;&amp;</span><span class="stryker-original-code" data-mutant="69"><span class="bg-null">||</span></span><span class="bg-null"> _.endsWith(filePath, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="70"><span class="badge badge-secondary">70</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="70">&quot;&quot;</span><span class="stryker-original-code" data-mutant="70"><span class="bg-null">&#039;.yaml&#039;</span></span><span class="bg-null">)</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="71"><span class="badge badge-secondary">71</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="71">{}</span><span class="stryker-original-code" data-mutant="71"><span class="bg-null">{
+            swaggerDocument = YAML.load(filePath);
+        }</span></span><span class="bg-null"> else </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="72"><span class="badge badge-secondary">72</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="72">{}</span><span class="stryker-original-code" data-mutant="72"><span class="bg-null">{
+            swaggerDocument = fs.readJSONSync(filePath);
+        }</span></span><span class="bg-null">
+
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="73"><span class="badge badge-secondary">73</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="73">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="74"><span class="badge badge-secondary">74</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="74">false</span><span class="stryker-original-code" data-mutant="73"><span class="stryker-original-code" data-mutant="74"><span class="bg-null">host</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="75"><span class="badge badge-secondary">75</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="75">{}</span><span class="stryker-original-code" data-mutant="75"><span class="bg-null">{
+            swaggerDocument.host = host;
+        }</span></span><span class="bg-null">
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="76"><span class="badge badge-secondary">76</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="76">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="77"><span class="badge badge-secondary">77</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="77">false</span><span class="stryker-original-code" data-mutant="76"><span class="stryker-original-code" data-mutant="77"><span class="bg-null">schemes</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="78"><span class="badge badge-secondary">78</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="78">{}</span><span class="stryker-original-code" data-mutant="78"><span class="bg-null">{
+            swaggerDocument.schemes = schemes;
+        }</span></span><span class="bg-null">
+
+        router.get(path.posix.join(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="79"><span class="badge badge-secondary">79</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="79">&quot;&quot;</span><span class="stryker-original-code" data-mutant="79"><span class="bg-null">&#039;/&#039;</span></span><span class="bg-null">, endpoint, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="80"><span class="badge badge-secondary">80</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="80">&quot;&quot;</span><span class="stryker-original-code" data-mutant="80"><span class="bg-null">&#039;json&#039;</span></span><span class="bg-null">), (req, res, next) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="81"><span class="badge badge-secondary">81</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="81">{}</span><span class="stryker-original-code" data-mutant="81"><span class="bg-null">{
+            res.send(swaggerDocument);
+        }</span></span><span class="bg-null">);
+        router.get(path.posix.join(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="82"><span class="badge badge-secondary">82</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="82">&quot;&quot;</span><span class="stryker-original-code" data-mutant="82"><span class="bg-null">&#039;/&#039;</span></span><span class="bg-null">, endpoint, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="83"><span class="badge badge-secondary">83</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="83">&quot;&quot;</span><span class="stryker-original-code" data-mutant="83"><span class="bg-null">&#039;yaml&#039;</span></span><span class="bg-null">), (req, res, next) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="84"><span class="badge badge-secondary">84</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="84">{}</span><span class="stryker-original-code" data-mutant="84"><span class="bg-null">{
+            res.set(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="85"><span class="badge badge-secondary">85</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="85">&quot;&quot;</span><span class="stryker-original-code" data-mutant="85"><span class="bg-null">&#039;Content-Type&#039;</span></span><span class="bg-null">, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="86"><span class="badge badge-secondary">86</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="86">&quot;&quot;</span><span class="stryker-original-code" data-mutant="86"><span class="bg-null">&#039;text/vnd.yaml&#039;</span></span><span class="bg-null">);
+            res.send(YAML.stringify(swaggerDocument, 1000));
+        }</span></span><span class="bg-null">);
+        router.use(path.posix.join(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="87"><span class="badge badge-secondary">87</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="87">&quot;&quot;</span><span class="stryker-original-code" data-mutant="87"><span class="bg-null">&#039;/&#039;</span></span><span class="bg-null">, endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
+    }</span></span><span class="bg-null">
+}</span>
+</code></pre></div>
+<div class="col-lg-5"><table class="table table-sm table-hover mutant-table"><thead><tr><th>#</th>
+<th>Mutator</th>
+<th>State</th>
+<th>Location</th>
+<th>Original</th>
+<th>Replacement</th></tr></thead>
+<tbody><tr><th>0</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>18
+:
+78</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>1</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>27
+:
+110</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>2</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>34
+:
+107</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>3</th>
+<td>ArrayLiteral</td>
+<td>RuntimeError</td>
+<td>35
+:
+47</td>
+<td><code>[]</code></td>
+<td><code>['   ...   ']</code></td></tr>
+<tr><th>4</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>36
+:
+36</td>
+<td><code>'       -    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>5</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>37
+:
+26</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>6</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>42
+:
+57</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>7</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>43
+:
+67</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>8</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>48
+:
+12</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>9</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>50
+:
+20</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>10</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>51
+:
+32</td>
+<td><code>`    ...   }`</code></td>
+<td><code>""</code></td></tr>
+<tr><th>11</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>58
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>12</th>
+<td>ArrayNewExpression</td>
+<td>RuntimeError</td>
+<td>59
+:
+23</td>
+<td><code><      >()</code></td>
+<td><code>([])</code></td></tr>
+<tr><th>13</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>60
+:
+57</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>14</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>71
+:
+82</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>15</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>73
+:
+12</td>
+<td><code>=== '      '</code></td>
+<td><code></code></td></tr>
+<tr><th>16</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>73
+:
+12</td>
+<td><code>=== '      '</code></td>
+<td><code></code></td></tr>
+<tr><th>17</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>73
+:
+34</td>
+<td><code>===</code></td>
+<td><code>!==</code></td></tr>
+<tr><th>18</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>73
+:
+38</td>
+<td><code>'      '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>19</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>73
+:
+48</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>20</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>75
+:
+15</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>21</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>86
+:
+77</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>22</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>96
+:
+40</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>23</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>97
+:
+28</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>24</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>97
+:
+28</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>25</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>97
+:
+34</td>
+<td><code>'    .../   '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>26</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>97
+:
+57</td>
+<td><code>'    ...-   '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>27</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>99
+:
+38</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>28</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>102
+:
+56</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>29</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>104
+:
+20</td>
+<td><code>['   ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>30</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>104
+:
+20</td>
+<td><code>['   ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>31</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>104
+:
+36</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>32</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>104
+:
+44</td>
+<td><code>&&</code></td>
+<td><code>||</code></td></tr>
+<tr><th>33</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>104
+:
+63</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>34</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>104
+:
+71</td>
+<td><code>!==</code></td>
+<td><code>===</code></td></tr>
+<tr><th>35</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>104
+:
+75</td>
+<td><code>'           '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>36</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>104
+:
+90</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>37</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>107
+:
+50</td>
+<td><code>'        '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>38</th>
+<td>WhileStatement</td>
+<td>RuntimeError</td>
+<td>108
+:
+23</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>39</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>108
+:
+40</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>40</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>109
+:
+24</td>
+<td><code>['   ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>41</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>109
+:
+24</td>
+<td><code>['   ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>42</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>109
+:
+40</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>43</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>109
+:
+48</td>
+<td><code>&&</code></td>
+<td><code>||</code></td></tr>
+<tr><th>44</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>109
+:
+67</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>45</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>109
+:
+75</td>
+<td><code>!==</code></td>
+<td><code>===</code></td></tr>
+<tr><th>46</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>109
+:
+79</td>
+<td><code>'           '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>47</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>109
+:
+94</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>48</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>112
+:
+54</td>
+<td><code>'        '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>49</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>114
+:
+32</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>50</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>123
+:
+73</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>51</th>
+<td>ArrayNewExpression</td>
+<td>RuntimeError</td>
+<td>124
+:
+23</td>
+<td><code><          >()</code></td>
+<td><code>([])</code></td></tr>
+<tr><th>52</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>125
+:
+74</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>53</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>137
+:
+51</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>54</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>152
+:
+70</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>55</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>160
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>56</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>169
+:
+72</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>57</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>177
+:
+51</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>58</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>186
+:
+93</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>59</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>194
+:
+65</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>60</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>206
+:
+153</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>61</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>207
+:
+34</td>
+<td><code>'    ...    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>62</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>208
+:
+12</td>
+<td><code>.    ... '.')</code></td>
+<td><code></code></td></tr>
+<tr><th>63</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>208
+:
+12</td>
+<td><code>.    ... '.')</code></td>
+<td><code></code></td></tr>
+<tr><th>64</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>208
+:
+35</td>
+<td><code>'.'</code></td>
+<td><code>""</code></td></tr>
+<tr><th>65</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>208
+:
+41</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>66</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>213
+:
+12</td>
+<td><code>.    ...   ')</code></td>
+<td><code></code></td></tr>
+<tr><th>67</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>213
+:
+12</td>
+<td><code>.    ...   ')</code></td>
+<td><code></code></td></tr>
+<tr><th>68</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>213
+:
+33</td>
+<td><code>'.   '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>69</th>
+<td>BinaryExpression</td>
+<td>RuntimeError</td>
+<td>213
+:
+41</td>
+<td><code>||</code></td>
+<td><code>&&</code></td></tr>
+<tr><th>70</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>213
+:
+65</td>
+<td><code>'.    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>71</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>213
+:
+75</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>72</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>215
+:
+15</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>73</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>219
+:
+12</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>74</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>219
+:
+12</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>75</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>219
+:
+18</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>76</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>222
+:
+12</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>77</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>222
+:
+12</td>
+<td><code></code></td>
+<td><code></code></td></tr>
+<tr><th>78</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>222
+:
+21</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>79</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>226
+:
+35</td>
+<td><code>'/'</code></td>
+<td><code>""</code></td></tr>
+<tr><th>80</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>226
+:
+50</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>81</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>226
+:
+79</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>82</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>229
+:
+35</td>
+<td><code>'/'</code></td>
+<td><code>""</code></td></tr>
+<tr><th>83</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>229
+:
+50</td>
+<td><code>'    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>84</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>229
+:
+79</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>85</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>230
+:
+20</td>
+<td><code>'       -    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>86</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>230
+:
+36</td>
+<td><code>'    /   .    '</code></td>
+<td><code>""</code></td></tr>
+<tr><th>87</th>
+<td>StringLiteral</td>
+<td>RuntimeError</td>
+<td>233
+:
+35</td>
+<td><code>'/'</code></td>
+<td><code>""</code></td></tr></tbody></table></div></div></div></div>
+<footer>Generated with stryker-html-reporter generator. Visit the 
+<a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
+<script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
+<script src="strykerResources/jquery/dist/jquery.slim.min.js" defer="defer"></script>
+<script src="strykerResources/bootstrap/js/bootstrap.min.js" defer="defer"></script>
+<script src="strykerResources/stryker.js" defer="defer"></script></body></html>

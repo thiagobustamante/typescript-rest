@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html><head><title>server-return.ts
+ - Stryker report</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="strykerResources/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="strykerResources/highlightjs/styles/default.css">
+<link rel="stylesheet" href="strykerResources/stryker.css"></head>
+<body><img class="stryker-image" alt="Stryker" src="strykerResources/stryker-80x80.png">
+<div class="container-fluid"><div class="row"><div class="col-lg-12"><h1 class="display-4">server-return.ts
+ 
+<small class="text-muted">- Stryker report</small></h1></div></div>
+<ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html">All files</a></li>
+<li class="breadcrumb-item active">server-return.ts</li></ol>
+<div class="row"><div class="col-lg-12"><div class="row"><div class="col-sm-11"><table class="table table-sm table-hover table-bordered table-no-top"><thead><tr><th style="width: 20%"><div><span>File / Directory</span></div></th>
+<th colspan="2"><div><span>Mutation score</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Killed</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Survived</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Timeout</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># No coverage</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Runtime errors</span></div></th>
+<th class="rotate text-center" style="width: 50px"><div><span># Transpile errors</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total detected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total undetected</span></div></th>
+<th class="rotate rotate-width-70 text-center" style="width: 70px"><div><span>Total mutants</span></div></th></tr></thead>
+<tbody><tr><td>server-return.ts</td>
+<td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
+%</div></div></td>
+<th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">0</td>
+<td class="text-center">4</td>
+<td class="text-center">0</td>
+<th class="text-center">0</th>
+<th class="text-center">0</th>
+<th class="text-center">4</th></tr>
+</tbody></table></div></div>
+<div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
+
+
+
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
+RuntimeError
+ 
+(4)</label></div>
+
+<a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
+<pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
+
+import { ReferencedResource } from &#039;./server-types&#039;;
+
+/**
+ * Inform that a new resource was created. Server will
+ * add a Location header and set status to 201
+ */
+export class NewResource&lt;T&gt; extends ReferencedResource&lt;T&gt; {
+    /**
+     * Constructor. Receives the location of the new resource created.
+     * @param location To be added to the Location header on response
+     * @param body To be added to the response body
+     */
+    constructor(location: string, body?: T) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
+        super(location, 201, body);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Inform that the request was accepted but is not completed.
+ * A Location header should inform the location where the user
+ * can monitor his request processing status.
+ */
+export class RequestAccepted&lt;T&gt; extends ReferencedResource&lt;T&gt; {
+    /**
+     * Constructor. Receives the location where information about the
+     * request processing can be found.
+     * @param location To be added to the Location header on response
+     * @param body To be added to the response body
+     */
+    constructor(location: string, body?: T) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">{}</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">{
+        super(location, 202, body);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Inform that the resource has permanently
+ * moved to a new location, and that future references should use a
+ * new URI with their requests.
+ */
+export class MovedPermanently&lt;T&gt; extends ReferencedResource&lt;T&gt; {
+    /**
+     * Constructor. Receives the location where the resource can be found.
+     * @param location To be added to the Location header on response
+     * @param body To be added to the response body
+     */
+    constructor(location: string, body?: T) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">{}</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">{
+        super(location, 301, body);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Inform that the resource has temporarily
+ * moved to another location, but that future references should
+ * still use the original URI to access the resource.
+ */
+export class MovedTemporarily&lt;T&gt; extends ReferencedResource&lt;T&gt; {
+    /**
+     * Constructor. Receives the location where the resource can be found.
+     * @param location To be added to the Location header on response
+     * @param body To be added to the response body
+     */
+    constructor(location: string, body?: T) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">{}</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">{
+        super(location, 302, body);
+    }</span></span><span class="bg-null">
+}
+
+/**
+ * Used to download a resource.
+ */
+export class DownloadResource {
+    /**
+     * Constructor.
+     * @param filePath The file path to download.
+     * @param fileName The file name
+     */
+    constructor(public filePath: string, public fileName: string) { }
+}
+
+/**
+ * Used to download binary data as a file.
+ */
+export class DownloadBinaryData {
+    /**
+     * Constructor. Receives the location of the resource.
+     * @param content The binary data to be downloaded as a file.
+     * @param mimeType The mime-type to be passed on Content-Type header.
+     * @param fileName The file name
+     */
+    constructor(public content: Buffer, public mimeType: string, public fileName?: string) { }
+}</span>
+</code></pre></div>
+<div class="col-lg-5"><table class="table table-sm table-hover mutant-table"><thead><tr><th>#</th>
+<th>Mutator</th>
+<th>State</th>
+<th>Location</th>
+<th>Original</th>
+<th>Replacement</th></tr></thead>
+<tbody><tr><th>0</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>14
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>1</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>31
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>2</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>47
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr>
+<tr><th>3</th>
+<td>Block</td>
+<td>RuntimeError</td>
+<td>63
+:
+44</td>
+<td><code>{
+   ...    }</code></td>
+<td><code>{}</code></td></tr></tbody></table></div></div></div></div>
+<footer>Generated with stryker-html-reporter generator. Visit the 
+<a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
+<script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
+<script src="strykerResources/jquery/dist/jquery.slim.min.js" defer="defer"></script>
+<script src="strykerResources/bootstrap/js/bootstrap.min.js" defer="defer"></script>
+<script src="strykerResources/stryker.js" defer="defer"></script></body></html>
