@@ -557,13 +557,13 @@ export class InternalServer {
         }
     }
 
-    private convertType(paramValue: string, paramType: Function): any {
+    private convertType(paramValue: string | boolean, paramType: Function): any {
         const serializedType = paramType['name'];
         switch (serializedType) {
             case 'Number':
-                return paramValue === undefined ? paramValue : parseFloat(paramValue);
+                return paramValue === undefined ? paramValue : parseFloat(paramValue as string);
             case 'Boolean':
-                return paramValue === undefined ? paramValue : paramValue === 'true';
+                return paramValue === undefined ? paramValue : paramValue === 'true' || paramValue === true;
             default:
                 let converter = this.paramConverters.get(paramType);
                 if (!converter) {
