@@ -8,10 +8,6 @@ This is a lightweight annotation-based [expressjs](http://expressjs.com/) extens
 
 It can be used to define your APIs using ES7 decorators.
 
-**Project Sponsors**
-
-This project is supported by [Leanty](https://github.com/Leanty/)'s team and is widely used by its main product: The [Tree Gateway](http://www.treegateway.org) API Gateway.
-
 **Table of Contents** 
 
 - [REST Services for Typescript](#)
@@ -37,7 +33,8 @@ This project is supported by [Leanty](https://github.com/Leanty/)'s team and is 
     - [IoC](#ioc)
     - [Inheritance and abstract services](#inheritance-and-abstract-services)    
   - [Swagger](#swagger)
- - [Breaking Changes - 1.0.0](#breaking-changes)
+ - [Breaking Changes](#breaking-changes)
+ - [Project Sponsors](#project-sponsors)
 
 ## Installation
 
@@ -1289,3 +1286,7 @@ class TestService {
 ## From 1.X to 2.X
 
 Starting from version 2.0.0, the method ```Server.setParamConverter``` was removed and replaced by ```Server.addParameterConverter```.
+
+**Project Sponsors**
+
+This project is supported by [Leanty](https://github.com/Leanty/)'s team and is widely used by its main product: The [Tree Gateway](http://www.treegateway.org) API Gateway.
