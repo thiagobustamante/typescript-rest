@@ -27,27 +27,24 @@
 <td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
 %</div></div></td>
 <th class="text-center text-success" style="width: 10%">100.00</th>
-<td class="text-center">1</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
-<td class="text-center">48</td>
 <td class="text-center">0</td>
-<th class="text-center">1</th>
+<td class="text-center">73</td>
+<td class="text-center">0</td>
 <th class="text-center">0</th>
-<th class="text-center">49</th></tr>
+<th class="text-center">0</th>
+<th class="text-center">73</th></tr>
 </tbody></table></div></div>
 <div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
 
-<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="1" type="checkbox">
-Killed
- 
-(1)</label></div>
+
 
 <div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
 RuntimeError
  
-(48)</label></div>
+(73)</label></div>
 
 <a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
 <pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
@@ -61,7 +58,7 @@ import { HttpError } from &#039;./server-types&#039;;
  */
 export class BadRequestError extends HttpError {
     constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">&quot;&quot;</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">&#039;BadRequestError&#039;</span></span><span class="bg-null">, 400, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">&amp;&amp;</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">&quot;&quot;</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">&#039;Bad Request&#039;</span></span><span class="bg-null">);
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">&quot;&quot;</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">&#039;BadRequestError&#039;</span></span><span class="bg-null">, 400, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">true</span><span class="stryker-original-code" data-mutant="2"><span class="stryker-original-code" data-mutant="3"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">&amp;&amp;</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">&quot;&quot;</span><span class="stryker-original-code" data-mutant="5"><span class="bg-null">&#039;Bad Request&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, BadRequestError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -72,8 +69,8 @@ export class BadRequestError extends HttpError {
  * requested resource.
  */
 export class UnauthorizedError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">{}</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">&quot;&quot;</span><span class="stryker-original-code" data-mutant="5"><span class="bg-null">&#039;UnauthorizedError&#039;</span></span><span class="bg-null">, 401, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">&amp;&amp;</span><span class="stryker-original-code" data-mutant="6"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">&quot;&quot;</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">&#039;Unauthorized&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">{}</span><span class="stryker-original-code" data-mutant="6"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">&quot;&quot;</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">&#039;UnauthorizedError&#039;</span></span><span class="bg-null">, 401, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">true</span><span class="stryker-original-code" data-mutant="8"><span class="stryker-original-code" data-mutant="9"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">&amp;&amp;</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">&quot;&quot;</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">&#039;Unauthorized&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, UnauthorizedError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -83,8 +80,8 @@ export class UnauthorizedError extends HttpError {
  * fulfill it. Authorization will not help and the request SHOULD NOT be repeated.
  */
 export class ForbiddenError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">{}</span><span class="stryker-original-code" data-mutant="8"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">&quot;&quot;</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">&#039;ForbiddenError&#039;</span></span><span class="bg-null">, 403, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">&amp;&amp;</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">&quot;&quot;</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">&#039;Forbidden&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">{}</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">&quot;&quot;</span><span class="stryker-original-code" data-mutant="13"><span class="bg-null">&#039;ForbiddenError&#039;</span></span><span class="bg-null">, 403, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">true</span><span class="stryker-original-code" data-mutant="14"><span class="stryker-original-code" data-mutant="15"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">&amp;&amp;</span><span class="stryker-original-code" data-mutant="16"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">&quot;&quot;</span><span class="stryker-original-code" data-mutant="17"><span class="bg-null">&#039;Forbidden&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, ForbidenError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -93,7 +90,7 @@ export class ForbiddenError extends HttpError {
  * @deprecated use ForbiddenError instead
  */
 export class ForbidenError extends ForbiddenError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">{}</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">{
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">{}</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">{
         super(message);
     }</span></span><span class="bg-null">
 }
@@ -110,8 +107,8 @@ export class ForbidenError extends ForbiddenError {
  * or when no other response is applicable.
  */
 export class NotFoundError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">{}</span><span class="stryker-original-code" data-mutant="13"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">&quot;&quot;</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">&#039;NotFoundError&#039;</span></span><span class="bg-null">, 404, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">&amp;&amp;</span><span class="stryker-original-code" data-mutant="15"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">&quot;&quot;</span><span class="stryker-original-code" data-mutant="16"><span class="bg-null">&#039;Not Found&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">{}</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">&quot;&quot;</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">&#039;NotFoundError&#039;</span></span><span class="bg-null">, 404, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">true</span><span class="stryker-original-code" data-mutant="21"><span class="stryker-original-code" data-mutant="22"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">&amp;&amp;</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">&quot;&quot;</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">&#039;Not Found&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, NotFoundError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -122,8 +119,8 @@ export class NotFoundError extends HttpError {
  * containing a list of valid methods for the requested resource.
  */
 export class MethodNotAllowedError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">{}</span><span class="stryker-original-code" data-mutant="17"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">&quot;&quot;</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">&#039;MethodNotAllowedError&#039;</span></span><span class="bg-null">, 405, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">&amp;&amp;</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">&quot;&quot;</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">&#039;Method Not Allowed&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">{}</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">&quot;&quot;</span><span class="stryker-original-code" data-mutant="26"><span class="bg-null">&#039;MethodNotAllowedError&#039;</span></span><span class="bg-null">, 405, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">true</span><span class="stryker-original-code" data-mutant="27"><span class="stryker-original-code" data-mutant="28"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">&amp;&amp;</span><span class="stryker-original-code" data-mutant="29"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">&quot;&quot;</span><span class="stryker-original-code" data-mutant="30"><span class="bg-null">&#039;Method Not Allowed&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, MethodNotAllowedError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -134,8 +131,8 @@ export class MethodNotAllowedError extends HttpError {
  * to the accept headers sent in the request.
  */
 export class NotAcceptableError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">{}</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">&quot;&quot;</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">&#039;NotAcceptableError&#039;</span></span><span class="bg-null">, 406, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">&amp;&amp;</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">&quot;&quot;</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">&#039;Not Acceptable&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">{}</span><span class="stryker-original-code" data-mutant="31"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">&quot;&quot;</span><span class="stryker-original-code" data-mutant="32"><span class="bg-null">&#039;NotAcceptableError&#039;</span></span><span class="bg-null">, 406, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="33"><span class="badge badge-secondary">33</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="33">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="34"><span class="badge badge-secondary">34</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="34">true</span><span class="stryker-original-code" data-mutant="33"><span class="stryker-original-code" data-mutant="34"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="35"><span class="badge badge-secondary">35</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="35">&amp;&amp;</span><span class="stryker-original-code" data-mutant="35"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="36"><span class="badge badge-secondary">36</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="36">&quot;&quot;</span><span class="stryker-original-code" data-mutant="36"><span class="bg-null">&#039;Not Acceptable&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, NotAcceptableError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -144,8 +141,8 @@ export class NotAcceptableError extends HttpError {
  * conflict with the current state of the resource.
  */
 export class ConflictError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">{}</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">&quot;&quot;</span><span class="stryker-original-code" data-mutant="26"><span class="bg-null">&#039;ConflictError&#039;</span></span><span class="bg-null">, 409, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">&amp;&amp;</span><span class="stryker-original-code" data-mutant="27"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">&quot;&quot;</span><span class="stryker-original-code" data-mutant="28"><span class="bg-null">&#039;Conflict&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="37"><span class="badge badge-secondary">37</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="37">{}</span><span class="stryker-original-code" data-mutant="37"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="38"><span class="badge badge-secondary">38</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="38">&quot;&quot;</span><span class="stryker-original-code" data-mutant="38"><span class="bg-null">&#039;ConflictError&#039;</span></span><span class="bg-null">, 409, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="39"><span class="badge badge-secondary">39</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="39">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="40"><span class="badge badge-secondary">40</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="40">true</span><span class="stryker-original-code" data-mutant="39"><span class="stryker-original-code" data-mutant="40"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="41"><span class="badge badge-secondary">41</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="41">&amp;&amp;</span><span class="stryker-original-code" data-mutant="41"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="42"><span class="badge badge-secondary">42</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="42">&quot;&quot;</span><span class="stryker-original-code" data-mutant="42"><span class="bg-null">&#039;Conflict&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, ConflictError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -160,8 +157,8 @@ export class ConflictError extends HttpError {
  * cacheable unless indicated otherwise.
  */
 export class GoneError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">{}</span><span class="stryker-original-code" data-mutant="29"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">&quot;&quot;</span><span class="stryker-original-code" data-mutant="30"><span class="bg-null">&#039;GoneError&#039;</span></span><span class="bg-null">, 410, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">&amp;&amp;</span><span class="stryker-original-code" data-mutant="31"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">&quot;&quot;</span><span class="stryker-original-code" data-mutant="32"><span class="bg-null">&#039;Gone&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="43"><span class="badge badge-secondary">43</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="43">{}</span><span class="stryker-original-code" data-mutant="43"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="44"><span class="badge badge-secondary">44</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="44">&quot;&quot;</span><span class="stryker-original-code" data-mutant="44"><span class="bg-null">&#039;GoneError&#039;</span></span><span class="bg-null">, 410, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="45"><span class="badge badge-secondary">45</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="45">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="46"><span class="badge badge-secondary">46</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="46">true</span><span class="stryker-original-code" data-mutant="45"><span class="stryker-original-code" data-mutant="46"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="47"><span class="badge badge-secondary">47</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="47">&amp;&amp;</span><span class="stryker-original-code" data-mutant="47"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="48"><span class="badge badge-secondary">48</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="48">&quot;&quot;</span><span class="stryker-original-code" data-mutant="48"><span class="bg-null">&#039;Gone&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, GoneError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -172,8 +169,8 @@ export class GoneError extends HttpError {
  * for the requested method.
  */
 export class UnsupportedMediaTypeError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="33"><span class="badge badge-secondary">33</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="33">{}</span><span class="stryker-original-code" data-mutant="33"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="34"><span class="badge badge-secondary">34</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="34">&quot;&quot;</span><span class="stryker-original-code" data-mutant="34"><span class="bg-null">&#039;UnsupportedMediaTypeError&#039;</span></span><span class="bg-null">, 415, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: Killed" data-mutant-status-annotation="success" data-mutant-status="1" data-mutant="35"><span class="badge badge-success">35</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="35">&amp;&amp;</span><span class="stryker-original-code" data-mutant="35"><span class="bg-success-light">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="36"><span class="badge badge-secondary">36</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="36">&quot;&quot;</span><span class="stryker-original-code" data-mutant="36"><span class="bg-null">&#039;Unsupported Media Type&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="49"><span class="badge badge-secondary">49</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="49">{}</span><span class="stryker-original-code" data-mutant="49"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="50"><span class="badge badge-secondary">50</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="50">&quot;&quot;</span><span class="stryker-original-code" data-mutant="50"><span class="bg-null">&#039;UnsupportedMediaTypeError&#039;</span></span><span class="bg-null">, 415, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="51"><span class="badge badge-secondary">51</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="51">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="52"><span class="badge badge-secondary">52</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="52">true</span><span class="stryker-original-code" data-mutant="51"><span class="stryker-original-code" data-mutant="52"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="53"><span class="badge badge-secondary">53</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="53">&amp;&amp;</span><span class="stryker-original-code" data-mutant="53"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="54"><span class="badge badge-secondary">54</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="54">&quot;&quot;</span><span class="stryker-original-code" data-mutant="54"><span class="bg-null">&#039;Unsupported Media Type&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, UnsupportedMediaTypeError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -183,8 +180,8 @@ export class UnsupportedMediaTypeError extends HttpError {
  * which prevented it from fulfilling the request.
  */
 export class InternalServerError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="37"><span class="badge badge-secondary">37</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="37">{}</span><span class="stryker-original-code" data-mutant="37"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="38"><span class="badge badge-secondary">38</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="38">&quot;&quot;</span><span class="stryker-original-code" data-mutant="38"><span class="bg-null">&#039;InternalServerError&#039;</span></span><span class="bg-null">, 500, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="39"><span class="badge badge-secondary">39</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="39">&amp;&amp;</span><span class="stryker-original-code" data-mutant="39"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="40"><span class="badge badge-secondary">40</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="40">&quot;&quot;</span><span class="stryker-original-code" data-mutant="40"><span class="bg-null">&#039;Internal Server Error&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="55"><span class="badge badge-secondary">55</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="55">{}</span><span class="stryker-original-code" data-mutant="55"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="56"><span class="badge badge-secondary">56</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="56">&quot;&quot;</span><span class="stryker-original-code" data-mutant="56"><span class="bg-null">&#039;InternalServerError&#039;</span></span><span class="bg-null">, 500, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="57"><span class="badge badge-secondary">57</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="57">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="58"><span class="badge badge-secondary">58</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="58">true</span><span class="stryker-original-code" data-mutant="57"><span class="stryker-original-code" data-mutant="58"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="59"><span class="badge badge-secondary">59</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="59">&amp;&amp;</span><span class="stryker-original-code" data-mutant="59"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="60"><span class="badge badge-secondary">60</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="60">&quot;&quot;</span><span class="stryker-original-code" data-mutant="60"><span class="bg-null">&#039;Internal Server Error&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, InternalServerError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -195,8 +192,8 @@ export class InternalServerError extends HttpError {
  * the request method and is not capable of supporting it for any resource.
  */
 export class NotImplementedError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="41"><span class="badge badge-secondary">41</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="41">{}</span><span class="stryker-original-code" data-mutant="41"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="42"><span class="badge badge-secondary">42</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="42">&quot;&quot;</span><span class="stryker-original-code" data-mutant="42"><span class="bg-null">&#039;NotImplementedError&#039;</span></span><span class="bg-null">, 501, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="43"><span class="badge badge-secondary">43</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="43">&amp;&amp;</span><span class="stryker-original-code" data-mutant="43"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="44"><span class="badge badge-secondary">44</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="44">&quot;&quot;</span><span class="stryker-original-code" data-mutant="44"><span class="bg-null">&#039;Not Implemented&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="61"><span class="badge badge-secondary">61</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="61">{}</span><span class="stryker-original-code" data-mutant="61"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="62"><span class="badge badge-secondary">62</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="62">&quot;&quot;</span><span class="stryker-original-code" data-mutant="62"><span class="bg-null">&#039;NotImplementedError&#039;</span></span><span class="bg-null">, 501, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="63"><span class="badge badge-secondary">63</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="63">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="64"><span class="badge badge-secondary">64</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="64">true</span><span class="stryker-original-code" data-mutant="63"><span class="stryker-original-code" data-mutant="64"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="65"><span class="badge badge-secondary">65</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="65">&amp;&amp;</span><span class="stryker-original-code" data-mutant="65"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="66"><span class="badge badge-secondary">66</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="66">&quot;&quot;</span><span class="stryker-original-code" data-mutant="66"><span class="bg-null">&#039;Not Implemented&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, NotImplementedError.prototype);
     }</span></span><span class="bg-null">
 }
@@ -207,8 +204,8 @@ export class NotImplementedError extends HttpError {
  * (thus a 400 Bad Request status code is inappropriate) but was unable to process the contained instructions.
  */
 export class UnprocessableEntityError extends HttpError {
-    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="45"><span class="badge badge-secondary">45</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="45">{}</span><span class="stryker-original-code" data-mutant="45"><span class="bg-null">{
-        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="46"><span class="badge badge-secondary">46</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="46">&quot;&quot;</span><span class="stryker-original-code" data-mutant="46"><span class="bg-null">&#039;UnprocessableEntityError&#039;</span></span><span class="bg-null">, 422, message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="47"><span class="badge badge-secondary">47</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="47">&amp;&amp;</span><span class="stryker-original-code" data-mutant="47"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="48"><span class="badge badge-secondary">48</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="48">&quot;&quot;</span><span class="stryker-original-code" data-mutant="48"><span class="bg-null">&#039;Unprocessable Entity&#039;</span></span><span class="bg-null">);
+    constructor(message?: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="67"><span class="badge badge-secondary">67</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="67">{}</span><span class="stryker-original-code" data-mutant="67"><span class="bg-null">{
+        super(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="68"><span class="badge badge-secondary">68</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="68">&quot;&quot;</span><span class="stryker-original-code" data-mutant="68"><span class="bg-null">&#039;UnprocessableEntityError&#039;</span></span><span class="bg-null">, 422, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="69"><span class="badge badge-secondary">69</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="69">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="70"><span class="badge badge-secondary">70</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="70">true</span><span class="stryker-original-code" data-mutant="69"><span class="stryker-original-code" data-mutant="70"><span class="bg-null">message </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="71"><span class="badge badge-secondary">71</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="71">&amp;&amp;</span><span class="stryker-original-code" data-mutant="71"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="72"><span class="badge badge-secondary">72</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="72">&quot;&quot;</span><span class="stryker-original-code" data-mutant="72"><span class="bg-null">&#039;Unprocessable Entity&#039;</span></span></span></span><span class="bg-null">);
         Object.setPrototypeOf(this, UnprocessableEntityError.prototype);
     }</span></span><span class="bg-null">
 }</span>
@@ -237,6 +234,22 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
 <tr><th>2</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>11
+:
+38</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>3</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>11
+:
+38</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>4</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>11
@@ -244,7 +257,7 @@ export class UnprocessableEntityError extends HttpError {
 46</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>3</th>
+<tr><th>5</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>11
@@ -252,7 +265,7 @@ export class UnprocessableEntityError extends HttpError {
 49</td>
 <td><code>'           '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>4</th>
+<tr><th>6</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>22
@@ -261,7 +274,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>5</th>
+<tr><th>7</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>23
@@ -269,7 +282,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>6</th>
+<tr><th>8</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>23
+:
+40</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>9</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>23
+:
+40</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>10</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>23
@@ -277,7 +306,7 @@ export class UnprocessableEntityError extends HttpError {
 48</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>7</th>
+<tr><th>11</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>23
@@ -285,7 +314,7 @@ export class UnprocessableEntityError extends HttpError {
 51</td>
 <td><code>'            '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>8</th>
+<tr><th>12</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>33
@@ -294,7 +323,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>9</th>
+<tr><th>13</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>34
@@ -302,7 +331,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>10</th>
+<tr><th>14</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>34
+:
+37</td>
+<td><code>|| '         '</code></td>
+<td><code></code></td></tr>
+<tr><th>15</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>34
+:
+37</td>
+<td><code>|| '         '</code></td>
+<td><code></code></td></tr>
+<tr><th>16</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>34
@@ -310,7 +355,7 @@ export class UnprocessableEntityError extends HttpError {
 45</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>11</th>
+<tr><th>17</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>34
@@ -318,7 +363,7 @@ export class UnprocessableEntityError extends HttpError {
 48</td>
 <td><code>'         '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>12</th>
+<tr><th>18</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>43
@@ -327,7 +372,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>13</th>
+<tr><th>19</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>60
@@ -336,7 +381,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>14</th>
+<tr><th>20</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>61
@@ -344,7 +389,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'             '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>15</th>
+<tr><th>21</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>61
+:
+36</td>
+<td><code>|| '         '</code></td>
+<td><code></code></td></tr>
+<tr><th>22</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>61
+:
+36</td>
+<td><code>|| '         '</code></td>
+<td><code></code></td></tr>
+<tr><th>23</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>61
@@ -352,7 +413,7 @@ export class UnprocessableEntityError extends HttpError {
 44</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>16</th>
+<tr><th>24</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>61
@@ -360,7 +421,7 @@ export class UnprocessableEntityError extends HttpError {
 47</td>
 <td><code>'         '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>17</th>
+<tr><th>25</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>72
@@ -369,7 +430,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>18</th>
+<tr><th>26</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>73
@@ -377,7 +438,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>19</th>
+<tr><th>27</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>73
+:
+44</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>28</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>73
+:
+44</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>29</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>73
@@ -385,7 +462,7 @@ export class UnprocessableEntityError extends HttpError {
 52</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>20</th>
+<tr><th>30</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>73
@@ -393,7 +470,7 @@ export class UnprocessableEntityError extends HttpError {
 55</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>21</th>
+<tr><th>31</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>84
@@ -402,7 +479,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>22</th>
+<tr><th>32</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>85
@@ -410,7 +487,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>23</th>
+<tr><th>33</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>85
+:
+41</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>34</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>85
+:
+41</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>35</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>85
@@ -418,7 +511,7 @@ export class UnprocessableEntityError extends HttpError {
 49</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>24</th>
+<tr><th>36</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>85
@@ -426,7 +519,7 @@ export class UnprocessableEntityError extends HttpError {
 52</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>25</th>
+<tr><th>37</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>94
@@ -435,7 +528,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>26</th>
+<tr><th>38</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>95
@@ -443,7 +536,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'             '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>27</th>
+<tr><th>39</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>95
+:
+36</td>
+<td><code>|| '        '</code></td>
+<td><code></code></td></tr>
+<tr><th>40</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>95
+:
+36</td>
+<td><code>|| '        '</code></td>
+<td><code></code></td></tr>
+<tr><th>41</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>95
@@ -451,7 +560,7 @@ export class UnprocessableEntityError extends HttpError {
 44</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>28</th>
+<tr><th>42</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>95
@@ -459,7 +568,7 @@ export class UnprocessableEntityError extends HttpError {
 47</td>
 <td><code>'        '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>29</th>
+<tr><th>43</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>110
@@ -468,7 +577,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>30</th>
+<tr><th>44</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>111
@@ -476,7 +585,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'         '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>31</th>
+<tr><th>45</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>111
+:
+32</td>
+<td><code>|| '    '</code></td>
+<td><code></code></td></tr>
+<tr><th>46</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>111
+:
+32</td>
+<td><code>|| '    '</code></td>
+<td><code></code></td></tr>
+<tr><th>47</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>111
@@ -484,7 +609,7 @@ export class UnprocessableEntityError extends HttpError {
 40</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>32</th>
+<tr><th>48</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>111
@@ -492,7 +617,7 @@ export class UnprocessableEntityError extends HttpError {
 43</td>
 <td><code>'    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>33</th>
+<tr><th>49</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>122
@@ -501,7 +626,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>34</th>
+<tr><th>50</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>123
@@ -509,15 +634,31 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>35</th>
+<tr><th>51</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>123
+:
+48</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>52</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>123
+:
+48</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>53</th>
 <td>BinaryExpression</td>
-<td>Killed</td>
+<td>RuntimeError</td>
 <td>123
 :
 56</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>36</th>
+<tr><th>54</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>123
@@ -525,7 +666,7 @@ export class UnprocessableEntityError extends HttpError {
 59</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>37</th>
+<tr><th>55</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>133
@@ -534,7 +675,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>38</th>
+<tr><th>56</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>134
@@ -542,7 +683,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>39</th>
+<tr><th>57</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>134
+:
+42</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>58</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>134
+:
+42</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>59</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>134
@@ -550,7 +707,7 @@ export class UnprocessableEntityError extends HttpError {
 50</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>40</th>
+<tr><th>60</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>134
@@ -558,7 +715,7 @@ export class UnprocessableEntityError extends HttpError {
 53</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>41</th>
+<tr><th>61</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>145
@@ -567,7 +724,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>42</th>
+<tr><th>62</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>146
@@ -575,7 +732,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>43</th>
+<tr><th>63</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>146
+:
+42</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>64</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>146
+:
+42</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>65</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>146
@@ -583,7 +756,7 @@ export class UnprocessableEntityError extends HttpError {
 50</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>44</th>
+<tr><th>66</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>146
@@ -591,7 +764,7 @@ export class UnprocessableEntityError extends HttpError {
 53</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>45</th>
+<tr><th>67</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>157
@@ -600,7 +773,7 @@ export class UnprocessableEntityError extends HttpError {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>46</th>
+<tr><th>68</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>158
@@ -608,7 +781,23 @@ export class UnprocessableEntityError extends HttpError {
 14</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>47</th>
+<tr><th>69</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>158
+:
+47</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>70</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>158
+:
+47</td>
+<td><code>|| ' ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>71</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>158
@@ -616,7 +805,7 @@ export class UnprocessableEntityError extends HttpError {
 55</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>48</th>
+<tr><th>72</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>158

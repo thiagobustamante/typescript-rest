@@ -27,24 +27,27 @@
 <td><div class="progress"><div class="progress-bar bg-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%;">100.00
 %</div></div></td>
 <th class="text-center text-success" style="width: 10%">100.00</th>
+<td class="text-center">1</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
+<td class="text-center">37</td>
 <td class="text-center">0</td>
-<td class="text-center">26</td>
-<td class="text-center">0</td>
+<th class="text-center">1</th>
 <th class="text-center">0</th>
-<th class="text-center">0</th>
-<th class="text-center">26</th></tr>
+<th class="text-center">38</th></tr>
 </tbody></table></div></div>
 <div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
 
-
+<div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="1" type="checkbox">
+Killed
+ 
+(1)</label></div>
 
 <div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
 RuntimeError
  
-(26)</label></div>
+(37)</label></div>
 
 <a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
 <pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
@@ -66,40 +69,40 @@ export class PassportAuthenticator implements ServiceAuthenticator {
     private options: PassportAuthenticatorOptions;
 
     constructor(strategy: passport.Strategy, options: PassportAuthenticatorOptions = {}) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
-        this.options = options;
-        const authStrategy = options.strategyName </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">&amp;&amp;</span><span class="stryker-original-code" data-mutant="1"><span class="bg-null">||</span></span><span class="bg-null"> strategy.name </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">&amp;&amp;</span><span class="stryker-original-code" data-mutant="2"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">&quot;&quot;</span><span class="stryker-original-code" data-mutant="3"><span class="bg-null">&#039;default_strategy&#039;</span></span><span class="bg-null">;
+        </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">true</span><span class="stryker-original-code" data-mutant="1"><span class="stryker-original-code" data-mutant="2"><span class="bg-null">this.options = options</span></span></span><span class="bg-null">;
+        const authStrategy = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="3"><span class="badge badge-secondary">3</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="3">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">true</span><span class="stryker-original-code" data-mutant="3"><span class="stryker-original-code" data-mutant="4"><span class="stryker-original-code" data-mutant="5"><span class="stryker-original-code" data-mutant="6"><span class="bg-null">options.strategyName </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">&amp;&amp;</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">||</span></span><span class="bg-null"> strategy.name</span></span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: Killed" data-mutant-status-annotation="success" data-mutant-status="1" data-mutant="8"><span class="badge badge-success">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">&amp;&amp;</span><span class="stryker-original-code" data-mutant="8"><span class="bg-success-light">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">&quot;&quot;</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">&#039;default_strategy&#039;</span></span></span></span><span class="bg-null">;
         passport.use(authStrategy, strategy);
-        this.authenticator = passport.authenticate(authStrategy, options.authOptions </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="4"><span class="badge badge-secondary">4</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="4">&amp;&amp;</span><span class="stryker-original-code" data-mutant="4"><span class="bg-null">||</span></span><span class="bg-null"> {});
+        </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">true</span><span class="stryker-original-code" data-mutant="10"><span class="stryker-original-code" data-mutant="11"><span class="bg-null">this.authenticator = passport.authenticate(authStrategy, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">true</span><span class="stryker-original-code" data-mutant="12"><span class="stryker-original-code" data-mutant="13"><span class="bg-null">options.authOptions </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">&amp;&amp;</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">||</span></span><span class="bg-null"> {}</span></span></span><span class="bg-null">)</span></span></span><span class="bg-null">;
     }</span></span><span class="bg-null">
 
-    public getMiddleware(): express.RequestHandler </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="5"><span class="badge badge-secondary">5</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="5">{}</span><span class="stryker-original-code" data-mutant="5"><span class="bg-null">{
+    public getMiddleware(): express.RequestHandler </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">{}</span><span class="stryker-original-code" data-mutant="15"><span class="bg-null">{
         return this.authenticator;
     }</span></span><span class="bg-null">
 
-    public getRoles(req: express.Request): Array&lt;string&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="6"><span class="badge badge-secondary">6</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="6">{}</span><span class="stryker-original-code" data-mutant="6"><span class="bg-null">{
-        const roleKey = this.options.rolesKey </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="7"><span class="badge badge-secondary">7</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="7">&amp;&amp;</span><span class="stryker-original-code" data-mutant="7"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="8"><span class="badge badge-secondary">8</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="8">&quot;&quot;</span><span class="stryker-original-code" data-mutant="8"><span class="bg-null">&#039;roles&#039;</span></span><span class="bg-null">;
-        return _.castArray(_.get(req.user, roleKey, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">[&#039;Stryker was here&#039;]</span><span class="stryker-original-code" data-mutant="9"><span class="bg-null">[]</span></span><span class="bg-null">));
+    public getRoles(req: express.Request): Array&lt;string&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">{}</span><span class="stryker-original-code" data-mutant="16"><span class="bg-null">{
+        const roleKey = </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">true</span><span class="stryker-original-code" data-mutant="17"><span class="stryker-original-code" data-mutant="18"><span class="bg-null">this.options.rolesKey </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">&amp;&amp;</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">||</span></span><span class="bg-null"> </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">&quot;&quot;</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">&#039;roles&#039;</span></span></span></span><span class="bg-null">;
+        return _.castArray(_.get(req.user, roleKey, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ArrayLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">[&#039;Stryker was here&#039;]</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">[]</span></span><span class="bg-null">));
     }</span></span><span class="bg-null">
 
-    public initialize(router: express.Router): void </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">{}</span><span class="stryker-original-code" data-mutant="10"><span class="bg-null">{
+    public initialize(router: express.Router): void </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">{}</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">{
         router.use(passport.initialize());
-        const useSession = _.get(this.options, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">&quot;&quot;</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">&#039;authOptions.session&#039;</span></span><span class="bg-null">, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">false</span><span class="stryker-original-code" data-mutant="12"><span class="bg-null">true</span></span><span class="bg-null">);
-        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">false</span><span class="stryker-original-code" data-mutant="13"><span class="stryker-original-code" data-mutant="14"><span class="bg-null">useSession</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">{}</span><span class="stryker-original-code" data-mutant="15"><span class="bg-null">{
+        const useSession = _.get(this.options, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">&quot;&quot;</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">&#039;authOptions.session&#039;</span></span><span class="bg-null">, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BooleanSubstitution" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">false</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">true</span></span><span class="bg-null">);
+        if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">false</span><span class="stryker-original-code" data-mutant="25"><span class="stryker-original-code" data-mutant="26"><span class="bg-null">useSession</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">{}</span><span class="stryker-original-code" data-mutant="27"><span class="bg-null">{
             router.use(passport.session());
-            if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">false</span><span class="stryker-original-code" data-mutant="16"><span class="stryker-original-code" data-mutant="17"><span class="bg-null">this.options.serializeUser </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">||</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">&amp;&amp;</span></span><span class="bg-null"> this.options.deserializeUser</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">{}</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">{
-                passport.serializeUser((user: any, done: (a: any, b: string) =&gt; void) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">{}</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">{
+            if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">false</span><span class="stryker-original-code" data-mutant="28"><span class="stryker-original-code" data-mutant="29"><span class="bg-null">this.options.serializeUser </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">||</span><span class="stryker-original-code" data-mutant="30"><span class="bg-null">&amp;&amp;</span></span><span class="bg-null"> this.options.deserializeUser</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">{}</span><span class="stryker-original-code" data-mutant="31"><span class="bg-null">{
+                passport.serializeUser((user: any, done: (a: any, b: string) =&gt; void) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">{}</span><span class="stryker-original-code" data-mutant="32"><span class="bg-null">{
                     Promise.resolve(this.options.serializeUser(user))
-                        .then((result: string) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">{}</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">{
+                        .then((result: string) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="33"><span class="badge badge-secondary">33</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="33">{}</span><span class="stryker-original-code" data-mutant="33"><span class="bg-null">{
                             done(null, result);
-                        }</span></span><span class="bg-null">).catch((err: Error) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">{}</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">{
+                        }</span></span><span class="bg-null">).catch((err: Error) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="34"><span class="badge badge-secondary">34</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="34">{}</span><span class="stryker-original-code" data-mutant="34"><span class="bg-null">{
                             done(err, null);
                         }</span></span><span class="bg-null">);
                 }</span></span><span class="bg-null">);
-                passport.deserializeUser((user: string, done: (a: any, b: any) =&gt; void) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">{}</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">{
+                passport.deserializeUser((user: string, done: (a: any, b: any) =&gt; void) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="35"><span class="badge badge-secondary">35</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="35">{}</span><span class="stryker-original-code" data-mutant="35"><span class="bg-null">{
                     Promise.resolve(this.options.deserializeUser(user))
-                        .then((result: any) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">{}</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">{
+                        .then((result: any) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="36"><span class="badge badge-secondary">36</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="36">{}</span><span class="stryker-original-code" data-mutant="36"><span class="bg-null">{
                             done(null, result);
-                        }</span></span><span class="bg-null">).catch((err: Error) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">{}</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">{
+                        }</span></span><span class="bg-null">).catch((err: Error) =&gt; </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="37"><span class="badge badge-secondary">37</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="37">{}</span><span class="stryker-original-code" data-mutant="37"><span class="bg-null">{
                             done(err, null);
                         }</span></span><span class="bg-null">);
                 }</span></span><span class="bg-null">);
@@ -123,6 +126,54 @@ export class PassportAuthenticator implements ServiceAuthenticator {
    ...    }</code></td>
 <td><code>{}</code></td></tr>
 <tr><th>1</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>19
+:
+8</td>
+<td><code>.        =</code></td>
+<td><code></code></td></tr>
+<tr><th>2</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>19
+:
+8</td>
+<td><code>.        =</code></td>
+<td><code></code></td></tr>
+<tr><th>3</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>20
+:
+29</td>
+<td><code>.    ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>4</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>20
+:
+29</td>
+<td><code>.    ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>5</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>20
+:
+29</td>
+<td><code>.    ...    .</code></td>
+<td><code></code></td></tr>
+<tr><th>6</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>20
+:
+29</td>
+<td><code>.    ...    .</code></td>
+<td><code></code></td></tr>
+<tr><th>7</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>20
@@ -130,15 +181,15 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 50</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>2</th>
+<tr><th>8</th>
 <td>BinaryExpression</td>
-<td>RuntimeError</td>
+<td>Killed</td>
 <td>20
 :
 67</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>3</th>
+<tr><th>9</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>20
@@ -146,7 +197,39 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 70</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>4</th>
+<tr><th>10</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>22
+:
+8</td>
+<td><code>.    ...| {})</code></td>
+<td><code></code></td></tr>
+<tr><th>11</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>22
+:
+8</td>
+<td><code>.    ...| {})</code></td>
+<td><code></code></td></tr>
+<tr><th>12</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>22
+:
+65</td>
+<td><code>.    ...|| {}</code></td>
+<td><code></code></td></tr>
+<tr><th>13</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>22
+:
+65</td>
+<td><code>.    ...|| {}</code></td>
+<td><code></code></td></tr>
+<tr><th>14</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>22
@@ -154,7 +237,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 85</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>5</th>
+<tr><th>15</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>25
@@ -163,7 +246,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>6</th>
+<tr><th>16</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>29
@@ -172,7 +255,23 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>7</th>
+<tr><th>17</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>30
+:
+24</td>
+<td><code>.    ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>18</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>30
+:
+24</td>
+<td><code>.    ...    '</code></td>
+<td><code></code></td></tr>
+<tr><th>19</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>30
@@ -180,7 +279,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 46</td>
 <td><code>||</code></td>
 <td><code>&&</code></td></tr>
-<tr><th>8</th>
+<tr><th>20</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>30
@@ -188,7 +287,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 49</td>
 <td><code>'     '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>9</th>
+<tr><th>21</th>
 <td>ArrayLiteral</td>
 <td>RuntimeError</td>
 <td>31
@@ -196,7 +295,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 52</td>
 <td><code>[]</code></td>
 <td><code>['   ...   ']</code></td></tr>
-<tr><th>10</th>
+<tr><th>22</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>34
@@ -205,7 +304,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>11</th>
+<tr><th>23</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>36
@@ -213,7 +312,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 47</td>
 <td><code>'    ...    '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>12</th>
+<tr><th>24</th>
 <td>BooleanSubstitution</td>
 <td>RuntimeError</td>
 <td>36
@@ -221,7 +320,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 70</td>
 <td><code></code></td>
 <td><code></code></td></tr>
-<tr><th>13</th>
+<tr><th>25</th>
 <td>IfStatement</td>
 <td>RuntimeError</td>
 <td>37
@@ -229,7 +328,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 12</td>
 <td><code></code></td>
 <td><code></code></td></tr>
-<tr><th>14</th>
+<tr><th>26</th>
 <td>IfStatement</td>
 <td>RuntimeError</td>
 <td>37
@@ -237,7 +336,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 12</td>
 <td><code></code></td>
 <td><code></code></td></tr>
-<tr><th>15</th>
+<tr><th>27</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>37
@@ -246,7 +345,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>16</th>
+<tr><th>28</th>
 <td>IfStatement</td>
 <td>RuntimeError</td>
 <td>39
@@ -254,7 +353,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 16</td>
 <td><code>.    ...    .</code></td>
 <td><code></code></td></tr>
-<tr><th>17</th>
+<tr><th>29</th>
 <td>IfStatement</td>
 <td>RuntimeError</td>
 <td>39
@@ -262,7 +361,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 16</td>
 <td><code>.    ...    .</code></td>
 <td><code></code></td></tr>
-<tr><th>18</th>
+<tr><th>30</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>39
@@ -270,7 +369,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 43</td>
 <td><code>&&</code></td>
 <td><code>||</code></td></tr>
-<tr><th>19</th>
+<tr><th>31</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>39
@@ -279,7 +378,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>20</th>
+<tr><th>32</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>40
@@ -288,7 +387,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>21</th>
+<tr><th>33</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>42
@@ -297,7 +396,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>22</th>
+<tr><th>34</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>44
@@ -306,7 +405,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>23</th>
+<tr><th>35</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>48
@@ -315,7 +414,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>24</th>
+<tr><th>36</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>50
@@ -324,7 +423,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>25</th>
+<tr><th>37</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>52

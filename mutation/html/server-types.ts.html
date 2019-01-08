@@ -31,11 +31,11 @@
 <td class="text-center">0</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
-<td class="text-center">1</td>
+<td class="text-center">3</td>
 <td class="text-center">0</td>
 <th class="text-center">0</th>
 <th class="text-center">0</th>
-<th class="text-center">1</th></tr>
+<th class="text-center">3</th></tr>
 </tbody></table></div></div>
 <div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
 
@@ -44,7 +44,7 @@
 <div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
 RuntimeError
  
-(1)</label></div>
+(3)</label></div>
 
 <a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
 <pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
@@ -119,7 +119,7 @@ export abstract class HttpError extends Error {
         public statusCode: number,
         public message: string) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="0"><span class="badge badge-secondary">0</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="0">{}</span><span class="stryker-original-code" data-mutant="0"><span class="bg-null">{
         super(message);
-        this.name = name;
+        </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="1"><span class="badge badge-secondary">1</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="1">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="2"><span class="badge badge-secondary">2</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="2">true</span><span class="stryker-original-code" data-mutant="1"><span class="stryker-original-code" data-mutant="2"><span class="bg-null">this.name = name</span></span></span><span class="bg-null">;
     }</span></span><span class="bg-null">
 }
 
@@ -187,7 +187,23 @@ export type ParameterConverter = (paramValue: any) =&gt; any;</span>
 32</td>
 <td><code>{
    ...    }</code></td>
-<td><code>{}</code></td></tr></tbody></table></div></div></div></div>
+<td><code>{}</code></td></tr>
+<tr><th>1</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>72
+:
+8</td>
+<td><code>.     =</code></td>
+<td><code></code></td></tr>
+<tr><th>2</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>72
+:
+8</td>
+<td><code>.     =</code></td>
+<td><code></code></td></tr></tbody></table></div></div></div></div>
 <footer>Generated with stryker-html-reporter generator. Visit the 
 <a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
 <script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>

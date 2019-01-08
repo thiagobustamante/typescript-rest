@@ -31,11 +31,11 @@
 <td class="text-center">0</td>
 <td class="text-center">0</td>
 <td class="text-center">0</td>
-<td class="text-center">29</td>
+<td class="text-center">33</td>
 <td class="text-center">0</td>
 <th class="text-center">0</th>
 <th class="text-center">0</th>
-<th class="text-center">29</th></tr>
+<th class="text-center">33</th></tr>
 </tbody></table></div></div>
 <div class="row"><div class="col-lg-7"><div class="row legend"><form class="col-md-12" novalidate="novalidate">
 
@@ -44,7 +44,7 @@
 <div class="form-check form-check-inline"><label class="form-check-label"><input class="form-check-input stryker-display" value="4" type="checkbox">
 RuntimeError
  
-(29)</label></div>
+(33)</label></div>
 
 <a href="#" class="stryker-collapse-expand-all">Expand all</a></form></div>
 <pre><code class="lang-javascript"><span class="bg-null">&#039;use strict&#039;;
@@ -63,25 +63,25 @@ export class ServerConfig {
                     Server.useIoC(config.es6);
                 }</span></span><span class="bg-null"> else if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="9"><span class="badge badge-secondary">9</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="9">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="10"><span class="badge badge-secondary">10</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="10">false</span><span class="stryker-original-code" data-mutant="9"><span class="stryker-original-code" data-mutant="10"><span class="bg-null">config.serviceFactory</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="11"><span class="badge badge-secondary">11</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="11">{}</span><span class="stryker-original-code" data-mutant="11"><span class="bg-null">{
                     if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="12"><span class="badge badge-secondary">12</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="12">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="13"><span class="badge badge-secondary">13</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="13">false</span><span class="stryker-original-code" data-mutant="12"><span class="stryker-original-code" data-mutant="13"><span class="bg-null">config.serviceFactory.indexOf(</span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="14"><span class="badge badge-secondary">14</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="14">&quot;&quot;</span><span class="stryker-original-code" data-mutant="14"><span class="bg-null">&#039;.&#039;</span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="15"><span class="badge badge-secondary">15</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="15">!==</span><span class="stryker-original-code" data-mutant="15"><span class="bg-null">===</span></span><span class="bg-null"> 0</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="16"><span class="badge badge-secondary">16</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="16">{}</span><span class="stryker-original-code" data-mutant="16"><span class="bg-null">{
-                        config.serviceFactory = path.join(process.cwd(), config.serviceFactory);
+                        </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">true</span><span class="stryker-original-code" data-mutant="17"><span class="stryker-original-code" data-mutant="18"><span class="bg-null">config.serviceFactory = path.join(process.cwd(), config.serviceFactory)</span></span></span><span class="bg-null">;
                     }</span></span><span class="bg-null">
                     Server.registerServiceFactory(config.serviceFactory);
                 }</span></span><span class="bg-null">
             }</span></span><span class="bg-null">
-        }</span></span><span class="bg-null"> catch (e) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="17"><span class="badge badge-secondary">17</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="17">{}</span><span class="stryker-original-code" data-mutant="17"><span class="bg-null">{
+        }</span></span><span class="bg-null"> catch (e) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">{}</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">{
             // tslint:disable-next-line:no-console
             console.error(e);
         }</span></span><span class="bg-null">
     }</span></span><span class="bg-null">
 
-    public static searchConfigFile() </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="18"><span class="badge badge-secondary">18</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="18">{}</span><span class="stryker-original-code" data-mutant="18"><span class="bg-null">{
-        let configFile = path.join(__dirname, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="19"><span class="badge badge-secondary">19</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="19">&quot;&quot;</span><span class="stryker-original-code" data-mutant="19"><span class="bg-null">&#039;rest.config&#039;</span></span><span class="bg-null">);
-        while (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="WhileStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="PrefixUnaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">fs.existsSync(configFile)</span><span class="stryker-original-code" data-mutant="20"><span class="stryker-original-code" data-mutant="21"><span class="bg-null">!fs.existsSync(configFile)</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">{}</span><span class="stryker-original-code" data-mutant="22"><span class="bg-null">{
-            const fileOnParent = path.normalize(path.join(path.dirname(configFile), </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">&quot;&quot;</span><span class="stryker-original-code" data-mutant="23"><span class="bg-null">&#039;..&#039;</span></span><span class="bg-null">, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">&quot;&quot;</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">&#039;rest.config&#039;</span></span><span class="bg-null">));
-            if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">false</span><span class="stryker-original-code" data-mutant="25"><span class="stryker-original-code" data-mutant="26"><span class="bg-null">configFile </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">!==</span><span class="stryker-original-code" data-mutant="27"><span class="bg-null">===</span></span><span class="bg-null"> fileOnParent</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">{}</span><span class="stryker-original-code" data-mutant="28"><span class="bg-null">{
+    public static searchConfigFile() </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="20"><span class="badge badge-secondary">20</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="20">{}</span><span class="stryker-original-code" data-mutant="20"><span class="bg-null">{
+        let configFile = path.join(__dirname, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="21"><span class="badge badge-secondary">21</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="21">&quot;&quot;</span><span class="stryker-original-code" data-mutant="21"><span class="bg-null">&#039;rest.config&#039;</span></span><span class="bg-null">);
+        while (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="WhileStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="22"><span class="badge badge-secondary">22</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="22">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="PrefixUnaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="23"><span class="badge badge-secondary">23</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="23">fs.existsSync(configFile)</span><span class="stryker-original-code" data-mutant="22"><span class="stryker-original-code" data-mutant="23"><span class="bg-null">!fs.existsSync(configFile)</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="24"><span class="badge badge-secondary">24</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="24">{}</span><span class="stryker-original-code" data-mutant="24"><span class="bg-null">{
+            const fileOnParent = path.normalize(path.join(path.dirname(configFile), </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="25"><span class="badge badge-secondary">25</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="25">&quot;&quot;</span><span class="stryker-original-code" data-mutant="25"><span class="bg-null">&#039;..&#039;</span></span><span class="bg-null">, </span><a href="#" class="stryker-mutant-button" tabindex="0" title="StringLiteral" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="26"><span class="badge badge-secondary">26</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="26">&quot;&quot;</span><span class="stryker-original-code" data-mutant="26"><span class="bg-null">&#039;rest.config&#039;</span></span><span class="bg-null">));
+            if (</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="27"><span class="badge badge-secondary">27</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="27">true</span><a href="#" class="stryker-mutant-button" tabindex="0" title="IfStatement" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="28"><span class="badge badge-secondary">28</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="28">false</span><span class="stryker-original-code" data-mutant="27"><span class="stryker-original-code" data-mutant="28"><span class="bg-null">configFile </span><a href="#" class="stryker-mutant-button" tabindex="0" title="BinaryExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="29"><span class="badge badge-secondary">29</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="29">!==</span><span class="stryker-original-code" data-mutant="29"><span class="bg-null">===</span></span><span class="bg-null"> fileOnParent</span></span></span><span class="bg-null">) </span><a href="#" class="stryker-mutant-button" tabindex="0" title="Block" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="30"><span class="badge badge-secondary">30</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="30">{}</span><span class="stryker-original-code" data-mutant="30"><span class="bg-null">{
                 return null;
             }</span></span><span class="bg-null">
-            configFile = fileOnParent;
+            </span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="31"><span class="badge badge-secondary">31</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="31">false</span><a href="#" class="stryker-mutant-button" tabindex="0" title="ConditionalExpression" data-content="status: RuntimeError" data-mutant-status-annotation="secondary" data-mutant-status="4" data-mutant="32"><span class="badge badge-secondary">32</span></a><span class="badge badge-info stryker-mutant-replacement" hidden="hidden" data-mutant="32">true</span><span class="stryker-original-code" data-mutant="31"><span class="stryker-original-code" data-mutant="32"><span class="bg-null">configFile = fileOnParent</span></span></span><span class="bg-null">;
         }</span></span><span class="bg-null">
         return configFile;
     }</span></span><span class="bg-null">
@@ -236,6 +236,22 @@ export class ServerConfig {
    ...    }</code></td>
 <td><code>{}</code></td></tr>
 <tr><th>17</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>16
+:
+24</td>
+<td><code>.    ...    )</code></td>
+<td><code></code></td></tr>
+<tr><th>18</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>16
+:
+24</td>
+<td><code>.    ...    )</code></td>
+<td><code></code></td></tr>
+<tr><th>19</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>21
@@ -244,7 +260,7 @@ export class ServerConfig {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>18</th>
+<tr><th>20</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>27
@@ -253,7 +269,7 @@ export class ServerConfig {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>19</th>
+<tr><th>21</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>28
@@ -261,7 +277,7 @@ export class ServerConfig {
 46</td>
 <td><code>'    .      '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>20</th>
+<tr><th>22</th>
 <td>WhileStatement</td>
 <td>RuntimeError</td>
 <td>29
@@ -269,7 +285,7 @@ export class ServerConfig {
 15</td>
 <td><code>!  . ...    )</code></td>
 <td><code></code></td></tr>
-<tr><th>21</th>
+<tr><th>23</th>
 <td>PrefixUnaryExpression</td>
 <td>RuntimeError</td>
 <td>29
@@ -277,7 +293,7 @@ export class ServerConfig {
 15</td>
 <td><code>!  . ...    )</code></td>
 <td><code>.    ...    )</code></td></tr>
-<tr><th>22</th>
+<tr><th>24</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>29
@@ -286,7 +302,7 @@ export class ServerConfig {
 <td><code>{
    ...    }</code></td>
 <td><code>{}</code></td></tr>
-<tr><th>23</th>
+<tr><th>25</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>30
@@ -294,7 +310,7 @@ export class ServerConfig {
 84</td>
 <td><code>'..'</code></td>
 <td><code>""</code></td></tr>
-<tr><th>24</th>
+<tr><th>26</th>
 <td>StringLiteral</td>
 <td>RuntimeError</td>
 <td>30
@@ -302,23 +318,23 @@ export class ServerConfig {
 90</td>
 <td><code>'    .      '</code></td>
 <td><code>""</code></td></tr>
-<tr><th>25</th>
-<td>IfStatement</td>
-<td>RuntimeError</td>
-<td>31
-:
-16</td>
-<td><code>===</code></td>
-<td><code></code></td></tr>
-<tr><th>26</th>
-<td>IfStatement</td>
-<td>RuntimeError</td>
-<td>31
-:
-16</td>
-<td><code>===</code></td>
-<td><code></code></td></tr>
 <tr><th>27</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>31
+:
+16</td>
+<td><code>===</code></td>
+<td><code></code></td></tr>
+<tr><th>28</th>
+<td>IfStatement</td>
+<td>RuntimeError</td>
+<td>31
+:
+16</td>
+<td><code>===</code></td>
+<td><code></code></td></tr>
+<tr><th>29</th>
 <td>BinaryExpression</td>
 <td>RuntimeError</td>
 <td>31
@@ -326,7 +342,7 @@ export class ServerConfig {
 27</td>
 <td><code>===</code></td>
 <td><code>!==</code></td></tr>
-<tr><th>28</th>
+<tr><th>30</th>
 <td>Block</td>
 <td>RuntimeError</td>
 <td>31
@@ -334,7 +350,23 @@ export class ServerConfig {
 45</td>
 <td><code>{
    ...    }</code></td>
-<td><code>{}</code></td></tr></tbody></table></div></div></div></div>
+<td><code>{}</code></td></tr>
+<tr><th>31</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>34
+:
+12</td>
+<td><code>=</code></td>
+<td><code></code></td></tr>
+<tr><th>32</th>
+<td>ConditionalExpression</td>
+<td>RuntimeError</td>
+<td>34
+:
+12</td>
+<td><code>=</code></td>
+<td><code></code></td></tr></tbody></table></div></div></div></div>
 <footer>Generated with stryker-html-reporter generator. Visit the 
 <a href="https://stryker-mutator.io" target="_blank">Stryker website</a></footer></div>
 <script src="strykerResources/popper.js/dist/umd/popper.min.js" defer="defer"></script>
