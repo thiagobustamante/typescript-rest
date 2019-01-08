@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/thiagobustamante/typescript-rest.svg?branch=master)](https://travis-ci.org/thiagobustamante/typescript-rest)
 [![Coverage Status](https://codecov.io/gh/thiagobustamante/typescript-rest/branch/master/graph/badge.svg)](https://codecov.io/gh/thiagobustamante/typescript-rest)
 [![Known Vulnerabilities](https://snyk.io/test/github/thiagobustamante/typescript-rest/badge.svg?targetFile=package.json)](https://snyk.io/test/github/thiagobustamante/typescript-rest?targetFile=package.json)
+[![BCH compliance](https://bettercodehub.com/edge/badge/thiagobustamante/typescript-rest?branch=master)](https://bettercodehub.com/)
 
 # REST Services for Typescript
 This is a lightweight annotation-based [expressjs](http://expressjs.com/) extension for typescript.
