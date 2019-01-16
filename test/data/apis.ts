@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 
-import { GET, Path, } from '../../src/typescript-rest';
+import { GET, Path } from '../../src/typescript-rest';
 
 
 @Path('simplepath')

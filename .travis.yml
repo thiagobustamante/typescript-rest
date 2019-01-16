@@ -4,18 +4,8 @@ node_js:
 - '8'
 - '10'
 script: 
-  - npm run test:mutation
   - npm run test:coverage
   - codecov -f ./reports/coverage/*.json
-deploy:
-  provider: pages
-  skip-cleanup: true
-  local-dir: reports
-  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep-history: true
-  on:
-    branch: master
-    node: '10'
 jobs:
   include:
   - stage: npm release

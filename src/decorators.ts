@@ -40,12 +40,12 @@ export function Path(path: string) {
     return function (...args: Array<any>) {
         args = _.without(args, undefined);
         if (args.length === 1) {
-            return PathTypeDecorator.apply(this, [args[0], path]);
+            PathTypeDecorator.apply(this, [args[0], path]);
         } else if (args.length === 3 && typeof args[2] === 'object') {
-            return PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+            PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
+        } else {
+            throw new Error('Invalid @Path Decorator declaration.');
         }
-
-        throw new Error('Invalid @Path Decorator declaration.');
     };
 }
 
