@@ -295,12 +295,10 @@ export class InternalServer {
     }
 
     private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod, serviceClass: metadata.ServiceClass) {
+        const allPreprocessors = _.union(serviceMethod.preProcessors, serviceClass.preProcessors);
         return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
             try {
-                if (serviceMethod.preProcessors || serviceClass.preProcessors) {
-                    const allPreprocessors = [...serviceClass.preProcessors || [], ...serviceMethod.preProcessors || []];
-                    await this.runPreprocessors(allPreprocessors, req);
-                }
+                await this.runPreprocessors(allPreprocessors, req);
                 await this.callTargetEndPoint(serviceClass, serviceMethod, req, res, next);
                 next();
             }
@@ -336,43 +334,66 @@ export class InternalServer {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
 
         if (serviceMethod.mustParseCookies) {
-            const args = [];
-            if (this.cookiesSecret) {
-                args.push(this.cookiesSecret);
-            }
-            if (this.cookiesDecoder) {
-                args.push({ decode: this.cookiesDecoder });
-            }
-            result.push(cookieParser.apply(this, args));
+            result.push(this.buildCookieParserMiddleware());
         }
         if (serviceMethod.mustParseBody) {
-            if (serviceMethod.bodyParserOptions) {
-                result.push(bodyParser.json(serviceMethod.bodyParserOptions));
-            } else {
-                result.push(bodyParser.json());
-            }
-            // TODO adicionar parser de XML para o body
+            result.push(this.buildJsonBodyParserMiddleware(serviceMethod));
         }
         if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
-            if (serviceMethod.bodyParserOptions) {
-                result.push(bodyParser.urlencoded(serviceMethod.bodyParserOptions));
-            } else {
-                result.push(bodyParser.urlencoded({ extended: true }));
-            }
+            result.push(this.buildFormParserMiddleware(serviceMethod));
         }
         if (serviceMethod.files.length > 0) {
-            const options: Array<multer.Field> = new Array<multer.Field>();
-            serviceMethod.files.forEach(fileData => {
-                if (fileData.singleFile) {
-                    options.push({ 'name': fileData.name, 'maxCount': 1 });
-                } else {
-                    options.push({ 'name': fileData.name });
-                }
-            });
-            result.push(this.getUploader().fields(options));
+            result.push(this.buildFilesParserMiddleware(serviceMethod));
         }
 
         return result;
+    }
+
+    private buildFilesParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+        const options: Array<multer.Field> = new Array<multer.Field>();
+        serviceMethod.files.forEach(fileData => {
+            if (fileData.singleFile) {
+                options.push({ 'name': fileData.name, 'maxCount': 1 });
+            }
+            else {
+                options.push({ 'name': fileData.name });
+            }
+        });
+        return this.getUploader().fields(options);
+    }
+
+    private buildFormParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+        let middleware: express.RequestHandler;
+        if (serviceMethod.bodyParserOptions) {
+            middleware = bodyParser.urlencoded(serviceMethod.bodyParserOptions);
+        }
+        else {
+            middleware = bodyParser.urlencoded({ extended: true });
+        }
+        return middleware;
+    }
+
+    private buildJsonBodyParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+        let middleware: express.RequestHandler;
+        if (serviceMethod.bodyParserOptions) {
+            middleware = bodyParser.json(serviceMethod.bodyParserOptions);
+        }
+        else {
+            middleware = bodyParser.json();
+        }
+        return middleware;
+    }
+
+    private buildCookieParserMiddleware() {
+        const args = [];
+        if (this.cookiesSecret) {
+            args.push(this.cookiesSecret);
+        }
+        if (this.cookiesDecoder) {
+            args.push({ decode: this.cookiesDecoder });
+        }
+        const middleware = cookieParser.apply(this, args);
+        return middleware;
     }
 
     private processResponseHeaders(serviceMethod: metadata.ServiceMethod, context: ServiceContext) {
