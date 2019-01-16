@@ -1288,6 +1288,8 @@ class TestService {
 
 Starting from version 2.0.0, the method ```Server.setParamConverter``` was removed and replaced by ```Server.addParameterConverter```.
 
+The method ```Server.swagger``` was refactored to receive an ```SwaggerOptions``` object.
+
 **Project Sponsors**
 
 This project is supported by [Leanty](https://github.com/Leanty/)'s team and is widely used by its main product: The [Tree Gateway](http://www.treegateway.org) API Gateway.

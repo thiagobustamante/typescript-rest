@@ -199,38 +199,73 @@ export class Server {
     /**
      * Creates and endpoint to publish the swagger documentation.
      * @param router Express router
-     * @param filePath the path to a swagger file (json or yaml)
-     * @param endpoint where to publish the docs
-     * @param host the hostname of the service
-     * @param schemes the schemes used by the server
+     * @param options Options for swagger endpoint
      */
-    public static swagger(router: express.Router, filePath: string, endpoint: string, host?: string, schemes?: Array<string>, swaggerUiOptions?: object) {
+    public static swagger(router: express.Router, options?: SwaggerOptions) {
         const swaggerUi = require('swagger-ui-express');
-        if (_.startsWith(filePath, '.')) {
-            filePath = path.join(process.cwd(), filePath);
+        options = Server.getOptions(options);
+
+        const swaggerDocument: any = Server.loadSwaggerDocument(options);
+
+        if (options.host) {
+            swaggerDocument.host = options.host;
+        }
+        if (options.schemes) {
+            swaggerDocument.schemes = options.schemes;
         }
 
-        let swaggerDocument: any;
-        if (_.endsWith(filePath, '.yml') || _.endsWith(filePath, '.yaml')) {
-            swaggerDocument = YAML.load(filePath);
-        } else {
-            swaggerDocument = fs.readJSONSync(filePath);
-        }
-
-        if (host) {
-            swaggerDocument.host = host;
-        }
-        if (schemes) {
-            swaggerDocument.schemes = schemes;
-        }
-
-        router.get(path.posix.join('/', endpoint, 'json'), (req, res, next) => {
+        router.get(path.posix.join('/', options.endpoint, 'json'), (req, res, next) => {
             res.send(swaggerDocument);
         });
-        router.get(path.posix.join('/', endpoint, 'yaml'), (req, res, next) => {
+        router.get(path.posix.join('/', options.endpoint, 'yaml'), (req, res, next) => {
             res.set('Content-Type', 'text/vnd.yaml');
             res.send(YAML.stringify(swaggerDocument, 1000));
         });
-        router.use(path.posix.join('/', endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
+        router.use(path.posix.join('/', options.endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, options.swaggerUiOptions));
     }
+
+    private static loadSwaggerDocument(options: SwaggerOptions) {
+        let swaggerDocument: any;
+        if (_.endsWith(options.filePath, '.yml') || _.endsWith(options.filePath, '.yaml')) {
+            swaggerDocument = YAML.load(options.filePath);
+        }
+        else {
+            swaggerDocument = fs.readJSONSync(options.filePath);
+        }
+        return swaggerDocument;
+    }
+
+    private static getOptions(options: SwaggerOptions) {
+        options = _.defaults(options, {
+            endpoint: 'api-docs',
+            filePath: './swagger.json'
+        });
+        if (_.startsWith(options.filePath, '.')) {
+            options.filePath = path.join(process.cwd(), options.filePath);
+        }
+        return options;
+    }
+}
+
+export interface SwaggerOptions {
+    /**
+     * The path to a swagger file (json or yaml)
+     */
+    filePath: string;
+    /**
+     * Where to publish the docs
+     */
+    endpoint: string;
+    /**
+     * The hostname of the service
+     */
+    host?: string;
+    /**
+     * The schemes used by the server
+     */
+    schemes?: Array<string>;
+    /**
+     * Options to send to swagger-ui
+     */
+    swaggerUiOptions?: object;
 }

@@ -121,7 +121,6 @@ describe('Decorators', () => {
             expect(serviceMethod.roles).to.include.members(roles);
         });
 
-
         it('should add a security validation to accept any role when empty is received', async () => {
             const role = '';
             decorators.Security(role)(TestService.prototype, 'test',

@@ -48,7 +48,12 @@ export function startApi(): Promise<void> {
         const app: express.Application = express();
         app.set('env', 'test');
         swaggerFile = YAML.load('./test/data/swagger.yaml');
-        Server.swagger(app, './test/data/swagger.yaml', 'api-docs', 'localhost:5674', ['http']);
+        Server.swagger(app, {
+            endpoint: 'api-docs',
+            filePath: './test/data/swagger.yaml',
+            host: 'localhost:5674',
+            schemes: ['http']
+        });
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);
