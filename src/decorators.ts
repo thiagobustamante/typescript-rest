@@ -2,6 +2,7 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
+import { MethodDecorator } from './decorators/method-decorator';
 import { ParameterDecorator } from './decorators/parameter-decorator';
 import { ServiceDecorator } from './decorators/service-decorator';
 import * as metadata from './metadata';
@@ -357,7 +358,7 @@ export function ContextAccept(...args: Array<any>) {
  */
 export function GET(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.GET);
+    new MethodDecorator(HttpMethod.GET).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -384,7 +385,7 @@ export function GET(target: any, propertyKey: string,
  */
 export function POST(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.POST);
+    new MethodDecorator(HttpMethod.POST).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -412,7 +413,7 @@ export function POST(target: any, propertyKey: string,
  */
 export function PUT(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.PUT);
+    new MethodDecorator(HttpMethod.PUT).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -440,7 +441,7 @@ export function PUT(target: any, propertyKey: string,
  */
 export function DELETE(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.DELETE);
+    new MethodDecorator(HttpMethod.DELETE).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -467,7 +468,7 @@ export function DELETE(target: any, propertyKey: string,
  */
 export function HEAD(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.HEAD);
+    new MethodDecorator(HttpMethod.HEAD).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -494,7 +495,7 @@ export function HEAD(target: any, propertyKey: string,
  */
 export function OPTIONS(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.OPTIONS);
+    new MethodDecorator(HttpMethod.OPTIONS).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -522,7 +523,7 @@ export function OPTIONS(target: any, propertyKey: string,
  */
 export function PATCH(target: any, propertyKey: string,
     descriptor: PropertyDescriptor) {
-    processHttpVerb(target, propertyKey, HttpMethod.PATCH);
+    new MethodDecorator(HttpMethod.PATCH).decorateMethod(target, propertyKey);
 }
 
 /**
@@ -846,57 +847,3 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
     }
 }
 
-/**
- * Decorator processor for HTTP verb annotations on methods
- */
-function processHttpVerb(target: any, propertyKey: string,
-    httpMethod: HttpMethod) {
-    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        if (!serviceMethod.httpMethod) {
-            serviceMethod.httpMethod = httpMethod;
-            processServiceMethod(target, propertyKey, serviceMethod);
-        } else if (serviceMethod.httpMethod !== httpMethod) {
-            throw new Error('Method is already annotated with @' +
-                HttpMethod[serviceMethod.httpMethod] +
-                '. You can only map a method to one HTTP verb.');
-        }
-    }
-}
-
-/**
- * Extract metadata for rest methods
- */
-function processServiceMethod(target: any, propertyKey: string, serviceMethod: metadata.ServiceMethod) {
-    serviceMethod.name = propertyKey;
-    const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
-    while (paramTypes && paramTypes.length > serviceMethod.parameters.length) {
-        serviceMethod.parameters.push(new metadata.MethodParam(null,
-            paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
-    }
-
-    serviceMethod.parameters.forEach(param => {
-        if (param.paramType === metadata.ParamType.cookie) {
-            serviceMethod.mustParseCookies = true;
-        } else if (param.paramType === metadata.ParamType.file) {
-            serviceMethod.files.push(new metadata.FileParam(param.name, true));
-        } else if (param.paramType === metadata.ParamType.files) {
-            serviceMethod.files.push(new metadata.FileParam(param.name, false));
-        } else if (param.paramType === metadata.ParamType.param) {
-            serviceMethod.acceptMultiTypedParam = true;
-        } else if (param.paramType === metadata.ParamType.form) {
-            if (serviceMethod.mustParseBody) {
-                throw Error('Can not use form parameters with a body parameter on the same method.');
-            }
-            serviceMethod.mustParseForms = true;
-        } else if (param.paramType === metadata.ParamType.body) {
-            if (serviceMethod.mustParseForms) {
-                throw Error('Can not use form parameters with a body parameter on the same method.');
-            }
-            if (serviceMethod.mustParseBody) {
-                throw Error('Can not use more than one body parameter on the same method.');
-            }
-            serviceMethod.mustParseBody = true;
-        }
-    });
-}
