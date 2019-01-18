@@ -5,12 +5,12 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as _ from 'lodash';
 import * as multer from 'multer';
-import * as metadata from './metadata';
-import * as Errors from './server-errors';
+import * as metadata from '../metadata';
+import * as Errors from '../server-errors';
 
 import { NextFunction, Request, Response } from 'express';
-import { DownloadBinaryData, DownloadResource } from './server-return';
-import { FileLimits, HttpMethod, ParameterConverter, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from './server-types';
+import { DownloadBinaryData, DownloadResource } from '../server-return';
+import { FileLimits, HttpMethod, ParameterConverter, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from '../server-types';
 
 export class DefaultServiceFactory implements ServiceFactory {
     public create(serviceClass: any) {
@@ -21,12 +21,12 @@ export class DefaultServiceFactory implements ServiceFactory {
     }
 }
 
-export class InternalServer {
-    public static get(): InternalServer {
-        return InternalServer.instance;
+export class ServerContainer {
+    public static get(): ServerContainer {
+        return ServerContainer.instance;
     }
 
-    private static instance: InternalServer = new InternalServer();
+    private static instance: ServerContainer = new ServerContainer();
 
     private static defaultParamConverter: ParameterConverter = (p: any) => p;
 
@@ -588,7 +588,7 @@ export class InternalServer {
             default:
                 let converter = this.paramConverters.get(paramType);
                 if (!converter) {
-                    converter = InternalServer.defaultParamConverter;
+                    converter = ServerContainer.defaultParamConverter;
                 }
 
                 return converter(paramValue);

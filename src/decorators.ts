@@ -2,9 +2,11 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
+import { ParameterDecorator } from './decorators/parameter-decorator';
+import { ServiceDecorator } from './decorators/service-decorator';
 import * as metadata from './metadata';
-import { InternalServer } from './server-container';
 import { HttpMethod, ServicePreProcessor } from './server-types';
+import { ServerContainer } from './server/server-container';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
@@ -37,16 +39,8 @@ import { HttpMethod, ServicePreProcessor } from './server-types';
  * ```
  */
 export function Path(path: string) {
-    return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            PathTypeDecorator.apply(this, [args[0], path]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            PathMethodDecorator.apply(this, [args[0], args[1], args[2], path]);
-        } else {
-            throw new Error('Invalid @Path Decorator declaration.');
-        }
-    };
+    return new ServiceDecorator('Path').withProperty('path').withValue(path)
+        .decorateTypeOrMethod();
 }
 
 /**
@@ -83,17 +77,9 @@ export function Path(path: string) {
  * ```
  */
 export function Security(roles?: string | Array<string>) {
-    return function (...args: Array<any>) {
-        roles = _.castArray(roles || '*');
-        args = _.without(args, undefined);
-        if (args.length === 1) {
-            return SecurityTypeDecorator.apply(this, [args[0], roles]);
-        } else if (args.length === 3 && typeof args[2] === 'object') {
-            return SecurityMethodDecorator.apply(this, [args[0], args[1], args[2], roles]);
-        }
-
-        throw new Error('Invalid @Security Decorator declaration.');
-    };
+    roles = _.castArray(roles || '*');
+    return new ServiceDecorator('Security').withProperty('roles').withValue(roles)
+        .decorateTypeOrMethod();
 }
 
 /**
@@ -228,15 +214,8 @@ export function Accept(...accepts: Array<string>) {
  * [[ServiceContext]] instance.
  */
 export function Context(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @Context Decorator declaration.');
+    return new ParameterDecorator('Context').withType(metadata.ParamType.context)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -259,15 +238,8 @@ export function Context(...args: Array<any>) {
  * request.
  */
 export function ContextRequest(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context_request, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @ContextRequest Decorator declaration.');
+    return new ParameterDecorator('ContextRequest').withType(metadata.ParamType.context_request)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -290,15 +262,8 @@ export function ContextRequest(...args: Array<any>) {
  * response object.
  */
 export function ContextResponse(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context_response, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @ContextResponse Decorator declaration.');
+    return new ParameterDecorator('ContextResponse').withType(metadata.ParamType.context_response)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -321,15 +286,8 @@ export function ContextResponse(...args: Array<any>) {
  * middleware the current request processing.
  */
 export function ContextNext(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context_next, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @ContextNext Decorator declaration.');
+    return new ParameterDecorator('ContextNext').withType(metadata.ParamType.context_next)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -349,15 +307,9 @@ export function ContextNext(...args: Array<any>) {
  * ```
  */
 export function ContextLanguage(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context_accept_language, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @ContextLanguage Decorator declaration.');
+    return new ParameterDecorator('ContextLanguage')
+        .withType(metadata.ParamType.context_accept_language)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -377,15 +329,8 @@ export function ContextLanguage(...args: Array<any>) {
  * ```
  */
 export function ContextAccept(...args: Array<any>) {
-    args = _.without(args, undefined);
-    const newArgs = args.concat([metadata.ParamType.context_accept, null]);
-    if (args.length < 3 || typeof args[2] === 'undefined') {
-        return processDecoratedProperty.apply(this, newArgs);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return processDecoratedParameter.apply(this, newArgs);
-    }
-
-    throw new Error('Invalid @ContextAccept Decorator declaration.');
+    return new ParameterDecorator('ContextAccept').withType(metadata.ParamType.context_accept)
+        .decorateParameterOrProperty(args);
 }
 
 /**
@@ -587,7 +532,7 @@ export function PATCH(target: any, propertyKey: string,
  */
 export function BodyOptions(options: any) {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-        const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
+        const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             serviceMethod.bodyParserOptions = options;
         }
@@ -620,20 +565,8 @@ export function BodyOptions(options: any) {
  * And pass 123 as the id argument on getPerson method's call.
  */
 export function PathParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.path, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-
-        throw new Error('Invalid @PathParam Decorator declaration.');
-    };
+    return new ParameterDecorator('PathParam').withType(metadata.ParamType.path).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -659,19 +592,8 @@ export function PathParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FileParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.file, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @FileParam Decorator declaration.');
-    };
+    return new ParameterDecorator('FileParam').withType(metadata.ParamType.file).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -697,19 +619,8 @@ export function FileParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FilesParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.files, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @FilesParam Decorator declaration.');
-    };
+    return new ParameterDecorator('FilesParam').withType(metadata.ParamType.files).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -737,19 +648,8 @@ export function FilesParam(name: string) {
  * And pass 'joe' as the name argument on getPerson method's call.
  */
 export function QueryParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.query, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @QueryParam Decorator declaration.');
-    };
+    return new ParameterDecorator('QueryParam').withType(metadata.ParamType.query).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -772,19 +672,8 @@ export function QueryParam(name: string) {
  * header called 'header' to the header argument on getPerson method's call.
  */
 export function HeaderParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.header, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @HeaderParam Decorator declaration.');
-    };
+    return new ParameterDecorator('HeaderParam').withType(metadata.ParamType.header).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -807,19 +696,8 @@ export function HeaderParam(name: string) {
  * cookie called 'cookie' to the cookie argument on getPerson method's call.
  */
 export function CookieParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.cookie, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @CookieParam Decorator declaration.');
-    };
+    return new ParameterDecorator('CookieParam').withType(metadata.ParamType.cookie).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -843,19 +721,8 @@ export function CookieParam(name: string) {
  * method's call.
  */
 export function FormParam(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.form, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @FormParam Decorator declaration.');
-    };
+    return new ParameterDecorator('FormParam').withType(metadata.ParamType.form).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -880,19 +747,8 @@ export function FormParam(name: string) {
  * received in the current request.
  */
 export function Param(name: string) {
-    return function (...args: Array<any>) {
-        name = name ? name.trim() : '';
-        if (name) {
-            args = _.without(args, undefined);
-            const newArgs = args.concat([metadata.ParamType.param, name]);
-            if (args.length < 3 || typeof args[2] === 'undefined') {
-                return processDecoratedProperty.apply(this, newArgs);
-            } else if (args.length === 3 && typeof args[2] === 'number') {
-                return processDecoratedParameter.apply(this, newArgs);
-            }
-        }
-        throw new Error('Invalid @Param Decorator declaration.');
-    };
+    return new ParameterDecorator('Param').withType(metadata.ParamType.param).withName(name)
+        .decorateNamedParameterOrProperty();
 }
 
 /**
@@ -917,7 +773,7 @@ export function Param(name: string) {
 export function Abstract(...args: Array<any>) {
     args = _.without(args, undefined);
     if (args.length === 1) {
-        const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(args[0]);
+        const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(args[0]);
         classData.isAbstract = true;
     }
     else {
@@ -929,7 +785,7 @@ export function Abstract(...args: Array<any>) {
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
+    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
     classData.languages = _.union(classData.languages, languages);
 }
 
@@ -938,7 +794,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>)
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, languages: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.languages = _.union(serviceMethod.languages, languages);
     }
@@ -948,7 +804,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Accept]] decorator on classes
  */
 function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
+    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
     classData.accepts = _.union(classData.accepts, accepts);
 }
 
@@ -957,51 +813,9 @@ function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
  */
 function AcceptMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, accepts: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.accepts = _.union(serviceMethod.accepts, accepts);
-    }
-}
-
-/**
- * Decorator processor for [[Path]] decorator on classes
- */
-function PathTypeDecorator(target: Function, path: string) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
-    if (classData) {
-        classData.path = path;
-    }
-}
-
-/**
- * Decorator processor for [[Path]] decorator on methods
- */
-function PathMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, path: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        serviceMethod.path = path;
-    }
-}
-
-/**
- * Decorator processor for [[Security]] decorator on classes
- */
-function SecurityTypeDecorator(target: Function, roles: Array<string>) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
-    if (classData) {
-        classData.roles = roles;
-    }
-}
-
-/**
- * Decorator processor for [[Security]] decorator on methods
- */
-function SecurityMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, roles: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        serviceMethod.roles = roles;
     }
 }
 
@@ -1009,7 +823,7 @@ function SecurityMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Preprocessor]] decorator on classes
  */
 function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target);
+    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
     if (classData) {
         if (!classData.preProcessors) {
             classData.preProcessors = [];
@@ -1023,7 +837,7 @@ function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.Prep
  */
 function PreprocessorMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         if (!serviceMethod.preProcessors) {
             serviceMethod.preProcessors = [];
@@ -1033,37 +847,11 @@ function PreprocessorMethodDecorator(target: any, propertyKey: string,
 }
 
 /**
- * Decorator processor for parameter annotations on methods
- */
-function processDecoratedParameter(target: Object, propertyKey: string, parameterIndex: number,
-    paramType: metadata.ParamType, name: string) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
-
-        while (paramTypes && serviceMethod.parameters.length < paramTypes.length) {
-            serviceMethod.parameters.push(new metadata.MethodParam(null,
-                paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
-        }
-        serviceMethod.parameters[parameterIndex] = new metadata.MethodParam(name, paramTypes[parameterIndex], paramType);
-    }
-}
-
-/**
- * Decorator processor for annotations on properties
- */
-function processDecoratedProperty(target: Function, key: string, paramType: metadata.ParamType, paramName: string) {
-    const classData: metadata.ServiceClass = InternalServer.get().registerServiceClass(target.constructor);
-    const propertyType = Reflect.getMetadata('design:type', target, key);
-    classData.addProperty(key, paramType, paramName, propertyType);
-}
-
-/**
  * Decorator processor for HTTP verb annotations on methods
  */
 function processHttpVerb(target: any, propertyKey: string,
     httpMethod: HttpMethod) {
-    const serviceMethod: metadata.ServiceMethod = InternalServer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         if (!serviceMethod.httpMethod) {
             serviceMethod.httpMethod = httpMethod;

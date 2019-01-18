@@ -14,6 +14,7 @@ export interface SeviceProperty {
  * Metadata for REST service classes
  */
 export class ServiceClass {
+    [key: string]: any;
 
     public targetClass: any;
     public path: string;
@@ -43,6 +44,8 @@ export class ServiceClass {
  * Metadata for REST service methods
  */
 export class ServiceMethod {
+    [key: string]: any;
+
     public name: string;
     public path: string;
     public roles: Array<string>;

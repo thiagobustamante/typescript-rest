@@ -12,55 +12,55 @@ const expect = chai.expect;
 
 // tslint:disable:no-unused-expression
 describe('Server', () => {
-    let internalServerStub: sinon.SinonStubbedInstance<any>;
+    let serverContainerStub: sinon.SinonStubbedInstance<any>;
     let Server: any;
 
     beforeEach(() => {
-        internalServerStub = sinon.stub({
+        serverContainerStub = sinon.stub({
             get: () => this,
         });
 
-        internalServerStub.get.returns(internalServerStub);
+        serverContainerStub.get.returns(serverContainerStub);
 
-        Server = proxyquire('../../src/server', {
-            './server-container': { InternalServer: internalServerStub }
+        Server = proxyquire('../../src/server/server', {
+            './server-container': { ServerContainer: serverContainerStub }
         }).Server;
     });
 
     afterEach(() => {
-        internalServerStub.get.restore();
+        serverContainerStub.get.restore();
     });
 
     it('should be able to define a custom cookie secret', async () => {
         const secret = 'my-secret';
         Server.setCookiesSecret(secret);
 
-        expect(internalServerStub.get).to.have.been.calledOnce;
-        expect(internalServerStub.cookiesSecret).to.be.equal(secret);
+        expect(serverContainerStub.get).to.have.been.calledOnce;
+        expect(serverContainerStub.cookiesSecret).to.be.equal(secret);
     });
 
     it('should be able to define a custom cookie decoder', async () => {
         const decoder = sinon.stub();
         Server.setCookiesDecoder(decoder);
 
-        expect(internalServerStub.get).to.have.been.calledOnce;
-        expect(internalServerStub.cookiesDecoder).to.be.equal(decoder);
+        expect(serverContainerStub.get).to.have.been.calledOnce;
+        expect(serverContainerStub.cookiesDecoder).to.be.equal(decoder);
     });
 
     it('should be able to define a custom destination folder for uploaded files', async () => {
         const target = './target-dir';
         Server.setFileDest(target);
 
-        expect(internalServerStub.get).to.have.been.calledOnce;
-        expect(internalServerStub.fileDest).to.be.equal(target);
+        expect(serverContainerStub.get).to.have.been.calledOnce;
+        expect(serverContainerStub.fileDest).to.be.equal(target);
     });
 
     it('should be able to define a custom filter for uploaded files', async () => {
         const filter = sinon.stub();
         Server.setFileFilter(filter);
 
-        expect(internalServerStub.get).to.have.been.calledOnce;
-        expect(internalServerStub.fileFilter).to.be.equal(filter);
+        expect(serverContainerStub.get).to.have.been.calledOnce;
+        expect(serverContainerStub.fileFilter).to.be.equal(filter);
     });
 
     it('should be able to define a custom limit for uploaded files', async () => {
@@ -75,7 +75,7 @@ describe('Server', () => {
         };
         Server.setFileLimits(limits);
 
-        expect(internalServerStub.get).to.have.been.calledOnce;
-        expect(internalServerStub.fileLimits).to.be.equal(limits);
+        expect(serverContainerStub.get).to.have.been.calledOnce;
+        expect(serverContainerStub.fileLimits).to.be.equal(limits);
     });
 });

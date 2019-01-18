@@ -28,7 +28,7 @@ describe('ServerConfig', () => {
         });
 
         ServerConfig = proxyquire('../../src/typescript-rest-config', {
-            './server': { Server: serverStub },
+            './server/server': { Server: serverStub },
             'fs-extra': fsStub
         }).ServerConfig;
     });

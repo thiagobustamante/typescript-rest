@@ -6,8 +6,8 @@ import * as _ from 'lodash';
 import 'multer';
 import * as path from 'path';
 import * as YAML from 'yamljs';
-import { InternalServer } from './server-container';
-import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from './server-types';
+import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from '../server-types';
+import { ServerContainer } from './server-container';
 
 /**
  * The Http server main class.
@@ -17,9 +17,9 @@ export class Server {
      * Create the routes for all classes decorated with our decorators
      */
     public static buildServices(router: express.Router, ...types: Array<any>) {
-        const iternalServer = InternalServer.get();
-        iternalServer.router = router;
-        iternalServer.buildServices(types);
+        const serverContainer = ServerContainer.get();
+        serverContainer.router = router;
+        serverContainer.buildServices(types);
     }
 
     /**
@@ -58,7 +58,7 @@ export class Server {
      */
     public static getPaths(): Array<string> {
         const result = new Array<string>();
-        InternalServer.get().getPaths().forEach(value => {
+        ServerContainer.get().getPaths().forEach(value => {
             result.push(value);
         });
 
@@ -77,7 +77,7 @@ export class Server {
             factory = serviceFactory as ServiceFactory;
         }
 
-        InternalServer.get().serviceFactory = factory;
+        ServerContainer.get().serviceFactory = factory;
     }
 
     /**
@@ -85,7 +85,7 @@ export class Server {
      * invocations occurs.
      */
     public static registerAuthenticator(authenticator: ServiceAuthenticator) {
-        InternalServer.get().authenticator = authenticator;
+        ServerContainer.get().authenticator = authenticator;
     }
 
     /**
@@ -123,7 +123,7 @@ export class Server {
      */
     public static getHttpMethods(servicePath: string): Array<HttpMethod> {
         const result = new Array<HttpMethod>();
-        InternalServer.get().getHttpMethods(servicePath).forEach(value => {
+        ServerContainer.get().getHttpMethods(servicePath).forEach(value => {
             result.push(value);
         });
 
@@ -136,7 +136,7 @@ export class Server {
      * @param secret the secret used to sign
      */
     public static setCookiesSecret(secret: string) {
-        InternalServer.get().cookiesSecret = secret;
+        ServerContainer.get().cookiesSecret = secret;
     }
 
     /**
@@ -151,7 +151,7 @@ export class Server {
      * @param decoder The decoder function
      */
     public static setCookiesDecoder(decoder: (val: string) => string) {
-        InternalServer.get().cookiesDecoder = decoder;
+        ServerContainer.get().cookiesDecoder = decoder;
     }
 
     /**
@@ -159,7 +159,7 @@ export class Server {
      * @param dest Destination folder
      */
     public static setFileDest(dest: string) {
-        InternalServer.get().fileDest = dest;
+        ServerContainer.get().fileDest = dest;
     }
 
     /**
@@ -168,7 +168,7 @@ export class Server {
      */
     public static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
         callback: (error: Error, acceptFile: boolean) => void) => void) {
-        InternalServer.get().fileFilter = filter;
+        ServerContainer.get().fileFilter = filter;
     }
 
     /**
@@ -176,7 +176,7 @@ export class Server {
      * @param limit The data limit
      */
     public static setFileLimits(limit: FileLimits) {
-        InternalServer.get().fileLimits = limit;
+        ServerContainer.get().fileLimits = limit;
     }
 
     /**
@@ -185,7 +185,7 @@ export class Server {
      * @param type The target type that needs to be converted
      */
     public static addParameterConverter(converter: ParameterConverter, type: Function): void {
-        InternalServer.get().paramConverters.set(type, converter);
+        ServerContainer.get().paramConverters.set(type, converter);
     }
 
     /**
@@ -193,7 +193,7 @@ export class Server {
      * @param type The target type that needs to be converted
      */
     public static removeParameterConverter(type: Function): void {
-        InternalServer.get().paramConverters.delete(type);
+        ServerContainer.get().paramConverters.delete(type);
     }
 
     /**

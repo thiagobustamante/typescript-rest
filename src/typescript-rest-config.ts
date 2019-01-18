@@ -2,7 +2,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { Server } from './server';
+import { Server } from './server/server';
 
 export class ServerConfig {
     public static configure() {

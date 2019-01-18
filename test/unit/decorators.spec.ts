@@ -42,7 +42,7 @@ describe('Decorators', () => {
         reflectGetOwnMetadata = sinon.stub(Reflect, 'getOwnMetadata');
 
         decorators = proxyquire('../../src/decorators', {
-            './server-container': { InternalServer: serverStub }
+            './server/server-container': { ServerContainer: serverStub }
         });
 
         serviceClass = new metadata.ServiceClass(TestService);
