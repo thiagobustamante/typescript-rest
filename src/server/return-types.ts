@@ -13,7 +13,8 @@ export class NewResource<T> extends ReferencedResource<T> {
      * @param body To be added to the response body
      */
     constructor(location: string, body?: T) {
-        super(location, 201, body);
+        super(location, 201);
+        this.body = body;
     }
 }
 
@@ -30,7 +31,8 @@ export class RequestAccepted<T> extends ReferencedResource<T> {
      * @param body To be added to the response body
      */
     constructor(location: string, body?: T) {
-        super(location, 202, body);
+        super(location, 202);
+        this.body = body;
     }
 }
 
@@ -46,7 +48,8 @@ export class MovedPermanently<T> extends ReferencedResource<T> {
      * @param body To be added to the response body
      */
     constructor(location: string, body?: T) {
-        super(location, 301, body);
+        super(location, 301);
+        this.body = body;
     }
 }
 
@@ -62,7 +65,8 @@ export class MovedTemporarily<T> extends ReferencedResource<T> {
      * @param body To be added to the response body
      */
     constructor(location: string, body?: T) {
-        super(location, 302, body);
+        super(location, 302);
+        this.body = body;
     }
 }
 

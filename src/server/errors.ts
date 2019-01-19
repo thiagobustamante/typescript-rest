@@ -4,8 +4,9 @@
  * The Base class for all HTTP errors
  */
 export abstract class HttpError extends Error {
+    public statusCode: number;
+
     constructor(name: string,
-        public statusCode: number,
         public message: string) {
         super(message);
         this.name = name;
@@ -19,8 +20,9 @@ export abstract class HttpError extends Error {
  */
 export class BadRequestError extends HttpError {
     constructor(message?: string) {
-        super('BadRequestError', 400, message || 'Bad Request');
+        super('BadRequestError', message || 'Bad Request');
         Object.setPrototypeOf(this, BadRequestError.prototype);
+        this.statusCode = 400;
     }
 }
 
@@ -31,8 +33,9 @@ export class BadRequestError extends HttpError {
  */
 export class UnauthorizedError extends HttpError {
     constructor(message?: string) {
-        super('UnauthorizedError', 401, message || 'Unauthorized');
+        super('UnauthorizedError', message || 'Unauthorized');
         Object.setPrototypeOf(this, UnauthorizedError.prototype);
+        this.statusCode = 401;
     }
 }
 
@@ -42,17 +45,9 @@ export class UnauthorizedError extends HttpError {
  */
 export class ForbiddenError extends HttpError {
     constructor(message?: string) {
-        super('ForbiddenError', 403, message || 'Forbidden');
-        Object.setPrototypeOf(this, ForbidenError.prototype);
-    }
-}
-
-/**
- * @deprecated use ForbiddenError instead
- */
-export class ForbidenError extends ForbiddenError {
-    constructor(message?: string) {
-        super(message);
+        super('ForbiddenError', message || 'Forbidden');
+        Object.setPrototypeOf(this, ForbiddenError.prototype);
+        this.statusCode = 403;
     }
 }
 
@@ -69,8 +64,9 @@ export class ForbidenError extends ForbiddenError {
  */
 export class NotFoundError extends HttpError {
     constructor(message?: string) {
-        super('NotFoundError', 404, message || 'Not Found');
+        super('NotFoundError', message || 'Not Found');
         Object.setPrototypeOf(this, NotFoundError.prototype);
+        this.statusCode = 404;
     }
 }
 
@@ -81,8 +77,9 @@ export class NotFoundError extends HttpError {
  */
 export class MethodNotAllowedError extends HttpError {
     constructor(message?: string) {
-        super('MethodNotAllowedError', 405, message || 'Method Not Allowed');
+        super('MethodNotAllowedError', message || 'Method Not Allowed');
         Object.setPrototypeOf(this, MethodNotAllowedError.prototype);
+        this.statusCode = 405;
     }
 }
 
@@ -93,8 +90,9 @@ export class MethodNotAllowedError extends HttpError {
  */
 export class NotAcceptableError extends HttpError {
     constructor(message?: string) {
-        super('NotAcceptableError', 406, message || 'Not Acceptable');
+        super('NotAcceptableError', message || 'Not Acceptable');
         Object.setPrototypeOf(this, NotAcceptableError.prototype);
+        this.statusCode = 406;
     }
 }
 /**
@@ -103,8 +101,9 @@ export class NotAcceptableError extends HttpError {
  */
 export class ConflictError extends HttpError {
     constructor(message?: string) {
-        super('ConflictError', 409, message || 'Conflict');
+        super('ConflictError', message || 'Conflict');
         Object.setPrototypeOf(this, ConflictError.prototype);
+        this.statusCode = 409;
     }
 }
 
@@ -119,8 +118,9 @@ export class ConflictError extends HttpError {
  */
 export class GoneError extends HttpError {
     constructor(message?: string) {
-        super('GoneError', 410, message || 'Gone');
+        super('GoneError', message || 'Gone');
         Object.setPrototypeOf(this, GoneError.prototype);
+        this.statusCode = 410;
     }
 }
 
@@ -131,31 +131,9 @@ export class GoneError extends HttpError {
  */
 export class UnsupportedMediaTypeError extends HttpError {
     constructor(message?: string) {
-        super('UnsupportedMediaTypeError', 415, message || 'Unsupported Media Type');
+        super('UnsupportedMediaTypeError', message || 'Unsupported Media Type');
         Object.setPrototypeOf(this, UnsupportedMediaTypeError.prototype);
-    }
-}
-
-/**
- * Represents an INTERNAL SERVER error. The server encountered an unexpected condition
- * which prevented it from fulfilling the request.
- */
-export class InternalServerError extends HttpError {
-    constructor(message?: string) {
-        super('InternalServerError', 500, message || 'Internal Server Error');
-        Object.setPrototypeOf(this, InternalServerError.prototype);
-    }
-}
-
-/**
- * Represents a NOT IMPLEMENTED error. The server does not support the functionality required
- *  to fulfill the request. This is the appropriate response when the server does not recognize
- * the request method and is not capable of supporting it for any resource.
- */
-export class NotImplementedError extends HttpError {
-    constructor(message?: string) {
-        super('NotImplementedError', 501, message || 'Not Implemented');
-        Object.setPrototypeOf(this, NotImplementedError.prototype);
+        this.statusCode = 415;
     }
 }
 
@@ -166,7 +144,33 @@ export class NotImplementedError extends HttpError {
  */
 export class UnprocessableEntityError extends HttpError {
     constructor(message?: string) {
-        super('UnprocessableEntityError', 422, message || 'Unprocessable Entity');
+        super('UnprocessableEntityError', message || 'Unprocessable Entity');
         Object.setPrototypeOf(this, UnprocessableEntityError.prototype);
+        this.statusCode = 422;
+    }
+}
+
+/**
+ * Represents an INTERNAL SERVER error. The server encountered an unexpected condition
+ * which prevented it from fulfilling the request.
+ */
+export class InternalServerError extends HttpError {
+    constructor(message?: string) {
+        super('InternalServerError', message || 'Internal Server Error');
+        Object.setPrototypeOf(this, InternalServerError.prototype);
+        this.statusCode = 500;
+    }
+}
+
+/**
+ * Represents a NOT IMPLEMENTED error. The server does not support the functionality required
+ *  to fulfill the request. This is the appropriate response when the server does not recognize
+ * the request method and is not capable of supporting it for any resource.
+ */
+export class NotImplementedError extends HttpError {
+    constructor(message?: string) {
+        super('NotImplementedError', message || 'Not Implemented');
+        Object.setPrototypeOf(this, NotImplementedError.prototype);
+        this.statusCode = 501;
     }
 }
