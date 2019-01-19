@@ -29,8 +29,7 @@ import { HttpMethod } from '../server/server-types';
  * GET http://mydomain/people
  * ```
  */
-export function GET(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function GET(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.GET).decorateMethod(target, propertyKey);
 }
 
@@ -56,8 +55,7 @@ export function GET(target: any, propertyKey: string,
  * POST http://mydomain/people
  * ```
  */
-export function POST(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function POST(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.POST).decorateMethod(target, propertyKey);
 }
 
@@ -84,8 +82,7 @@ export function POST(target: any, propertyKey: string,
  * PUT http://mydomain/people/123
  * ```
  */
-export function PUT(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function PUT(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.PUT).decorateMethod(target, propertyKey);
 }
 
@@ -112,8 +109,7 @@ export function PUT(target: any, propertyKey: string,
  * PUT http://mydomain/people/123
  * ```
  */
-export function DELETE(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function DELETE(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.DELETE).decorateMethod(target, propertyKey);
 }
 
@@ -139,8 +135,7 @@ export function DELETE(target: any, propertyKey: string,
  * HEAD http://mydomain/people/123
  * ```
  */
-export function HEAD(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function HEAD(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.HEAD).decorateMethod(target, propertyKey);
 }
 
@@ -166,8 +161,7 @@ export function HEAD(target: any, propertyKey: string,
  * OPTIONS http://mydomain/people/123
  * ```
  */
-export function OPTIONS(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function OPTIONS(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.OPTIONS).decorateMethod(target, propertyKey);
 }
 
@@ -194,8 +188,7 @@ export function OPTIONS(target: any, propertyKey: string,
  * PATCH http://mydomain/people/123
  * ```
  */
-export function PATCH(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor) {
+export function PATCH(target: any, propertyKey: string) {
     new MethodDecorator(HttpMethod.PATCH).decorateMethod(target, propertyKey);
 }
 
