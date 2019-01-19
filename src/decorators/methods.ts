@@ -2,9 +2,9 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
-import * as metadata from '../metadata';
-import { HttpMethod } from '../server-types';
+import { FileParam, MethodParam, ParamType, ServiceMethod } from '../server/metadata';
 import { ServerContainer } from '../server/server-container';
+import { HttpMethod } from '../server/server-types';
 
 
 /**
@@ -209,7 +209,7 @@ class MethodDecorator {
     }
 
     public decorateMethod(target: Function, propertyKey: string) {
-        const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+        const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             if (!serviceMethod.httpMethod) {
                 serviceMethod.httpMethod = this.httpMethod;
@@ -225,7 +225,7 @@ class MethodDecorator {
     /**
      * Extract metadata for rest methods
      */
-    private processServiceMethod(target: any, propertyKey: string, serviceMethod: metadata.ServiceMethod) {
+    private processServiceMethod(target: any, propertyKey: string, serviceMethod: ServiceMethod) {
         serviceMethod.name = propertyKey;
         const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
         this.registerUndecoratedParameters(paramTypes, serviceMethod);
@@ -238,35 +238,35 @@ class MethodDecorator {
         });
     }
 
-    private registerUndecoratedParameters(paramTypes: any, serviceMethod: metadata.ServiceMethod) {
+    private registerUndecoratedParameters(paramTypes: any, serviceMethod: ServiceMethod) {
         while (paramTypes && paramTypes.length > serviceMethod.parameters.length) {
-            serviceMethod.parameters.push(new metadata.MethodParam(null, paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
+            serviceMethod.parameters.push(new MethodParam(null, paramTypes[serviceMethod.parameters.length], ParamType.body));
         }
     }
 }
 
-type ParamProcessor = (serviceMethod: metadata.ServiceMethod, param?: metadata.MethodParam) => void;
+type ParamProcessor = (serviceMethod: ServiceMethod, param?: MethodParam) => void;
 function getParameterProcessors() {
-    const result = new Map<metadata.ParamType, ParamProcessor>();
-    result.set(metadata.ParamType.cookie, (serviceMethod) => {
+    const result = new Map<ParamType, ParamProcessor>();
+    result.set(ParamType.cookie, (serviceMethod) => {
         serviceMethod.mustParseCookies = true;
     });
-    result.set(metadata.ParamType.file, (serviceMethod, param) => {
-        serviceMethod.files.push(new metadata.FileParam(param.name, true));
+    result.set(ParamType.file, (serviceMethod, param) => {
+        serviceMethod.files.push(new FileParam(param.name, true));
     });
-    result.set(metadata.ParamType.files, (serviceMethod, param) => {
-        serviceMethod.files.push(new metadata.FileParam(param.name, false));
+    result.set(ParamType.files, (serviceMethod, param) => {
+        serviceMethod.files.push(new FileParam(param.name, false));
     });
-    result.set(metadata.ParamType.param, (serviceMethod) => {
+    result.set(ParamType.param, (serviceMethod) => {
         serviceMethod.acceptMultiTypedParam = true;
     });
-    result.set(metadata.ParamType.form, (serviceMethod) => {
+    result.set(ParamType.form, (serviceMethod) => {
         if (serviceMethod.mustParseBody) {
             throw Error('Can not use form parameters with a body parameter on the same method.');
         }
         serviceMethod.mustParseForms = true;
     });
-    result.set(metadata.ParamType.body, (serviceMethod) => {
+    result.set(ParamType.body, (serviceMethod) => {
         if (serviceMethod.mustParseForms) {
             throw Error('Can not use form parameters with a body parameter on the same method.');
         }

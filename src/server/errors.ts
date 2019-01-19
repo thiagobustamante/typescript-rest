@@ -1,6 +1,16 @@
 'use strict';
 
-import { HttpError } from './server-types';
+/**
+ * The Base class for all HTTP errors
+ */
+export abstract class HttpError extends Error {
+    constructor(name: string,
+        public statusCode: number,
+        public message: string) {
+        super(message);
+        this.name = name;
+    }
+}
 
 /**
  * Represents a BAD REQUEST error. The request could not be understood by the

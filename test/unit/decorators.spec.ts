@@ -8,8 +8,8 @@ import * as proxyquire from 'proxyquire';
 import 'reflect-metadata';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import * as metadata from '../../src/metadata';
-import { HttpMethod, ServiceContext } from '../../src/server-types';
+import { MethodParam, ParamType, ServiceClass, ServiceMethod } from '../../src/server/metadata';
+import { HttpMethod, ServiceContext } from '../../src/server/server-types';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -30,8 +30,8 @@ describe('Decorators', () => {
     let parameterDecorators: any;
     let methodDecorators: any;
     let propertyType: sinon.SinonStub;
-    let serviceClass: metadata.ServiceClass;
-    let serviceMethod: metadata.ServiceMethod;
+    let serviceClass: ServiceClass;
+    let serviceMethod: ServiceMethod;
 
     beforeEach(() => {
         serverStub = sinon.stub({
@@ -53,8 +53,8 @@ describe('Decorators', () => {
             '../server/server-container': { ServerContainer: serverStub }
         });
 
-        serviceClass = new metadata.ServiceClass(TestService);
-        serviceMethod = new metadata.ServiceMethod();
+        serviceClass = new ServiceClass(TestService);
+        serviceMethod = new ServiceMethod();
 
         serverStub.registerServiceMethod.returns(serviceMethod);
         serverStub.registerServiceClass.returns(serviceClass);
@@ -293,12 +293,12 @@ describe('Decorators', () => {
     });
 
     [
-        { name: 'Context', paramType: metadata.ParamType.context },
-        { name: 'ContextRequest', paramType: metadata.ParamType.context_request },
-        { name: 'ContextResponse', paramType: metadata.ParamType.context_response },
-        { name: 'ContextNext', paramType: metadata.ParamType.context_next },
-        { name: 'ContextLanguage', paramType: metadata.ParamType.context_accept_language },
-        { name: 'ContextAccept', paramType: metadata.ParamType.context_accept }
+        { name: 'Context', paramType: ParamType.context },
+        { name: 'ContextRequest', paramType: ParamType.context_request },
+        { name: 'ContextResponse', paramType: ParamType.context_response },
+        { name: 'ContextNext', paramType: ParamType.context_next },
+        { name: 'ContextLanguage', paramType: ParamType.context_accept_language },
+        { name: 'ContextAccept', paramType: ParamType.context_accept }
     ].forEach(test => {
         describe(`${test.name} Decorator`, () => {
             it(`should bind the @${test.name} to one service property`, async () => {
@@ -326,14 +326,14 @@ describe('Decorators', () => {
     });
 
     [
-        { name: 'PathParam', paramType: metadata.ParamType.path },
-        { name: 'FileParam', paramType: metadata.ParamType.file },
-        { name: 'FilesParam', paramType: metadata.ParamType.files },
-        { name: 'QueryParam', paramType: metadata.ParamType.query },
-        { name: 'HeaderParam', paramType: metadata.ParamType.header },
-        { name: 'CookieParam', paramType: metadata.ParamType.cookie },
-        { name: 'FormParam', paramType: metadata.ParamType.form },
-        { name: 'Param', paramType: metadata.ParamType.param }
+        { name: 'PathParam', paramType: ParamType.path },
+        { name: 'FileParam', paramType: ParamType.file },
+        { name: 'FilesParam', paramType: ParamType.files },
+        { name: 'QueryParam', paramType: ParamType.query },
+        { name: 'HeaderParam', paramType: ParamType.header },
+        { name: 'CookieParam', paramType: ParamType.cookie },
+        { name: 'FormParam', paramType: ParamType.form },
+        { name: 'Param', paramType: ParamType.param }
     ].forEach(test => {
         describe(`${test.name} Decorator`, () => {
             it(`should bind a @${test.name} to one service property`, async () => {
@@ -439,16 +439,16 @@ describe('Decorators', () => {
                 expect(serviceMethod.parameters).to.have.length(1);
                 expect(serviceMethod.parameters[0].name).to.be.null;
                 expect(serviceMethod.parameters[0].type).to.be.equals(String);
-                expect(serviceMethod.parameters[0].paramType).to.be.equals(metadata.ParamType.body);
+                expect(serviceMethod.parameters[0].paramType).to.be.equals(ParamType.body);
             });
 
             it(`should bind the HTTP ${test.name} verb to one service method with a cookie param`, async () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(name, String, metadata.ParamType.cookie)
+                    new MethodParam(name, String, ParamType.cookie)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -465,9 +465,9 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(name, String, metadata.ParamType.file)
+                    new MethodParam(name, String, ParamType.file)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -487,9 +487,9 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(name, String, metadata.ParamType.files)
+                    new MethodParam(name, String, ParamType.files)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -509,9 +509,9 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(name, String, metadata.ParamType.param)
+                    new MethodParam(name, String, ParamType.param)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -528,9 +528,9 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(name, String, metadata.ParamType.form)
+                    new MethodParam(name, String, ParamType.form)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -547,12 +547,12 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters.push(
-                    new metadata.MethodParam(`${name}1`, String, metadata.ParamType.cookie),
-                    new metadata.MethodParam(`${name}2`, String, metadata.ParamType.path),
-                    new metadata.MethodParam(`${name}3`, String, metadata.ParamType.param),
-                    new metadata.MethodParam(`${name}4`, String, metadata.ParamType.body)
+                    new MethodParam(`${name}1`, String, ParamType.cookie),
+                    new MethodParam(`${name}2`, String, ParamType.path),
+                    new MethodParam(`${name}3`, String, ParamType.param),
+                    new MethodParam(`${name}4`, String, ParamType.body)
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
@@ -569,11 +569,11 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.body));
+                    .push(new MethodParam(`${name}1`, String, ParamType.body));
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.body));
+                    .push(new MethodParam(`${name}2`, String, ParamType.body));
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
@@ -586,11 +586,11 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.body));
+                    .push(new MethodParam(`${name}1`, String, ParamType.body));
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.form));
+                    .push(new MethodParam(`${name}2`, String, ParamType.form));
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
@@ -603,11 +603,11 @@ describe('Decorators', () => {
                 const methodName = 'test';
                 const name = 'para-name';
 
-                const testMethod = new metadata.ServiceMethod();
+                const testMethod = new ServiceMethod();
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}1`, String, metadata.ParamType.form));
+                    .push(new MethodParam(`${name}1`, String, ParamType.form));
                 testMethod.parameters
-                    .push(new metadata.MethodParam(`${name}2`, String, metadata.ParamType.body));
+                    .push(new MethodParam(`${name}2`, String, ParamType.body));
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
@@ -645,7 +645,7 @@ describe('Decorators', () => {
         });
     });
 
-    function validateDecoratedProperty(propertyName: string, paramType: metadata.ParamType, name: string) {
+    function validateDecoratedProperty(propertyName: string, paramType: ParamType, name: string) {
         expect(serverStub.registerServiceClass).to.have.been
             .calledOnceWithExactly(TestService.constructor);
         expect(reflectGetMetadata).to.have.been
@@ -668,7 +668,7 @@ describe('Decorators', () => {
     }
 
     function validateServiceMethodParameter(type: any,
-        paramType: metadata.ParamType,
+        paramType: ParamType,
         paramIndex: number, name: string) {
         const param = serviceMethod.parameters[paramIndex];
         expect(param.name).to.be.equals(name);

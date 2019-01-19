@@ -2,9 +2,9 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
-import * as metadata from '../metadata';
-import { ServicePreProcessor } from '../server-types';
+import { PreprocessorFunction, ServiceClass, ServiceMethod } from '../server/metadata';
 import { ServerContainer } from '../server/server-container';
+import { ServicePreProcessor } from '../server/server-types';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method
@@ -196,7 +196,7 @@ export function Accept(...accepts: Array<string>) {
  * Decorator processor for [[AcceptLanguage]] decorator on classes
  */
 function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
-    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
+    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
     classData.languages = _.union(classData.languages, languages);
 }
 
@@ -205,7 +205,7 @@ function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>)
  */
 function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, languages: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.languages = _.union(serviceMethod.languages, languages);
     }
@@ -215,7 +215,7 @@ function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
  * Decorator processor for [[Accept]] decorator on classes
  */
 function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
-    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
+    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
     classData.accepts = _.union(classData.accepts, accepts);
 }
 
@@ -224,7 +224,7 @@ function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
  */
 function AcceptMethodDecorator(target: any, propertyKey: string,
     descriptor: PropertyDescriptor, accepts: Array<string>) {
-    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) { // does not intercept constructor
         serviceMethod.accepts = _.union(serviceMethod.accepts, accepts);
     }
@@ -233,8 +233,8 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
 /**
  * Decorator processor for [[Preprocessor]] decorator on classes
  */
-function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.PreprocessorFunction) {
-    const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
+function PreprocessorTypeDecorator(target: Function, preprocessor: PreprocessorFunction) {
+    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
     if (classData) {
         if (!classData.preProcessors) {
             classData.preProcessors = [];
@@ -247,8 +247,8 @@ function PreprocessorTypeDecorator(target: Function, preprocessor: metadata.Prep
  * Decorator processor for [[Preprocessor]] decorator on methods
  */
 function PreprocessorMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, preprocessor: metadata.PreprocessorFunction) {
-    const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+    descriptor: PropertyDescriptor, preprocessor: PreprocessorFunction) {
+    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
     if (serviceMethod) {
         if (!serviceMethod.preProcessors) {
             serviceMethod.preProcessors = [];
@@ -289,7 +289,7 @@ export function BodyOptions(options: any) {
 export function Abstract(...args: Array<any>) {
     args = _.without(args, undefined);
     if (args.length === 1) {
-        const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(args[0]);
+        const classData: ServiceClass = ServerContainer.get().registerServiceClass(args[0]);
         classData.isAbstract = true;
     }
     else {
@@ -330,14 +330,14 @@ class ServiceDecorator {
     }
 
     private decorateType(target: Function) {
-        const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target);
+        const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
         if (classData) {
             classData[this.property] = this.value;
         }
     }
 
     private decorateMethod(target: Function, propertyKey: string) {
-        const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+        const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             serviceMethod[this.property] = this.value;
         }

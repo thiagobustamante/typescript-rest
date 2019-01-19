@@ -2,7 +2,7 @@
 import * as express from 'express';
 import * as _ from 'lodash';
 import * as passport from 'passport';
-import { ServiceAuthenticator } from './server-types';
+import { ServiceAuthenticator } from '../server/server-types';
 
 export interface PassportAuthenticatorOptions {
     authOptions?: passport.AuthenticateOptions;

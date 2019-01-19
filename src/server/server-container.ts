@@ -5,12 +5,15 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as _ from 'lodash';
 import * as multer from 'multer';
-import * as metadata from '../metadata';
-import * as Errors from '../server-errors';
+import * as Errors from './errors';
+import { ParamType, ServiceClass, ServiceMethod } from './metadata';
 
 import { NextFunction, Request, Response } from 'express';
-import { DownloadBinaryData, DownloadResource } from '../server-return';
-import { FileLimits, HttpMethod, ParameterConverter, ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory } from '../server-types';
+import { DownloadBinaryData, DownloadResource } from './return-types';
+import {
+    FileLimits, HttpMethod, ParameterConverter,
+    ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory
+} from './server-types';
 
 export class DefaultServiceFactory implements ServiceFactory {
     public create(serviceClass: any) {
@@ -41,27 +44,27 @@ export class ServerContainer {
     public router: express.Router;
 
     private upload: multer.Instance;
-    private serverClasses: Map<Function, metadata.ServiceClass> = new Map<Function, metadata.ServiceClass>();
+    private serverClasses: Map<Function, ServiceClass> = new Map<Function, ServiceClass>();
     private paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
     private pathsResolved: boolean = false;
 
     private constructor() { }
 
-    public registerServiceClass(target: Function): metadata.ServiceClass {
+    public registerServiceClass(target: Function): ServiceClass {
         this.pathsResolved = false;
         target = this.serviceFactory.getTargetClass(target);
         if (!this.serverClasses.has(target)) {
-            this.serverClasses.set(target, new metadata.ServiceClass(target));
+            this.serverClasses.set(target, new ServiceClass(target));
             this.inheritParentClass(target);
         }
-        const serviceClass: metadata.ServiceClass = this.serverClasses.get(target);
+        const serviceClass: ServiceClass = this.serverClasses.get(target);
         return serviceClass;
     }
 
     public inheritParentClass(target: Function) {
-        const classData: metadata.ServiceClass = this.serverClasses.get(target);
+        const classData: ServiceClass = this.serverClasses.get(target);
         const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
-        const parentClassData: metadata.ServiceClass = this.getServiceClass(parent);
+        const parentClassData: ServiceClass = this.getServiceClass(parent);
         if (parentClassData) {
             if (parentClassData.methods) {
                 parentClassData.methods.forEach((value, key) => {
@@ -85,14 +88,14 @@ export class ServerContainer {
         }
     }
 
-    public registerServiceMethod(target: Function, methodName: string): metadata.ServiceMethod {
+    public registerServiceMethod(target: Function, methodName: string): ServiceMethod {
         if (methodName) {
             this.pathsResolved = false;
-            const classData: metadata.ServiceClass = this.registerServiceClass(target);
+            const classData: ServiceClass = this.registerServiceClass(target);
             if (!classData.methods.has(methodName)) {
-                classData.methods.set(methodName, new metadata.ServiceMethod());
+                classData.methods.set(methodName, new ServiceMethod());
             }
-            const serviceMethod: metadata.ServiceMethod = classData.methods.get(methodName);
+            const serviceMethod: ServiceMethod = classData.methods.get(methodName);
             return serviceMethod;
         }
         return null;
@@ -153,7 +156,7 @@ export class ServerContainer {
         }
     }
 
-    public buildService(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
+    public buildService(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
 
         if (!serviceMethod.resolvedPath) {
             this.resolveProperties(serviceClass, serviceMethod);
@@ -191,13 +194,13 @@ export class ServerContainer {
         }
     }
 
-    private getServiceClass(target: Function): metadata.ServiceClass {
+    private getServiceClass(target: Function): ServiceClass {
         target = this.serviceFactory.getTargetClass(target);
         return this.serverClasses.get(target) || null;
     }
 
-    private resolveLanguages(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
+    private resolveLanguages(serviceClass: ServiceClass,
+        serviceMethod: ServiceMethod): void {
 
         const resolvedLanguages = _.union(serviceClass.languages, serviceMethod.languages);
         if (resolvedLanguages.length > 0) {
@@ -205,23 +208,23 @@ export class ServerContainer {
         }
     }
 
-    private resolveAccepts(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
+    private resolveAccepts(serviceClass: ServiceClass,
+        serviceMethod: ServiceMethod): void {
         const resolvedAccepts = _.union(serviceClass.accepts, serviceMethod.accepts);
         if (resolvedAccepts.length > 0) {
             serviceMethod.resolvedAccepts = resolvedAccepts;
         }
     }
 
-    private resolveProperties(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
+    private resolveProperties(serviceClass: ServiceClass,
+        serviceMethod: ServiceMethod): void {
         this.resolveLanguages(serviceClass, serviceMethod);
         this.resolveAccepts(serviceClass, serviceMethod);
         this.resolvePath(serviceClass, serviceMethod);
     }
 
-    private resolvePath(serviceClass: metadata.ServiceClass,
-        serviceMethod: metadata.ServiceMethod): void {
+    private resolvePath(serviceClass: ServiceClass,
+        serviceMethod: ServiceMethod): void {
         const classPath: string = serviceClass.path ? serviceClass.path.trim() : '';
 
         let resolvedPath = _.startsWith(classPath, '/') ? classPath : '/' + classPath;
@@ -294,7 +297,7 @@ export class ServerContainer {
         return this.upload;
     }
 
-    private buildServiceMiddleware(serviceMethod: metadata.ServiceMethod, serviceClass: metadata.ServiceClass) {
+    private buildServiceMiddleware(serviceMethod: ServiceMethod, serviceClass: ServiceClass) {
         const allPreprocessors = _.union(serviceMethod.preProcessors, serviceClass.preProcessors);
         return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
             try {
@@ -308,7 +311,7 @@ export class ServerContainer {
         };
     }
 
-    private buildSecurityMiddlewares(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod) {
+    private buildSecurityMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         let roles: Array<string> = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
             .filter((role) => !!role);
@@ -330,7 +333,7 @@ export class ServerContainer {
         return result;
     }
 
-    private buildParserMiddlewares(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
+    private buildParserMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod): Array<express.RequestHandler> {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         const bodyParserOptions = serviceMethod.bodyParserOptions || serviceClass.bodyParserOptions;
 
@@ -350,7 +353,7 @@ export class ServerContainer {
         return result;
     }
 
-    private buildFilesParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+    private buildFilesParserMiddleware(serviceMethod: ServiceMethod) {
         const options: Array<multer.Field> = new Array<multer.Field>();
         serviceMethod.files.forEach(fileData => {
             if (fileData.singleFile) {
@@ -397,7 +400,7 @@ export class ServerContainer {
         return middleware;
     }
 
-    private processResponseHeaders(serviceMethod: metadata.ServiceMethod, context: ServiceContext) {
+    private processResponseHeaders(serviceMethod: ServiceMethod, context: ServiceContext) {
         if (serviceMethod.resolvedLanguages) {
             if (serviceMethod.httpMethod === HttpMethod.GET) {
                 context.response.vary('Accept-Language');
@@ -409,7 +412,7 @@ export class ServerContainer {
         }
     }
 
-    private checkAcceptance(serviceMethod: metadata.ServiceMethod, context: ServiceContext): void {
+    private checkAcceptance(serviceMethod: ServiceMethod, context: ServiceContext): void {
         if (serviceMethod.resolvedLanguages) {
             const lang: any = context.request.acceptsLanguages(serviceMethod.resolvedLanguages);
             if (lang) {
@@ -436,7 +439,7 @@ export class ServerContainer {
         }
     }
 
-    private createService(serviceClass: metadata.ServiceClass, context: ServiceContext) {
+    private createService(serviceClass: ServiceClass, context: ServiceContext) {
         const serviceObject = this.serviceFactory.create(serviceClass.targetClass, context);
         if (serviceClass.hasProperties()) {
             serviceClass.properties.forEach((property, key) => {
@@ -446,7 +449,7 @@ export class ServerContainer {
         return serviceObject;
     }
 
-    private async callTargetEndPoint(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod,
+    private async callTargetEndPoint(serviceClass: ServiceClass, serviceMethod: ServiceMethod,
         req: express.Request, res: express.Response, next: express.NextFunction) {
         const context: ServiceContext = new ServiceContext();
         context.request = req;
@@ -524,7 +527,7 @@ export class ServerContainer {
         });
     }
 
-    private buildArgumentsList(serviceMethod: metadata.ServiceMethod, context: ServiceContext) {
+    private buildArgumentsList(serviceMethod: ServiceMethod, context: ServiceContext) {
         const result: Array<any> = new Array<any>();
 
         serviceMethod.parameters.forEach(param => {
@@ -534,45 +537,45 @@ export class ServerContainer {
         return result;
     }
 
-    private processParameter(paramType: metadata.ParamType, context: ServiceContext, name: string, type: any) {
+    private processParameter(paramType: ParamType, context: ServiceContext, name: string, type: any) {
         switch (paramType) {
-            case metadata.ParamType.path:
+            case ParamType.path:
                 return this.convertType(context.request.params[name], type);
-            case metadata.ParamType.query:
+            case ParamType.query:
                 return this.convertType(context.request.query[name], type);
-            case metadata.ParamType.header:
+            case ParamType.header:
                 return this.convertType(context.request.header(name), type);
-            case metadata.ParamType.cookie:
+            case ParamType.cookie:
                 return this.convertType(context.request.cookies[name], type);
-            case metadata.ParamType.body:
+            case ParamType.body:
                 return this.convertType(context.request.body, type);
-            case metadata.ParamType.file:
+            case ParamType.file:
                 // @ts-ignore
                 const files: Array<Express.Multer.File> = context.request.files ? context.request.files[name] : null;
                 if (files && files.length > 0) {
                     return files[0];
                 }
                 return null;
-            case metadata.ParamType.files:
+            case ParamType.files:
                 // @ts-ignore
                 return context.request.files[name];
-            case metadata.ParamType.form:
+            case ParamType.form:
                 return this.convertType(context.request.body[name], type);
-            case metadata.ParamType.param:
+            case ParamType.param:
                 const paramValue = context.request.body[name] ||
                     context.request.query[name];
                 return this.convertType(paramValue, type);
-            case metadata.ParamType.context:
+            case ParamType.context:
                 return context;
-            case metadata.ParamType.context_request:
+            case ParamType.context_request:
                 return context.request;
-            case metadata.ParamType.context_response:
+            case ParamType.context_response:
                 return context.response;
-            case metadata.ParamType.context_next:
+            case ParamType.context_next:
                 return context.next;
-            case metadata.ParamType.context_accept:
+            case ParamType.context_accept:
                 return context.accept;
-            case metadata.ParamType.context_accept_language:
+            case ParamType.context_accept_language:
                 return context.language;
             default:
                 throw new Errors.BadRequestError('Invalid parameter type');

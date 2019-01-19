@@ -6,8 +6,11 @@ import * as _ from 'lodash';
 import 'multer';
 import * as path from 'path';
 import * as YAML from 'yamljs';
-import { FileLimits, HttpMethod, ParameterConverter, ServiceAuthenticator, ServiceFactory } from '../server-types';
 import { ServerContainer } from './server-container';
+import {
+    FileLimits, HttpMethod, ParameterConverter,
+    ServiceAuthenticator, ServiceFactory
+} from './server-types';
 
 /**
  * The Http server main class.

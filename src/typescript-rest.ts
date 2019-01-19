@@ -1,15 +1,15 @@
 'use strict';
 
-import * as Errors from './server-errors';
-import * as Return from './server-return';
+import * as Errors from './server/errors';
+import * as Return from './server/return-types';
 import { ServerConfig } from './typescript-rest-config';
 
 export * from './decorators/parameters';
 export * from './decorators/methods';
 export * from './decorators/services';
-export * from './server-types';
+export * from './server/server-types';
 export * from './server/server';
-export * from './passport-authenticator';
+export * from './authenticator/passport';
 
 export { Return };
 export { Errors };

@@ -46,7 +46,7 @@ describe('PassportAuthenticator', () => {
         passportStub.initialize.returns(initializer);
         passportStub.session.returns(sessionHandler);
 
-        PassportAuthenticator = proxyquire('../../src/passport-authenticator', {
+        PassportAuthenticator = proxyquire('../../src/authenticator/passport', {
             'passport': passportStub
         }).PassportAuthenticator;
     });

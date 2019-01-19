@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
-import * as metadata from '../metadata';
+import { MethodParam, ParamType, ServiceClass, ServiceMethod } from '../server/metadata';
 import { ServerContainer } from '../server/server-container';
 
 
@@ -26,7 +26,7 @@ import { ServerContainer } from '../server/server-container';
  * [[ServiceContext]] instance.
  */
 export function Context(...args: Array<any>) {
-    return new ParameterDecorator('Context').withType(metadata.ParamType.context)
+    return new ParameterDecorator('Context').withType(ParamType.context)
         .decorateParameterOrProperty(args);
 }
 
@@ -50,7 +50,7 @@ export function Context(...args: Array<any>) {
  * request.
  */
 export function ContextRequest(...args: Array<any>) {
-    return new ParameterDecorator('ContextRequest').withType(metadata.ParamType.context_request)
+    return new ParameterDecorator('ContextRequest').withType(ParamType.context_request)
         .decorateParameterOrProperty(args);
 }
 
@@ -74,7 +74,7 @@ export function ContextRequest(...args: Array<any>) {
  * response object.
  */
 export function ContextResponse(...args: Array<any>) {
-    return new ParameterDecorator('ContextResponse').withType(metadata.ParamType.context_response)
+    return new ParameterDecorator('ContextResponse').withType(ParamType.context_response)
         .decorateParameterOrProperty(args);
 }
 
@@ -98,7 +98,7 @@ export function ContextResponse(...args: Array<any>) {
  * middleware the current request processing.
  */
 export function ContextNext(...args: Array<any>) {
-    return new ParameterDecorator('ContextNext').withType(metadata.ParamType.context_next)
+    return new ParameterDecorator('ContextNext').withType(ParamType.context_next)
         .decorateParameterOrProperty(args);
 }
 
@@ -120,7 +120,7 @@ export function ContextNext(...args: Array<any>) {
  */
 export function ContextLanguage(...args: Array<any>) {
     return new ParameterDecorator('ContextLanguage')
-        .withType(metadata.ParamType.context_accept_language)
+        .withType(ParamType.context_accept_language)
         .decorateParameterOrProperty(args);
 }
 
@@ -141,7 +141,7 @@ export function ContextLanguage(...args: Array<any>) {
  * ```
  */
 export function ContextAccept(...args: Array<any>) {
-    return new ParameterDecorator('ContextAccept').withType(metadata.ParamType.context_accept)
+    return new ParameterDecorator('ContextAccept').withType(ParamType.context_accept)
         .decorateParameterOrProperty(args);
 }
 
@@ -172,7 +172,7 @@ export function ContextAccept(...args: Array<any>) {
  * And pass 123 as the id argument on getPerson method's call.
  */
 export function PathParam(name: string) {
-    return new ParameterDecorator('PathParam').withType(metadata.ParamType.path).withName(name)
+    return new ParameterDecorator('PathParam').withType(ParamType.path).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -199,7 +199,7 @@ export function PathParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FileParam(name: string) {
-    return new ParameterDecorator('FileParam').withType(metadata.ParamType.file).withName(name)
+    return new ParameterDecorator('FileParam').withType(ParamType.file).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -226,7 +226,7 @@ export function FileParam(name: string) {
  * argument on addAvatar method's call.
  */
 export function FilesParam(name: string) {
-    return new ParameterDecorator('FilesParam').withType(metadata.ParamType.files).withName(name)
+    return new ParameterDecorator('FilesParam').withType(ParamType.files).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -255,7 +255,7 @@ export function FilesParam(name: string) {
  * And pass 'joe' as the name argument on getPerson method's call.
  */
 export function QueryParam(name: string) {
-    return new ParameterDecorator('QueryParam').withType(metadata.ParamType.query).withName(name)
+    return new ParameterDecorator('QueryParam').withType(ParamType.query).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -279,7 +279,7 @@ export function QueryParam(name: string) {
  * header called 'header' to the header argument on getPerson method's call.
  */
 export function HeaderParam(name: string) {
-    return new ParameterDecorator('HeaderParam').withType(metadata.ParamType.header).withName(name)
+    return new ParameterDecorator('HeaderParam').withType(ParamType.header).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -303,7 +303,7 @@ export function HeaderParam(name: string) {
  * cookie called 'cookie' to the cookie argument on getPerson method's call.
  */
 export function CookieParam(name: string) {
-    return new ParameterDecorator('CookieParam').withType(metadata.ParamType.cookie).withName(name)
+    return new ParameterDecorator('CookieParam').withType(ParamType.cookie).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -328,7 +328,7 @@ export function CookieParam(name: string) {
  * method's call.
  */
 export function FormParam(name: string) {
-    return new ParameterDecorator('FormParam').withType(metadata.ParamType.form).withName(name)
+    return new ParameterDecorator('FormParam').withType(ParamType.form).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
@@ -354,13 +354,13 @@ export function FormParam(name: string) {
  * received in the current request.
  */
 export function Param(name: string) {
-    return new ParameterDecorator('Param').withType(metadata.ParamType.param).withName(name)
+    return new ParameterDecorator('Param').withType(ParamType.param).withName(name)
         .decorateNamedParameterOrProperty();
 }
 
 class ParameterDecorator {
     private decorator: string;
-    private paramType: metadata.ParamType;
+    private paramType: ParamType;
     private nameRequired: boolean = false;
     private name: string = null;
 
@@ -368,7 +368,7 @@ class ParameterDecorator {
         this.decorator = decorator;
     }
 
-    public withType(paramType: metadata.ParamType) {
+    public withType(paramType: ParamType) {
         this.paramType = paramType;
         return this;
     }
@@ -399,21 +399,21 @@ class ParameterDecorator {
     }
 
     private decorateParameter(target: Object, propertyKey: string, parameterIndex: number) {
-        const serviceMethod: metadata.ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
+        const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
             const paramTypes = Reflect.getOwnMetadata('design:paramtypes', target, propertyKey);
 
             while (paramTypes && serviceMethod.parameters.length < paramTypes.length) {
-                serviceMethod.parameters.push(new metadata.MethodParam(null,
-                    paramTypes[serviceMethod.parameters.length], metadata.ParamType.body));
+                serviceMethod.parameters.push(new MethodParam(null,
+                    paramTypes[serviceMethod.parameters.length], ParamType.body));
             }
             serviceMethod.parameters[parameterIndex] =
-                new metadata.MethodParam(this.name, paramTypes[parameterIndex], this.paramType);
+                new MethodParam(this.name, paramTypes[parameterIndex], this.paramType);
         }
     }
 
     private decorateProperty(target: Function, key: string) {
-        const classData: metadata.ServiceClass = ServerContainer.get().registerServiceClass(target.constructor);
+        const classData: ServiceClass = ServerContainer.get().registerServiceClass(target.constructor);
         const propertyType = Reflect.getMetadata('design:type', target, key);
         classData.addProperty(key, this.paramType, this.name, propertyType);
     }

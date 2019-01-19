@@ -63,18 +63,6 @@ export class ServiceContext {
 }
 
 /**
- * The Base class for all HTTP errors
- */
-export abstract class HttpError extends Error {
-    constructor(name: string,
-        public statusCode: number,
-        public message: string) {
-        super(message);
-        this.name = name;
-    }
-}
-
-/**
  * Used to create a reference to a resource.
  */
 export abstract class ReferencedResource<T> {
