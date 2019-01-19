@@ -21,6 +21,7 @@ export class ServiceClass {
     public roles: Array<string>;
     public preProcessors: Array<PreprocessorFunction>;
     public methods: Map<string, ServiceMethod>;
+    public bodyParserOptions: any;
     public languages: Array<string>;
     public accepts: Array<string>;
     public properties: Map<string, SeviceProperty>;

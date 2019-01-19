@@ -161,7 +161,7 @@ export class ServerContainer {
 
         let args: Array<any> = [serviceMethod.resolvedPath];
         args = args.concat(this.buildSecurityMiddlewares(serviceClass, serviceMethod));
-        args = args.concat(this.buildParserMiddlewares(serviceMethod));
+        args = args.concat(this.buildParserMiddlewares(serviceClass, serviceMethod));
         args.push(this.buildServiceMiddleware(serviceMethod, serviceClass));
         switch (serviceMethod.httpMethod) {
             case HttpMethod.GET:
@@ -330,17 +330,18 @@ export class ServerContainer {
         return result;
     }
 
-    private buildParserMiddlewares(serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
+    private buildParserMiddlewares(serviceClass: metadata.ServiceClass, serviceMethod: metadata.ServiceMethod): Array<express.RequestHandler> {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
+        const bodyParserOptions = serviceMethod.bodyParserOptions || serviceClass.bodyParserOptions;
 
         if (serviceMethod.mustParseCookies) {
             result.push(this.buildCookieParserMiddleware());
         }
         if (serviceMethod.mustParseBody) {
-            result.push(this.buildJsonBodyParserMiddleware(serviceMethod));
+            result.push(this.buildJsonBodyParserMiddleware(bodyParserOptions));
         }
         if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
-            result.push(this.buildFormParserMiddleware(serviceMethod));
+            result.push(this.buildFormParserMiddleware(bodyParserOptions));
         }
         if (serviceMethod.files.length > 0) {
             result.push(this.buildFilesParserMiddleware(serviceMethod));
@@ -362,10 +363,10 @@ export class ServerContainer {
         return this.getUploader().fields(options);
     }
 
-    private buildFormParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+    private buildFormParserMiddleware(bodyParserOptions: any) {
         let middleware: express.RequestHandler;
-        if (serviceMethod.bodyParserOptions) {
-            middleware = bodyParser.urlencoded(serviceMethod.bodyParserOptions);
+        if (bodyParserOptions) {
+            middleware = bodyParser.urlencoded(bodyParserOptions);
         }
         else {
             middleware = bodyParser.urlencoded({ extended: true });
@@ -373,10 +374,10 @@ export class ServerContainer {
         return middleware;
     }
 
-    private buildJsonBodyParserMiddleware(serviceMethod: metadata.ServiceMethod) {
+    private buildJsonBodyParserMiddleware(bodyParserOptions: any) {
         let middleware: express.RequestHandler;
-        if (serviceMethod.bodyParserOptions) {
-            middleware = bodyParser.json(serviceMethod.bodyParserOptions);
+        if (bodyParserOptions) {
+            middleware = bodyParser.json(bodyParserOptions);
         }
         else {
             middleware = bodyParser.json();

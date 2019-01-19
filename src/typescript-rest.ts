@@ -4,7 +4,9 @@ import * as Errors from './server-errors';
 import * as Return from './server-return';
 import { ServerConfig } from './typescript-rest-config';
 
-export * from './decorators';
+export * from './decorators/parameters';
+export * from './decorators/methods';
+export * from './decorators/services';
 export * from './server-types';
 export * from './server/server';
 export * from './passport-authenticator';

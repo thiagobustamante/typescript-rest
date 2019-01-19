@@ -26,7 +26,9 @@ describe('Decorators', () => {
     let serverStub: sinon.SinonStubbedInstance<any>;
     let reflectGetMetadata: sinon.SinonStubbedInstance<any>;
     let reflectGetOwnMetadata: sinon.SinonStubbedInstance<any>;
-    let decorators: any;
+    let serviceDecorators: any;
+    let parameterDecorators: any;
+    let methodDecorators: any;
     let propertyType: sinon.SinonStub;
     let serviceClass: metadata.ServiceClass;
     let serviceMethod: metadata.ServiceMethod;
@@ -41,8 +43,14 @@ describe('Decorators', () => {
         reflectGetMetadata = sinon.stub(Reflect, 'getMetadata');
         reflectGetOwnMetadata = sinon.stub(Reflect, 'getOwnMetadata');
 
-        decorators = proxyquire('../../src/decorators', {
-            './server/server-container': { ServerContainer: serverStub }
+        serviceDecorators = proxyquire('../../src/decorators/services', {
+            '../server/server-container': { ServerContainer: serverStub }
+        });
+        parameterDecorators = proxyquire('../../src/decorators/parameters', {
+            '../server/server-container': { ServerContainer: serverStub }
+        });
+        methodDecorators = proxyquire('../../src/decorators/methods', {
+            '../server/server-container': { ServerContainer: serverStub }
         });
 
         serviceClass = new metadata.ServiceClass(TestService);
@@ -66,7 +74,7 @@ describe('Decorators', () => {
     describe('Path Decorator', () => {
         it('should add a path namespace to all methods of a class', async () => {
             const path = 'test-path';
-            decorators.Path(path)(TestService);
+            serviceDecorators.Path(path)(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.path).to.equals(path);
@@ -74,7 +82,7 @@ describe('Decorators', () => {
 
         it('should add a path to methods of a class', async () => {
             const path = 'test-path';
-            decorators.Path(path)(TestService.prototype, 'test',
+            serviceDecorators.Path(path)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -85,7 +93,7 @@ describe('Decorators', () => {
             const path = 'test-path';
 
             expect(() => {
-                decorators.Path(path)(TestService.prototype, 'test',
+                serviceDecorators.Path(path)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
             }).to.throw('Invalid @Path Decorator declaration.');
         });
@@ -94,7 +102,7 @@ describe('Decorators', () => {
     describe('Security Decorator', () => {
         it('should add a security role to all methods of a class', async () => {
             const role = 'test-role';
-            decorators.Security(role)(TestService);
+            serviceDecorators.Security(role)(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.roles).to.have.length(1);
@@ -103,7 +111,7 @@ describe('Decorators', () => {
 
         it('should add a security role to methods of a class', async () => {
             const role = 'test-role';
-            decorators.Security(role)(TestService.prototype, 'test',
+            serviceDecorators.Security(role)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -113,7 +121,7 @@ describe('Decorators', () => {
 
         it('should add a security set of roles to methods of a class', async () => {
             const roles = ['test-role', 'tes-role2'];
-            decorators.Security(roles)(TestService.prototype, 'test',
+            serviceDecorators.Security(roles)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -123,7 +131,7 @@ describe('Decorators', () => {
 
         it('should add a security validation to accept any role when empty is received', async () => {
             const role = '';
-            decorators.Security(role)(TestService.prototype, 'test',
+            serviceDecorators.Security(role)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -133,7 +141,7 @@ describe('Decorators', () => {
 
         it('should add a security validation to accept any role when undefined is received', async () => {
             const role: string = undefined;
-            decorators.Security(role)(TestService.prototype, 'test',
+            serviceDecorators.Security(role)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -145,7 +153,7 @@ describe('Decorators', () => {
             const role = 'test-role';
 
             expect(() => {
-                decorators.Security(role)(TestService.prototype, 'test',
+                serviceDecorators.Security(role)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
             }).to.throw('Invalid @Security Decorator declaration.');
         });
@@ -156,7 +164,7 @@ describe('Decorators', () => {
             return;
         };
         it('should add a ServicePreProcessor to all methods of a class', async () => {
-            decorators.Preprocessor(preprocessor)(TestService);
+            serviceDecorators.Preprocessor(preprocessor)(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.preProcessors).to.have.length(1);
@@ -164,7 +172,7 @@ describe('Decorators', () => {
         });
 
         it('should add a ServicePreProcessor to methods of a class', async () => {
-            decorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
+            serviceDecorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -174,14 +182,14 @@ describe('Decorators', () => {
 
         it('should throw an error if misused', async () => {
             expect(() => {
-                decorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
+                serviceDecorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
             }).to.throw('Invalid @Preprocessor Decorator declaration.');
         });
 
         it('should throw an error if receives undefined preprocessor', async () => {
             expect(() => {
-                decorators.Preprocessor(undefined)(TestService.prototype, 'test',
+                serviceDecorators.Preprocessor(undefined)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
             }).to.throw('Invalid @Preprocessor Decorator declaration.');
         });
@@ -189,7 +197,7 @@ describe('Decorators', () => {
 
     describe('AcceptLanguage Decorator', () => {
         it('should add an accepted language to all methods of a class', async () => {
-            decorators.AcceptLanguage('en')(TestService);
+            serviceDecorators.AcceptLanguage('en')(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.languages).to.have.length(1);
@@ -197,7 +205,7 @@ describe('Decorators', () => {
         });
 
         it('should add an accepted language to methods of a class', async () => {
-            decorators.AcceptLanguage('en')(TestService.prototype, 'test',
+            serviceDecorators.AcceptLanguage('en')(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -207,13 +215,13 @@ describe('Decorators', () => {
 
         it('should throw an error if misused', async () => {
             expect(() => {
-                decorators.AcceptLanguage('en')(TestService.prototype, 'test',
+                serviceDecorators.AcceptLanguage('en')(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
             }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
         });
 
         it('should ignore falsey values of accepted languages', async () => {
-            decorators.AcceptLanguage(null, 'en', undefined, 0, false, 'pt')(TestService);
+            serviceDecorators.AcceptLanguage(null, 'en', undefined, 0, false, 'pt')(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.languages).to.have.length(2);
@@ -222,14 +230,14 @@ describe('Decorators', () => {
 
         it('should throw an error if receives undefined', async () => {
             expect(() => {
-                decorators.AcceptLanguage(undefined)(TestService.prototype, 'test',
+                serviceDecorators.AcceptLanguage(undefined)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
             }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
         });
 
         it('should throw an error if receives nothing', async () => {
             expect(() => {
-                decorators.AcceptLanguage()(TestService.prototype, 'test',
+                serviceDecorators.AcceptLanguage()(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
             }).to.throw('Invalid @AcceptLanguage Decorator declaration.');
         });
@@ -237,7 +245,7 @@ describe('Decorators', () => {
 
     describe('Accept Decorator', () => {
         it('should add an accepted content type to all methods of a class', async () => {
-            decorators.Accept('application/json')(TestService);
+            serviceDecorators.Accept('application/json')(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.accepts).to.have.length(1);
@@ -245,7 +253,7 @@ describe('Decorators', () => {
         });
 
         it('should add an accepted content type to methods of a class', async () => {
-            decorators.Accept('application/json')(TestService.prototype, 'test',
+            serviceDecorators.Accept('application/json')(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -255,13 +263,13 @@ describe('Decorators', () => {
 
         it('should throw an error if misused', async () => {
             expect(() => {
-                decorators.Accept('application/json')(TestService.prototype, 'test',
+                serviceDecorators.Accept('application/json')(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
             }).to.throw('Invalid @Accept Decorator declaration.');
         });
 
         it('should ignore falsey values of content types', async () => {
-            decorators.Accept(null, 'application/json', undefined, 0, false, 'application/xml')
+            serviceDecorators.Accept(null, 'application/json', undefined, 0, false, 'application/xml')
                 (TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
@@ -271,14 +279,14 @@ describe('Decorators', () => {
 
         it('should throw an error if receives undefined', async () => {
             expect(() => {
-                decorators.Accept(undefined)(TestService.prototype, 'test',
+                serviceDecorators.Accept(undefined)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
             }).to.throw('Invalid @Accept Decorator declaration.');
         });
 
         it('should throw an error if receives nothing', async () => {
             expect(() => {
-                decorators.Accept()(TestService.prototype, 'test',
+                serviceDecorators.Accept()(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
             }).to.throw('Invalid @Accept Decorator declaration.');
         });
@@ -295,7 +303,7 @@ describe('Decorators', () => {
         describe(`${test.name} Decorator`, () => {
             it(`should bind the @${test.name} to one service property`, async () => {
                 const propertyName = 'property';
-                decorators[test.name](TestService, propertyName);
+                parameterDecorators[test.name](TestService, propertyName);
 
                 validateDecoratedProperty(propertyName, test.paramType, null);
             });
@@ -303,7 +311,7 @@ describe('Decorators', () => {
             it(`should bind the @${test.name} to one method parameter`, async () => {
                 const paramName = 'param1';
                 reflectGetOwnMetadata.returns([ServiceContext]);
-                decorators[test.name](TestService, paramName, 0);
+                parameterDecorators[test.name](TestService, paramName, 0);
 
                 validateDecoratedParameter(paramName, 1);
                 validateServiceMethodParameter(ServiceContext, test.paramType, 0, null);
@@ -311,7 +319,7 @@ describe('Decorators', () => {
 
             it('should throw an error if misused', async () => {
                 expect(() => {
-                    decorators[test.name](TestService, 'param1', 0, 'extra-param');
+                    parameterDecorators[test.name](TestService, 'param1', 0, 'extra-param');
                 }).to.throw(`Invalid @${test.name} Decorator declaration.`);
             });
         });
@@ -331,7 +339,7 @@ describe('Decorators', () => {
             it(`should bind a @${test.name} to one service property`, async () => {
                 const propertyName = 'property';
                 const name = 'name';
-                decorators[test.name](name)(TestService, propertyName);
+                parameterDecorators[test.name](name)(TestService, propertyName);
 
                 validateDecoratedProperty(propertyName, test.paramType, name);
             });
@@ -340,7 +348,7 @@ describe('Decorators', () => {
                 const paramName = 'param1';
                 const name = 'name';
                 reflectGetOwnMetadata.returns([ServiceContext]);
-                decorators[test.name](name)(TestService, paramName, 0);
+                parameterDecorators[test.name](name)(TestService, paramName, 0);
 
                 validateDecoratedParameter(paramName, 1);
                 validateServiceMethodParameter(ServiceContext, test.paramType, 0, name);
@@ -348,7 +356,7 @@ describe('Decorators', () => {
 
             it('should throw an error if misused', async () => {
                 expect(() => {
-                    decorators[test.name]('name')(TestService, 'param1', 0, 'extra-param');
+                    parameterDecorators[test.name]('name')(TestService, 'param1', 0, 'extra-param');
                 }).to.throw(`Invalid @${test.name} Decorator declaration.`);
             });
 
@@ -356,7 +364,7 @@ describe('Decorators', () => {
                 const paramName = 'param1';
                 const name: string = '';
                 expect(() => {
-                    decorators[test.name](name)(TestService, paramName, 0);
+                    parameterDecorators[test.name](name)(TestService, paramName, 0);
                 }).to.throw(`Invalid @${test.name} Decorator declaration.`);
             });
 
@@ -364,7 +372,7 @@ describe('Decorators', () => {
                 const paramName = 'param1';
                 const name: string = null;
                 expect(() => {
-                    decorators[test.name](name)(TestService, paramName, 0);
+                    parameterDecorators[test.name](name)(TestService, paramName, 0);
                 }).to.throw(`Invalid @${test.name} Decorator declaration.`);
             });
 
@@ -372,7 +380,7 @@ describe('Decorators', () => {
                 const paramName = 'param1';
                 const name: string = undefined;
                 expect(() => {
-                    decorators[test.name](name)(TestService, paramName, 0);
+                    parameterDecorators[test.name](name)(TestService, paramName, 0);
                 }).to.throw(`Invalid @${test.name} Decorator declaration.`);
             });
         });
@@ -380,14 +388,14 @@ describe('Decorators', () => {
 
     describe('Abstract Decorator', () => {
         it('should bind a class, markint it as Abstract', async () => {
-            decorators.Abstract(TestService);
+            serviceDecorators.Abstract(TestService);
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.isAbstract).to.be.true;
         });
 
         it('should throw an error if misused', async () => {
             expect(() => {
-                decorators.Abstract(TestService, 'extra-param');
+                serviceDecorators.Abstract(TestService, 'extra-param');
             }).to.throw(`Invalid @Abstract Decorator declaration.`);
         });
     });
@@ -405,7 +413,7 @@ describe('Decorators', () => {
             it(`should bind the HTTP ${test.name} verb to one service method`, async () => {
                 const methodName = 'test';
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(serverStub.registerServiceMethod).to.have.been
@@ -421,7 +429,7 @@ describe('Decorators', () => {
 
                 reflectGetOwnMetadata.returns([String]);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(serviceMethod.mustParseBody).to.be.true;
@@ -444,7 +452,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.false;
@@ -463,7 +471,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.false;
@@ -485,7 +493,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.false;
@@ -507,7 +515,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.false;
@@ -526,7 +534,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.false;
@@ -548,7 +556,7 @@ describe('Decorators', () => {
                 );
                 serverStub.registerServiceMethod.returns(testMethod);
 
-                decorators[test.name](TestService, methodName,
+                methodDecorators[test.name](TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
 
                 expect(testMethod.mustParseBody).to.be.true;
@@ -569,7 +577,7 @@ describe('Decorators', () => {
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
-                    decorators[test.name](TestService, methodName,
+                    methodDecorators[test.name](TestService, methodName,
                         Object.getOwnPropertyDescriptor(TestService, methodName));
                 }).to.throw('Can not use more than one body parameter on the same method.');
             });
@@ -586,7 +594,7 @@ describe('Decorators', () => {
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
-                    decorators[test.name](TestService, methodName,
+                    methodDecorators[test.name](TestService, methodName,
                         Object.getOwnPropertyDescriptor(TestService, methodName));
                 }).to.throw('Can not use form parameters with a body parameter on the same method.');
             });
@@ -603,7 +611,7 @@ describe('Decorators', () => {
                 serverStub.registerServiceMethod.returns(testMethod);
 
                 expect(() => {
-                    decorators[test.name](TestService, methodName,
+                    methodDecorators[test.name](TestService, methodName,
                         Object.getOwnPropertyDescriptor(TestService, methodName));
                 }).to.throw('Can not use form parameters with a body parameter on the same method.');
             });
@@ -615,9 +623,9 @@ describe('Decorators', () => {
             const methodName = 'test';
 
             expect(() => {
-                decorators.GET(TestService, methodName,
+                methodDecorators.GET(TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
-                decorators.POST(TestService, methodName,
+                methodDecorators.POST(TestService, methodName,
                     Object.getOwnPropertyDescriptor(TestService, methodName));
             }).to.throw('Method is already annotated with @GET. You can only map a method to one HTTP verb.');
         });
@@ -625,9 +633,9 @@ describe('Decorators', () => {
         it(`should ignore duplications of the same HTTP verb annotation`, async () => {
             const methodName = 'test';
 
-            decorators.GET(TestService, methodName,
+            methodDecorators.GET(TestService, methodName,
                 Object.getOwnPropertyDescriptor(TestService, methodName));
-            decorators.GET(TestService, methodName,
+            methodDecorators.GET(TestService, methodName,
                 Object.getOwnPropertyDescriptor(TestService, methodName));
 
             expect(reflectGetOwnMetadata).to.have.been
