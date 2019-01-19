@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
-import { PreprocessorFunction, ServiceClass, ServiceMethod } from '../server/metadata';
+import { ServiceClass, ServiceMethod } from '../server/metadata';
 import { ServerContainer } from '../server/server-container';
 import { ServicePreProcessor } from '../server/server-types';
 
@@ -107,18 +107,9 @@ export function Security(roles?: string | Array<string>) {
  * ```
  */
 export function Preprocessor(preprocessor: ServicePreProcessor) {
-    return function (...args: Array<any>) {
-        args = _.without(args, undefined);
-        if (preprocessor) {
-            if (args.length === 1) {
-                return PreprocessorTypeDecorator.apply(this, [args[0], preprocessor]);
-            } else if (args.length === 3 && typeof args[2] === 'object') {
-                return PreprocessorMethodDecorator.apply(this, [args[0], args[1], args[2], preprocessor]);
-            }
-        }
-
-        throw new Error('Invalid @Preprocessor Decorator declaration.');
-    };
+    return new ArrayServiceDecorator('Preprocessor')
+        .withProperty('preProcessors').withValue(preprocessor)
+        .requiresValue().decorateTypeOrMethod();
 }
 
 /**
@@ -231,33 +222,6 @@ function AcceptMethodDecorator(target: any, propertyKey: string,
 }
 
 /**
- * Decorator processor for [[Preprocessor]] decorator on classes
- */
-function PreprocessorTypeDecorator(target: Function, preprocessor: PreprocessorFunction) {
-    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
-    if (classData) {
-        if (!classData.preProcessors) {
-            classData.preProcessors = [];
-        }
-        classData.preProcessors.unshift(preprocessor);
-    }
-}
-
-/**
- * Decorator processor for [[Preprocessor]] decorator on methods
- */
-function PreprocessorMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, preprocessor: PreprocessorFunction) {
-    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) {
-        if (!serviceMethod.preProcessors) {
-            serviceMethod.preProcessors = [];
-        }
-        serviceMethod.preProcessors.unshift(preprocessor);
-    }
-}
-
-/**
  * A decorator to inform options to pe passed to bodyParser.
  * You can inform any property accepted by
  * [[bodyParser]](https://www.npmjs.com/package/body-parser)
@@ -298,9 +262,10 @@ export function Abstract(...args: Array<any>) {
 }
 
 class ServiceDecorator {
-    private decorator: string;
-    private property: string;
-    private value: any;
+    protected decorator: string;
+    protected property: string;
+    protected value: any;
+    protected valueRequired: boolean = false;
 
     constructor(decorator: string) {
         this.decorator = decorator;
@@ -316,8 +281,14 @@ class ServiceDecorator {
         return this;
     }
 
+    public requiresValue() {
+        this.valueRequired = true;
+        return this;
+    }
+
     public decorateTypeOrMethod() {
         return (...args: Array<any>) => {
+            this.checkRequiredValue();
             args = _.without(args, undefined);
             if (args.length === 1) {
                 this.decorateType(args[0]);
@@ -329,21 +300,47 @@ class ServiceDecorator {
         };
     }
 
-    private decorateType(target: Function) {
-        const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
-        if (classData) {
-            classData[this.property] = this.value;
+    protected checkRequiredValue() {
+        if (this.valueRequired && !this.value) {
+            throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
         }
     }
 
-    private decorateMethod(target: Function, propertyKey: string) {
+    protected decorateType(target: Function) {
+        const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
+        if (classData) {
+            this.updateClassMetadata(classData);
+        }
+    }
+
+    protected decorateMethod(target: Function, propertyKey: string) {
         const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
         if (serviceMethod) { // does not intercept constructor
-            serviceMethod[this.property] = this.value;
+            this.updateMethodMetadada(serviceMethod);
         }
+    }
+
+    protected updateClassMetadata(classData: ServiceClass) {
+        classData[this.property] = this.value;
+    }
+
+    protected updateMethodMetadada(serviceMethod: ServiceMethod) {
+        serviceMethod[this.property] = this.value;
     }
 }
 
+class ArrayServiceDecorator extends ServiceDecorator {
+    protected updateClassMetadata(classData: ServiceClass) {
+        if (!classData[this.property]) {
+            classData[this.property] = [];
+        }
+        classData[this.property].unshift(this.value);
+    }
 
-
-
+    protected updateMethodMetadada(serviceMethod: ServiceMethod) {
+        if (!serviceMethod[this.property]) {
+            serviceMethod[this.property] = [];
+        }
+        serviceMethod[this.property].unshift(this.value);
+    }
+}

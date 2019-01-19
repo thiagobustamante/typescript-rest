@@ -12,7 +12,8 @@ import { NextFunction, Request, Response } from 'express';
 import { DownloadBinaryData, DownloadResource } from './return-types';
 import {
     FileLimits, HttpMethod, ParameterConverter,
-    ReferencedResource, ServiceAuthenticator, ServiceContext, ServiceFactory
+    ReferencedResource, ServiceAuthenticator, ServiceContext,
+    ServiceFactory, ServicePreProcessor
 } from './server-types';
 
 export class DefaultServiceFactory implements ServiceFactory {
@@ -150,7 +151,7 @@ export class ServerContainer {
         this.handleNotAllowedMethods();
     }
 
-    public async runPreprocessors(processors: Array<Function>, req: express.Request): Promise<void> {
+    public async runPreprocessors(processors: Array<ServicePreProcessor>, req: express.Request): Promise<void> {
         for (const processor of processors) {
             await Promise.resolve(processor(req));
         }
