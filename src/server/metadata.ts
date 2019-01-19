@@ -32,8 +32,8 @@ export class ServiceClass {
         this.properties = new Map<string, SeviceProperty>();
     }
 
-    public addProperty(key: string, paramType: ParamType, paramName: string, propertyType: any) {
-        this.properties.set(key, { type: paramType, name: paramName, propertyType: propertyType });
+    public addProperty(key: string, property: SeviceProperty) {
+        this.properties.set(key, property);
     }
 
     public hasProperties(): boolean {

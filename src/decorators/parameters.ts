@@ -415,7 +415,11 @@ class ParameterDecorator {
     private decorateProperty(target: Function, key: string) {
         const classData: ServiceClass = ServerContainer.get().registerServiceClass(target.constructor);
         const propertyType = Reflect.getMetadata('design:type', target, key);
-        classData.addProperty(key, this.paramType, this.name, propertyType);
+        classData.addProperty(key, {
+            name: this.name,
+            propertyType: propertyType,
+            type: this.paramType
+        });
     }
 }
 

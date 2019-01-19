@@ -31,7 +31,7 @@ export class ErrorService {
     @GET
     public test3(p: string): Promise<string> {
         return new Promise<string>(function (resolve, reject) {
-            reject(new Errors.ForbidenError());
+            reject(new Errors.ForbiddenError());
         });
     }
 
