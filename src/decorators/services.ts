@@ -107,7 +107,7 @@ export function Security(roles?: string | Array<string>) {
  * ```
  */
 export function Preprocessor(preprocessor: ServicePreProcessor) {
-    return new ArrayServiceDecorator('Preprocessor')
+    return new ProcessorServiceDecorator('Preprocessor')
         .withProperty('preProcessors').withValue(preprocessor)
         .requiresValue().decorateTypeOrMethod();
 }
@@ -133,19 +133,9 @@ export function Preprocessor(preprocessor: ServicePreProcessor) {
  * If the language requested is not supported, a status code 406 returned
  */
 export function AcceptLanguage(...languages: Array<string>) {
-    return function (...args: Array<any>) {
-        languages = _.compact(languages);
-        if (languages.length) {
-            args = _.without(args, undefined);
-            if (args.length === 1) {
-                return AcceptLanguageTypeDecorator.apply(this, [args[0], languages]);
-            } else if (args.length === 3 && typeof args[2] === 'object') {
-                return AcceptLanguageMethodDecorator.apply(this, [args[0], args[1], args[2], languages]);
-            }
-        }
-
-        throw new Error('Invalid @AcceptLanguage Decorator declaration.');
-    };
+    languages = _.compact(languages);
+    return new AcceptServiceDecorator('AcceptLanguage').withProperty('languages').withValue(languages)
+        .decorateTypeOrMethod();
 }
 
 /**
@@ -169,56 +159,9 @@ export function AcceptLanguage(...languages: Array<string>) {
  * If the mime type requested is not supported, a status code 406 returned
  */
 export function Accept(...accepts: Array<string>) {
-    return function (...args: Array<any>) {
-        accepts = _.compact(accepts);
-        if (accepts.length) {
-            args = _.without(args, undefined);
-            if (args.length === 1) {
-                return AcceptTypeDecorator.apply(this, [args[0], accepts]);
-            } else if (args.length === 3 && typeof args[2] === 'object') {
-                return AcceptMethodDecorator.apply(this, [args[0], args[1], args[2], accepts]);
-            }
-        }
-        throw new Error('Invalid @Accept Decorator declaration.');
-    };
-}
-
-/**
- * Decorator processor for [[AcceptLanguage]] decorator on classes
- */
-function AcceptLanguageTypeDecorator(target: Function, languages: Array<string>) {
-    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
-    classData.languages = _.union(classData.languages, languages);
-}
-
-/**
- * Decorator processor for [[AcceptLanguage]] decorator on methods
- */
-function AcceptLanguageMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, languages: Array<string>) {
-    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        serviceMethod.languages = _.union(serviceMethod.languages, languages);
-    }
-}
-
-/**
- * Decorator processor for [[Accept]] decorator on classes
- */
-function AcceptTypeDecorator(target: Function, accepts: Array<string>) {
-    const classData: ServiceClass = ServerContainer.get().registerServiceClass(target);
-    classData.accepts = _.union(classData.accepts, accepts);
-}
-
-/**
- * Decorator processor for [[Accept]] decorator on methods
- */
-function AcceptMethodDecorator(target: any, propertyKey: string,
-    descriptor: PropertyDescriptor, accepts: Array<string>) {
-    const serviceMethod: ServiceMethod = ServerContainer.get().registerServiceMethod(target.constructor, propertyKey);
-    if (serviceMethod) { // does not intercept constructor
-        serviceMethod.accepts = _.union(serviceMethod.accepts, accepts);
-    }
+    accepts = _.compact(accepts);
+    return new AcceptServiceDecorator('Accept').withProperty('accepts').withValue(accepts)
+        .decorateTypeOrMethod();
 }
 
 /**
@@ -329,7 +272,7 @@ class ServiceDecorator {
     }
 }
 
-class ArrayServiceDecorator extends ServiceDecorator {
+class ProcessorServiceDecorator extends ServiceDecorator {
     protected updateClassMetadata(classData: ServiceClass) {
         if (!classData[this.property]) {
             classData[this.property] = [];
@@ -342,5 +285,26 @@ class ArrayServiceDecorator extends ServiceDecorator {
             serviceMethod[this.property] = [];
         }
         serviceMethod[this.property].unshift(this.value);
+    }
+}
+
+class AcceptServiceDecorator extends ServiceDecorator {
+    constructor(decorator: string) {
+        super(decorator);
+        this.requiresValue();
+    }
+
+    protected updateClassMetadata(classData: ServiceClass) {
+        classData[this.property] = _.union(classData[this.property], this.value);
+    }
+
+    protected updateMethodMetadada(serviceMethod: ServiceMethod) {
+        serviceMethod[this.property] = _.union(serviceMethod[this.property], this.value);
+    }
+
+    protected checkRequiredValue() {
+        if (!this.value || !this.value.length) {
+            throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
+        }
     }
 }
