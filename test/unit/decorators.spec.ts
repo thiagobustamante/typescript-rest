@@ -8,8 +8,8 @@ import * as proxyquire from 'proxyquire';
 import 'reflect-metadata';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai';
-import { MethodParam, ParamType, ServiceClass, ServiceMethod } from '../../src/server/metadata';
-import { HttpMethod, ServiceContext } from '../../src/server/server-types';
+import { MethodParam, ParamType, ServiceClass, ServiceMethod } from '../../src/server/model/metadata';
+import { HttpMethod, ServiceContext } from '../../src/server/model/server-types';
 
 chai.use(sinonChai);
 const expect = chai.expect;

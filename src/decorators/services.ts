@@ -2,9 +2,9 @@
 
 import * as _ from 'lodash';
 import 'reflect-metadata';
-import { ServiceClass, ServiceMethod } from '../server/metadata';
+import { ServiceClass, ServiceMethod } from '../server/model/metadata';
+import { ServicePreProcessor } from '../server/model/server-types';
 import { ServerContainer } from '../server/server-container';
-import { ServicePreProcessor } from '../server/server-types';
 
 /**
  * A decorator to tell the [[Server]] that a class or a method

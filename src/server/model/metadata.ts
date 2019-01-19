@@ -2,7 +2,7 @@
 
 import { HttpMethod, ServicePreProcessor } from './server-types';
 
-export interface SeviceProperty {
+export interface ServiceProperty {
     type: ParamType;
     name: string;
     propertyType: any;
@@ -22,15 +22,15 @@ export class ServiceClass {
     public bodyParserOptions: any;
     public languages: Array<string>;
     public accepts: Array<string>;
-    public properties: Map<string, SeviceProperty>;
+    public properties: Map<string, ServiceProperty>;
     public isAbstract: boolean = false;
     constructor(targetClass: any) {
         this.targetClass = targetClass;
         this.methods = new Map<string, ServiceMethod>();
-        this.properties = new Map<string, SeviceProperty>();
+        this.properties = new Map<string, ServiceProperty>();
     }
 
-    public addProperty(key: string, property: SeviceProperty) {
+    public addProperty(key: string, property: ServiceProperty) {
         this.properties.set(key, property);
     }
 
