@@ -302,8 +302,7 @@ export class ServerContainer {
 
     private buildSecurityMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
-        let roles: Array<string> = [...(serviceMethod.roles || []), ...(serviceClass.roles || [])]
-            .filter((role) => !!role);
+        let roles: Array<string> = _.compact(_.union(serviceMethod.roles, serviceClass.roles));
         if (this.authenticator && roles.length) {
             result.push(this.authenticator.getMiddleware());
             roles = roles.filter((role) => role !== '*');
