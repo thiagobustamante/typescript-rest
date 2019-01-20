@@ -400,6 +400,31 @@ describe('Decorators', () => {
         });
     });
 
+    describe('IgnoreNextMiddlewares Decorator', () => {
+        it('should bind a class, making server does not call next function after invocations', async () => {
+            serviceDecorators.IgnoreNextMiddlewares(TestService);
+            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+            expect(serviceClass.ignoreNextMiddlewares).to.be.true;
+        });
+
+        it('should bind a method, making server does not call next function after invocations', async () => {
+            const methodName = 'test';
+            serviceDecorators.IgnoreNextMiddlewares(TestService.prototype, methodName,
+                Object.getOwnPropertyDescriptor(TestService.prototype, methodName));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+            expect(serviceMethod.ignoreNextMiddlewares).to.be.true;
+        });
+
+        it('should throw an error if misused', async () => {
+            const methodName = 'test';
+            expect(() => {
+                serviceDecorators.IgnoreNextMiddlewares(TestService.prototype, methodName,
+                    Object.getOwnPropertyDescriptor(TestService.prototype, methodName), 'extra-param');
+            }).to.throw(`Invalid @IgnoreNextMiddlewares Decorator declaration.`);
+        });
+    });
+
     [
         { name: 'GET', method: HttpMethod.GET },
         { name: 'POST', method: HttpMethod.POST },
