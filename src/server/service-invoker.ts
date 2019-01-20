@@ -151,27 +151,9 @@ export class ServiceInvoker {
                 if (value.filePath && value instanceof DownloadResource) {
                     await this.downloadResToPromise(context.response, value);
                 } else if (value instanceof DownloadBinaryData) {
-                    if (value.fileName) {
-                        context.response.writeHead(200, {
-                            'Content-Length': value.content.length,
-                            'Content-Type': value.mimeType,
-                            'Content-disposition': 'attachment;filename=' + value.fileName
-                        });
-                    } else {
-                        context.response.writeHead(200, {
-                            'Content-Length': value.content.length,
-                            'Content-Type': value.mimeType
-                        });
-                    }
-                    context.response.end(value.content);
+                    this.sendFile(context, value);
                 } else if (value.location && value instanceof ReferencedResource) {
-                    context.response.set('Location', value.location);
-                    if (value.body) {
-                        context.response.status(value.statusCode);
-                        await this.sendValue(value.body, context);
-                    } else {
-                        context.response.sendStatus(value.statusCode);
-                    }
+                    await this.sendReferencedResource(context, value);
                 } else if (value.then && value.catch) {
                     const val = await value;
                     await this.sendValue(val, context);
@@ -179,6 +161,34 @@ export class ServiceInvoker {
                     context.response.json(value);
                 }
         }
+    }
+
+    private async sendReferencedResource(context: ServiceContext, value: ReferencedResource<any>) {
+        context.response.set('Location', value.location);
+        if (value.body) {
+            context.response.status(value.statusCode);
+            await this.sendValue(value.body, context);
+        }
+        else {
+            context.response.sendStatus(value.statusCode);
+        }
+    }
+
+    private sendFile(context: ServiceContext, value: DownloadBinaryData) {
+        if (value.fileName) {
+            context.response.writeHead(200, {
+                'Content-Length': value.content.length,
+                'Content-Type': value.mimeType,
+                'Content-disposition': 'attachment;filename=' + value.fileName
+            });
+        }
+        else {
+            context.response.writeHead(200, {
+                'Content-Length': value.content.length,
+                'Content-Type': value.mimeType
+            });
+        }
+        context.response.end(value.content);
     }
 
     private downloadResToPromise(res: express.Response, value: DownloadResource) {
