@@ -148,18 +148,26 @@ export class ServiceInvoker {
                 }
                 break;
             default:
-                if (value.filePath && value instanceof DownloadResource) {
-                    await this.downloadResToPromise(context.response, value);
-                } else if (value instanceof DownloadBinaryData) {
-                    this.sendFile(context, value);
-                } else if (value.location && value instanceof ReferencedResource) {
-                    await this.sendReferencedResource(context, value);
-                } else if (value.then && value.catch) {
-                    const val = await value;
-                    await this.sendValue(val, context);
-                } else {
-                    context.response.json(value);
-                }
+                await this.sendComplexValue(context, value);
+        }
+    }
+
+    private async sendComplexValue(context: ServiceContext, value: any) {
+        if (value.filePath && value instanceof DownloadResource) {
+            await this.downloadResToPromise(context.response, value);
+        }
+        else if (value instanceof DownloadBinaryData) {
+            this.sendFile(context, value);
+        }
+        else if (value.location && value instanceof ReferencedResource) {
+            await this.sendReferencedResource(context, value);
+        }
+        else if (value.then && value.catch) {
+            const val = await value;
+            await this.sendValue(val, context);
+        }
+        else {
+            context.response.json(value);
         }
     }
 
