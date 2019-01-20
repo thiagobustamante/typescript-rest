@@ -3,13 +3,13 @@
 import * as express from 'express';
 import * as _ from 'lodash';
 import { Errors } from '../typescript-rest';
-import { ParamType, ServiceClass, ServiceMethod, ServiceProperty } from './model/metadata';
+import { ServiceClass, ServiceMethod, ServiceProperty } from './model/metadata';
 import { DownloadBinaryData, DownloadResource } from './model/return-types';
-import { HttpMethod, ParameterConverter, ReferencedResource, ServiceContext, ServicePreProcessor } from './model/server-types';
+import { HttpMethod, ReferencedResource, ServiceContext, ServicePreProcessor } from './model/server-types';
+import { ParameterProcessor } from './parameter-processor';
 import { ServerContainer } from './server-container';
 
 export class ServiceInvoker {
-    private static defaultParamConverter: ParameterConverter = (p: any) => p;
     private serviceClass: ServiceClass;
     private serviceMethod: ServiceMethod;
     private preProcessors: Array<ServicePreProcessor>;
@@ -114,65 +114,7 @@ export class ServiceInvoker {
     }
 
     private processParameter(context: ServiceContext, property: ServiceProperty) {
-        switch (property.type) {
-            case ParamType.path:
-                return this.convertType(context.request.params[property.name], property.propertyType);
-            case ParamType.query:
-                return this.convertType(context.request.query[property.name], property.propertyType);
-            case ParamType.header:
-                return this.convertType(context.request.header(property.name), property.propertyType);
-            case ParamType.cookie:
-                return this.convertType(context.request.cookies[property.name], property.propertyType);
-            case ParamType.body:
-                return this.convertType(context.request.body, property.propertyType);
-            case ParamType.file:
-                // @ts-ignore
-                const files: Array<Express.Multer.File> = context.request.files ? context.request.files[property.name] : null;
-                if (files && files.length > 0) {
-                    return files[0];
-                }
-                return null;
-            case ParamType.files:
-                // @ts-ignore
-                return context.request.files[property.name];
-            case ParamType.form:
-                return this.convertType(context.request.body[property.name], property.propertyType);
-            case ParamType.param:
-                const paramValue = context.request.body[property.name] ||
-                    context.request.query[property.name];
-                return this.convertType(paramValue, property.propertyType);
-            case ParamType.context:
-                return context;
-            case ParamType.context_request:
-                return context.request;
-            case ParamType.context_response:
-                return context.response;
-            case ParamType.context_next:
-                return context.next;
-            case ParamType.context_accept:
-                return context.accept;
-            case ParamType.context_accept_language:
-                return context.language;
-            default:
-                throw new Errors.BadRequestError('Invalid parameter type');
-        }
-    }
-
-    private convertType(paramValue: string | boolean, paramType: Function): any {
-        const serializedType = paramType['name'];
-        switch (serializedType) {
-            case 'Number':
-                return paramValue === undefined ? paramValue : parseFloat(paramValue as string);
-            case 'Boolean':
-                return paramValue === undefined ? paramValue : paramValue === 'true' || paramValue === true;
-            default:
-                let converter = ServerContainer.get().paramConverters.get(paramType);
-                if (!converter) {
-                    converter = ServiceInvoker.defaultParamConverter;
-                }
-
-                return converter(paramValue);
-        }
+        return ParameterProcessor.get().processParameter(context, property);
     }
 
     private processResponseHeaders(context: ServiceContext) {
