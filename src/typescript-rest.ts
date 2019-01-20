@@ -1,8 +1,8 @@
 'use strict';
 
+import { ServerConfig } from './server/config';
 import * as Errors from './server/model/errors';
 import * as Return from './server/model/return-types';
-import { ServerConfig } from './typescript-rest-config';
 
 export * from './decorators/parameters';
 export * from './decorators/methods';

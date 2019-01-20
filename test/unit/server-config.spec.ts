@@ -27,8 +27,8 @@ describe('ServerConfig', () => {
             useIoC: (es6: boolean) => true
         });
 
-        ServerConfig = proxyquire('../../src/typescript-rest-config', {
-            './server/server': { Server: serverStub },
+        ServerConfig = proxyquire('../../src/server/config', {
+            './server': { Server: serverStub },
             'fs-extra': fsStub
         }).ServerConfig;
     });
