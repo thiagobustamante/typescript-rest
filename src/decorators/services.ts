@@ -38,7 +38,7 @@ import { ServerContainer } from '../server/server-container';
  */
 export function Path(path: string) {
     return new ServiceDecorator('Path').withProperty('path').withValue(path)
-        .decorateTypeOrMethod();
+        .createDecorator();
 }
 
 /**
@@ -77,7 +77,7 @@ export function Path(path: string) {
 export function Security(roles?: string | Array<string>) {
     roles = _.castArray(roles || '*');
     return new ServiceDecorator('Security').withProperty('roles').withValue(roles)
-        .decorateTypeOrMethod();
+        .createDecorator();
 }
 
 /**
@@ -106,10 +106,10 @@ export function Security(roles?: string | Array<string>) {
  * }
  * ```
  */
-export function Preprocessor(preprocessor: ServicePreProcessor) {
-    return new ProcessorServiceDecorator('Preprocessor')
+export function PreProcessor(preprocessor: ServicePreProcessor) {
+    return new ProcessorServiceDecorator('PreProcessor')
         .withProperty('preProcessors').withValue(preprocessor)
-        .requiresValue().decorateTypeOrMethod();
+        .requiresValue().createDecorator();
 }
 
 /**
@@ -135,7 +135,7 @@ export function Preprocessor(preprocessor: ServicePreProcessor) {
 export function AcceptLanguage(...languages: Array<string>) {
     languages = _.compact(languages);
     return new AcceptServiceDecorator('AcceptLanguage').withProperty('languages').withValue(languages)
-        .decorateTypeOrMethod();
+        .createDecorator();
 }
 
 /**
@@ -161,7 +161,7 @@ export function AcceptLanguage(...languages: Array<string>) {
 export function Accept(...accepts: Array<string>) {
     accepts = _.compact(accepts);
     return new AcceptServiceDecorator('Accept').withProperty('accepts').withValue(accepts)
-        .decorateTypeOrMethod();
+        .createDecorator();
 }
 
 /**
@@ -171,7 +171,17 @@ export function Accept(...accepts: Array<string>) {
  */
 export function BodyOptions(options: any) {
     return new ServiceDecorator('BodyOptions').withProperty('bodyParserOptions').withValue(options)
-        .decorateTypeOrMethod();
+        .createDecorator();
+}
+
+/**
+ * A decorator to inform that server should ignore other middlewares.
+ * It makes server does not call next function after service invocation.
+ */
+export function IgnoreNextMiddlewares(...args: Array<any>) {
+    return new ServiceDecorator('IgnoreNextMiddlewares')
+        .withProperty('ignoreNextMiddlewares').withValue(true)
+        .decorateTypeOrMethod(args);
 }
 
 /**
@@ -229,18 +239,22 @@ class ServiceDecorator {
         return this;
     }
 
-    public decorateTypeOrMethod() {
+    public createDecorator() {
         return (...args: Array<any>) => {
             this.checkRequiredValue();
-            args = _.without(args, undefined);
-            if (args.length === 1) {
-                this.decorateType(args[0]);
-            } else if (args.length === 3 && typeof args[2] === 'object') {
-                this.decorateMethod(args[0], args[1]);
-            } else {
-                throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
-            }
+            this.decorateTypeOrMethod(args);
         };
+    }
+
+    public decorateTypeOrMethod(args: Array<any>) {
+        args = _.without(args, undefined);
+        if (args.length === 1) {
+            this.decorateType(args[0]);
+        } else if (args.length === 3 && typeof args[2] === 'object') {
+            this.decorateMethod(args[0], args[1]);
+        } else {
+            throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
+        }
     }
 
     protected checkRequiredValue() {

@@ -99,20 +99,6 @@ export class ServerContainer {
         return null;
     }
 
-    public resolveAllPaths() {
-        if (!this.pathsResolved) {
-            this.paths.clear();
-            this.serverClasses.forEach(classData => {
-                classData.methods.forEach(method => {
-                    if (!method.resolvedPath) {
-                        this.resolveProperties(classData, method);
-                    }
-                });
-            });
-            this.pathsResolved = true;
-        }
-    }
-
     public getPaths(): Set<string> {
         this.resolveAllPaths();
         const result = new Set<string>();
@@ -148,8 +134,7 @@ export class ServerContainer {
         this.handleNotAllowedMethods();
     }
 
-    public buildService(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
-
+    private buildService(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         if (!serviceMethod.resolvedPath) {
             this.resolveProperties(serviceClass, serviceMethod);
         }
@@ -186,9 +171,30 @@ export class ServerContainer {
         }
     }
 
+    private resolveAllPaths() {
+        if (!this.pathsResolved) {
+            this.paths.clear();
+            this.serverClasses.forEach(classData => {
+                classData.methods.forEach(method => {
+                    if (!method.resolvedPath) {
+                        this.resolveProperties(classData, method);
+                    }
+                });
+            });
+            this.pathsResolved = true;
+        }
+    }
+
     private getServiceClass(target: Function): ServiceClass {
         target = this.serviceFactory.getTargetClass(target);
         return this.serverClasses.get(target) || null;
+    }
+
+    private resolveProperties(serviceClass: ServiceClass,
+        serviceMethod: ServiceMethod): void {
+        this.resolveLanguages(serviceClass, serviceMethod);
+        this.resolveAccepts(serviceClass, serviceMethod);
+        this.resolvePath(serviceClass, serviceMethod);
     }
 
     private resolveLanguages(serviceClass: ServiceClass,
@@ -206,13 +212,6 @@ export class ServerContainer {
         if (resolvedAccepts.length > 0) {
             serviceMethod.resolvedAccepts = resolvedAccepts;
         }
-    }
-
-    private resolveProperties(serviceClass: ServiceClass,
-        serviceMethod: ServiceMethod): void {
-        this.resolveLanguages(serviceClass, serviceMethod);
-        this.resolveAccepts(serviceClass, serviceMethod);
-        this.resolvePath(serviceClass, serviceMethod);
     }
 
     private resolvePath(serviceClass: ServiceClass,

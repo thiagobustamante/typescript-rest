@@ -159,12 +159,12 @@ describe('Decorators', () => {
         });
     });
 
-    describe('Preprocessor Decorator', () => {
+    describe('PreProcessor Decorator', () => {
         const preprocessor = (req: Request) => {
             return;
         };
         it('should add a ServicePreProcessor to all methods of a class', async () => {
-            serviceDecorators.Preprocessor(preprocessor)(TestService);
+            serviceDecorators.PreProcessor(preprocessor)(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
             expect(serviceClass.preProcessors).to.have.length(1);
@@ -172,7 +172,7 @@ describe('Decorators', () => {
         });
 
         it('should add a ServicePreProcessor to methods of a class', async () => {
-            serviceDecorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
+            serviceDecorators.PreProcessor(preprocessor)(TestService.prototype, 'test',
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
@@ -182,16 +182,16 @@ describe('Decorators', () => {
 
         it('should throw an error if misused', async () => {
             expect(() => {
-                serviceDecorators.Preprocessor(preprocessor)(TestService.prototype, 'test',
+                serviceDecorators.PreProcessor(preprocessor)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
-            }).to.throw('Invalid @Preprocessor Decorator declaration.');
+            }).to.throw('Invalid @PreProcessor Decorator declaration.');
         });
 
         it('should throw an error if receives undefined preprocessor', async () => {
             expect(() => {
-                serviceDecorators.Preprocessor(undefined)(TestService.prototype, 'test',
+                serviceDecorators.PreProcessor(undefined)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
-            }).to.throw('Invalid @Preprocessor Decorator declaration.');
+            }).to.throw('Invalid @PreProcessor Decorator declaration.');
         });
     });
 

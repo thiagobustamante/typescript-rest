@@ -23,11 +23,17 @@ export class ServiceInvoker {
     public async callService(context: ServiceContext) {
         try {
             await this.callTargetEndPoint(context);
-            context.next();
+            if (this.mustCallNext()) {
+                context.next();
+            }
         }
         catch (err) {
             context.next(err);
         }
+    }
+
+    private mustCallNext() {
+        return !this.serviceMethod.ignoreNextMiddlewares && !this.serviceClass.ignoreNextMiddlewares;
     }
 
     private async runPreprocessors(context: ServiceContext): Promise<void> {

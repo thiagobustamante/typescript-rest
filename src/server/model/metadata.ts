@@ -24,6 +24,7 @@ export class ServiceClass {
     public accepts: Array<string>;
     public properties: Map<string, ServiceProperty>;
     public isAbstract: boolean = false;
+    public ignoreNextMiddlewares: boolean = false;
     constructor(targetClass: any) {
         this.targetClass = targetClass;
         this.methods = new Map<string, ServiceMethod>();
@@ -62,6 +63,7 @@ export class ServiceMethod {
     public resolvedLanguages: Array<string>;
     public resolvedAccepts: Array<string>;
     public preProcessors: Array<ServicePreProcessor>;
+    public ignoreNextMiddlewares: boolean = false;
 }
 
 /**

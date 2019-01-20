@@ -1286,9 +1286,11 @@ class TestService {
 
 ## From 1.X to 2.X
 
-Starting from version 2.0.0, the method ```Server.setParamConverter``` was removed and replaced by ```Server.addParameterConverter```.
+- Starting from version 2.0.0, the method ```Server.setParamConverter``` was removed and replaced by ```Server.addParameterConverter```.
 
-The method ```Server.swagger``` was refactored to receive an ```SwaggerOptions``` object.
+- The method ```Server.swagger``` was refactored to receive an ```SwaggerOptions``` object.
+
+- Deprecated ```ForbidenError``` was removed in favor of ```ForbiddenError```.
 
 **Project Sponsors**
 

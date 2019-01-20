@@ -5,27 +5,27 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
-import { ContextRequest, Errors, Path, POST, Preprocessor, Server } from '../../src/typescript-rest';
+import { ContextRequest, Errors, Path, POST, PreProcessor, Server } from '../../src/typescript-rest';
 
 const expect = chai.expect;
 
 @Path('preprocessor')
-@Preprocessor(preprocessor1)
+@PreProcessor(preprocessor1)
 export class PreprocessedService {
     @ContextRequest
     public request: PreprocessedRequest;
 
     @Path('test')
     @POST
-    @Preprocessor(preprocessor2)
+    @PreProcessor(preprocessor2)
     public test(body: any) {
         return this.request.preprocessor1 && this.request.preprocessor2;
     }
 
     @Path('asynctest')
     @POST
-    @Preprocessor(asyncPreprocessor1)
-    @Preprocessor(asyncPreprocessor2) // multiple preprocessors needed to test async
+    @PreProcessor(asyncPreprocessor1)
+    @PreProcessor(asyncPreprocessor2) // multiple preprocessors needed to test async
     public asynctest(body: any) {
         return this.request.preprocessor1 && (!this.request.preprocessor2) &&
             this.request.asyncPreproocessor1 && this.request.asyncPreproocessor2;
