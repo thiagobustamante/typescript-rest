@@ -94,3 +94,9 @@ export class DownloadBinaryData {
      */
     constructor(public content: Buffer, public mimeType: string, public fileName?: string) { }
 }
+
+/**
+ * If returned by a service, no response will be sent to client. Use it
+ * if you want to send the response by yourself.
+ */
+export const NoResponse = {};

@@ -13,6 +13,8 @@ import {
 } from '../../src/typescript-rest';
 const expect = chai.expect;
 
+// tslint:disable:no-unused-expression
+
 export class Person {
     public id: number;
     public name: string;
@@ -170,6 +172,22 @@ export class TestParamsService {
         return new Promise<Return.DownloadResource>((resolve, reject) => {
             resolve(new Return.DownloadResource(__dirname + '/datatypes.spec.ts', 'test-rest.spec.js'));
         });
+    }
+}
+
+@Path("testreturn")
+export class TestReturnService {
+
+    @GET
+    @Path('noresponse')
+    public testNoResponse() {
+        return Return.NoResponse;
+    }
+
+    @GET
+    @Path('empty')
+    public testEmptyObjectResponse() {
+        return {};
     }
 }
 
@@ -394,6 +412,26 @@ describe('Data Types Tests', () => {
         });
     });
 
+    describe('No Response Service', () => {
+        it('should not send a value when NoResponse is returned', (done) => {
+            request({
+                url: 'http://localhost:5674/testreturn/noresponse'
+            }, (error, response, body) => {
+                expect(body).to.eq('handled by middleware');
+                done();
+            });
+        });
+        it('should not be handled as an empty object', (done) => {
+            request({
+                url: 'http://localhost:5674/testreturn/empty'
+            }, (error, response, body) => {
+                const val = JSON.parse(body);
+                expect(val).to.be.empty;
+                done();
+            });
+        });
+    });
+
     describe('Param Converters', () => {
         it('should intercept parameters', (done) => {
             Server.addParameterConverter((param: Person) => {
@@ -426,7 +464,12 @@ export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         const app: express.Application = express();
         app.set('env', 'test');
-        Server.buildServices(app, TestParamsService);
+        Server.buildServices(app, TestParamsService, TestReturnService);
+        app.use('/testreturn', (req, res, next) => {
+            if (!res.headersSent) {
+                res.send('handled by middleware');
+            }
+        });
         server = app.listen(5674, (err: any) => {
             if (err) {
                 return reject(err);

@@ -4,7 +4,7 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import { Errors } from '../typescript-rest';
 import { ServiceClass, ServiceMethod, ServiceProperty } from './model/metadata';
-import { DownloadBinaryData, DownloadResource } from './model/return-types';
+import { DownloadBinaryData, DownloadResource, NoResponse } from './model/return-types';
 import { HttpMethod, ReferencedResource, ServiceContext, ServicePreProcessor } from './model/server-types';
 import { ParameterProcessor } from './parameter-processor';
 import { ServerContainer } from './server-container';
@@ -138,23 +138,25 @@ export class ServiceInvoker {
     }
 
     private async sendValue(value: any, context: ServiceContext) {
-        switch (typeof value) {
-            case 'number':
-                context.response.send(value.toString());
-                break;
-            case 'string':
-                context.response.send(value);
-                break;
-            case 'boolean':
-                context.response.send(value.toString());
-                break;
-            case 'undefined':
-                if (!context.response.headersSent) {
-                    context.response.sendStatus(204);
-                }
-                break;
-            default:
-                await this.sendComplexValue(context, value);
+        if (value !== NoResponse) {
+            switch (typeof value) {
+                case 'number':
+                    context.response.send(value.toString());
+                    break;
+                case 'string':
+                    context.response.send(value);
+                    break;
+                case 'boolean':
+                    context.response.send(value.toString());
+                    break;
+                case 'undefined':
+                    if (!context.response.headersSent) {
+                        context.response.sendStatus(204);
+                    }
+                    break;
+                default:
+                    await this.sendComplexValue(context, value);
+            }
         }
     }
 
