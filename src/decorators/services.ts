@@ -3,7 +3,7 @@
 import * as _ from 'lodash';
 import 'reflect-metadata';
 import { ServiceClass, ServiceMethod } from '../server/model/metadata';
-import { ServicePreProcessor } from '../server/model/server-types';
+import { ServiceProcessor } from '../server/model/server-types';
 import { ServerContainer } from '../server/server-container';
 
 /**
@@ -99,16 +99,48 @@ export function Security(roles?: string | Array<string>) {
  * class PeopleService {
  *   @ PUT
  *   @ Path(':id')
- *   @ Preprocessor(validator)
+ *   @ PreProcessor(validator)
  *   savePerson(person:Person) {
  *      // ...
  *   }
  * }
  * ```
  */
-export function PreProcessor(preprocessor: ServicePreProcessor) {
+export function PreProcessor(preprocessor: ServiceProcessor) {
     return new ProcessorServiceDecorator('PreProcessor')
         .withProperty('preProcessors').withValue(preprocessor)
+        .requiresValue().createDecorator();
+}
+
+/**
+ * A decorator to tell the [[Server]] that a class or a method
+ * should include a post-processor in its request pipelines.
+ *
+ * For example:
+ * ```
+ * function processor(req: express.Request): express.Request {
+ *   if (!req.body.userId) {
+ *      throw new Errors.BadRequestError("userId not present");
+ *   } 
+ * }
+ * ```
+ * And:
+ *
+ * ```
+ * @ Path('people')
+ * class PeopleService {
+ *   @ PUT
+ *   @ Path(':id')
+ *   @ PostProcessor(validator)
+ *   savePerson(person:Person) {
+ *      // ...
+ *   }
+ * }
+ * ```
+ */
+export function PostProcessor(postprocessor: ServiceProcessor) {
+    return new ProcessorServiceDecorator('PostProcessor')
+        .withProperty('postProcessors').withValue(postprocessor)
         .requiresValue().createDecorator();
 }
 

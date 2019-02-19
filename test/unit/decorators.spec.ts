@@ -159,39 +159,44 @@ describe('Decorators', () => {
         });
     });
 
-    describe('PreProcessor Decorator', () => {
-        const preprocessor = (req: Request) => {
-            return;
-        };
-        it('should add a ServicePreProcessor to all methods of a class', async () => {
-            serviceDecorators.PreProcessor(preprocessor)(TestService);
+    [
+        { name: 'PreProcessor', property: 'preProcessors' },
+        { name: 'PostProcessor', property: 'postProcessors' }
+    ].forEach(test => {
+        describe(`${test.name} Decorator`, () => {
+            const processor = (req: Request) => {
+                return;
+            };
+            it('should add a ServiceProcessor to all methods of a class', async () => {
+                serviceDecorators[test.name](processor)(TestService);
 
-            expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
-            expect(serviceClass.preProcessors).to.have.length(1);
-            expect(serviceClass.preProcessors).to.include.members([preprocessor]);
-        });
+                expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
+                expect(serviceClass[test.property]).to.have.length(1);
+                expect(serviceClass[test.property]).to.include.members([processor]);
+            });
 
-        it('should add a ServicePreProcessor to methods of a class', async () => {
-            serviceDecorators.PreProcessor(preprocessor)(TestService.prototype, 'test',
-                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
-
-            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.preProcessors).to.have.length(1);
-            expect(serviceMethod.preProcessors).to.include.members([preprocessor]);
-        });
-
-        it('should throw an error if misused', async () => {
-            expect(() => {
-                serviceDecorators.PreProcessor(preprocessor)(TestService.prototype, 'test',
-                    Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
-            }).to.throw('Invalid @PreProcessor Decorator declaration.');
-        });
-
-        it('should throw an error if receives undefined preprocessor', async () => {
-            expect(() => {
-                serviceDecorators.PreProcessor(undefined)(TestService.prototype, 'test',
+            it('should add a ServiceProcessor to methods of a class', async () => {
+                serviceDecorators[test.name](processor)(TestService.prototype, 'test',
                     Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
-            }).to.throw('Invalid @PreProcessor Decorator declaration.');
+
+                expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+                expect(serviceMethod[test.property]).to.have.length(1);
+                expect(serviceMethod[test.property]).to.include.members([processor]);
+            });
+
+            it('should throw an error if misused', async () => {
+                expect(() => {
+                    serviceDecorators[test.name](processor)(TestService.prototype, 'test',
+                        Object.getOwnPropertyDescriptor(TestService.prototype, 'test'), 'extra-arg');
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
+
+            it('should throw an error if receives undefined preprocessor', async () => {
+                expect(() => {
+                    serviceDecorators[test.name](undefined)(TestService.prototype, 'test',
+                        Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+                }).to.throw(`Invalid @${test.name} Decorator declaration.`);
+            });
         });
     });
 

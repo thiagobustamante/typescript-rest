@@ -1,6 +1,6 @@
 'use strict';
 
-import { HttpMethod, ServicePreProcessor } from './server-types';
+import { HttpMethod, ServiceProcessor } from './server-types';
 
 export interface ServiceProperty {
     type: ParamType;
@@ -17,7 +17,8 @@ export class ServiceClass {
     public targetClass: any;
     public path: string;
     public roles: Array<string>;
-    public preProcessors: Array<ServicePreProcessor>;
+    public preProcessors: Array<ServiceProcessor>;
+    public postProcessors: Array<ServiceProcessor>;
     public methods: Map<string, ServiceMethod>;
     public bodyParserOptions: any;
     public languages: Array<string>;
@@ -62,7 +63,8 @@ export class ServiceMethod {
     public accepts: Array<string>;
     public resolvedLanguages: Array<string>;
     public resolvedAccepts: Array<string>;
-    public preProcessors: Array<ServicePreProcessor>;
+    public preProcessors: Array<ServiceProcessor>;
+    public postProcessors: Array<ServiceProcessor>;
     public ignoreNextMiddlewares: boolean = false;
 }
 

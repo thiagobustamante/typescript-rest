@@ -113,5 +113,5 @@ export interface ServiceAuthenticator {
     getMiddleware(): express.RequestHandler;
 }
 
-export type ServicePreProcessor = (req: express.Request) => void;
+export type ServiceProcessor = (req: express.Request, res?: express.Response) => void;
 export type ParameterConverter = (paramValue: any) => any;

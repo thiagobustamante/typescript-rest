@@ -5,19 +5,21 @@ import * as _ from 'lodash';
 import { Errors } from '../typescript-rest';
 import { ServiceClass, ServiceMethod, ServiceProperty } from './model/metadata';
 import { DownloadBinaryData, DownloadResource, NoResponse } from './model/return-types';
-import { HttpMethod, ReferencedResource, ServiceContext, ServicePreProcessor } from './model/server-types';
+import { HttpMethod, ReferencedResource, ServiceContext, ServiceProcessor } from './model/server-types';
 import { ParameterProcessor } from './parameter-processor';
 import { ServerContainer } from './server-container';
 
 export class ServiceInvoker {
     private serviceClass: ServiceClass;
     private serviceMethod: ServiceMethod;
-    private preProcessors: Array<ServicePreProcessor>;
+    private preProcessors: Array<ServiceProcessor>;
+    private postProcessors: Array<ServiceProcessor>;
 
     constructor(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         this.serviceClass = serviceClass;
         this.serviceMethod = serviceMethod;
         this.preProcessors = _.union(serviceMethod.preProcessors, serviceClass.preProcessors);
+        this.postProcessors = _.union(serviceMethod.postProcessors, serviceClass.postProcessors);
     }
 
     public async callService(context: ServiceContext) {
@@ -36,19 +38,30 @@ export class ServiceInvoker {
         return !this.serviceMethod.ignoreNextMiddlewares && !this.serviceClass.ignoreNextMiddlewares;
     }
 
-    private async runPreprocessors(context: ServiceContext): Promise<void> {
+    private async runPreProcessors(context: ServiceContext): Promise<void> {
         for (const processor of this.preProcessors) {
-            await Promise.resolve(processor(context.request));
+            await Promise.resolve(processor(context.request, context.response));
+        }
+    }
+
+    private async runPostProcessors(context: ServiceContext): Promise<void> {
+        for (const processor of this.postProcessors) {
+            await Promise.resolve(processor(context.request, context.response));
         }
     }
 
     private async callTargetEndPoint(context: ServiceContext) {
         this.checkAcceptance(context);
-        await this.runPreprocessors(context);
+        if (this.preProcessors.length) {
+            await this.runPreProcessors(context);
+        }
         const serviceObject = this.createService(context);
         const args = this.buildArgumentsList(context);
         const toCall = this.getMethodToCall();
         const result = toCall.apply(serviceObject, args);
+        if (this.postProcessors.length) {
+            await this.runPostProcessors(context);
+        }
         this.processResponseHeaders(context);
         await this.sendValue(result, context);
     }
