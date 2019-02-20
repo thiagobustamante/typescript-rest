@@ -74,10 +74,10 @@ That's it. You can just call now:
 GET http://localhost:3000/hello/joe
 ```
 
-## Boilerplate Project
-
-You can check [this project](https://github.com/vrudikov/typescript-rest-boilerplate) to get started.
-
 ## Complete Guide
 
 Check our [documentation](https://github.com/thiagobustamante/typescript-rest/wiki).
+
+## Boilerplate Project
+
+You can check [this project](https://github.com/vrudikov/typescript-rest-boilerplate) to get started.
