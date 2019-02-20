@@ -15,6 +15,7 @@ It can be used to define your APIs using ES7 decorators.
   - [Installation](#installation)
   - [Configuration](#configuration)
   - [Basic Usage](#basic-usage)
+  - [Documentation](https://github.com/thiagobustamante/typescript-rest/wiki)
   - [Boilerplate Project](#boilerplate-project)  
 
 ## Installation
