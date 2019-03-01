@@ -29,12 +29,15 @@ let middlewareCalled: boolean;
 describe('Customized Endpoint Tests', () => {
 
     before(() => {
-        middlewareCalled = false;
         return startApi();
     });
 
     after(() => {
         stopApi();
+    });
+
+    beforeEach(() => {
+        middlewareCalled = false;
     });
 
     describe('@IgnoreNexts Decorator', () => {
@@ -54,6 +57,25 @@ describe('Customized Endpoint Tests', () => {
             });
         });
     });
+
+    describe('Server.ignoreNextMiddlewares', () => {
+        before(() => {
+            Server.ignoreNextMiddlewares(true);
+        });
+
+        after(() => {
+            Server.ignoreNextMiddlewares(false);
+        });
+
+        it('should make the server ignore next middlewares for all services', (done) => {
+            request('http://localhost:5674/ignoreEndpoint/withMiddlewares', (error, response, body) => {
+                expect(body).to.eq('OK');
+                expect(middlewareCalled).to.be.false;
+                done();
+            });
+        });
+    });
+
 });
 
 let server: any;

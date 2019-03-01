@@ -36,6 +36,7 @@ export class ServerContainer {
     public fileDest: string;
     public fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
     public fileLimits: FileLimits;
+    public ignoreNextMiddlewares: boolean = false;
     public authenticator: ServiceAuthenticator;
     public serviceFactory: ServiceFactory = new DefaultServiceFactory();
     public paramConverters: Map<Function, ParameterConverter> = new Map<Function, ParameterConverter>();

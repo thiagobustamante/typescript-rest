@@ -200,6 +200,16 @@ export class Server {
     }
 
     /**
+     * Makes the server ignore next middlewares for all endpoints.
+     * It has the same effect than add @IgnoreNextMiddlewares to all
+     * services.
+     * @param value - true to ignore next middlewares. 
+     */
+    public static ignoreNextMiddlewares(value: boolean) {
+        ServerContainer.get().ignoreNextMiddlewares = value;
+    }
+
+    /**
      * Creates and endpoint to publish the swagger documentation.
      * @param router Express router
      * @param options Options for swagger endpoint

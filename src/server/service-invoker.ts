@@ -35,7 +35,8 @@ export class ServiceInvoker {
     }
 
     private mustCallNext() {
-        return !this.serviceMethod.ignoreNextMiddlewares && !this.serviceClass.ignoreNextMiddlewares;
+        return !ServerContainer.get().ignoreNextMiddlewares &&
+            !this.serviceMethod.ignoreNextMiddlewares && !this.serviceClass.ignoreNextMiddlewares;
     }
 
     private async runPreProcessors(context: ServiceContext): Promise<void> {
