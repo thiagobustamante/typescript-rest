@@ -21,7 +21,6 @@
     "clean": "rimraf dist",
     "lint": "tslint ./src/**/*.ts ./test/**/*.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.ts -t verbose",
-    "format": "tsfmt -r",
     "pretest": "cross-env NODE_ENV=test npm run build && npm run lint",
     "test": "cross-env NODE_ENV=test mocha --exit",
     "test:integration": "cross-env NODE_ENV=test mocha --opts ./test/mocha-integration.opts --exit",

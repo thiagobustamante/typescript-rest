@@ -264,11 +264,11 @@ export interface SwaggerOptions {
     /**
      * The path to a swagger file (json or yaml)
      */
-    filePath: string;
+    filePath?: string;
     /**
      * Where to publish the docs
      */
-    endpoint: string;
+    endpoint?: string;
     /**
      * The hostname of the service
      */
