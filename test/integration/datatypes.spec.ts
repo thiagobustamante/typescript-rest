@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
+import { Container } from 'typescript-ioc';
 import {
     BodyOptions, Context, ContextNext, ContextRequest,
     ContextResponse, CookieParam, FileParam, FormParam, GET,
@@ -188,6 +189,12 @@ export class TestReturnService {
     @Path('empty')
     public testEmptyObjectResponse() {
         return {};
+    }
+
+    @POST
+    @Path('/externalmodule')
+    public testExternal(@ContextRequest req: express.Request): Return.NewResource<Container> {
+        return new Return.NewResource<Container>(req.url + '/123');
     }
 }
 
@@ -427,6 +434,18 @@ describe('Data Types Tests', () => {
             }, (error, response, body) => {
                 const val = JSON.parse(body);
                 expect(val).to.be.empty;
+                done();
+            });
+        });
+    });
+
+    describe('NewResource return type', () => {
+        it('should handle types referenced from other modules', (done) => {
+            request.post({
+                url: 'http://localhost:5674/testreturn/externalmodule'
+            }, (error, response, body) => {
+                expect(response.statusCode).to.be.equal(201);
+                expect(response.headers.location).to.be.equal('/testreturn/externalmodule/123');
                 done();
             });
         });
