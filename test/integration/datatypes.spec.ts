@@ -194,7 +194,9 @@ export class TestReturnService {
     @POST
     @Path('/externalmodule')
     public testExternal(@ContextRequest req: express.Request): Return.NewResource<Container> {
-        return new Return.NewResource<Container>(req.url + '/123');
+        const result = new Return.NewResource<Container>(req.url + '/123');
+        result.body = new Container();
+        return result;
     }
 }
 
