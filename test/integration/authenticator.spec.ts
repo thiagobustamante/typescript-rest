@@ -287,7 +287,7 @@ function startApi(): Promise<void> {
         configureAuthenticator();
         Server.buildServices(app, AuthenticatePath, AuthenticateRole,
             AuthenticateWithoutRole, AuthenticateMethods);
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }
