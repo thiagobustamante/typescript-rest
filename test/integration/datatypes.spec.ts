@@ -491,7 +491,7 @@ export function startApi(): Promise<void> {
                 res.send('handled by middleware');
             }
         });
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

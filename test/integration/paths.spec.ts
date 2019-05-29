@@ -169,7 +169,7 @@ export function startApi(): Promise<void> {
         app.set('env', 'test');
         Server.buildServices(app, PathTestService, PathOnlyOnMethodTestService,
             SubPathTestService, SuperClassService);
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

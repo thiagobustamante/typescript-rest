@@ -103,7 +103,7 @@ function startApi(): Promise<void> {
         const app: express.Application = express();
         app.set('env', 'test');
         Server.buildServices(app, IoCService, IoCService2, IoCService3, IoCService4);
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

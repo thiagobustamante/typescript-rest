@@ -294,7 +294,7 @@ export function startApi(): Promise<void> {
         Server.loadControllers(app, ['test/data/*', '!**/*.yaml'], `${__dirname}/../..`);
         Server.buildServices(app, AcceptServiceTest, ReferenceServiceTest,
             AsyncServiceTest, SimpleService);
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

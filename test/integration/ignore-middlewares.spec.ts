@@ -89,7 +89,7 @@ export function startApi(): Promise<void> {
             middlewareCalled = true;
             next();
         });
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

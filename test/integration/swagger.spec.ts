@@ -54,7 +54,7 @@ export function startApi(): Promise<void> {
             host: 'localhost:5674',
             schemes: ['http']
         });
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }

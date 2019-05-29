@@ -214,7 +214,7 @@ export function startApi(): Promise<void> {
         const app: express.Application = express();
         app.set('env', 'test');
         Server.buildServices(app, ErrorService);
-        server = app.listen(5674, (err: any) => {
+        server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);
             }
