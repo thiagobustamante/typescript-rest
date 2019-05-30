@@ -6,3 +6,4 @@ tsconfig.json
 tslint.json
 test
 stryker.conf.json
+.bettercodehub.yml
