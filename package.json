@@ -1,6 +1,6 @@
 {
   "name": "typescript-rest",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "keywords": [
@@ -85,7 +85,7 @@
     "cross-env": "^5.2.0",
     "jsonwebtoken": "^8.4.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
+    "nyc": "^14.1.1",
     "passport-jwt": "^4.0.0",
     "proxyquire": "^2.1.0",
     "request": "^2.88.0",
