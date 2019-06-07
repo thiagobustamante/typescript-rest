@@ -8,9 +8,9 @@ import 'mocha';
 import * as request from 'request';
 import { Container } from 'typescript-ioc';
 import {
-    BodyOptions, Context, ContextNext, ContextRequest,
-    ContextResponse, CookieParam, FileParam, FormParam, GET,
-    HeaderParam, Param, Path, PathParam, POST, PUT, QueryParam, Return, Server, ServiceContext
+    BodyOptions, BodyType, Context, ContextNext,
+    ContextRequest, ContextResponse, CookieParam, FileParam, FormParam,
+    GET, HeaderParam, Param, ParserType, Path, PathParam, POST, PUT, QueryParam, Return, Server, ServiceContext
 } from '../../src/typescript-rest';
 const expect = chai.expect;
 
@@ -177,8 +177,25 @@ export class TestParamsService {
 
     @Path('stringbody')
     @POST
-    public async testRawStringBody(data: string) {
+    @BodyType(ParserType.text)
+    public async testStringBody(data: string) {
         return data;
+    }
+
+    @Path('stringbodytype')
+    @POST
+    @BodyType(ParserType.text)
+    @BodyOptions({ type: 'text/myformat' })
+    public async testStringWithTypeBody(data: string) {
+        return data;
+    }
+
+    @Path('rawbody')
+    @POST
+    @BodyType(ParserType.raw)
+    @BodyOptions({ type: 'text/plain' })
+    public async testRawBody(data: Buffer) {
+        return Buffer.isBuffer(data);
     }
 }
 
@@ -436,6 +453,42 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testparams/stringbody'
             }, (error, response, body) => {
                 expect(body).to.eq(data);
+                done();
+            });
+        });
+
+        it('should accept a buffer as a body', (done) => {
+            const data = Buffer.from('1;2;3;4;\n5;6;7;8;\n9;10;11;12;');
+            request.post({
+                body: data,
+                headers: { 'content-type': 'text/plain' },
+                url: 'http://localhost:5674/testparams/rawbody'
+            }, (error, response, body) => {
+                expect(body).to.eq('true');
+                done();
+            });
+        });
+
+        it('should accept a string as a body with custom mediatype', (done) => {
+            const data = '1;2;3;4;\n5;6;7;8;\n9;10;11;12;';
+            request.post({
+                body: data,
+                headers: { 'content-type': 'text/myformat' },
+                url: 'http://localhost:5674/testparams/stringbodytype'
+            }, (error, response, body) => {
+                expect(body).to.eq(data);
+                done();
+            });
+        });
+
+        it('should accept a string as a body with custom mediatype', (done) => {
+            const data = '1;2;3;4;\n5;6;7;8;\n9;10;11;12;';
+            request.post({
+                body: data,
+                headers: { 'content-type': 'text/plain' },
+                url: 'http://localhost:5674/testparams/stringbodytype'
+            }, (error, response, body) => {
+                expect(body).to.equals('{}');
                 done();
             });
         });

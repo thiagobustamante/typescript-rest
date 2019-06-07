@@ -3,7 +3,7 @@
 import * as _ from 'lodash';
 import 'reflect-metadata';
 import { ServiceClass, ServiceMethod } from '../server/model/metadata';
-import { ServiceProcessor } from '../server/model/server-types';
+import { ParserType, ServiceProcessor } from '../server/model/server-types';
 import { ServerContainer } from '../server/server-container';
 
 /**
@@ -203,6 +203,15 @@ export function Accept(...accepts: Array<string>) {
  */
 export function BodyOptions(options: any) {
     return new ServiceDecorator('BodyOptions').withProperty('bodyParserOptions').withValue(options)
+        .createDecorator();
+}
+
+/**
+ * A decorator to inform the type of parser to be used to parse the body.
+ * The default type is json.
+ */
+export function BodyType(type: ParserType) {
+    return new ServiceDecorator('BodyType').withProperty('bodyParserType').withValue(type)
         .createDecorator();
 }
 

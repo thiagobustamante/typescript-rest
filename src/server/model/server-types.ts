@@ -26,13 +26,13 @@ export interface FileLimits {
  * The supported HTTP methods.
  */
 export enum HttpMethod {
-    GET = 1,
-    POST,
-    PUT,
-    DELETE,
-    HEAD,
-    OPTIONS,
-    PATCH
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+    HEAD = 'HEAD',
+    OPTIONS = 'OPTIONS',
+    PATCH = 'PATCH'
 }
 
 /**
@@ -115,3 +115,12 @@ export interface ServiceAuthenticator {
 
 export type ServiceProcessor = (req: express.Request, res?: express.Response) => void;
 export type ParameterConverter = (paramValue: any) => any;
+
+/**
+ * The types of parsers to parse the message body
+ */
+export enum ParserType {
+    json = 'json',
+    text = 'text',
+    raw = 'raw'
+}

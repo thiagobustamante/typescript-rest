@@ -11,7 +11,7 @@ import * as Errors from './model/errors';
 import { ServiceClass, ServiceMethod } from './model/metadata';
 import {
     FileLimits, HttpMethod, ParameterConverter,
-    ServiceAuthenticator, ServiceContext, ServiceFactory
+    ParserType, ServiceAuthenticator, ServiceContext, ServiceFactory
 } from './model/server-types';
 import { ServiceInvoker } from './service-invoker';
 
@@ -355,10 +355,10 @@ export class ServerContainer {
             result.push(this.buildCookieParserMiddleware());
         }
         if (serviceMethod.mustParseBody) {
-            this.debugger.build('Registering body json parser middleware for method <%s>' +
-                ' with options: %j.', serviceMethod.name, bodyParserOptions);
-            result.push(bodyParser.text());
-            result.push(this.buildJsonBodyParserMiddleware(bodyParserOptions));
+            const bodyParserType = serviceMethod.bodyParserType || serviceClass.bodyParserType || ParserType.json;
+            this.debugger.build('Registering body %s parser middleware for method <%s>' +
+                ' with options: %j.', ParserType[bodyParserType], serviceMethod.name, bodyParserOptions);
+            result.push(this.buildBodyParserMiddleware(serviceMethod, bodyParserOptions, bodyParserType));
         }
         if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
             this.debugger.build('Registering body form parser middleware for method <%s>' +
@@ -371,6 +371,17 @@ export class ServerContainer {
         }
 
         return result;
+    }
+
+    private buildBodyParserMiddleware(serviceMethod: ServiceMethod, bodyParserOptions: any, bodyParserType: ParserType) {
+        switch (bodyParserType) {
+            case ParserType.text:
+                return this.buildTextBodyParserMiddleware(bodyParserOptions);
+            case ParserType.raw:
+                return this.buildRawBodyParserMiddleware(bodyParserOptions);
+            default:
+                return this.buildJsonBodyParserMiddleware(bodyParserOptions);
+        }
     }
 
     private buildFilesParserMiddleware(serviceMethod: ServiceMethod) {
@@ -405,6 +416,30 @@ export class ServerContainer {
         }
         else {
             middleware = bodyParser.json();
+        }
+        return middleware;
+    }
+
+    private buildTextBodyParserMiddleware(bodyParserOptions: any) {
+        let middleware: express.RequestHandler;
+        this.debugger.build('Creating text body parser with options %j.', bodyParserOptions || {});
+        if (bodyParserOptions) {
+            middleware = bodyParser.text(bodyParserOptions);
+        }
+        else {
+            middleware = bodyParser.text();
+        }
+        return middleware;
+    }
+
+    private buildRawBodyParserMiddleware(bodyParserOptions: any) {
+        let middleware: express.RequestHandler;
+        this.debugger.build('Creating raw body parser with options %j.', bodyParserOptions || {});
+        if (bodyParserOptions) {
+            middleware = bodyParser.raw(bodyParserOptions);
+        }
+        else {
+            middleware = bodyParser.raw();
         }
         return middleware;
     }
