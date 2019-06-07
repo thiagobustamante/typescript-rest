@@ -1,5 +1,6 @@
 'use strict';
 
+import * as debug from 'debug';
 import { Errors } from '../typescript-rest';
 import { ParamType, ServiceProperty } from './model/metadata';
 import { ParameterConverter, ServiceContext } from './model/server-types';
@@ -15,6 +16,11 @@ export class ParameterProcessor {
     private static defaultParamConverter: ParameterConverter = (p: any) => p;
 
     private parameterMapper: Map<ParamType, ParameterContextMapper>;
+    private debugger = {
+        build: debug('typescript-rest:parameter-processor:build'),
+        runtime: debug('typescript-rest:parameter-processor:runtime')
+    };
+
     private constructor() {
         this.parameterMapper = this.initializeParameterMappers();
     }
@@ -28,6 +34,7 @@ export class ParameterProcessor {
     }
 
     private initializeParameterMappers() {
+        this.debugger.build('Initializing parameters processors');
         const parameterMapper: Map<ParamType, ParameterContextMapper> = new Map();
 
         parameterMapper.set(ParamType.path, (context, property) => this.convertType(context.request.params[property.name], property.propertyType));
@@ -36,6 +43,7 @@ export class ParameterProcessor {
         parameterMapper.set(ParamType.cookie, (context, property) => this.convertType(context.request.cookies[property.name], property.propertyType));
         parameterMapper.set(ParamType.body, (context, property) => this.convertType(context.request.body, property.propertyType));
         parameterMapper.set(ParamType.file, (context, property) => {
+            this.debugger.runtime('Processing file parameter');
             // @ts-ignore
             const files: Array<Express.Multer.File> = context.request.files ? context.request.files[property.name] : null;
             if (files && files.length > 0) {
@@ -44,6 +52,7 @@ export class ParameterProcessor {
             return null;
         });
         parameterMapper.set(ParamType.files, (context, property) => {
+            this.debugger.runtime('Processing files parameter');
             // @ts-ignore
             return context.request.files[property.name];
         });
@@ -65,6 +74,7 @@ export class ParameterProcessor {
 
     private convertType(paramValue: string | boolean, paramType: Function): any {
         const serializedType = paramType['name'];
+        this.debugger.runtime('Processing parameter. received type: %s, received value:', serializedType, paramValue);
         switch (serializedType) {
             case 'Number':
                 return paramValue === undefined ? paramValue : parseFloat(paramValue as string);
