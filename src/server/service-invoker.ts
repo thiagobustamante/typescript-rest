@@ -1,5 +1,6 @@
 'use strict';
 
+import * as debug from 'debug';
 import * as express from 'express';
 import * as _ from 'lodash';
 import { Errors } from '../typescript-rest';
@@ -14,6 +15,7 @@ export class ServiceInvoker {
     private serviceMethod: ServiceMethod;
     private preProcessors: Array<ServiceProcessor>;
     private postProcessors: Array<ServiceProcessor>;
+    private debugger = debug('typescript-rest:service-invoker:runtime');
 
     constructor(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         this.serviceClass = serviceClass;
@@ -27,6 +29,8 @@ export class ServiceInvoker {
             await this.callTargetEndPoint(context);
             if (this.mustCallNext()) {
                 context.next();
+            } else if (this.debugger.enabled) {
+                this.debugger('Ignoring next middlewares');
             }
         }
         catch (err) {
@@ -40,18 +44,21 @@ export class ServiceInvoker {
     }
 
     private async runPreProcessors(context: ServiceContext): Promise<void> {
+        this.debugger('Running preprocessors');
         for (const processor of this.preProcessors) {
             await Promise.resolve(processor(context.request, context.response));
         }
     }
 
     private async runPostProcessors(context: ServiceContext): Promise<void> {
+        this.debugger('Running postprocessors');
         for (const processor of this.postProcessors) {
             await Promise.resolve(processor(context.request, context.response));
         }
     }
 
     private async callTargetEndPoint(context: ServiceContext) {
+        this.debugger('Calling targetEndpoint %s', this.serviceMethod.resolvedPath);
         this.checkAcceptance(context);
         if (this.preProcessors.length) {
             await this.runPreProcessors(context);
@@ -59,6 +66,9 @@ export class ServiceInvoker {
         const serviceObject = this.createService(context);
         const args = this.buildArgumentsList(context);
         const toCall = this.getMethodToCall();
+        if (this.debugger.enabled) {
+            this.debugger('Invoking service method <%s> with params: %j', this.serviceMethod.name, args);
+        }
         const result = toCall.apply(serviceObject, args);
         if (this.postProcessors.length) {
             await this.runPostProcessors(context);
@@ -73,6 +83,7 @@ export class ServiceInvoker {
     }
 
     private checkAcceptance(context: ServiceContext): void {
+        this.debugger('Verifying accept headers');
         this.identifyAcceptedLanguage(context);
         this.identifyAcceptedType(context);
 
@@ -96,6 +107,7 @@ export class ServiceInvoker {
                 context.language = languages[0];
             }
         }
+        this.debugger('Identified the preferable language accepted by server: %s', context.language);
     }
 
     private identifyAcceptedType(context: ServiceContext) {
@@ -107,12 +119,15 @@ export class ServiceInvoker {
                 context.accept = accepts[0];
             }
         }
+        this.debugger('Identified the preferable media type accepted by server: %s', context.accept);
     }
 
     private createService(context: ServiceContext) {
         const serviceObject = ServerContainer.get().serviceFactory.create(this.serviceClass.targetClass, context);
+        this.debugger('Creating service object');
         if (this.serviceClass.hasProperties()) {
             this.serviceClass.properties.forEach((property, key) => {
+                this.debugger('Setting service property %s', key);
                 serviceObject[key] = this.processParameter(context, property);
             });
         }
@@ -123,6 +138,7 @@ export class ServiceInvoker {
         const result: Array<any> = new Array<any>();
 
         this.serviceMethod.parameters.forEach(param => {
+            this.debugger('Processing service parameter %s', param.name);
             result.push(this.processParameter(context, {
                 name: param.name,
                 propertyType: param.type,
@@ -140,12 +156,15 @@ export class ServiceInvoker {
     private processResponseHeaders(context: ServiceContext) {
         if (this.serviceMethod.resolvedLanguages) {
             if (this.serviceMethod.httpMethod === HttpMethod.GET) {
+                this.debugger('Adding response header vary: Accept-Language');
                 context.response.vary('Accept-Language');
             }
+            this.debugger('Adding response header Content-Language: %s', context.language);
             context.response.set('Content-Language', context.language);
         }
         if (this.serviceMethod.resolvedAccepts) {
             if (this.serviceMethod.httpMethod === HttpMethod.GET) {
+                this.debugger('Adding response header vary: Accept');
                 context.response.vary('Accept');
             }
         }
@@ -153,6 +172,7 @@ export class ServiceInvoker {
 
     private async sendValue(value: any, context: ServiceContext) {
         if (value !== NoResponse) {
+            this.debugger('Sending response value: %o', value);
             switch (typeof value) {
                 case 'number':
                     context.response.send(value.toString());
@@ -174,6 +194,8 @@ export class ServiceInvoker {
                 default:
                     await this.sendComplexValue(context, value);
             }
+        } else {
+            this.debugger('Do not send any response value');
         }
     }
 
@@ -192,11 +214,14 @@ export class ServiceInvoker {
             await this.sendValue(val, context);
         }
         else {
+            this.debugger('Sending a json value: %j', value);
             context.response.json(value);
         }
     }
 
     private async sendReferencedResource(context: ServiceContext, value: ReferencedResource<any>) {
+        this.debugger('Setting the header Location: %s', value.location);
+        this.debugger('Sendinf status code: %d', value.statusCode);
         context.response.set('Location', value.location);
         if (value.body) {
             context.response.status(value.statusCode);
@@ -208,6 +233,7 @@ export class ServiceInvoker {
     }
 
     private sendFile(context: ServiceContext, value: DownloadBinaryData) {
+        this.debugger('Sending file as response');
         if (value.fileName) {
             context.response.writeHead(200, {
                 'Content-Length': value.content.length,
@@ -225,6 +251,7 @@ export class ServiceInvoker {
     }
 
     private downloadResToPromise(res: express.Response, value: DownloadResource) {
+        this.debugger('Sending a resource to download. Path: %s', value.filePath);
         return new Promise((resolve, reject) => {
             res.download(value.filePath, value.filePath, (err) => {
                 if (err) {
