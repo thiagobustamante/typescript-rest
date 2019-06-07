@@ -2,18 +2,18 @@
 
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
+import * as debug from 'debug';
 import * as express from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as _ from 'lodash';
 import * as multer from 'multer';
 import * as Errors from './model/errors';
 import { ServiceClass, ServiceMethod } from './model/metadata';
-import { ServiceInvoker } from './service-invoker';
-
-import { NextFunction, Request, Response } from 'express';
 import {
     FileLimits, HttpMethod, ParameterConverter,
     ServiceAuthenticator, ServiceContext, ServiceFactory
 } from './model/server-types';
+import { ServiceInvoker } from './service-invoker';
 
 export class DefaultServiceFactory implements ServiceFactory {
     public create(serviceClass: any) {
@@ -42,6 +42,10 @@ export class ServerContainer {
     public paramConverters: Map<Function, ParameterConverter> = new Map<Function, ParameterConverter>();
     public router: express.Router;
 
+    private debugger = {
+        build: debug('typescript-rest:server-container:build'),
+        runtime: debug('typescript-rest:server-container:runtime')
+    };
     private upload: multer.Instance;
     private serverClasses: Map<Function, ServiceClass> = new Map<Function, ServiceClass>();
     private paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
@@ -53,6 +57,7 @@ export class ServerContainer {
         this.pathsResolved = false;
         target = this.serviceFactory.getTargetClass(target);
         if (!this.serverClasses.has(target)) {
+            this.debugger.build('Registering a new service class, %o', target);
             this.serverClasses.set(target, new ServiceClass(target));
             this.inheritParentClass(target);
         }
@@ -60,38 +65,12 @@ export class ServerContainer {
         return serviceClass;
     }
 
-    public inheritParentClass(target: Function) {
-        const classData: ServiceClass = this.serverClasses.get(target);
-        const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
-        const parentClassData: ServiceClass = this.getServiceClass(parent);
-        if (parentClassData) {
-            if (parentClassData.methods) {
-                parentClassData.methods.forEach((value, key) => {
-                    classData.methods.set(key, _.cloneDeep(value));
-                });
-            }
-
-            if (parentClassData.properties) {
-                parentClassData.properties.forEach((value, key) => {
-                    classData.properties.set(key, _.cloneDeep(value));
-                });
-            }
-
-            if (parentClassData.languages) {
-                classData.languages = _.union(classData.languages, parentClassData.languages);
-            }
-
-            if (parentClassData.accepts) {
-                classData.accepts = _.union(classData.accepts, parentClassData.accepts);
-            }
-        }
-    }
-
     public registerServiceMethod(target: Function, methodName: string): ServiceMethod {
         if (methodName) {
             this.pathsResolved = false;
             const classData: ServiceClass = this.registerServiceClass(target);
             if (!classData.methods.has(methodName)) {
+                this.debugger.build('Registering the rest method <%s> for the service class, %o', methodName, target);
                 classData.methods.set(methodName, new ServiceMethod());
             }
             const serviceMethod: ServiceMethod = classData.methods.get(methodName);
@@ -119,6 +98,7 @@ export class ServerContainer {
         if (types) {
             types = types.map(type => this.serviceFactory.getTargetClass(type));
         }
+        this.debugger.build('Creating service endpoints for types: %o', types);
         if (this.authenticator) {
             this.authenticator.initialize(this.router);
         }
@@ -135,7 +115,36 @@ export class ServerContainer {
         this.handleNotAllowedMethods();
     }
 
+    private inheritParentClass(target: Function) {
+        const classData: ServiceClass = this.serverClasses.get(target);
+        const parent = Object.getPrototypeOf(classData.targetClass.prototype).constructor;
+        const parentClassData: ServiceClass = this.getServiceClass(parent);
+        if (parentClassData) {
+            if (parentClassData.methods) {
+                parentClassData.methods.forEach((value, key) => {
+                    classData.methods.set(key, _.cloneDeep(value));
+                });
+            }
+
+            if (parentClassData.properties) {
+                parentClassData.properties.forEach((value, key) => {
+                    classData.properties.set(key, _.cloneDeep(value));
+                });
+            }
+
+            if (parentClassData.languages) {
+                classData.languages = _.union(classData.languages, parentClassData.languages);
+            }
+
+            if (parentClassData.accepts) {
+                classData.accepts = _.union(classData.accepts, parentClassData.accepts);
+            }
+        }
+        this.debugger.build('Service class registered with the given metadata: %o', classData);
+    }
+
     private buildService(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
+        this.debugger.build('Creating service endpoint for method: %o', serviceMethod);
         if (!serviceMethod.resolvedPath) {
             this.resolveProperties(serviceClass, serviceMethod);
         }
@@ -174,6 +183,7 @@ export class ServerContainer {
 
     private resolveAllPaths() {
         if (!this.pathsResolved) {
+            this.debugger.build('Building the server list of paths');
             this.paths.clear();
             this.serverClasses.forEach(classData => {
                 classData.methods.forEach(method => {
@@ -200,6 +210,7 @@ export class ServerContainer {
 
     private resolveLanguages(serviceClass: ServiceClass,
         serviceMethod: ServiceMethod): void {
+        this.debugger.build('Resolving the list of acceptable languages for method %s', serviceMethod.name);
 
         const resolvedLanguages = _.union(serviceClass.languages, serviceMethod.languages);
         if (resolvedLanguages.length > 0) {
@@ -209,6 +220,8 @@ export class ServerContainer {
 
     private resolveAccepts(serviceClass: ServiceClass,
         serviceMethod: ServiceMethod): void {
+
+        this.debugger.build('Resolving the list of acceptable types for method %s', serviceMethod.name);
         const resolvedAccepts = _.union(serviceClass.accepts, serviceMethod.accepts);
         if (resolvedAccepts.length > 0) {
             serviceMethod.resolvedAccepts = resolvedAccepts;
@@ -217,8 +230,10 @@ export class ServerContainer {
 
     private resolvePath(serviceClass: ServiceClass,
         serviceMethod: ServiceMethod): void {
-        const classPath: string = serviceClass.path ? serviceClass.path.trim() : '';
 
+        this.debugger.build('Resolving the path for method %s', serviceMethod.name);
+
+        const classPath: string = serviceClass.path ? serviceClass.path.trim() : '';
         let resolvedPath = _.startsWith(classPath, '/') ? classPath : '/' + classPath;
         if (_.endsWith(resolvedPath, '/')) {
             resolvedPath = resolvedPath.slice(0, resolvedPath.length - 1);
@@ -249,6 +264,7 @@ export class ServerContainer {
     }
 
     private handleNotAllowedMethods() {
+        this.debugger.build('Creating middleware to handle not allowed methods');
         const paths: Set<string> = this.getPaths();
         paths.forEach((path) => {
             const supported: Set<HttpMethod> = this.getHttpMethods(path);
@@ -257,6 +273,8 @@ export class ServerContainer {
                 allowedMethods.push(HttpMethod[method]);
             });
             const allowed: string = allowedMethods.join(', ');
+            this.debugger.build('Registering middleware to validate allowed HTTP methods for path %s.', path);
+            this.debugger.build('Allowed HTTP methods [%s].', allowed);
             this.router.all(path, (req: express.Request, res: express.Response, next: express.NextFunction) => {
                 if (res.headersSent || allowedMethods.indexOf(req.method) > -1) {
                     next();
@@ -281,8 +299,10 @@ export class ServerContainer {
                 options.limits = this.fileLimits;
             }
             if (options.dest) {
+                this.debugger.build('Creating a file Uploader with options: %o.', options);
                 this.upload = multer(options);
             } else {
+                this.debugger.build('Creating a file Uploader with the default options.');
                 this.upload = multer();
             }
         }
@@ -291,6 +311,7 @@ export class ServerContainer {
 
     private buildServiceMiddleware(serviceMethod: ServiceMethod, serviceClass: ServiceClass) {
         const serviceInvoker = new ServiceInvoker(serviceClass, serviceMethod);
+        this.debugger.build('Creating the service middleware for method <%s>.', serviceMethod.name);
         return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
             const context: ServiceContext = new ServiceContext();
             context.request = req;
@@ -304,11 +325,15 @@ export class ServerContainer {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         let roles: Array<string> = _.compact(_.union(serviceMethod.roles, serviceClass.roles));
         if (this.authenticator && roles.length) {
+            this.debugger.build('Registering an authenticator middleware for method <%s>.', serviceMethod.name);
             result.push(this.authenticator.getMiddleware());
             roles = roles.filter((role) => role !== '*');
             if (roles.length) {
+                this.debugger.build('Registering a role validator middleware for method <%s>.', serviceMethod.name);
+                this.debugger.build('Roles: <%j>.', roles);
                 result.push((req: Request, res: Response, next: NextFunction) => {
                     const requestRoles = this.authenticator.getRoles(req);
+                    this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
                     if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
                         next();
                     } else {
@@ -326,15 +351,21 @@ export class ServerContainer {
         const bodyParserOptions = serviceMethod.bodyParserOptions || serviceClass.bodyParserOptions;
 
         if (serviceMethod.mustParseCookies) {
+            this.debugger.build('Registering cookie parser middleware for method <%s>.', serviceMethod.name);
             result.push(this.buildCookieParserMiddleware());
         }
         if (serviceMethod.mustParseBody) {
+            this.debugger.build('Registering body json parser middleware for method <%s>' +
+                ' with options: %j.', serviceMethod.name, bodyParserOptions);
             result.push(this.buildJsonBodyParserMiddleware(bodyParserOptions));
         }
         if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {
+            this.debugger.build('Registering body form parser middleware for method <%s>' +
+                ' with options: %j.', serviceMethod.name, bodyParserOptions);
             result.push(this.buildFormParserMiddleware(bodyParserOptions));
         }
         if (serviceMethod.files.length > 0) {
+            this.debugger.build('Registering file parser middleware for method <%s>.', serviceMethod.name);
             result.push(this.buildFilesParserMiddleware(serviceMethod));
         }
 
@@ -351,22 +382,23 @@ export class ServerContainer {
                 options.push({ 'name': fileData.name });
             }
         });
+        this.debugger.build('Creating file parser with options %j.', options);
         return this.getUploader().fields(options);
     }
 
     private buildFormParserMiddleware(bodyParserOptions: any) {
         let middleware: express.RequestHandler;
-        if (bodyParserOptions) {
-            middleware = bodyParser.urlencoded(bodyParserOptions);
+        if (!bodyParserOptions) {
+            bodyParserOptions = { extended: true };
         }
-        else {
-            middleware = bodyParser.urlencoded({ extended: true });
-        }
+        this.debugger.build('Creating form body parser with options %j.', bodyParserOptions);
+        middleware = bodyParser.urlencoded(bodyParserOptions);
         return middleware;
     }
 
     private buildJsonBodyParserMiddleware(bodyParserOptions: any) {
         let middleware: express.RequestHandler;
+        this.debugger.build('Creating json body parser with options %j.', bodyParserOptions || {});
         if (bodyParserOptions) {
             middleware = bodyParser.json(bodyParserOptions);
         }
@@ -384,6 +416,7 @@ export class ServerContainer {
         if (this.cookiesDecoder) {
             args.push({ decode: this.cookiesDecoder });
         }
+        this.debugger.build('Creating cookie parser with options %j.', args);
         const middleware = cookieParser.apply(this, args);
         return middleware;
     }

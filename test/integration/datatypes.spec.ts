@@ -174,6 +174,14 @@ export class TestParamsService {
             resolve(new Return.DownloadResource(__dirname + '/datatypes.spec.ts', 'test-rest.spec.js'));
         });
     }
+
+    @Path('stringbody')
+    @POST
+    public async testRawStringBody(data: string) {
+        // tslint:disable-next-line:no-console
+        console.log(data);
+        return data;
+    }
 }
 
 @Path("testreturn")
@@ -416,6 +424,20 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testparams/download/ref'
             }, (error, response, body) => {
                 expect(_.startsWith(body.toString(), '\'use strict\';')).to.eq(true);
+                done();
+            });
+        });
+    });
+
+    describe('Raw Body Service', () => {
+        it('should accept a string as a body', (done) => {
+            const data = '1;2;3;4;\n5;6;7;8;\n9;10;11;12;';
+            request.post({
+                body: 'teste de body',
+                headers: { 'content-type': 'plain/text' },
+                url: 'http://localhost:5674/testparams/stringbody'
+            }, (error, response, body) => {
+                expect(body).to.eq(data);
                 done();
             });
         });
