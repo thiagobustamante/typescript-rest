@@ -357,6 +357,7 @@ export class ServerContainer {
         if (serviceMethod.mustParseBody) {
             this.debugger.build('Registering body json parser middleware for method <%s>' +
                 ' with options: %j.', serviceMethod.name, bodyParserOptions);
+            result.push(bodyParser.text());
             result.push(this.buildJsonBodyParserMiddleware(bodyParserOptions));
         }
         if (serviceMethod.mustParseForms || serviceMethod.acceptMultiTypedParam) {

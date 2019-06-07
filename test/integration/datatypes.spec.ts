@@ -178,8 +178,6 @@ export class TestParamsService {
     @Path('stringbody')
     @POST
     public async testRawStringBody(data: string) {
-        // tslint:disable-next-line:no-console
-        console.log(data);
         return data;
     }
 }
@@ -433,8 +431,8 @@ describe('Data Types Tests', () => {
         it('should accept a string as a body', (done) => {
             const data = '1;2;3;4;\n5;6;7;8;\n9;10;11;12;';
             request.post({
-                body: 'teste de body',
-                headers: { 'content-type': 'plain/text' },
+                body: data,
+                headers: { 'content-type': 'text/plain' },
                 url: 'http://localhost:5674/testparams/stringbody'
             }, (error, response, body) => {
                 expect(body).to.eq(data);

@@ -138,7 +138,7 @@ export class ServiceInvoker {
         const result: Array<any> = new Array<any>();
 
         this.serviceMethod.parameters.forEach(param => {
-            this.debugger('Processing service parameter %s', param.name);
+            this.debugger('Processing service parameter [%s]', param.name || 'body');
             result.push(this.processParameter(context, {
                 name: param.name,
                 propertyType: param.type,
