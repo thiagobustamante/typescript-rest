@@ -37,7 +37,7 @@ import { ServerContainer } from '../server/server-container';
  * ```
  */
 export function Path(path: string) {
-    return new ServiceDecorator('Path').withProperty('path').withValue(path)
+    return new ServiceDecorator('Path').withProperty('path', path)
         .createDecorator();
 }
 
@@ -74,9 +74,11 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles?: string | Array<string>) {
+export function Security(roles?: string | Array<string>, name?: string) {
     roles = _.castArray(roles || '*');
-    return new ServiceDecorator('Security').withProperty('roles').withValue(roles)
+    return new ServiceDecorator('Security')
+        .withProperty('roles', roles)
+        .withProperty('authenticator', name || 'default')
         .createDecorator();
 }
 
@@ -108,8 +110,8 @@ export function Security(roles?: string | Array<string>) {
  */
 export function PreProcessor(preprocessor: ServiceProcessor) {
     return new ProcessorServiceDecorator('PreProcessor')
-        .withProperty('preProcessors').withValue(preprocessor)
-        .requiresValue().createDecorator();
+        .withArrayProperty('preProcessors', preprocessor, true)
+        .createDecorator();
 }
 
 /**
@@ -140,8 +142,8 @@ export function PreProcessor(preprocessor: ServiceProcessor) {
  */
 export function PostProcessor(postprocessor: ServiceProcessor) {
     return new ProcessorServiceDecorator('PostProcessor')
-        .withProperty('postProcessors').withValue(postprocessor)
-        .requiresValue().createDecorator();
+        .withArrayProperty('postProcessors', postprocessor, true)
+        .createDecorator();
 }
 
 /**
@@ -166,7 +168,7 @@ export function PostProcessor(postprocessor: ServiceProcessor) {
  */
 export function AcceptLanguage(...languages: Array<string>) {
     languages = _.compact(languages);
-    return new AcceptServiceDecorator('AcceptLanguage').withProperty('languages').withValue(languages)
+    return new AcceptServiceDecorator('AcceptLanguage').withArrayProperty('languages', languages, true)
         .createDecorator();
 }
 
@@ -192,7 +194,7 @@ export function AcceptLanguage(...languages: Array<string>) {
  */
 export function Accept(...accepts: Array<string>) {
     accepts = _.compact(accepts);
-    return new AcceptServiceDecorator('Accept').withProperty('accepts').withValue(accepts)
+    return new AcceptServiceDecorator('Accept').withArrayProperty('accepts', accepts, true)
         .createDecorator();
 }
 
@@ -202,7 +204,7 @@ export function Accept(...accepts: Array<string>) {
  * [[bodyParser]](https://www.npmjs.com/package/body-parser)
  */
 export function BodyOptions(options: any) {
-    return new ServiceDecorator('BodyOptions').withProperty('bodyParserOptions').withValue(options)
+    return new ServiceDecorator('BodyOptions').withProperty('bodyParserOptions', options)
         .createDecorator();
 }
 
@@ -211,7 +213,7 @@ export function BodyOptions(options: any) {
  * The default type is json.
  */
 export function BodyType(type: ParserType) {
-    return new ServiceDecorator('BodyType').withProperty('bodyParserType').withValue(type)
+    return new ServiceDecorator('BodyType').withProperty('bodyParserType', type)
         .createDecorator();
 }
 
@@ -220,8 +222,7 @@ export function BodyType(type: ParserType) {
  * It makes server does not call next function after service invocation.
  */
 export function IgnoreNextMiddlewares(...args: Array<any>) {
-    return new ServiceDecorator('IgnoreNextMiddlewares')
-        .withProperty('ignoreNextMiddlewares').withValue(true)
+    return new ServiceDecorator('IgnoreNextMiddlewares').withProperty('ignoreNextMiddlewares', true)
         .decorateTypeOrMethod(args);
 }
 
@@ -255,28 +256,32 @@ export function Abstract(...args: Array<any>) {
     }
 }
 
+interface DecoratorProperty {
+    property: string;
+    value: any;
+    required: boolean;
+    process: (target: any) => void;
+    checkRequired: () => boolean;
+}
+
 class ServiceDecorator {
     protected decorator: string;
-    protected property: string;
-    protected value: any;
-    protected valueRequired: boolean = false;
+    protected properties: Array<DecoratorProperty> = [];
 
     constructor(decorator: string) {
         this.decorator = decorator;
     }
 
-    public withValue(value: any) {
-        this.value = value;
-        return this;
-    }
-
-    public withProperty(property: string) {
-        this.property = property;
-        return this;
-    }
-
-    public requiresValue() {
-        this.valueRequired = true;
+    public withProperty(property: string, value: any, required: boolean = false) {
+        this.properties.push({
+            checkRequired: () => required && !value,
+            process: (target: any) => {
+                target[property] = value;
+            },
+            property: property,
+            required: required,
+            value: value
+        });
         return this;
     }
 
@@ -299,9 +304,11 @@ class ServiceDecorator {
     }
 
     protected checkRequiredValue() {
-        if (this.valueRequired && !this.value) {
-            throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
-        }
+        this.properties.forEach(property => {
+            if (property.checkRequired()) {
+                throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
+            }
+        });
     }
 
     protected decorateType(target: Function) {
@@ -319,47 +326,47 @@ class ServiceDecorator {
     }
 
     protected updateClassMetadata(classData: ServiceClass) {
-        classData[this.property] = this.value;
+        this.properties.forEach(property => {
+            property.process(classData);
+        });
     }
 
     protected updateMethodMetadada(serviceMethod: ServiceMethod) {
-        serviceMethod[this.property] = this.value;
+        this.properties.forEach(property => {
+            property.process(serviceMethod);
+        });
     }
 }
 
 class ProcessorServiceDecorator extends ServiceDecorator {
-    protected updateClassMetadata(classData: ServiceClass) {
-        if (!classData[this.property]) {
-            classData[this.property] = [];
-        }
-        classData[this.property].unshift(this.value);
-    }
-
-    protected updateMethodMetadada(serviceMethod: ServiceMethod) {
-        if (!serviceMethod[this.property]) {
-            serviceMethod[this.property] = [];
-        }
-        serviceMethod[this.property].unshift(this.value);
+    public withArrayProperty(property: string, value: any, required: boolean = false) {
+        this.properties.push({
+            checkRequired: () => required && !value,
+            process: (target: any) => {
+                if (!target[property]) {
+                    target[property] = [];
+                }
+                target[property].unshift(value);
+            },
+            property: property,
+            required: required,
+            value: value
+        });
+        return this;
     }
 }
 
 class AcceptServiceDecorator extends ServiceDecorator {
-    constructor(decorator: string) {
-        super(decorator);
-        this.requiresValue();
-    }
-
-    protected updateClassMetadata(classData: ServiceClass) {
-        classData[this.property] = _.union(classData[this.property], this.value);
-    }
-
-    protected updateMethodMetadada(serviceMethod: ServiceMethod) {
-        serviceMethod[this.property] = _.union(serviceMethod[this.property], this.value);
-    }
-
-    protected checkRequiredValue() {
-        if (!this.value || !this.value.length) {
-            throw new Error(`Invalid @${this.decorator} Decorator declaration.`);
-        }
+    public withArrayProperty(property: string, value: any, required: boolean = false) {
+        this.properties.push({
+            checkRequired: () => required && (!value || !value.length),
+            process: (target: any) => {
+                target[property] = _.union(target[property], value);
+            },
+            property: property,
+            required: required,
+            value: value
+        });
+        return this;
     }
 }

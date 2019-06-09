@@ -37,7 +37,7 @@ export class ServerContainer {
     public fileFilter: (req: Express.Request, file: Express.Multer.File, callback: (error: Error, acceptFile: boolean) => void) => void;
     public fileLimits: FileLimits;
     public ignoreNextMiddlewares: boolean = false;
-    public authenticator: ServiceAuthenticator;
+    public authenticator: Map<string, ServiceAuthenticator> = new Map<string, ServiceAuthenticator>();
     public serviceFactory: ServiceFactory = new DefaultServiceFactory();
     public paramConverters: Map<Function, ParameterConverter> = new Map<Function, ParameterConverter>();
     public router: express.Router;
@@ -100,7 +100,10 @@ export class ServerContainer {
         }
         this.debugger.build('Creating service endpoints for types: %o', types);
         if (this.authenticator) {
-            this.authenticator.initialize(this.router);
+            this.authenticator.forEach((auth, name) => {
+                this.debugger.build('Initializing authenticator: %s', name);
+                auth.initialize(this.router);
+            });
         }
         this.serverClasses.forEach(classData => {
             if (!classData.isAbstract) {
@@ -324,26 +327,42 @@ export class ServerContainer {
     private buildSecurityMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         let roles: Array<string> = _.compact(_.union(serviceMethod.roles, serviceClass.roles));
-        if (this.authenticator && roles.length) {
-            this.debugger.build('Registering an authenticator middleware for method <%s>.', serviceMethod.name);
-            result.push(this.authenticator.getMiddleware());
+        const authenticatorName: string = serviceMethod.authenticator || serviceClass.authenticator;
+        if (this.authenticator && authenticatorName && roles.length) {
+            this.debugger.build('Registering an authenticator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
+            const authenticator = this.getAuthenticator(authenticatorName);
+            result.push(authenticator.getMiddleware());
             roles = roles.filter((role) => role !== '*');
             if (roles.length) {
-                this.debugger.build('Registering a role validator middleware for method <%s>.', serviceMethod.name);
+                this.debugger.build('Registering a role validator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
                 this.debugger.build('Roles: <%j>.', roles);
-                result.push((req: Request, res: Response, next: NextFunction) => {
-                    const requestRoles = this.authenticator.getRoles(req);
-                    this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
-                    if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
-                        next();
-                    } else {
-                        throw new Errors.ForbiddenError();
-                    }
-                });
+                result.push(this.buildAuthMiddleware(authenticator, roles));
             }
         }
 
         return result;
+    }
+
+    private getAuthenticator(authenticatorName: string) {
+        if (!this.authenticator.has(authenticatorName)) {
+            throw new Error(`Invalid authenticator name ${authenticatorName}`);
+        }
+        return this.authenticator.get(authenticatorName);
+    }
+
+    private buildAuthMiddleware(authenticator: ServiceAuthenticator, roles: Array<string>): express.RequestHandler {
+        return (req: Request, res: Response, next: NextFunction) => {
+            const requestRoles = authenticator.getRoles(req);
+            if (this.debugger.runtime.enabled) {
+                this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
+            }
+            if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
+                next();
+            }
+            else {
+                throw new Errors.ForbiddenError();
+            }
+        };
     }
 
     private buildParserMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod): Array<express.RequestHandler> {

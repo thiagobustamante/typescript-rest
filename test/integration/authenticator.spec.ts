@@ -35,6 +35,18 @@ export class AuthenticateRole {
     }
 }
 
+@Path('authorization/secondAuthenticator')
+@Security('ROLE_ADMIN', 'secondAuthenticator')
+export class MultipleAuthenticateRole {
+    @Context
+    public context: ServiceContext;
+
+    @GET
+    public test(): JwtUser {
+        return this.context.request.user;
+    }
+}
+
 @Path('authorization/without/role')
 @Security('ROLE_NOT_EXISTING')
 export class AuthenticateWithoutRole {
@@ -147,7 +159,25 @@ describe('Authenticator Tests', () => {
                 }
             }, (error, response, body) => {
                 expect(response.statusCode).to.eq(200);
-                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                const user = JSON.parse(body);
+                expect(user).to.contain({ username: 'admin' });
+                expect(user).to.contain({ strategy: 'default' });
+                done();
+            });
+        });
+    });
+
+    describe('Multiple Authorizations registered', () => {
+        it('should authorize with the correct autorization', (done) => {
+            request('http://localhost:5674/authorization/secondAuthenticator', {
+                headers: {
+                    'Authorization': `Bearer ${generateJwt()}`
+                }
+            }, (error, response, body) => {
+                expect(response.statusCode).to.eq(200);
+                const user = JSON.parse(body);
+                expect(user).to.contain({ username: 'admin' });
+                expect(user).to.contain({ strategy: 'second' });
                 done();
             });
         });
@@ -250,6 +280,7 @@ const jwtConfig: StrategyOptions = {
 interface JwtUser {
     username: string;
     roles: Array<string>;
+    strategy: string;
 }
 
 interface JwtUserPayload {
@@ -261,6 +292,16 @@ function configureAuthenticator() {
     const strategy = new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
         const user: JwtUser = {
             roles: payload.auth.split(','),
+            strategy: 'default',
+            username: payload.sub
+        };
+        done(null, user);
+    });
+
+    const secondStrategy = new Strategy(jwtConfig, (payload: JwtUserPayload, done: (a: null, b: JwtUser) => void) => {
+        const user: JwtUser = {
+            roles: payload.auth.split(','),
+            strategy: 'second',
             username: payload.sub
         };
         done(null, user);
@@ -272,6 +313,13 @@ function configureAuthenticator() {
             return JSON.stringify(user);
         }
     }));
+    Server.registerAuthenticator(new PassportAuthenticator(secondStrategy, {
+        deserializeUser: (user: string) => JSON.parse(user),
+        serializeUser: (user: JwtUser) => {
+            return JSON.stringify(user);
+        },
+        strategyName: 'secondAuthenticator'
+    }), 'secondAuthenticator');
 }
 
 function generateJwt() {
@@ -286,7 +334,7 @@ function startApi(): Promise<void> {
         app.set('env', 'test');
         configureAuthenticator();
         Server.buildServices(app, AuthenticatePath, AuthenticateRole,
-            AuthenticateWithoutRole, AuthenticateMethods);
+            AuthenticateWithoutRole, AuthenticateMethods, MultipleAuthenticateRole);
         server = app.listen(5674, (err?: any) => {
             if (err) {
                 return reject(err);

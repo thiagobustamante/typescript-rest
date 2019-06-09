@@ -94,9 +94,9 @@ export class Server {
      * Register a service authenticator. It will be used to authenticate users before the service method
      * invocations occurs.
      */
-    public static registerAuthenticator(authenticator: ServiceAuthenticator) {
-        serverDebugger('Registering a new authenticator');
-        ServerContainer.get().authenticator = authenticator;
+    public static registerAuthenticator(authenticator: ServiceAuthenticator, name: string = 'default') {
+        serverDebugger('Registering a new authenticator with name %s', name);
+        ServerContainer.get().authenticator.set(name, authenticator);
     }
 
     /**

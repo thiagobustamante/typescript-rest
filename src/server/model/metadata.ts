@@ -17,6 +17,7 @@ export class ServiceClass {
     public targetClass: any;
     public path: string;
     public roles: Array<string>;
+    public authenticator: string;
     public preProcessors: Array<ServiceProcessor>;
     public postProcessors: Array<ServiceProcessor>;
     public methods: Map<string, ServiceMethod>;
@@ -51,6 +52,7 @@ export class ServiceMethod {
     public name: string;
     public path: string;
     public roles: Array<string>;
+    public authenticator: string;
     public resolvedPath: string;
     public httpMethod: HttpMethod;
     public parameters: Array<MethodParam> = new Array<MethodParam>();

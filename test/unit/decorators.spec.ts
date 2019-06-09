@@ -149,6 +149,29 @@ describe('Decorators', () => {
             expect(serviceMethod.roles).to.include.members(['*']);
         });
 
+        it('should set the default authenticator if no name is provided', async () => {
+            const role: string = 'test-role';
+            serviceDecorators.Security(role)(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+            expect(serviceMethod.roles).to.have.length(1);
+            expect(serviceMethod.roles).to.includes(role);
+            expect(serviceMethod.authenticator).to.be.equals('default');
+        });
+
+        it('should set the authenticator name, when name is provided', async () => {
+            const role: string = 'test-role';
+            const name: string = 'authenticator-name';
+            serviceDecorators.Security(role, name)(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
+            expect(serviceMethod.roles).to.have.length(1);
+            expect(serviceMethod.roles).to.includes(role);
+            expect(serviceMethod.authenticator).to.be.equals(name);
+        });
+
         it('should throw an error if misused', async () => {
             const role = 'test-role';
 
