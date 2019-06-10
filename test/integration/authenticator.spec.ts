@@ -323,7 +323,8 @@ function configureAuthenticator() {
 }
 
 function generateJwt() {
-    return jwt.sign({ sub: 'admin', auth: 'ROLE_ADMIN,ROLE_USER' }, Buffer.from(JWT_SECRET, 'base64'), { algorithm: 'HS512' });
+    const user = { sub: 'admin', auth: 'ROLE_ADMIN,ROLE_USER' };
+    return jwt.sign(user, Buffer.from(JWT_SECRET, 'base64'), { algorithm: 'HS512' });
 }
 
 let server: any;
