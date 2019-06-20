@@ -58,6 +58,7 @@ export class Server {
         try {
             Server.buildServices(router, ...importedTypes);
         } catch (e) {
+            serverDebugger('Error loading services for pattern: %j. Error: %o', patterns, e);
             throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
         }
     }
@@ -113,6 +114,9 @@ export class Server {
                 return ioc.Container.get(serviceClass);
             },
             getTargetClass: (serviceClass: Function) => {
+                if (_.isArray(serviceClass)) {
+                    return null;
+                }
                 let typeConstructor: any = serviceClass;
                 if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
                     return typeConstructor as FunctionConstructor;
@@ -124,6 +128,7 @@ export class Server {
                     }
                     typeConstructor = typeConstructor['__parent'];
                 }
+                serverDebugger('Can not identify the base Type for requested target: %o', serviceClass);
                 throw TypeError('Can not identify the base Type for requested target');
             }
         });
