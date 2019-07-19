@@ -26,7 +26,9 @@
     "test:integration": "cross-env NODE_ENV=test mocha --opts ./test/mocha-integration.opts --exit",
     "test:unit": "cross-env NODE_ENV=test mocha --opts ./test/mocha-unit.opts --exit",
     "test:coverage": "nyc npm test",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "nyc": {
     "include": [
@@ -65,6 +67,7 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.12",
     "require-glob": "^3.2.0",
+    "snyk": "^1.189.0"
     "swagger-ui-express": "^4.0.7",
     "yamljs": "^0.3.0"
   },
@@ -115,5 +118,6 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "engineStrict": true
+  "engineStrict": true,
+  "snyk": true
 }
