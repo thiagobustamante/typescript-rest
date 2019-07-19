@@ -245,11 +245,11 @@ export class TestContextRequestPropertyService {
     @Path('nonexistent')
     @PreProcessor(testContextRequestPropertyMiddleware)
     public testNonexistentInjection(@ContextRequestProperty('otherName') otherName: string) {
-        if (otherName) {
-            return 'NOT OK';
+        if (!otherName) {
+            return 'OK';
         }
         else {
-            return 'OK';
+            return 'NOT OK';
         }
     }
 }
