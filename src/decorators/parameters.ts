@@ -55,11 +55,9 @@ export function ContextRequest(...args: Array<any>) {
 }
 
 /**
- * A decorator to be used on class properties or on service method arguments
- * to inform that the decorated property or argument should be bound to the
- * the given property name in the current request. This could be used, for
- * example, to extract values inserted by prior middlewares into the request
- * object.
+ * Creates a mapping between properties on the request object and a method
+ * argument. This could be used, for example, to extract values inserted by
+ * prior middlewares into the request.
  *
  * For example:
  *
