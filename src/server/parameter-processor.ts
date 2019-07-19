@@ -42,6 +42,7 @@ export class ParameterProcessor {
         parameterMapper.set(ParamType.header, (context, property) => this.convertType(context.request.header(property.name), property.propertyType));
         parameterMapper.set(ParamType.cookie, (context, property) => this.convertType(context.request.cookies[property.name], property.propertyType));
         parameterMapper.set(ParamType.body, (context, property) => this.convertType(context.request.body, property.propertyType));
+        parameterMapper.set(ParamType.context_request_property, (context, property) => this.convertType((context.request as any)[property.name], property.propertyType));
         parameterMapper.set(ParamType.file, (context, property) => {
             this.debugger.runtime('Processing file parameter');
             // @ts-ignore

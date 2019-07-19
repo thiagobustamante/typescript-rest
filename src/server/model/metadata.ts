@@ -115,6 +115,7 @@ export enum ParamType {
     files = 'files',
     context = 'context',
     context_request = 'context_request',
+    context_request_property = 'context_request_property',
     context_response = 'context_response',
     context_next = 'context_next',
     context_accept = 'context_accept',

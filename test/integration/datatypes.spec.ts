@@ -9,7 +9,7 @@ import * as request from 'request';
 import { Container } from 'typescript-ioc';
 import {
     BodyOptions, BodyType, Context, ContextNext,
-    ContextRequest, ContextResponse, CookieParam, FileParam, FormParam,
+    ContextRequest, ContextRequestProperty, ContextResponse, CookieParam, FileParam, FormParam,
     GET, HeaderParam, Param, ParserType, Path, PathParam, POST, PUT, QueryParam, Return, Server, ServiceContext
 } from '../../src/typescript-rest';
 const expect = chai.expect;

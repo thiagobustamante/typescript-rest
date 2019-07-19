@@ -57,6 +57,40 @@ export function ContextRequest(...args: Array<any>) {
 /**
  * A decorator to be used on class properties or on service method arguments
  * to inform that the decorated property or argument should be bound to the
+ * the given property name in the current request. This could be used, for
+ * example, to extract values inserted by prior middlewares into the request
+ * object.
+ *
+ * For example:
+ *
+ * ```
+ * const authMiddleware = async (req, res, next) => {
+ *   const userId: string = await authenticateRequestAndReturnCurrentUserId(...);
+ *   req.userId = userId;
+ *   next();
+ * }
+ * 
+ * ...
+ * 
+ * @ Path('people')
+ * class PeopleService {
+ *   @ GET
+ *   getCurrentUser(@ ContextRequestProperty('userId') userId: string) {
+ * }
+ * ```
+ *
+ * The `authMiddleware` function will insert the `userId` property into
+ * the request object. Then, that value will be passed along into the
+ * `userId` parameter when `getCurrentUser` is called.
+ */
+export function ContextRequestProperty(name: string) {
+    return new ParameterDecorator('ContextRequestProperty').withType(ParamType.context_request_property).withName(name)
+        .decorateNamedParameterOrProperty();
+}
+
+/**
+ * A decorator to be used on class properties or on service method arguments
+ * to inform that the decorated property or argument should be bound to the
  * the current response object.
  *
  * For example:
