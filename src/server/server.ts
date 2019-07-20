@@ -50,15 +50,18 @@ export class Server {
         });
 
         _.values(loadedModules).forEach(serviceModule => {
-            _.values(serviceModule).forEach((service: Function) => {
-                importedTypes.push(service);
-            });
+            _.values(serviceModule)
+                .filter((service: Function) => typeof service === 'function')
+                .forEach((service: Function) => {
+                    importedTypes.push(service);
+                });
         });
 
         try {
             Server.buildServices(router, ...importedTypes);
         } catch (e) {
             serverDebugger('Error loading services for pattern: %j. Error: %o', patterns, e);
+            serverDebugger('ImportedTypes: %o', importedTypes);
             throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
         }
     }
