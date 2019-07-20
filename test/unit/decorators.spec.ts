@@ -362,7 +362,7 @@ describe('Decorators', () => {
         { name: 'CookieParam', paramType: ParamType.cookie },
         { name: 'FormParam', paramType: ParamType.form },
         { name: 'Param', paramType: ParamType.param },
-        { name: 'ContextRequestProperty', paramType: ParamType.context_request_property }
+        // { name: 'ContextRequestProperty', paramType: ParamType.context_request_property }
     ].forEach(test => {
         describe(`${test.name} Decorator`, () => {
             it(`should bind a @${test.name} to one service property`, async () => {
