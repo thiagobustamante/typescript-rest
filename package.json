@@ -22,6 +22,7 @@
     "lint": "tslint ./src/**/*.ts ./test/**/*.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.ts -t verbose",
     "pretest": "cross-env NODE_ENV=test npm run build && npm run lint",
+    "postinstall": "npm run build",
     "test": "cross-env NODE_ENV=test mocha --exit",
     "test:integration": "cross-env NODE_ENV=test mocha --opts ./test/mocha-integration.opts --exit",
     "test:unit": "cross-env NODE_ENV=test mocha --opts ./test/mocha-unit.opts --exit",
