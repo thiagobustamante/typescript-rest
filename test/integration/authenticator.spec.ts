@@ -18,7 +18,7 @@ export class AuthenticatePath {
     public context: ServiceContext;
 
     @GET
-    public test(): JwtUser {
+    public test(): Express.User {
         return this.context.request.user;
     }
 }
@@ -30,7 +30,7 @@ export class AuthenticateRole {
     public context: ServiceContext;
 
     @GET
-    public test(): JwtUser {
+    public test(): Express.User {
         return this.context.request.user;
     }
 }
@@ -42,7 +42,7 @@ export class MultipleAuthenticateRole {
     public context: ServiceContext;
 
     @GET
-    public test(): JwtUser {
+    public test(): Express.User {
         return this.context.request.user;
     }
 }
@@ -54,7 +54,7 @@ export class AuthenticateWithoutRole {
     public context: ServiceContext;
 
     @GET
-    public test(): JwtUser {
+    public test(): Express.User {
         return this.context.request.user;
     }
 }
@@ -74,7 +74,7 @@ export class AuthenticateMethods {
     @POST
     @Path('profile')
     @Security(['ROLE_ADMIN', 'ROLE_USER'])
-    public test3(): JwtUser {
+    public test3(): Express.User {
         return this.context.request.user;
     }
 
@@ -87,7 +87,7 @@ export class AuthenticateMethods {
     @PUT
     @Path('profile')
     @Security('ROLE_NOT_EXISTING')
-    public test4(): JwtUser {
+    public test4(): Express.User {
         return this.context.request.user;
     }
 }
