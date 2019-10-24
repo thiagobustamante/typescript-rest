@@ -74,11 +74,12 @@ export function Path(path: string) {
  * GET http://mydomain/people/123 (For all authorized users)
  * ```
  */
-export function Security(roles?: string | Array<string>, name?: string) {
+export function Security(roles?: string | Array<string>, names?: string | Array<string>) {
     roles = _.castArray(roles || '*');
+    names = _.castArray(names || 'default');
     return new ServiceDecorator('Security')
         .withProperty('roles', roles)
-        .withProperty('authenticator', name || 'default')
+        .withProperty('authenticators', names)
         .createDecorator();
 }
 

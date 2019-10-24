@@ -327,17 +327,20 @@ export class ServerContainer {
     private buildSecurityMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
         let roles: Array<string> = _.compact(_.union(serviceMethod.roles, serviceClass.roles));
-        const authenticatorName: string = serviceMethod.authenticator || serviceClass.authenticator;
-        if (this.authenticator && authenticatorName && roles.length) {
-            this.debugger.build('Registering an authenticator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
-            const authenticator = this.getAuthenticator(authenticatorName);
-            result.push(authenticator.getMiddleware());
-            roles = roles.filter((role) => role !== '*');
-            if (roles.length) {
-                this.debugger.build('Registering a role validator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
-                this.debugger.build('Roles: <%j>.', roles);
-                result.push(this.buildAuthMiddleware(authenticator, roles));
-            }
+        const authenticatorNames: Array<string> = serviceMethod.authenticators || serviceClass.authenticators;
+        if (this.authenticator && authenticatorNames && roles.length) {
+            authenticatorNames.forEach((authenticatorName: string) => {
+                this.debugger.build('Registering an authenticator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
+                const authenticator = this.getAuthenticator(authenticatorName);
+                result.push(authenticator.getMiddleware());
+
+                roles = roles.filter((role) => role !== '*');
+                if (roles.length) {
+                    this.debugger.build('Registering a role validator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
+                    this.debugger.build('Roles: <%j>.', roles);
+                    result.push(this.buildAuthMiddleware(authenticator, roles));
+                }
+            });
         }
 
         return result;

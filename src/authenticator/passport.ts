@@ -3,24 +3,34 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import * as passport from 'passport';
 import { ServiceAuthenticator } from '../server/model/server-types';
+import { Strategy } from 'passport-strategy';
 
 export interface PassportAuthenticatorOptions {
     authOptions?: passport.AuthenticateOptions;
     rolesKey?: string;
-    strategyName?: string;
     serializeUser?: (user: any) => string | Promise<string>;
     deserializeUser?: (user: string) => any;
+}
+
+export interface PassportAuthenticatorStrategy {
+    strategy: Strategy;
+    name: string;
 }
 
 export class PassportAuthenticator implements ServiceAuthenticator {
     private authenticator: express.Handler;
     private options: PassportAuthenticatorOptions;
 
-    constructor(strategy: passport.Strategy, options: PassportAuthenticatorOptions = {}) {
+    constructor(strategies: Array<PassportAuthenticatorStrategy>, options: PassportAuthenticatorOptions = {}) {
         this.options = options;
-        const authStrategy = options.strategyName || strategy.name || 'default_strategy';
-        passport.use(authStrategy, strategy);
-        this.authenticator = passport.authenticate(authStrategy, options.authOptions || {});
+        var strategyNames: Array<string> = [];
+
+        strategies.forEach(strategy => {
+            strategyNames.push(strategy.name)
+            passport.use(strategy.name, strategy.strategy);
+        });
+
+        this.authenticator = passport.authenticate(strategyNames, options.authOptions || {});
     }
 
     public getMiddleware(): express.RequestHandler {
