@@ -3,7 +3,6 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import * as passport from 'passport';
 import { ServiceAuthenticator } from '../server/model/server-types';
-import { Strategy } from 'passport-strategy';
 
 export interface PassportAuthenticatorOptions {
     authOptions?: passport.AuthenticateOptions;
@@ -13,7 +12,7 @@ export interface PassportAuthenticatorOptions {
 }
 
 export interface PassportAuthenticatorStrategy {
-    strategy: Strategy;
+    strategy: passport.Strategy;
     name: string;
 }
 
@@ -23,12 +22,12 @@ export class PassportAuthenticator implements ServiceAuthenticator {
 
     constructor(strategies: Array<PassportAuthenticatorStrategy>, options: PassportAuthenticatorOptions = {}) {
         this.options = options;
-        var strategyNames: Array<string> = [];
 
         strategies.forEach(strategy => {
-            strategyNames.push(strategy.name)
             passport.use(strategy.name, strategy.strategy);
         });
+
+        const strategyNames = strategies.map(x => x.name)
 
         this.authenticator = passport.authenticate(strategyNames, options.authOptions || {});
     }
