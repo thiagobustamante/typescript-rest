@@ -27,7 +27,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
             passport.use(strategy.name, strategy.strategy);
         });
 
-        const strategyNames = strategies.map(x => x.name)
+        const strategyNames = strategies.map(x => x.name);
 
         this.authenticator = passport.authenticate(strategyNames, options.authOptions || {});
     }
