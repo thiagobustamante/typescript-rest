@@ -253,7 +253,7 @@ export class ServiceInvoker {
     private downloadResToPromise(res: express.Response, value: DownloadResource) {
         this.debugger('Sending a resource to download. Path: %s', value.filePath);
         return new Promise((resolve, reject) => {
-            res.download(value.filePath, value.filePath, (err) => {
+            res.download(value.filePath, value.fileName || value.filePath, (err) => {
                 if (err) {
                     reject(err);
                 } else {
