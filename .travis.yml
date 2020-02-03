@@ -3,9 +3,9 @@ node_js:
 - '8'
 - '10'
 - '12'
-script: 
-  - npm run test:coverage
-  - codecov -f ./reports/coverage/*.json
+script:
+- npm run test:coverage
+- codecov -f ./reports/coverage/*.json
 jobs:
   include:
   - stage: npm release
@@ -16,7 +16,7 @@ jobs:
       email: thiago@cruxframework.org
       skip_cleanup: true
       api_key:
-        secure: JgJhhsQvA9+lsDX6Krvh6TT+9wES53akhuhMkntcwNO8YHL4Mkl7y3sqCLnR92ri+AuIsmm/FZ5hxClLEIKPDkObLn4AXpI1WP4cAuh1s6TyUjqgOII3gx3lV0tZhLqol2bD9fIp/x9gaONGQCRHTVgWDVFP611U86XJ7fZxyUtpIqVxVTTxFCTv0BkipMl/mjGrb3YquF2C0S6gyN6lXiBfsN0Chf+hogOvSRSnnK2ObhGcvKZ2IF4NYHTs1X4AD+iRsFVmYGxIY52YGWQDyICDheOgEJjQOWl1+ca3FPvKS6lQzYpkhpsCRAGa2lquWWQeUKh8b2buoKaQePNcQqowdOQGGHmBpirUbomnQlKPLqq3Jmc2stnp12YQh9JbSvVQkrYKM3V/j2plaPzbrWoSepzxfCmzy9LRl2kBhcnKiZdciXkIqwHyqXHQL9FSyxrDDHrkFIVJAQwFkX5rGvHB9x4PRbV+orJym+rj+kSLXSD0j3G0k6CcGyW4OzQr3yOCSETRiat05aX7V+77Bp33BMNxH8m8gKFHuSwvWfHaRpQngwqR1ziVZ4XTbe4lCF2wLR0h6JdR03JrSjhZgEpAjfwhKkWjAMBN1VUOJP5gTIGZF0k8oDPTH6OTOl9B6q0L5RsFsJs83tXehwPFtqQdfJ6mXcXked5o2rbB7SE=
+        secure: nZOxHv8kWg+f3RZF6xMY8J8y/qTuVzWWpYDVz6Gjp+CS6yZSpFyfrlEp9/VVahLvkCckTKtrYtnaJwRGwnwx2RA2aiMaYYXCqxYzrTkH6yQjc67poKfd1/BOq655LuitZ92hgD9dvHCtjoBxLpNU9flzT3Osu/Td0sHI73lEeaBFJnUkq0Ui5w1mjwYboWKUqs6Kmv7RoAQaeEGwroUMg/Jvn0yguxyj0j6MZ2SVLAcULA9NhGhel3cxZB3ESraAEe6jkLTrVmDZA5jYEpI2PujbDK3ExMcjujpRGaauqh6Zsg+lDs6BWEWwvn8qHOiB/IIS9dYaX75Mmrpq4Kfi7DGtUkmrFIbUcpWef7cECeTSK5/BVcgHednymPYG6vQWF7/7pg6EpCz/L5dTy9Kvtsg1KbFhxiCejN4D4Bt1wdocBQ8IMA0FE4eowbdJ4odOi5olVSV2zPP/V8HS8W5mwU/3JZhLe91aCfQgw8EtMNi8IrEmtKKqo7878O81BGaFYQ2tbBFctEHYiPeQ3c+RPoWDs/NmRJY3UhM4NbC3cZrfq4S4UGxfTN+g1zelbv5UBZyRGRK99H30Rt4AaCzkwyp+2mJCqgxA4WrdNzNp+jXsujDM0o0/9GGyuSDb3bGUYCkeLSVvwwavv1YacY/elaBfJPV+ZIDfBYbJpe7P54Y=
       on:
         tags: true
         repo: thiagobustamante/typescript-rest
