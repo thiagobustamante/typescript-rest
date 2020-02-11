@@ -21,13 +21,24 @@ const serverDebugger = debug('typescript-rest:server:build');
 export class Server {
 
     /**
+     * Makes the server immutable. Any configuration change request to the Server
+     * is ignored when immutable is true
+     * @param value true to make immutable
+     */
+    public static immutable(value: boolean) {
+        Server.locked = value;
+    }
+
+    /**
      * Create the routes for all classes decorated with our decorators
      */
     public static buildServices(router: express.Router, ...types: Array<any>) {
-        serverDebugger('Creating typescript-rest services handlers');
-        const serverContainer = ServerContainer.get();
-        serverContainer.router = router;
-        serverContainer.buildServices(types);
+        if (!Server.locked) {
+            serverDebugger('Creating typescript-rest services handlers');
+            const serverContainer = ServerContainer.get();
+            serverContainer.router = router;
+            serverContainer.buildServices(types);
+        }
     }
 
     /**
@@ -41,28 +52,30 @@ export class Server {
      * Load all services from the files that matches the patterns provided
      */
     public static loadServices(router: express.Router, patterns: string | Array<string>, baseDir?: string) {
-        serverDebugger('Loading typescript-rest services %j. BaseDir: %s', patterns, baseDir);
-        const importedTypes: Array<Function> = [];
-        const requireGlob = require('require-glob');
-        baseDir = baseDir || process.cwd();
-        const loadedModules: Array<any> = requireGlob.sync(patterns, {
-            cwd: baseDir
-        });
+        if (!Server.locked) {
+            serverDebugger('Loading typescript-rest services %j. BaseDir: %s', patterns, baseDir);
+            const importedTypes: Array<Function> = [];
+            const requireGlob = require('require-glob');
+            baseDir = baseDir || process.cwd();
+            const loadedModules: Array<any> = requireGlob.sync(patterns, {
+                cwd: baseDir
+            });
 
-        _.values(loadedModules).forEach(serviceModule => {
-            _.values(serviceModule)
-                .filter((service: Function) => typeof service === 'function')
-                .forEach((service: Function) => {
-                    importedTypes.push(service);
-                });
-        });
+            _.values(loadedModules).forEach(serviceModule => {
+                _.values(serviceModule)
+                    .filter((service: Function) => typeof service === 'function')
+                    .forEach((service: Function) => {
+                        importedTypes.push(service);
+                    });
+            });
 
-        try {
-            Server.buildServices(router, ...importedTypes);
-        } catch (e) {
-            serverDebugger('Error loading services for pattern: %j. Error: %o', patterns, e);
-            serverDebugger('ImportedTypes: %o', importedTypes);
-            throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
+            try {
+                Server.buildServices(router, ...importedTypes);
+            } catch (e) {
+                serverDebugger('Error loading services for pattern: %j. Error: %o', patterns, e);
+                serverDebugger('ImportedTypes: %o', importedTypes);
+                throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
+            }
         }
     }
 
@@ -83,15 +96,17 @@ export class Server {
      * If You plan to use a custom serviceFactory, You must ensure to call this method before any typescript-rest service declaration.
      */
     public static registerServiceFactory(serviceFactory: ServiceFactory | string) {
-        let factory: ServiceFactory;
-        if (typeof serviceFactory === 'string') {
-            factory = require(serviceFactory);
-        } else {
-            factory = serviceFactory as ServiceFactory;
-        }
+        if (!Server.locked) {
+            let factory: ServiceFactory;
+            if (typeof serviceFactory === 'string') {
+                factory = require(serviceFactory);
+            } else {
+                factory = serviceFactory as ServiceFactory;
+            }
 
-        serverDebugger('Registering a new serviceFactory');
-        ServerContainer.get().serviceFactory = factory;
+            serverDebugger('Registering a new serviceFactory');
+            ServerContainer.get().serviceFactory = factory;
+        }
     }
 
     /**
@@ -99,8 +114,10 @@ export class Server {
      * invocations occurs.
      */
     public static registerAuthenticator(authenticator: ServiceAuthenticator, name: string = 'default') {
-        serverDebugger('Registering a new authenticator with name %s', name);
-        ServerContainer.get().authenticator.set(name, authenticator);
+        if (!Server.locked) {
+            serverDebugger('Registering a new authenticator with name %s', name);
+            ServerContainer.get().authenticator.set(name, authenticator);
+        }
     }
 
     /**
@@ -110,31 +127,33 @@ export class Server {
      * @param es6 if true, import typescript-ioc/es6
      */
     public static useIoC(es6: boolean = false) {
-        const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
-        serverDebugger('Configuring a serviceFactory to use typescript-ioc to instantiate services. ES6: ', es6);
-        Server.registerServiceFactory({
-            create: (serviceClass) => {
-                return ioc.Container.get(serviceClass);
-            },
-            getTargetClass: (serviceClass: Function) => {
-                if (_.isArray(serviceClass)) {
-                    return null;
-                }
-                let typeConstructor: any = serviceClass;
-                if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
-                    return typeConstructor as FunctionConstructor;
-                }
-                typeConstructor = typeConstructor['__parent'];
-                while (typeConstructor) {
+        if (!Server.locked) {
+            const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
+            serverDebugger('Configuring a serviceFactory to use typescript-ioc to instantiate services. ES6: ', es6);
+            Server.registerServiceFactory({
+                create: (serviceClass) => {
+                    return ioc.Container.get(serviceClass);
+                },
+                getTargetClass: (serviceClass: Function) => {
+                    if (_.isArray(serviceClass)) {
+                        return null;
+                    }
+                    let typeConstructor: any = serviceClass;
                     if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
                         return typeConstructor as FunctionConstructor;
                     }
                     typeConstructor = typeConstructor['__parent'];
+                    while (typeConstructor) {
+                        if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
+                            return typeConstructor as FunctionConstructor;
+                        }
+                        typeConstructor = typeConstructor['__parent'];
+                    }
+                    serverDebugger('Can not identify the base Type for requested target: %o', serviceClass);
+                    throw TypeError('Can not identify the base Type for requested target');
                 }
-                serverDebugger('Can not identify the base Type for requested target: %o', serviceClass);
-                throw TypeError('Can not identify the base Type for requested target');
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -156,8 +175,10 @@ export class Server {
      * @param secret the secret used to sign
      */
     public static setCookiesSecret(secret: string) {
-        serverDebugger('Setting a new secret for cookies: %s', secret);
-        ServerContainer.get().cookiesSecret = secret;
+        if (!Server.locked) {
+            serverDebugger('Setting a new secret for cookies: %s', secret);
+            ServerContainer.get().cookiesSecret = secret;
+        }
     }
 
     /**
@@ -172,8 +193,10 @@ export class Server {
      * @param decoder The decoder function
      */
     public static setCookiesDecoder(decoder: (val: string) => string) {
-        serverDebugger('Setting a new secret decoder');
-        ServerContainer.get().cookiesDecoder = decoder;
+        if (!Server.locked) {
+            serverDebugger('Setting a new secret decoder');
+            ServerContainer.get().cookiesDecoder = decoder;
+        }
     }
 
     /**
@@ -181,8 +204,10 @@ export class Server {
      * @param dest Destination folder
      */
     public static setFileDest(dest: string) {
-        serverDebugger('Setting a new destination for files: %s', dest);
-        ServerContainer.get().fileDest = dest;
+        if (!Server.locked) {
+            serverDebugger('Setting a new destination for files: %s', dest);
+            ServerContainer.get().fileDest = dest;
+        }
     }
 
     /**
@@ -191,8 +216,10 @@ export class Server {
      */
     public static setFileFilter(filter: (req: Express.Request, file: Express.Multer.File,
         callback: (error: Error, acceptFile: boolean) => void) => void) {
-        serverDebugger('Setting a new filter for files');
-        ServerContainer.get().fileFilter = filter;
+        if (!Server.locked) {
+            serverDebugger('Setting a new filter for files');
+            ServerContainer.get().fileFilter = filter;
+        }
     }
 
     /**
@@ -200,8 +227,10 @@ export class Server {
      * @param limit The data limit
      */
     public static setFileLimits(limit: FileLimits) {
-        serverDebugger('Setting a new fileLimits: %j', limit);
-        ServerContainer.get().fileLimits = limit;
+        if (!Server.locked) {
+            serverDebugger('Setting a new fileLimits: %j', limit);
+            ServerContainer.get().fileLimits = limit;
+        }
     }
 
     /**
@@ -210,8 +239,10 @@ export class Server {
      * @param type The target type that needs to be converted
      */
     public static addParameterConverter(converter: ParameterConverter, type: Function): void {
-        serverDebugger('Adding a new parameter converter');
-        ServerContainer.get().paramConverters.set(type, converter);
+        if (!Server.locked) {
+            serverDebugger('Adding a new parameter converter');
+            ServerContainer.get().paramConverters.set(type, converter);
+        }
     }
 
     /**
@@ -219,8 +250,10 @@ export class Server {
      * @param type The target type that needs to be converted
      */
     public static removeParameterConverter(type: Function): void {
-        serverDebugger('Removing a parameter converter');
-        ServerContainer.get().paramConverters.delete(type);
+        if (!Server.locked) {
+            serverDebugger('Removing a parameter converter');
+            ServerContainer.get().paramConverters.delete(type);
+        }
     }
 
     /**
@@ -230,8 +263,10 @@ export class Server {
      * @param value - true to ignore next middlewares. 
      */
     public static ignoreNextMiddlewares(value: boolean) {
-        serverDebugger('Ignoring next middlewares: %b', value);
-        ServerContainer.get().ignoreNextMiddlewares = value;
+        if (!Server.locked) {
+            serverDebugger('Ignoring next middlewares: %b', value);
+            ServerContainer.get().ignoreNextMiddlewares = value;
+        }
     }
 
     /**
@@ -240,28 +275,32 @@ export class Server {
      * @param options Options for swagger endpoint
      */
     public static swagger(router: express.Router, options?: SwaggerOptions) {
-        const swaggerUi = require('swagger-ui-express');
-        options = Server.getOptions(options);
-        serverDebugger('Configuring open api documentation endpoints for options: %j', options);
+        if (!Server.locked) {
+            const swaggerUi = require('swagger-ui-express');
+            options = Server.getOptions(options);
+            serverDebugger('Configuring open api documentation endpoints for options: %j', options);
 
-        const swaggerDocument: any = Server.loadSwaggerDocument(options);
+            const swaggerDocument: any = Server.loadSwaggerDocument(options);
 
-        if (options.host) {
-            swaggerDocument.host = options.host;
+            if (options.host) {
+                swaggerDocument.host = options.host;
+            }
+            if (options.schemes) {
+                swaggerDocument.schemes = options.schemes;
+            }
+
+            router.get(path.posix.join('/', options.endpoint, 'json'), (req, res, next) => {
+                res.send(swaggerDocument);
+            });
+            router.get(path.posix.join('/', options.endpoint, 'yaml'), (req, res, next) => {
+                res.set('Content-Type', 'text/vnd.yaml');
+                res.send(YAML.stringify(swaggerDocument, 1000));
+            });
+            router.use(path.posix.join('/', options.endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, options.swaggerUiOptions));
         }
-        if (options.schemes) {
-            swaggerDocument.schemes = options.schemes;
-        }
-
-        router.get(path.posix.join('/', options.endpoint, 'json'), (req, res, next) => {
-            res.send(swaggerDocument);
-        });
-        router.get(path.posix.join('/', options.endpoint, 'yaml'), (req, res, next) => {
-            res.set('Content-Type', 'text/vnd.yaml');
-            res.send(YAML.stringify(swaggerDocument, 1000));
-        });
-        router.use(path.posix.join('/', options.endpoint), swaggerUi.serve, swaggerUi.setup(swaggerDocument, options.swaggerUiOptions));
     }
+
+    private static locked = false;
 
     private static loadSwaggerDocument(options: SwaggerOptions) {
         let swaggerDocument: any;

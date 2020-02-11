@@ -29,6 +29,7 @@ describe('Server', () => {
 
     afterEach(() => {
         serverContainerStub.get.restore();
+        Server.immutable(false);
     });
 
     it('should be able to define a custom cookie secret', async () => {
@@ -78,4 +79,21 @@ describe('Server', () => {
         expect(serverContainerStub.get).to.have.been.calledOnce;
         expect(serverContainerStub.fileLimits).to.be.equal(limits);
     });
+
+
+    it('should ignore change requests when immutable', async () => {
+        Server.immutable(true);
+        Server.setCookiesSecret(null);
+        Server.registerAuthenticator(null);
+        Server.registerServiceFactory('test');
+        Server.setCookiesDecoder(null);
+        Server.setFileDest('test');
+        Server.setFileFilter(null);
+        Server.setFileLimits(null);
+        Server.addParameterConverter(null, null);
+        Server.removeParameterConverter(null);
+        Server.ignoreNextMiddlewares(false);
+        expect(serverContainerStub.get).to.not.have.been.called;
+    });
+
 });
