@@ -94,6 +94,7 @@ describe('Server', () => {
         Server.removeParameterConverter(null);
         Server.ignoreNextMiddlewares(false);
         expect(serverContainerStub.get).to.not.have.been.called;
+        expect(Server.isImmutable()).to.be.true;
     });
 
 });

@@ -19,16 +19,6 @@ const serverDebugger = debug('typescript-rest:server:build');
  * The Http server main class.
  */
 export class Server {
-
-    /**
-     * Makes the server immutable. Any configuration change request to the Server
-     * is ignored when immutable is true
-     * @param value true to make immutable
-     */
-    public static immutable(value: boolean) {
-        Server.locked = value;
-    }
-
     /**
      * Create the routes for all classes decorated with our decorators
      */
@@ -77,6 +67,30 @@ export class Server {
                 throw new TypeError(`Error loading services for pattern: ${JSON.stringify(patterns)}. Error: ${e.message}`);
             }
         }
+    }
+
+    /**
+     * Makes the server immutable. Any configuration change request to the Server
+     * is ignored when immutable is true
+     * @param value true to make immutable
+     */
+    public static immutable(value: boolean) {
+        Server.locked = value;
+    }
+
+    /**
+     * Return true if the server is immutable. Any configuration change request to the Server
+     * is ignored when immutable is true
+     */
+    public static isImmutable() {
+        return Server.locked;
+    }
+
+    /**
+     * Retrieve the express router that serves the rest endpoints
+     */
+    public static server() {
+        return ServerContainer.get().router;
     }
 
     /**
