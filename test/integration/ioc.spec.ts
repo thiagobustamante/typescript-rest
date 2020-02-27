@@ -5,16 +5,17 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
-import { AutoWired, Inject } from 'typescript-ioc';
+import { Inject, OnlyInstantiableByContainer } from 'typescript-ioc';
+import ServiceFactoryIoC from 'typescript-rest-ioc';
 import { DefaultServiceFactory, GET, Path, Server } from '../../src/typescript-rest';
 const expect = chai.expect;
 
-Server.useIoC();
+Server.registerServiceFactory(ServiceFactoryIoC);
 
-@AutoWired
+@OnlyInstantiableByContainer
 export class InjectableObject { }
 
-@AutoWired
+@OnlyInstantiableByContainer
 @Path('ioctest')
 export class IoCService {
     @Inject
@@ -27,7 +28,6 @@ export class IoCService {
 }
 
 @Path('ioctest2')
-@AutoWired
 export class IoCService2 {
     @Inject
     private injectedObject: InjectableObject;
@@ -39,7 +39,7 @@ export class IoCService2 {
 }
 
 @Path('ioctest3')
-@AutoWired
+@OnlyInstantiableByContainer
 export class IoCService3 {
     private injectedObject: InjectableObject;
 
@@ -54,7 +54,7 @@ export class IoCService3 {
 }
 
 @Path('ioctest4')
-@AutoWired
+@OnlyInstantiableByContainer
 export class IoCService4 extends IoCService2 {
 }
 

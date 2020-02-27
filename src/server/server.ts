@@ -135,42 +135,6 @@ export class Server {
     }
 
     /**
-     * Configure the Server to use [typescript-ioc](https://github.com/thiagobustamante/typescript-ioc)
-     * to instantiate the service objects.
-     * If You plan to use IoC, You must ensure to call this method before any typescript-rest service declaration.
-     * @param es6 if true, import typescript-ioc/es6
-     */
-    public static useIoC(es6: boolean = false) {
-        if (!Server.locked) {
-            const ioc = require(es6 ? 'typescript-ioc/es6' : 'typescript-ioc');
-            serverDebugger('Configuring a serviceFactory to use typescript-ioc to instantiate services. ES6: ', es6);
-            Server.registerServiceFactory({
-                create: (serviceClass) => {
-                    return ioc.Container.get(serviceClass);
-                },
-                getTargetClass: (serviceClass: Function) => {
-                    if (_.isArray(serviceClass)) {
-                        return null;
-                    }
-                    let typeConstructor: any = serviceClass;
-                    if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
-                        return typeConstructor as FunctionConstructor;
-                    }
-                    typeConstructor = typeConstructor['__parent'];
-                    while (typeConstructor) {
-                        if (typeConstructor['name'] && typeConstructor['name'] !== 'ioc_wrapper') {
-                            return typeConstructor as FunctionConstructor;
-                        }
-                        typeConstructor = typeConstructor['__parent'];
-                    }
-                    serverDebugger('Can not identify the base Type for requested target: %o', serviceClass);
-                    throw TypeError('Can not identify the base Type for requested target');
-                }
-            });
-        }
-    }
-
-    /**
      * Return the set oh HTTP verbs configured for the given path
      * @param servicePath The path to search HTTP verbs
      */

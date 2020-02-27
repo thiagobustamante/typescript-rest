@@ -40,36 +40,6 @@ describe('ServerConfig', () => {
         serverStub.useIoC.restore();
     });
 
-    it('should be able to search for config files', async () => {
-        const config = {
-            es6: true,
-            useIoC: true
-        };
-
-        fsStub.existsSync.onCall(0).returns(false);
-        fsStub.existsSync.onCall(1).returns(true);
-        fsStub.existsSync.onCall(2).returns(true);
-        fsStub.readJSONSync.returns(config);
-        ServerConfig.configure();
-
-        expect(serverStub.useIoC).to.have.been.calledOnceWithExactly(config.es6);
-    });
-
-    it('should not use ioc if useIoC is false', async () => {
-        const config = {
-            useIoC: false
-        };
-
-        fsStub.existsSync.onCall(0).returns(false);
-        fsStub.existsSync.onCall(1).returns(true);
-        fsStub.existsSync.onCall(2).returns(true);
-        fsStub.readJSONSync.returns(config);
-        ServerConfig.configure();
-
-        expect(serverStub.useIoC).to.not.have.been.called;
-        expect(serverStub.registerServiceFactory).to.not.have.been.called;
-    });
-
     it('should use a custom service factory if configured', async () => {
         const config = {
             serviceFactory: 'myCustomFactory'

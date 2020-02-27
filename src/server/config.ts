@@ -1,5 +1,3 @@
-'use strict';
-
 import * as debug from 'debug';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -14,9 +12,7 @@ export class ServerConfig {
             if (CONFIG_FILE && fs.existsSync(CONFIG_FILE)) {
                 const config = fs.readJSONSync(CONFIG_FILE);
                 serverDebugger('rest.config file found: %j', config);
-                if (config.useIoC) {
-                    Server.useIoC(config.es6);
-                } else if (config.serviceFactory) {
+                if (config.serviceFactory) {
                     if (config.serviceFactory.indexOf('.') === 0) {
                         config.serviceFactory = path.join(process.cwd(), config.serviceFactory);
                     }
