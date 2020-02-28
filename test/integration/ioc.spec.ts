@@ -6,11 +6,10 @@ import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
 import { Inject, OnlyInstantiableByContainer } from 'typescript-ioc';
-import ServiceFactoryIoC from 'typescript-rest-ioc';
 import { DefaultServiceFactory, GET, Path, Server } from '../../src/typescript-rest';
 const expect = chai.expect;
 
-Server.registerServiceFactory(ServiceFactoryIoC);
+Server.registerServiceFactory('typescript-rest-ioc');
 
 @OnlyInstantiableByContainer
 export class InjectableObject { }
@@ -28,6 +27,7 @@ export class IoCService {
 }
 
 @Path('ioctest2')
+@OnlyInstantiableByContainer
 export class IoCService2 {
     @Inject
     private injectedObject: InjectableObject;

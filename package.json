@@ -1,6 +1,6 @@
 {
   "name": "typescript-rest",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "keywords": [
@@ -100,7 +100,7 @@
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.17.0",
     "typescript": "^3.7.5",
-    "typescript-ioc": "^3.0.1",
+    "typescript-ioc": "^3.0.3",
     "typescript-rest-ioc": "^1.0.0"
   },
   "repository": {

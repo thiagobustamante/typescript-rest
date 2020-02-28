@@ -113,7 +113,8 @@ export class Server {
         if (!Server.locked) {
             let factory: ServiceFactory;
             if (typeof serviceFactory === 'string') {
-                factory = require(serviceFactory);
+                const mod = require(serviceFactory);
+                factory = mod.default ? mod.default : mod;
             } else {
                 factory = serviceFactory as ServiceFactory;
             }
