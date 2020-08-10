@@ -69,7 +69,7 @@ export class ServiceInvoker {
         if (this.debugger.enabled) {
             this.debugger('Invoking service method <%s> with params: %j', this.serviceMethod.name, args);
         }
-        const result = toCall.apply(serviceObject, args);
+        const result = await toCall.apply(serviceObject, args);
         if (this.postProcessors.length) {
             await this.runPostProcessors(context);
         }
