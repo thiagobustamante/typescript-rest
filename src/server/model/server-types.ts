@@ -90,7 +90,8 @@ export interface ServiceFactory {
     /**
      * Return the type used to handle requests to the target service.
      * By default, returns the serviceClass received, but you can use this
-     * to implement IoC integrations.
+     * to implement IoC integrations, once some frameworks like typescript-ioc or
+     * Inversify can override constructors for injectable types.
      */
     getTargetClass: (serviceClass: Function) => FunctionConstructor;
 }
