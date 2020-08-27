@@ -352,7 +352,7 @@ export class ServerContainer {
 
     private buildAuthMiddleware(authenticator: ServiceAuthenticator, roles: Array<string>): express.RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
-            const requestRoles = authenticator.getRoles(req);
+            const requestRoles = authenticator.getRoles(req, res);
             if (this.debugger.runtime.enabled) {
                 this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
             }
