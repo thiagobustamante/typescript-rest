@@ -80,6 +80,8 @@ export class ParameterProcessor {
                 return paramValue === undefined ? paramValue : parseFloat(paramValue as string);
             case 'Boolean':
                 return paramValue === undefined ? paramValue : paramValue === 'true' || paramValue === true;
+            case 'Array':
+                return paramValue === undefined ? paramValue : [].concat(paramValue);
             default:
                 let converter = ServerContainer.get().paramConverters.get(paramType);
                 if (!converter) {
