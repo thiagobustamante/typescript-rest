@@ -3,7 +3,7 @@
 import * as _ from 'lodash';
 import 'reflect-metadata';
 import { ServiceClass, ServiceMethod } from '../server/model/metadata';
-import { ParserType, ServiceProcessor } from '../server/model/server-types';
+import { ParserType, ServicePostProcessor, ServicePreProcessor } from '../server/model/server-types';
 import { ServerContainer } from '../server/server-container';
 
 /**
@@ -108,7 +108,7 @@ export function Security(roles?: string | Array<string>, name?: string) {
  * }
  * ```
  */
-export function PreProcessor(preprocessor: ServiceProcessor) {
+export function PreProcessor(preprocessor: ServicePreProcessor) {
     return new ProcessorServiceDecorator('PreProcessor')
         .withArrayProperty('preProcessors', preprocessor, true)
         .createDecorator();
@@ -140,7 +140,7 @@ export function PreProcessor(preprocessor: ServiceProcessor) {
  * }
  * ```
  */
-export function PostProcessor(postprocessor: ServiceProcessor) {
+export function PostProcessor(postprocessor: ServicePostProcessor) {
     return new ProcessorServiceDecorator('PostProcessor')
         .withArrayProperty('postProcessors', postprocessor, true)
         .createDecorator();

@@ -5,9 +5,11 @@ import * as express from 'express';
 import * as _ from 'lodash';
 import 'mocha';
 import * as request from 'request';
+import * as sinon from 'sinon';
 import { Path, POST, PostProcessor, Server } from '../../src/typescript-rest';
 
 const expect = chai.expect;
+const postprocessorSpy = sinon.spy();
 
 @Path('postprocessor')
 @PostProcessor(postprocessor1)
@@ -15,6 +17,7 @@ export class PostProcessedService {
     @Path('test')
     @POST
     @PostProcessor(postprocessor2)
+    @PostProcessor(postprocessorSpy)
     public test() {
         return 'OK';
     }
@@ -62,6 +65,15 @@ describe('Postprocessor Tests', () => {
             }, (error, response, body) => {
                 expect(response.headers['x-postprocessor1']).to.eq('1');
                 expect(response.headers['x-postprocessor2']).to.eq('1');
+                done();
+            });
+        });
+        it('should pass the controller result to the processor', (done) => {
+            request.post({
+                headers: { 'content-type': 'application/json' },
+                url: 'http://localhost:5674/postprocessor/test'
+            }, (error, response, body) => {
+                expect(postprocessorSpy).to.be.calledWith(sinon.match({}), sinon.match({}) , 'OK');
                 done();
             });
         });
