@@ -105,8 +105,8 @@ describe('Decorators', () => {
             serviceDecorators.Security(role)(TestService);
 
             expect(serverStub.registerServiceClass).to.have.been.calledOnceWithExactly(TestService);
-            expect(serviceClass.roles).to.have.length(1);
-            expect(serviceClass.roles).to.includes(role);
+            expect(serviceClass.authenticator.default).to.have.length(1);
+            expect(serviceClass.authenticator.default).to.includes(role);
         });
 
         it('should add a security role to methods of a class', async () => {
@@ -115,8 +115,8 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(1);
-            expect(serviceMethod.roles).to.includes(role);
+            expect(serviceMethod.authenticator.default).to.have.length(1);
+            expect(serviceMethod.authenticator.default).to.includes(role);
         });
 
         it('should add a security set of roles to methods of a class', async () => {
@@ -125,8 +125,8 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(2);
-            expect(serviceMethod.roles).to.include.members(roles);
+            expect(serviceMethod.authenticator.default).to.have.length(2);
+            expect(serviceMethod.authenticator.default).to.include.members(roles);
         });
 
         it('should add a security validation to accept any role when empty is received', async () => {
@@ -135,8 +135,8 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(1);
-            expect(serviceMethod.roles).to.include.members(['*']);
+            expect(serviceMethod.authenticator.default).to.have.length(1);
+            expect(serviceMethod.authenticator.default).to.include.members(['*']);
         });
 
         it('should add a security validation to accept any role when undefined is received', async () => {
@@ -145,8 +145,8 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(1);
-            expect(serviceMethod.roles).to.include.members(['*']);
+            expect(serviceMethod.authenticator.default).to.have.length(1);
+            expect(serviceMethod.authenticator.default).to.include.members(['*']);
         });
 
         it('should set the default authenticator if no name is provided', async () => {
@@ -155,9 +155,9 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(1);
-            expect(serviceMethod.roles).to.includes(role);
-            expect(serviceMethod.authenticator).to.be.equals('default');
+            expect(serviceMethod.authenticator.default).to.have.length(1);
+            expect(serviceMethod.authenticator.default).to.includes(role);
+            expect(Object.keys(serviceMethod.authenticator)).to.deep.equals(['default']);
         });
 
         it('should set the authenticator name, when name is provided', async () => {
@@ -167,9 +167,28 @@ describe('Decorators', () => {
                 Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
 
             expect(serverStub.registerServiceMethod).to.have.been.calledOnce;
-            expect(serviceMethod.roles).to.have.length(1);
-            expect(serviceMethod.roles).to.includes(role);
-            expect(serviceMethod.authenticator).to.be.equals(name);
+            expect(serviceMethod.authenticator[name]).to.have.length(1);
+            expect(serviceMethod.authenticator[name]).to.includes(role);
+            expect(Object.keys(serviceMethod.authenticator)).to.deep.equals([name]);
+        });
+
+        it('should set multiple authenticator names', async () => {
+            const role1: string = 'test-role-1';
+            const role2: string = 'test-role-2';
+            const name1: string = 'authenticator-name-1';
+            const name2: string = 'authenticator-name-2';
+            serviceDecorators.Security(role1, name1)(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+            serviceDecorators.Security(role2, name2)(TestService.prototype, 'test',
+                Object.getOwnPropertyDescriptor(TestService.prototype, 'test'));
+
+            expect(serverStub.registerServiceMethod).to.have.been.calledTwice;
+            expect(serviceMethod.authenticator[name1]).to.have.length(1);
+            expect(serviceMethod.authenticator[name2]).to.have.length(1);
+            expect(serviceMethod.authenticator[name1]).to.includes(role1);
+            expect(serviceMethod.authenticator[name2]).to.includes(role2);
+            expect(Object.keys(serviceMethod.authenticator)).to.have.length(2);
+            expect(Object.keys(serviceMethod.authenticator)).to.deep.equals([name1, name2]);
         });
 
         it('should throw an error if misused', async () => {
