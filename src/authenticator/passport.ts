@@ -27,7 +27,7 @@ export class PassportAuthenticator implements ServiceAuthenticator {
         return this.authenticator;
     }
 
-    public getRoles(req: express.Request): Array<string> {
+    public async getRoles(req: express.Request): Promise<Array<string>> {
         const roleKey = this.options.rolesKey || 'roles';
         return _.castArray(_.get(req.user, roleKey, []));
     }

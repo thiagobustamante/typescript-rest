@@ -103,7 +103,7 @@ export interface ServiceAuthenticator {
     /**
      * Get the user list of roles.
      */
-    getRoles: (req: express.Request) => Array<string>;
+    getRoles: (req: express.Request) => Promise<Array<string>>;
     /**
      * Initialize the authenticator
      */

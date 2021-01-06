@@ -354,16 +354,19 @@ export class ServerContainer {
     }
 
     private buildAuthMiddleware(authenticator: ServiceAuthenticator, roles: Array<string>): express.RequestHandler {
-        return (req: Request, res: Response, next: NextFunction) => {
-            const requestRoles = authenticator.getRoles(req);
-            if (this.debugger.runtime.enabled) {
-                this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
-            }
-            if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
-                next();
-            }
-            else {
-                throw new Errors.ForbiddenError();
+        return async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const requestRoles = await authenticator.getRoles(req);
+                if (this.debugger.runtime.enabled) {
+                    this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
+                }
+                if (requestRoles.some((role: string) => roles.indexOf(role) >= 0)) {
+                    next();
+                } else {
+                    throw new Errors.ForbiddenError();
+                }
+            } catch (err) {
+                next(err);
             }
         };
     }
