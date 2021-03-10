@@ -38,7 +38,7 @@ export class ParameterProcessor {
         const parameterMapper: Map<ParamType, ParameterContextMapper> = new Map();
 
         parameterMapper.set(ParamType.path, (context, property) => this.convertType(context.request.params[property.name], property.propertyType));
-        parameterMapper.set(ParamType.query, (context, property) => this.convertType(context.request.query[property.name], property.propertyType));
+        parameterMapper.set(ParamType.query, (context, property) => this.convertType(context.request.query[property.name] as string, property.propertyType));
         parameterMapper.set(ParamType.header, (context, property) => this.convertType(context.request.header(property.name), property.propertyType));
         parameterMapper.set(ParamType.cookie, (context, property) => this.convertType(context.request.cookies[property.name], property.propertyType));
         parameterMapper.set(ParamType.body, (context, property) => this.convertType(context.request.body, property.propertyType));

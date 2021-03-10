@@ -256,7 +256,7 @@ export class ServiceInvoker {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve();
+                    resolve(undefined);
                 }
             });
         });

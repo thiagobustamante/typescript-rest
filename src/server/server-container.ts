@@ -326,17 +326,20 @@ export class ServerContainer {
 
     private buildSecurityMiddlewares(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
         const result: Array<express.RequestHandler> = new Array<express.RequestHandler>();
-        let roles: Array<string> = _.compact(_.union(serviceMethod.roles, serviceClass.roles));
-        const authenticatorName: string = serviceMethod.authenticator || serviceClass.authenticator;
-        if (this.authenticator && authenticatorName && roles.length) {
-            this.debugger.build('Registering an authenticator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
-            const authenticator = this.getAuthenticator(authenticatorName);
-            result.push(authenticator.getMiddleware());
-            roles = roles.filter((role) => role !== '*');
-            if (roles.length) {
-                this.debugger.build('Registering a role validator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
-                this.debugger.build('Roles: <%j>.', roles);
-                result.push(this.buildAuthMiddleware(authenticator, roles));
+        const authenticatorMap: Record<string, Array<string>> | undefined = serviceMethod.authenticator || serviceClass.authenticator;
+        if (this.authenticator && authenticatorMap) {
+            const authenticatorNames: Array<string> = Object.keys(authenticatorMap);
+            for (const authenticatorName of authenticatorNames) {
+                let roles: Array<string> = authenticatorMap[authenticatorName];
+                this.debugger.build('Registering an authenticator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
+                const authenticator = this.getAuthenticator(authenticatorName);
+                result.push(authenticator.getMiddleware());
+                roles = roles.filter((role) => role !== '*');
+                if (roles.length) {
+                    this.debugger.build('Registering a role validator middleware <%s> for method <%s>.', authenticatorName, serviceMethod.name);
+                    this.debugger.build('Roles: <%j>.', roles);
+                    result.push(this.buildAuthMiddleware(authenticator, roles));
+                }
             }
         }
 
@@ -352,7 +355,7 @@ export class ServerContainer {
 
     private buildAuthMiddleware(authenticator: ServiceAuthenticator, roles: Array<string>): express.RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
-            const requestRoles = authenticator.getRoles(req);
+            const requestRoles = authenticator.getRoles(req, res);
             if (this.debugger.runtime.enabled) {
                 this.debugger.runtime('Validating authentication roles: <%j>.', requestRoles);
             }

@@ -76,9 +76,8 @@ export function Path(path: string) {
  */
 export function Security(roles?: string | Array<string>, name?: string) {
     roles = _.castArray(roles || '*');
-    return new ServiceDecorator('Security')
-        .withProperty('roles', roles)
-        .withProperty('authenticator', name || 'default')
+    return new SecurityServiceDecorator('Security')
+        .withObjectProperty('authenticator', name || 'default', roles)
         .createDecorator();
 }
 
@@ -335,6 +334,24 @@ class ServiceDecorator {
         this.properties.forEach(property => {
             property.process(serviceMethod);
         });
+    }
+}
+
+class SecurityServiceDecorator extends ServiceDecorator {
+    public withObjectProperty(property: string, subtext: string, value: any, required: boolean = false) {
+        this.properties.push({
+            checkRequired: () => required && !value,
+            process: (target: any) => {
+                if (!target[property]) {
+                    target[property] = {};
+                }
+                target[property][subtext] = value;
+            },
+            property: property,
+            required: required,
+            value: value
+        });
+        return this;
     }
 }
 

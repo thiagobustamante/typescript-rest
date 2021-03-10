@@ -1,0 +1,8 @@
+exit: true
+bail: true
+timeout: 25000
+full-trace: true
+require: 
+  - ts-node/register
+  - source-map-support/register
+spec: test/integration/**/*.spec.ts
