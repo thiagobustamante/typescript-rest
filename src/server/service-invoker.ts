@@ -6,15 +6,15 @@ import * as _ from 'lodash';
 import { Errors } from '../typescript-rest';
 import { ServiceClass, ServiceMethod, ServiceProperty } from './model/metadata';
 import { DownloadBinaryData, DownloadResource, NoResponse } from './model/return-types';
-import { HttpMethod, ReferencedResource, ServiceContext, ServiceProcessor } from './model/server-types';
+import { HttpMethod, ReferencedResource, ServiceContext, ServicePostProcessor, ServicePreProcessor } from './model/server-types';
 import { ParameterProcessor } from './parameter-processor';
 import { ServerContainer } from './server-container';
 
 export class ServiceInvoker {
     private serviceClass: ServiceClass;
     private serviceMethod: ServiceMethod;
-    private preProcessors: Array<ServiceProcessor>;
-    private postProcessors: Array<ServiceProcessor>;
+    private preProcessors: Array<ServicePreProcessor>;
+    private postProcessors: Array<ServicePostProcessor>;
     private debugger = debug('typescript-rest:service-invoker:runtime');
 
     constructor(serviceClass: ServiceClass, serviceMethod: ServiceMethod) {
@@ -50,10 +50,10 @@ export class ServiceInvoker {
         }
     }
 
-    private async runPostProcessors(context: ServiceContext): Promise<void> {
+    private async runPostProcessors(context: ServiceContext, result: any): Promise<void> {
         this.debugger('Running postprocessors');
         for (const processor of this.postProcessors) {
-            await Promise.resolve(processor(context.request, context.response));
+            await Promise.resolve(processor(context.request, context.response, result));
         }
     }
 
@@ -71,7 +71,7 @@ export class ServiceInvoker {
         }
         const result = await toCall.apply(serviceObject, args);
         if (this.postProcessors.length) {
-            await this.runPostProcessors(context);
+            await this.runPostProcessors(context, result);
         }
         this.processResponseHeaders(context);
         await this.sendValue(result, context);
