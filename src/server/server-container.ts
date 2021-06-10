@@ -46,7 +46,7 @@ export class ServerContainer {
         build: debug('typescript-rest:server-container:build'),
         runtime: debug('typescript-rest:server-container:runtime')
     };
-    private upload: multer.Instance;
+    private upload: multer.Multer;
     private serverClasses: Map<Function, ServiceClass> = new Map<Function, ServiceClass>();
     private paths: Map<string, Set<HttpMethod>> = new Map<string, Set<HttpMethod>>();
     private pathsResolved: boolean = false;
@@ -289,7 +289,7 @@ export class ServerContainer {
         });
     }
 
-    private getUploader(): multer.Instance {
+    private getUploader(): multer.Multer {
         if (!this.upload) {
             const options: multer.Options = {};
             if (this.fileDest) {
