@@ -1,34 +1,19 @@
-'use strict';
+jest.mock('../../src/server/server-container');
 
-import * as chai from 'chai';
 import * as _ from 'lodash';
-import 'mocha';
-import * as proxyquire from 'proxyquire';
-import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
+import { Server } from '../../src/server/server';
+import { ServerContainer } from '../../src/server/server-container';
 
-chai.use(sinonChai);
-const expect = chai.expect;
+const server: any = {};
+const get = ServerContainer.get as jest.Mock;
 
-// tslint:disable:no-unused-expression
 describe('Server', () => {
-    let serverContainerStub: sinon.SinonStubbedInstance<any>;
-    let Server: any;
-
-    beforeEach(() => {
-        serverContainerStub = sinon.stub({
-            get: () => this,
-        });
-
-        serverContainerStub.get.returns(serverContainerStub);
-
-        Server = proxyquire('../../src/server/server', {
-            './server-container': { ServerContainer: serverContainerStub }
-        }).Server;
+    beforeAll(() => {
+        get.mockReturnValue(server);
     });
 
     afterEach(() => {
-        serverContainerStub.get.restore();
+        get.mockClear();
         Server.immutable(false);
     });
 
@@ -36,32 +21,32 @@ describe('Server', () => {
         const secret = 'my-secret';
         Server.setCookiesSecret(secret);
 
-        expect(serverContainerStub.get).to.have.been.calledOnce;
-        expect(serverContainerStub.cookiesSecret).to.be.equal(secret);
+        expect(get).toBeCalledTimes(1);
+        expect(server.cookiesSecret).toEqual(secret);
     });
 
     it('should be able to define a custom cookie decoder', async () => {
-        const decoder = sinon.stub();
+        const decoder = jest.fn();
         Server.setCookiesDecoder(decoder);
 
-        expect(serverContainerStub.get).to.have.been.calledOnce;
-        expect(serverContainerStub.cookiesDecoder).to.be.equal(decoder);
+        expect(get).toBeCalledTimes(1);
+        expect(server.cookiesDecoder).toEqual(decoder);
     });
 
     it('should be able to define a custom destination folder for uploaded files', async () => {
         const target = './target-dir';
         Server.setFileDest(target);
 
-        expect(serverContainerStub.get).to.have.been.calledOnce;
-        expect(serverContainerStub.fileDest).to.be.equal(target);
+        expect(get).toBeCalledTimes(1);
+        expect(server.fileDest).toEqual(target);
     });
 
     it('should be able to define a custom filter for uploaded files', async () => {
-        const filter = sinon.stub();
+        const filter = jest.fn();
         Server.setFileFilter(filter);
 
-        expect(serverContainerStub.get).to.have.been.calledOnce;
-        expect(serverContainerStub.fileFilter).to.be.equal(filter);
+        expect(get).toBeCalledTimes(1);
+        expect(server.fileFilter).toEqual(filter);
     });
 
     it('should be able to define a custom limit for uploaded files', async () => {
@@ -76,8 +61,8 @@ describe('Server', () => {
         };
         Server.setFileLimits(limits);
 
-        expect(serverContainerStub.get).to.have.been.calledOnce;
-        expect(serverContainerStub.fileLimits).to.be.equal(limits);
+        expect(get).toBeCalledTimes(1);
+        expect(server.fileLimits).toEqual(limits);
     });
 
 
@@ -93,8 +78,8 @@ describe('Server', () => {
         Server.addParameterConverter(null, null);
         Server.removeParameterConverter(null);
         Server.ignoreNextMiddlewares(false);
-        expect(serverContainerStub.get).to.not.have.been.called;
-        expect(Server.isImmutable()).to.be.true;
+        expect(get).toBeCalledTimes(0);
+        expect(Server.isImmutable()).toBeTruthy();
     });
 
 });

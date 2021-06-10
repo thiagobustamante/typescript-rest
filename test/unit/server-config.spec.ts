@@ -1,43 +1,21 @@
-'use strict';
+jest.mock('fs-extra');
+jest.mock('../../src/server/server');
 
-import * as chai from 'chai';
 import * as _ from 'lodash';
-import 'mocha';
 import * as path from 'path';
-import * as proxyquire from 'proxyquire';
-import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
+import { ServerConfig } from '../../src/server/config';
+import { Server } from '../../src/server/server';
+import * as fs from 'fs-extra';
 
-chai.use(sinonChai);
-const expect = chai.expect;
+const registerServiceFactory = Server.registerServiceFactory as jest.Mock;
+const existsSync = fs.existsSync as jest.Mock;
+const readJSONSync = fs.readJSONSync as jest.Mock;
 
-// tslint:disable:no-unused-expression
 describe('ServerConfig', () => {
-    let fsStub: sinon.SinonStubbedInstance<any>;
-    let serverStub: sinon.SinonStubbedInstance<any>;
-    let ServerConfig: any;
-
-    beforeEach(() => {
-        fsStub = sinon.stub({
-            existsSync: (file: string) => true,
-            readJSONSync: (file: string) => this
-        });
-        serverStub = sinon.stub({
-            registerServiceFactory: (serviceFactory: any) => this,
-            useIoC: (es6: boolean) => true
-        });
-
-        ServerConfig = proxyquire('../../src/server/config', {
-            './server': { Server: serverStub },
-            'fs-extra': fsStub
-        }).ServerConfig;
-    });
-
     afterEach(() => {
-        fsStub.existsSync.restore();
-        fsStub.readJSONSync.restore();
-        serverStub.registerServiceFactory.restore();
-        serverStub.useIoC.restore();
+        existsSync.mockClear();
+        readJSONSync.mockClear();
+        registerServiceFactory.mockClear();
     });
 
     it('should use a custom service factory if configured', async () => {
@@ -45,14 +23,14 @@ describe('ServerConfig', () => {
             serviceFactory: 'myCustomFactory'
         };
 
-        fsStub.existsSync.onCall(0).returns(false);
-        fsStub.existsSync.onCall(1).returns(true);
-        fsStub.existsSync.onCall(2).returns(true);
-        fsStub.readJSONSync.returns(config);
+        existsSync.mockReturnValueOnce(false);
+        existsSync.mockReturnValueOnce(true);
+        existsSync.mockReturnValueOnce(true);
+        readJSONSync.mockReturnValue(config);
         ServerConfig.configure();
 
-        expect(serverStub.useIoC).to.not.have.been.called;
-        expect(serverStub.registerServiceFactory).to.have.been.calledOnceWithExactly(config.serviceFactory);
+        expect(registerServiceFactory).toBeCalledWith(config.serviceFactory);
+        expect(registerServiceFactory).toBeCalledTimes(1);
     });
 
     it('should use a custom service factory configured with relative path', async () => {
@@ -61,28 +39,27 @@ describe('ServerConfig', () => {
         };
         const expectedServicePath = path.join(process.cwd(), config.serviceFactory);
 
-        fsStub.existsSync.onCall(0).returns(false);
-        fsStub.existsSync.onCall(1).returns(true);
-        fsStub.existsSync.onCall(2).returns(true);
-        fsStub.readJSONSync.returns(config);
+        existsSync.mockReturnValueOnce(false);
+        existsSync.mockReturnValueOnce(true);
+        existsSync.mockReturnValueOnce(true);
+        readJSONSync.mockReturnValue(config);
         ServerConfig.configure();
 
-        expect(serverStub.useIoC).to.not.have.been.called;
-        expect(serverStub.registerServiceFactory).to.have.been.calledOnceWithExactly(expectedServicePath);
+        expect(registerServiceFactory).toBeCalledWith(expectedServicePath);
+        expect(registerServiceFactory).toBeCalledTimes(1);
     });
 
     it('should not use ioc if an error occur while searching for config file', async () => {
-        const consoleStub = sinon.stub(console, 'error');
+        const consoleError = jest.spyOn(console, "error");
         try {
             const error = new Error("Some error");
-            fsStub.existsSync.throws(error);
+            existsSync.mockImplementation(() => { throw error; });
             ServerConfig.configure();
 
-            expect(serverStub.useIoC).to.not.have.been.called;
-            expect(serverStub.registerServiceFactory).to.not.have.been.called;
-            expect(consoleStub).to.have.been.calledOnceWithExactly(error);
+            expect(registerServiceFactory).toBeCalledTimes(0);
+            expect(consoleError).toBeCalledWith(error);
         } finally {
-            consoleStub.restore();
+            consoleError.mockReset();
         }
     });
 });

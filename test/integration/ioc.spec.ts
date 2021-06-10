@@ -1,13 +1,8 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { Inject, OnlyInstantiableByContainer } from 'typescript-ioc';
 import { DefaultServiceFactory, GET, Path, Server } from '../../src/typescript-rest';
-const expect = chai.expect;
 
 Server.registerServiceFactory('typescript-rest-ioc');
 
@@ -60,36 +55,36 @@ export class IoCService4 extends IoCService2 {
 
 describe('IoC Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
     describe('Server integrated with typescript-ioc', () => {
         it('should use IoC container to instantiate the services', (done) => {
             request('http://localhost:5674/ioctest', (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should use IoC container to instantiate the services, does not carrying about the decorators order', (done) => {
             request('http://localhost:5674/ioctest2', (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should use IoC container to instantiate the services with injected params on constructor', (done) => {
             request('http://localhost:5674/ioctest3', (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should use IoC container to instantiate the services with superclasses', (done) => {
             request('http://localhost:5674/ioctest4', (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });

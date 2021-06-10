@@ -1,13 +1,7 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { Abstract, Context, GET, HttpMethod, Path, PathParam, PUT, Server, ServiceContext } from '../../src/typescript-rest';
-const expect = chai.expect;
-
 
 @Path('/pathtest')
 export class PathTestService {
@@ -40,7 +34,7 @@ export class SubPathTestService {
 @Abstract
 export abstract class BaseApi {
     @Context
-    private context: ServiceContext;
+    protected context: ServiceContext;
 
     @GET
     @Path(':id')
@@ -74,7 +68,7 @@ export class SuperClassService extends BaseApi {
     @GET
     @Path('overload/:id')
     public testOverloadGet(@PathParam('id') id: string) {
-        if (context) {
+        if (this.context) {
             return 'superclass_OK_' + id;
         }
         return 'false';
@@ -83,7 +77,7 @@ export class SuperClassService extends BaseApi {
     @Path('overload/:id')
     @PUT
     public testOverloadPut(@PathParam('id') id: string) {
-        if (context) {
+        if (this.context) {
             return 'superclass_OK_' + id;
         }
         return 'false';
@@ -92,48 +86,52 @@ export class SuperClassService extends BaseApi {
 
 describe('Paths Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
     describe('Server', () => {
-        it('should provide a catalog containing the exposed paths', (done) => {
-            expect(Server.getPaths()).to.include.members(['/pathtest', '/pathtest2',
-                '/methodpath', '/pathtest2/secondpath', '/superclasspath/overload/:id']);
-            expect(Server.getPaths()).to.not.include.members(['/overload/:id']);
-            expect(Server.getHttpMethods('/pathtest')).to.have.members([HttpMethod.GET]);
-            expect(Server.getHttpMethods('/pathtest2/secondpath')).to.have.members([HttpMethod.GET]);
-            expect(Server.getHttpMethods('/superclasspath/overload/:id')).to.have.members([HttpMethod.GET, HttpMethod.PUT]);
-            done();
+        it('should provide a catalog containing the exposed paths', () => {
+            expect(Server.getPaths()).toContain('/pathtest');
+            expect(Server.getPaths()).toContain('/pathtest2');
+            expect(Server.getPaths()).toContain('/methodpath');
+            expect(Server.getPaths()).toContain('/pathtest2/secondpath');
+            expect(Server.getPaths()).toContain('/superclasspath/overload/:id');
+            expect(Server.getPaths()).toContain('/pathtest');
+            expect(Server.getPaths()).not.toContain('/overload/:id');
+            expect(Server.getHttpMethods('/pathtest')).toContain(HttpMethod.GET);
+            expect(Server.getHttpMethods('/pathtest2/secondpath')).toContain(HttpMethod.GET);
+            expect(Server.getHttpMethods('/superclasspath/overload/:id')).toContain(HttpMethod.GET);
+            expect(Server.getHttpMethods('/superclasspath/overload/:id')).toContain(HttpMethod.PUT);
         });
     });
 
     describe('Path Annotation', () => {
         it('should configure a path', (done) => {
             request('http://localhost:5674/pathtest', function (error, response, body) {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should configure a path without an initial /', (done) => {
             request('http://localhost:5674/pathtest2', function (error, response, body) {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should be able to build a composed path bwetween class and method', (done) => {
             request('http://localhost:5674/pathtest2/secondpath', function (error, response, body) {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should be able to register services with present only on methods of a class', (done) => {
             request('http://localhost:5674/methodpath', function (error, response, body) {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
@@ -142,20 +140,20 @@ describe('Paths Tests', () => {
     describe('Service on Subclass', () => {
         it('should return OK when calling a method of its super class', (done) => {
             request('http://localhost:5674/superclasspath/123', function (error, response, body) {
-                expect(body).to.eq('OK_' + 123);
+                expect(body).toEqual('OK_' + 123);
                 done();
             });
         });
 
         it('should return OK when calling an overloaded method of its super class', (done) => {
             request('http://localhost:5674/superclasspath/overload/123', function (error, response, body) {
-                expect(body).to.eq('superclass_OK_' + 123);
+                expect(body).toEqual('superclass_OK_' + 123);
                 done();
             });
         });
         it('should return OK when calling an overloaded PUT method of its super class', (done) => {
             request.put('http://localhost:5674/superclasspath/overload/123', function (error, response, body) {
-                expect(body).to.eq('superclass_OK_' + 123);
+                expect(body).toEqual('superclass_OK_' + 123);
                 done();
             });
         });

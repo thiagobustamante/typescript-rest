@@ -1,83 +1,63 @@
-'use strict';
+jest.mock('passport');
 
-import * as chai from 'chai';
-import { RequestHandler } from 'express-serve-static-core';
 import * as _ from 'lodash';
-import 'mocha';
-import { AuthenticateOptions, Strategy } from 'passport';
-import * as proxyquire from 'proxyquire';
-import * as sinon from 'sinon';
-import * as sinonChai from 'sinon-chai';
+import { PassportAuthenticator } from '../../src/authenticator/passport';
 import { wait } from 'test-wait';
+import * as passport from 'passport';
 
-chai.use(sinonChai);
-const expect = chai.expect;
+const expressStub: any = 
+{
+    use: jest.fn()
+};
+const authenticate = passport.authenticate as jest.Mock;
+const deserializeUser = passport.deserializeUser as jest.Mock;
+const initialize = passport.initialize as jest.Mock;
+const serializeUser = passport.serializeUser as jest.Mock;
+const session = passport.session as jest.Mock;
+const use = passport.use as jest.Mock;
 
-// tslint:disable:no-unused-expression
 describe('PassportAuthenticator', () => {
-    const testStrategy = { name: 'test-strategy' };
-    let passportStub: sinon.SinonStubbedInstance<any>;
-    let PassportAuthenticator: any;
-    let authenticator: sinon.SinonStub;
-    let expressStub: sinon.SinonStubbedInstance<any>;
-    let initializer: sinon.SinonStub;
-    let sessionHandler: sinon.SinonStub;
+    const testStrategy: any = { name: 'test-strategy' };
+    const authenticator = jest.fn();
+    const initializer = jest.fn();
+    const sessionHandler = jest.fn();
 
     beforeEach(() => {
-        authenticator = sinon.stub();
-        initializer = sinon.stub();
-        sessionHandler = sinon.stub();
 
-        expressStub = sinon.stub({
-            use: (...handlers: Array<RequestHandler>) => this
-        });
-
-        passportStub = sinon.stub({
-            authenticate: (strategy: string | Array<string>, options: AuthenticateOptions,
-                callback?: (...args: Array<any>) => any) => true,
-            deserializeUser: (user: string, done: (a: any, b: any) => void) => this,
-            initialize: () => this,
-            serializeUser: (user: any, done: (a: any, b: string) => void) => this,
-            session: () => this,
-            use: (name: string, strategy: Strategy) => this
-        });
-
-        passportStub.authenticate.returns(authenticator);
-        passportStub.initialize.returns(initializer);
-        passportStub.session.returns(sessionHandler);
-
-        PassportAuthenticator = proxyquire('../../src/authenticator/passport', {
-            'passport': passportStub
-        }).PassportAuthenticator;
+        authenticate.mockReturnValue(authenticator);
+        initialize.mockReturnValue(initializer);
+        session.mockReturnValue(sessionHandler);
     });
 
     afterEach(() => {
-        passportStub.authenticate.restore();
-        passportStub.deserializeUser.restore();
-        passportStub.initialize.restore();
-        passportStub.serializeUser.restore();
-        passportStub.session.restore();
-        passportStub.use.restore();
-        expressStub.use.restore();
+        authenticate.mockClear();
+        deserializeUser.mockClear();
+        initialize.mockClear();
+        serializeUser.mockClear();
+        session.mockClear();
+        use.mockClear();
+        expressStub.use.mockClear();
     });
 
     it('should be able to create a simple authenticator with a given passport strategy', async () => {
-        const auth = new PassportAuthenticator(testStrategy);
+        const auth: any = new PassportAuthenticator(testStrategy);
 
-        expect(auth.options).to.be.empty;
-        expect(passportStub.use).to.have.been.calledOnceWithExactly(testStrategy.name, testStrategy);
-        expect(passportStub.authenticate).to.have.been
-            .calledOnceWithExactly(testStrategy.name, sinon.match.any);
-        expect(auth.getMiddleware()).to.be.equal(authenticator);
+        expect(Object.keys(auth.options)).toHaveLength(0);
+        expect(use).toBeCalledWith(testStrategy.name, testStrategy);
+        expect(use).toBeCalledTimes(1);
+        expect(authenticate).toBeCalledWith(testStrategy.name, expect.anything());
+        expect(auth.getMiddleware()).toEqual(authenticator);
     });
 
     it('should be able to create a simple authenticator with default strategy name', async () => {
-        const strategy = {};
-        new PassportAuthenticator(strategy);
+        const strategy: any = {};
+        const auth = new PassportAuthenticator(strategy);
 
-        expect(passportStub.use).to.have.been.calledOnceWithExactly('default_strategy', strategy);
-        expect(passportStub.authenticate).to.have.been
-            .calledOnceWithExactly('default_strategy', sinon.match.any);
+        expect(auth).toBeDefined();
+        expect(use).toBeCalledWith('default_strategy', strategy);
+        expect(use).toBeCalledTimes(1);
+        expect(authenticate).toBeCalledWith('default_strategy', expect.anything());
+        expect(authenticate).toBeCalledTimes(1);
     });
 
     it('should be able to create a simple authenticator with custom auth options', async () => {
@@ -87,11 +67,11 @@ describe('PassportAuthenticator', () => {
             },
             strategyName: 'my-custom-strategy'
         };
-        const auth = new PassportAuthenticator(testStrategy, options);
+        const auth: any = new PassportAuthenticator(testStrategy, options);
 
-        expect(auth.options).to.be.equal(options);
-        expect(passportStub.authenticate).to.have.been
-            .calledOnceWithExactly(options.strategyName, options.authOptions);
+        expect(auth.options).toEqual(options);
+        expect(authenticate).toBeCalledWith(options.strategyName, options.authOptions);
+        expect(authenticate).toBeCalledTimes(1);
     });
 
     it('should be able to initialize a sessionless authenticator', async () => {
@@ -103,65 +83,75 @@ describe('PassportAuthenticator', () => {
         const auth = new PassportAuthenticator(testStrategy, options);
         auth.initialize(expressStub);
 
-        expect(passportStub.initialize).to.have.been.calledOnce;
-        expect(expressStub.use).to.have.been.calledOnceWithExactly(initializer);
-        expect(passportStub.session).to.not.have.been.called;
+        expect(initialize).toBeCalledTimes(1);
+        expect(expressStub.use).toBeCalledTimes(1);
+        expect(expressStub.use).toBeCalledWith(initializer);
+        expect(session).toBeCalledTimes(0);
     });
 
     describe('Session tests', () => {
-        let serializeUser: sinon.SinonStub;
-        let serializationCallbackStub: sinon.SinonStub;
-        let deserializationCallbackStub: sinon.SinonStub;
-        let deserializeUser: sinon.SinonStub;
-        let options: any;
+        const serializationCallbackStub = jest.fn();
+        const deserializationCallbackStub = jest.fn();
+        const options = {
+            deserializeUser: jest.fn(),
+            serializeUser: jest.fn()
+        };
 
-        beforeEach(() => {
-            serializeUser = sinon.stub();
-            serializationCallbackStub = sinon.stub();
-            deserializationCallbackStub = sinon.stub();
-            deserializeUser = sinon.stub();
-            options = {
-                deserializeUser: deserializeUser,
-                serializeUser: serializeUser
-            };
+        afterEach(() => {
+            options.deserializeUser.mockClear();
+            options.serializeUser.mockClear();
+            deserializationCallbackStub.mockClear();
+            serializationCallbackStub.mockClear();
         });
 
         it('should be able to initialize an authenticator with session', async () => {
             const user = { 'id': '123', 'name': 'Joe' };
             const serialization = JSON.stringify(user);
-            serializeUser.returns(serialization);
-            deserializeUser.returns(user);
+            options.serializeUser.mockReturnValue(serialization);
+            options.deserializeUser.mockReturnValue(user);
 
-            passportStub.serializeUser.yields(user, serializationCallbackStub);
-            passportStub.deserializeUser.yields(serialization, deserializationCallbackStub);
+            serializeUser.mockImplementation((callback) => {
+                callback(user, serializationCallbackStub);
+            });
+            deserializeUser.mockImplementation((callback) => {
+                callback(serialization, deserializationCallbackStub);
+            });
             const auth = new PassportAuthenticator(testStrategy, options);
             auth.initialize(expressStub);
             await wait(1);
-            expect(passportStub.initialize).to.have.been.calledOnce;
-            expect(expressStub.use).to.have.been.calledTwice;
-            expect(expressStub.use).to.have.been.calledWithExactly(initializer);
-            expect(passportStub.session).to.have.been.calledOnce;
-            expect(expressStub.use).to.have.been.calledWithExactly(sessionHandler);
-            expect(passportStub.serializeUser).to.have.been.calledOnce;
-            expect(passportStub.deserializeUser).to.have.been.calledOnce;
-            expect(serializationCallbackStub).to.have.been.calledOnceWithExactly(null, serialization);
-            expect(deserializationCallbackStub).to.have.been.calledOnceWithExactly(null, user);
+            expect(initialize).toBeCalledTimes(1);
+            expect(expressStub.use).toBeCalledTimes(2);
+            expect(expressStub.use).toBeCalledWith(initializer);
+            expect(session).toBeCalledTimes(1);
+            expect(expressStub.use).toBeCalledWith(sessionHandler);
+            expect(serializeUser).toBeCalledTimes(1);
+            expect(deserializeUser).toBeCalledTimes(1);
+            expect(serializationCallbackStub).toBeCalledWith(null, serialization);
+            expect(serializationCallbackStub).toBeCalledTimes(1);
+            expect(deserializationCallbackStub).toBeCalledWith(null, user);
+            expect(deserializationCallbackStub).toBeCalledTimes(1);
         });
 
         it('should be able to fail when serialization fail', async () => {
             const user = { 'id': '123', 'name': 'Joe' };
             const serialization = JSON.stringify(user);
             const error = new Error('any error');
-            serializeUser.returns(Promise.reject(error));
-            deserializeUser.returns(Promise.reject(error));
+            options.serializeUser.mockReturnValue(Promise.reject(error));
+            options.deserializeUser.mockReturnValue(Promise.reject(error));
 
-            passportStub.serializeUser.yields(user, serializationCallbackStub);
-            passportStub.deserializeUser.yields(serialization, deserializationCallbackStub);
+            serializeUser.mockImplementation((callback) => {
+                callback(user, serializationCallbackStub);
+            });
+            deserializeUser.mockImplementation((callback) => {
+                callback(serialization, deserializationCallbackStub);
+            });
             const auth = new PassportAuthenticator(testStrategy, options);
             auth.initialize(expressStub);
             await wait(1);
-            expect(serializationCallbackStub).to.have.been.calledOnceWithExactly(error, null);
-            expect(deserializationCallbackStub).to.have.been.calledOnceWithExactly(error, null);
+            expect(serializationCallbackStub).toBeCalledWith(error, null);
+            expect(serializationCallbackStub).toBeCalledTimes(1);
+            expect(deserializationCallbackStub).toBeCalledWith(error, null);
+            expect(deserializationCallbackStub).toBeCalledTimes(1);
         });
     });
 

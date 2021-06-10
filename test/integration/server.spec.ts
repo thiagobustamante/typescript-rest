@@ -1,15 +1,10 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import {
     Accept, AcceptLanguage, ContextAccept, ContextLanguage, GET,
     Path, POST, PUT, Return, Server
 } from '../../src/typescript-rest';
-const expect = chai.expect;
 
 export class Person {
     public id: number;
@@ -116,11 +111,11 @@ export class SimpleService {
 
 describe('Server Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
@@ -141,7 +136,7 @@ describe('Server Tests', () => {
                 headers: { 'Accept-Language': 'pt-BR' },
                 url: 'http://localhost:5674/accept'
             }, (error, response, body) => {
-                expect(body).to.eq('aceito');
+                expect(body).toEqual('aceito');
                 done();
             });
         });
@@ -151,7 +146,7 @@ describe('Server Tests', () => {
                 headers: { 'Accept-Language': 'fr' },
                 url: 'http://localhost:5674/accept/fr'
             }, (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
@@ -161,7 +156,7 @@ describe('Server Tests', () => {
                 headers: { 'Accept-Language': 'fr' },
                 url: 'http://localhost:5674/accept'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(406);
+                expect(response.statusCode).toEqual(406);
                 done();
             });
         });
@@ -170,7 +165,7 @@ describe('Server Tests', () => {
             request({
                 url: 'http://localhost:5674/accept'
             }, (error, response, body) => {
-                expect(body).to.eq('accepted');
+                expect(body).toEqual('accepted');
                 done();
             });
         });
@@ -179,7 +174,7 @@ describe('Server Tests', () => {
             request({
                 url: 'http://localhost:5674/accept/types'
             }, (error, response, body) => {
-                expect(body).to.eq('accepted');
+                expect(body).toEqual('accepted');
                 done();
             });
         });
@@ -188,7 +183,7 @@ describe('Server Tests', () => {
                 headers: { 'Accept': 'text/html' },
                 url: 'http://localhost:5674/accept/types'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(406);
+                expect(response.statusCode).toEqual(406);
                 done();
             });
         });
@@ -197,7 +192,7 @@ describe('Server Tests', () => {
             request({
                 url: 'http://localhost:5674/unmapped/resource'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(404);
+                expect(response.statusCode).toEqual(404);
                 done();
             });
         });
@@ -206,16 +201,16 @@ describe('Server Tests', () => {
             request.post({
                 url: 'http://localhost:5674/accept'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(405);
+                expect(response.statusCode).toEqual(405);
                 const allowed: string | Array<string> = response.headers['allow'];
-                expect(allowed).to.contain('GET');
-                expect(allowed).to.contain('PUT');
+                expect(allowed).toContain('GET');
+                expect(allowed).toContain('PUT');
                 done();
             });
         });
         it('should support async and await on REST methods', (done) => {
             request('http://localhost:5674/async/test', (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
@@ -228,8 +223,8 @@ describe('Server Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/reference/accepted'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(202);
-                expect(response.headers['location']).to.eq('123');
+                expect(response.statusCode).toEqual(202);
+                expect(response.headers['location']).toEqual('123');
                 done();
             });
         });
@@ -240,8 +235,8 @@ describe('Server Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/reference/moved'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(301);
-                expect(response.headers['location']).to.eq('123');
+                expect(response.statusCode).toEqual(301);
+                expect(response.headers['location']).toEqual('123');
                 done();
             });
         });
@@ -252,8 +247,8 @@ describe('Server Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/reference/movedtemp'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(302);
-                expect(response.headers['location']).to.eq('123');
+                expect(response.statusCode).toEqual(302);
+                expect(response.headers['location']).toEqual('123');
                 done();
             });
         });
@@ -264,8 +259,8 @@ describe('Server Tests', () => {
             request.get({
                 url: 'http://localhost:5674/simplepath'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(body).to.eq('simpleservice');
+                expect(response.statusCode).toEqual(200);
+                expect(body).toEqual('simpleservice');
                 done();
             });
         });
@@ -273,8 +268,8 @@ describe('Server Tests', () => {
             request.get({
                 url: 'http://localhost:5674/othersimplepath'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(body).to.eq('othersimpleservice');
+                expect(response.statusCode).toEqual(200);
+                expect(body).toEqual('othersimpleservice');
                 done();
             });
         });

@@ -1,13 +1,7 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { Errors, GET, Path, Server } from '../../src/typescript-rest';
-
-const expect = chai.expect;
 
 @Path('errors')
 export class ErrorService {
@@ -116,91 +110,91 @@ export class ErrorService {
 
 describe('Errors Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
     describe('Error Service', () => {
         it('should be able to send 400', (done) => {
             request.get('http://localhost:5674/errors/badrequest', (error, response, body) => {
-                expect(response.statusCode).to.eq(400);
+                expect(response.statusCode).toEqual(400);
                 done();
             });
         });
         it('should be able to send 400', (done) => {
             request.get('http://localhost:5674/errors/sync/badrequest', (error, response, body) => {
-                expect(response.statusCode).to.eq(400);
+                expect(response.statusCode).toEqual(400);
                 done();
             });
         });
         it('should be able to send 409', (done) => {
             request.get('http://localhost:5674/errors/conflict', (error, response, body) => {
-                expect(response.statusCode).to.eq(409);
+                expect(response.statusCode).toEqual(409);
                 done();
             });
         });
         it('should be able to send 403', (done) => {
             request.get('http://localhost:5674/errors/forbiden', (error, response, body) => {
-                expect(response.statusCode).to.eq(403);
+                expect(response.statusCode).toEqual(403);
                 done();
             });
         });
         it('should be able to send 410', (done) => {
             request.get('http://localhost:5674/errors/gone', (error, response, body) => {
-                expect(response.statusCode).to.eq(410);
+                expect(response.statusCode).toEqual(410);
                 done();
             });
         });
         it('should be able to send 500', (done) => {
             request.get('http://localhost:5674/errors/internal', (error, response, body) => {
-                expect(response.statusCode).to.eq(500);
+                expect(response.statusCode).toEqual(500);
                 done();
             });
         });
         it('should be able to send 405', (done) => {
             request.get('http://localhost:5674/errors/method', (error, response, body) => {
-                expect(response.statusCode).to.eq(405);
+                expect(response.statusCode).toEqual(405);
                 done();
             });
         });
         it('should be able to send 406', (done) => {
             request.get('http://localhost:5674/errors/notacceptable', (error, response, body) => {
-                expect(response.statusCode).to.eq(406);
+                expect(response.statusCode).toEqual(406);
                 done();
             });
         });
         it('should be able to send 404', (done) => {
             request.get('http://localhost:5674/errors/notfound', (error, response, body) => {
-                expect(response.statusCode).to.eq(404);
+                expect(response.statusCode).toEqual(404);
                 done();
             });
         });
         it('should be able to send 501', (done) => {
             request.get('http://localhost:5674/errors/notimplemented', (error, response, body) => {
-                expect(response.statusCode).to.eq(501);
+                expect(response.statusCode).toEqual(501);
                 done();
             });
         });
         it('should be able to send 401', (done) => {
             request.get('http://localhost:5674/errors/unauthorized', (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
+                expect(response.statusCode).toEqual(401);
                 done();
             });
         });
         it('should be able to send 415', (done) => {
             request.get('http://localhost:5674/errors/unsupportedmedia', (error, response, body) => {
-                expect(response.statusCode).to.eq(415);
+                expect(response.statusCode).toEqual(415);
                 done();
             });
         });
 
         it('should be able to send 422', (done) => {
             request.get('http://localhost:5674/errors/unprocessableentity', (error, response, body) => {
-                expect(response.statusCode).to.eq(422);
+                expect(response.statusCode).toEqual(422);
                 done();
             });
         });

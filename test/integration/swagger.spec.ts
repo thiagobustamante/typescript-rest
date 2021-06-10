@@ -1,24 +1,19 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import * as YAML from 'yamljs';
 import { Server } from '../../src/typescript-rest';
-const expect = chai.expect;
 
 let server: any;
 let swaggerFile: any;
 
 describe('Swagger Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
@@ -29,14 +24,14 @@ describe('Swagger Tests', () => {
                 const expectedSwagger = _.cloneDeep(swaggerFile);
                 expectedSwagger.host = 'localhost:5674';
                 expectedSwagger.schemes = ["http"];
-                expect(expectedSwagger).to.deep.equals(swaggerDocument);
+                expect(expectedSwagger).toEqual(swaggerDocument);
                 done();
             });
         });
         it('should be able to send the JSON API swagger file', (done) => {
             request.get('http://localhost:5674/api-docs/json', (error, response, body) => {
                 const swaggerDocument: any = JSON.parse(body);
-                expect(swaggerDocument.basePath).to.eq('/v1');
+                expect(swaggerDocument.basePath).toEqual('/v1');
                 done();
             });
         });

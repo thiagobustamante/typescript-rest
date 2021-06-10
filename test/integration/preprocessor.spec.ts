@@ -1,13 +1,7 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { ContextRequest, Errors, Path, POST, PreProcessor, Server } from '../../src/typescript-rest';
-
-const expect = chai.expect;
 
 @Path('preprocessor')
 @PreProcessor(preprocessor1)
@@ -63,11 +57,11 @@ interface PreprocessedRequest extends express.Request {
 
 describe('Preprocessor Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
@@ -78,7 +72,7 @@ describe('Preprocessor Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/preprocessor/test'
             }, (error, response, body) => {
-                expect(body).to.eq('true');
+                expect(body).toEqual('true');
                 done();
             });
         });
@@ -88,7 +82,7 @@ describe('Preprocessor Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/preprocessor/test'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(400);
+                expect(response.statusCode).toEqual(400);
                 done();
             });
         });
@@ -101,7 +95,7 @@ describe('Preprocessor Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/preprocessor/asynctest'
             }, (error, response, body) => {
-                expect(body).to.eq('true');
+                expect(body).toEqual('true');
                 done();
             });
         });
@@ -111,7 +105,7 @@ describe('Preprocessor Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/preprocessor/asynctest'
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(400);
+                expect(response.statusCode).toEqual(400);
                 done();
             });
         });

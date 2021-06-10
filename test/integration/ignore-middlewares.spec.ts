@@ -1,14 +1,8 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { GET, IgnoreNextMiddlewares, Path, Server } from '../../src/typescript-rest';
-const expect = chai.expect;
 
-// tslint:disable:no-unused-expression
 @Path('/ignoreEndpoint')
 export class EndpointTestService {
     @GET
@@ -28,11 +22,11 @@ export class EndpointTestService {
 let middlewareCalled: boolean;
 describe('Customized Endpoint Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
@@ -43,34 +37,34 @@ describe('Customized Endpoint Tests', () => {
     describe('@IgnoreNexts Decorator', () => {
         it('should make the server ignore next middlewares (does not call next())', (done) => {
             request('http://localhost:5674/ignoreEndpoint/withoutMiddlewares', (error, response, body) => {
-                expect(body).to.eq('OK');
-                expect(middlewareCalled).to.be.false;
+                expect(body).toEqual('OK');
+                expect(middlewareCalled).toBeFalsy();
                 done();
             });
         });
 
         it('should not prevent the server to call next middlewares for sibbling methods', (done) => {
             request('http://localhost:5674/ignoreEndpoint/withMiddlewares', (error, response, body) => {
-                expect(body).to.eq('OK');
-                expect(middlewareCalled).to.be.true;
+                expect(body).toEqual('OK');
+                expect(middlewareCalled).toBeTruthy();
                 done();
             });
         });
     });
 
     describe('Server.ignoreNextMiddlewares', () => {
-        before(() => {
+        beforeAll(() => {
             Server.ignoreNextMiddlewares(true);
         });
 
-        after(() => {
+        afterAll(() => {
             Server.ignoreNextMiddlewares(false);
         });
 
         it('should make the server ignore next middlewares for all services', (done) => {
             request('http://localhost:5674/ignoreEndpoint/withMiddlewares', (error, response, body) => {
-                expect(body).to.eq('OK');
-                expect(middlewareCalled).to.be.false;
+                expect(body).toEqual('OK');
+                expect(middlewareCalled).toBeFalsy();
                 done();
             });
         });

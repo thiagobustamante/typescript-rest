@@ -1,10 +1,8 @@
 'use strict';
 
-import * as chai from 'chai';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as _ from 'lodash';
-import 'mocha';
 import * as request from 'request';
 import { Container } from 'typescript-ioc';
 import {
@@ -12,9 +10,6 @@ import {
     ContextRequest, ContextResponse, CookieParam, FileParam, FormParam,
     GET, HeaderParam, Param, ParserType, Path, PathParam, POST, PUT, QueryParam, Return, Server, ServiceContext
 } from '../../src/typescript-rest';
-const expect = chai.expect;
-
-// tslint:disable:no-unused-expression
 
 export class Person {
     public id: number;
@@ -225,11 +220,11 @@ export class TestReturnService {
 
 describe('Data Types Tests', () => {
 
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(() => {
+    afterAll(() => {
         stopApi();
     });
 
@@ -237,7 +232,7 @@ describe('Data Types Tests', () => {
         it('should be able to return Objects as JSON', (done) => {
             request('http://localhost:5674/testparams/people/123', (error, response, body) => {
                 const result: Person = JSON.parse(body);
-                expect(result.id).to.eq(123);
+                expect(result.id).toEqual(123);
                 done();
             });
         });
@@ -250,7 +245,7 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testparams/people/123'
             }, (error, response, body) => {
                 const receivedPerson = JSON.parse(body);
-                expect(receivedPerson).to.deep.equals(person);
+                expect(receivedPerson).toEqual(person);
                 done();
             });
         });
@@ -258,7 +253,7 @@ describe('Data Types Tests', () => {
         it('should be able to return an array of Objects', (done) => {
             request('http://localhost:5674/testparams/people?start=0&size=3', (error, response, body) => {
                 const result: Array<Person> = JSON.parse(body);
-                expect(result.length).to.eq(3);
+                expect(result.length).toEqual(3);
                 done();
             });
         });
@@ -269,10 +264,10 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/testparams/people'
             }, function (error, response, body) {
-                expect(response.statusCode).to.eq(201);
-                expect(response.headers['location']).to.eq('/testparams/people/123');
+                expect(response.statusCode).toEqual(201);
+                expect(response.headers['location']).toEqual('/testparams/people/123');
                 const result: Person = JSON.parse(body);
-                expect(result.id).to.eq(123);
+                expect(result.id).toEqual(123);
                 done();
             });
         });
@@ -284,7 +279,7 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'application/json' },
                 url: 'http://localhost:5674/testparams/people'
             }, function (error, response, body) {
-                expect(response.statusCode).to.eq(413);
+                expect(response.statusCode).toEqual(413);
                 done();
             });
         });
@@ -299,7 +294,7 @@ describe('Data Types Tests', () => {
                 json: true,
                 url: 'http://localhost:5674/testparams/date'
             }, (error, response, body) => {
-                expect(body).to.eq('OK');
+                expect(body).toEqual('OK');
                 done();
             });
         });
@@ -311,7 +306,7 @@ describe('Data Types Tests', () => {
                 headers: { 'my-header': 'header value', 'Cookie': 'my-cookie=cookie value' },
                 url: 'http://localhost:5674/testparams/headers'
             }, (error, response, body) => {
-                expect(body).to.eq('cookie: cookie value|header: header value');
+                expect(body).toEqual('cookie: cookie value|header: header value');
                 done();
             });
         });
@@ -321,7 +316,7 @@ describe('Data Types Tests', () => {
                 headers: { 'my-header': 'header value' },
                 url: 'http://localhost:5674/testparams/myheader'
             }, (error, response, body) => {
-                expect(body).to.eq('header: header value');
+                expect(body).toEqual('header: header value');
                 done();
             });
         });
@@ -330,7 +325,7 @@ describe('Data Types Tests', () => {
             request.post({
                 url: 'http://localhost:5674/testparams/multi-param?param=myQueryValue'
             }, (error, response, body) => {
-                expect(body).to.eq('myQueryValue');
+                expect(body).toEqual('myQueryValue');
                 done();
             });
         });
@@ -343,8 +338,8 @@ describe('Data Types Tests', () => {
                 'form': form,
                 'url': 'http://localhost:5674/testparams/multi-param'
             }, (error, response, body) => {
-                expect(body).to.eq('formParam');
-                expect(response.statusCode).to.eq(200);
+                expect(body).toEqual('formParam');
+                expect(response.statusCode).toEqual(200);
                 done();
             });
         });
@@ -353,16 +348,16 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/context?q=123'
             }, (error, response, body) => {
-                expect(body).to.eq('true');
-                expect(response.statusCode).to.eq(201);
+                expect(body).toEqual('true');
+                expect(response.statusCode).toEqual(201);
                 done();
             });
         });
 
         it('should accept file parameters', (done) => {
             const req = request.post('http://localhost:5674/testparams/upload', (error, response, body) => {
-                expect(body).to.eq('true');
-                expect(response.statusCode).to.eq(200);
+                expect(body).toEqual('true');
+                expect(response.statusCode).toEqual(200);
                 done();
             });
             const form = req.form();
@@ -374,7 +369,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/default-query?limit=5&prefix=test&expand=false'
             }, (error, response, body) => {
-                expect(body).to.eq('limit:5|prefix:test|expand:false');
+                expect(body).toEqual('limit:5|prefix:test|expand:false');
                 done();
             });
         });
@@ -383,7 +378,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/default-query'
             }, (error, response, body) => {
-                expect(body).to.eq('limit:20|prefix:default|expand:true');
+                expect(body).toEqual('limit:20|prefix:default|expand:true');
                 done();
             });
         });
@@ -392,7 +387,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/default-query?limit=&prefix=&expand='
             }, (error, response, body) => {
-                expect(body).to.eq('limit:NaN|prefix:|expand:false');
+                expect(body).toEqual('limit:NaN|prefix:|expand:false');
                 done();
             });
         });
@@ -401,7 +396,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/optional-query?limit=5&prefix=test&expand=false'
             }, (error, response, body) => {
-                expect(body).to.eq('limit:5|prefix:test|expand:false');
+                expect(body).toEqual('limit:5|prefix:test|expand:false');
                 done();
             });
         });
@@ -410,7 +405,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/optional-query'
             }, (error, response, body) => {
-                expect(body).to.eq('limit:undefined|prefix:undefined|expand:undefined');
+                expect(body).toEqual('limit:undefined|prefix:undefined|expand:undefined');
                 done();
             });
         });
@@ -419,7 +414,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/optional-query?limit=&prefix=&expand='
             }, (error, response, body) => {
-                expect(body).to.eq('limit:NaN|prefix:|expand:false');
+                expect(body).toEqual('limit:NaN|prefix:|expand:false');
                 done();
             });
         });
@@ -429,8 +424,8 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/download'
             }, (error, response, body) => {
-                expect(response.headers['content-type']).to.eq('application/javascript');
-                expect(_.startsWith(body.toString(), '\'use strict\';')).to.eq(true);
+                expect(response.headers['content-type']).toEqual('application/javascript');
+                expect(_.startsWith(body.toString(), '\'use strict\';')).toEqual(true);
                 done();
             });
         });
@@ -438,7 +433,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testparams/download/ref'
             }, (error, response, body) => {
-                expect(_.startsWith(body.toString(), '\'use strict\';')).to.eq(true);
+                expect(_.startsWith(body.toString(), '\'use strict\';')).toEqual(true);
                 done();
             });
         });
@@ -452,7 +447,7 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'text/plain' },
                 url: 'http://localhost:5674/testparams/stringbody'
             }, (error, response, body) => {
-                expect(body).to.eq(data);
+                expect(body).toEqual(data);
                 done();
             });
         });
@@ -464,7 +459,7 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'text/plain' },
                 url: 'http://localhost:5674/testparams/rawbody'
             }, (error, response, body) => {
-                expect(body).to.eq('true');
+                expect(body).toEqual('true');
                 done();
             });
         });
@@ -476,7 +471,7 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'text/myformat' },
                 url: 'http://localhost:5674/testparams/stringbodytype'
             }, (error, response, body) => {
-                expect(body).to.eq(data);
+                expect(body).toEqual(data);
                 done();
             });
         });
@@ -488,7 +483,7 @@ describe('Data Types Tests', () => {
                 headers: { 'content-type': 'text/plain' },
                 url: 'http://localhost:5674/testparams/stringbodytype'
             }, (error, response, body) => {
-                expect(body).to.equals('{}');
+                expect(body).toEqual('{}');
                 done();
             });
         });
@@ -499,7 +494,7 @@ describe('Data Types Tests', () => {
             request({
                 url: 'http://localhost:5674/testreturn/noresponse'
             }, (error, response, body) => {
-                expect(body).to.eq('handled by middleware');
+                expect(body).toEqual('handled by middleware');
                 done();
             });
         });
@@ -508,7 +503,7 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testreturn/empty'
             }, (error, response, body) => {
                 const val = JSON.parse(body);
-                expect(val).to.be.empty;
+                expect(Object.keys(val)).toHaveLength(0);
                 done();
             });
         });
@@ -519,8 +514,8 @@ describe('Data Types Tests', () => {
             request.post({
                 url: 'http://localhost:5674/testreturn/externalmodule'
             }, (error, response, body) => {
-                expect(response.statusCode).to.be.equal(201);
-                expect(response.headers.location).to.be.equal('/testreturn/externalmodule/123');
+                expect(response.statusCode).toEqual(201);
+                expect(response.headers.location).toEqual('/testreturn/externalmodule/123');
                 done();
             });
         });
@@ -541,7 +536,7 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testparams/people/123'
             }, (error, response, body) => {
                 const receivedPerson = JSON.parse(body);
-                expect(receivedPerson.salary).to.equals(434343);
+                expect(receivedPerson.salary).toEqual(434343);
                 Server.removeParameterConverter(Person);
                 done();
             });

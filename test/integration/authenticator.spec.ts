@@ -1,15 +1,10 @@
-'use strict';
-
-import * as chai from 'chai';
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as _ from 'lodash';
-import 'mocha';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import * as request from 'request';
 import { Context, GET, PassportAuthenticator, Path, POST, PUT, Security, Server, ServiceContext } from '../../src/typescript-rest';
 
-const expect = chai.expect;
 
 @Path('authorization')
 @Security()
@@ -93,19 +88,19 @@ export class AuthenticateMethods {
 }
 
 describe('Authenticator Tests', () => {
-    before(() => {
+    beforeAll(() => {
         return startApi();
     });
 
-    after(function () {
+    afterAll(function () {
         stopApi();
     });
 
     describe('Authorization', () => {
         it('should not authorize without header', (done) => {
             request('http://localhost:5674/authorization', (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -115,8 +110,8 @@ describe('Authenticator Tests', () => {
                     'Authorization': 'Bearer xx'
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -126,8 +121,8 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                expect(response.statusCode).toEqual(200);
+                expect(JSON.parse(body)).toMatchObject({ username: 'admin' });
                 done();
             });
         });
@@ -136,8 +131,8 @@ describe('Authenticator Tests', () => {
     describe('Authorization with role', () => {
         it('should not authorize without header', (done) => {
             request('http://localhost:5674/authorization/with/role', (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -147,8 +142,8 @@ describe('Authenticator Tests', () => {
                     'Authorization': 'Bearer xx'
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -158,10 +153,10 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
+                expect(response.statusCode).toEqual(200);
                 const user = JSON.parse(body);
-                expect(user).to.contain({ username: 'admin' });
-                expect(user).to.contain({ strategy: 'default' });
+                expect(user).toMatchObject({ username: 'admin' });
+                expect(user).toMatchObject({ strategy: 'default' });
                 done();
             });
         });
@@ -174,10 +169,10 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
+                expect(response.statusCode).toEqual(200);
                 const user = JSON.parse(body);
-                expect(user).to.contain({ username: 'admin' });
-                expect(user).to.contain({ strategy: 'second' });
+                expect(user).toMatchObject({ username: 'admin' });
+                expect(user).toMatchObject({ strategy: 'second' });
                 done();
             });
         });
@@ -186,8 +181,8 @@ describe('Authenticator Tests', () => {
     describe('Authorization without role', () => {
         it('should not authorize without header', (done) => {
             request('http://localhost:5674/authorization/without/role', (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -197,8 +192,8 @@ describe('Authenticator Tests', () => {
                     'Authorization': 'Bearer xx'
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
-                expect(body).to.eq('Unauthorized');
+                expect(response.statusCode).toEqual(401);
+                expect(body).toEqual('Unauthorized');
                 done();
             });
         });
@@ -208,7 +203,7 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(403);
+                expect(response.statusCode).toEqual(403);
                 done();
             });
         });
@@ -217,15 +212,15 @@ describe('Authenticator Tests', () => {
     describe('Authorization for methods', () => {
         it('should work in "public" methods', (done) => {
             request('http://localhost:5674/authorization/methods/public', (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(body).to.eq('OK');
+                expect(response.statusCode).toEqual(200);
+                expect(body).toEqual('OK');
                 done();
             });
         });
         it('should not authorize without header', (done) => {
             request.post('http://localhost:5674/authorization/methods/profile',
                 (error, response, body) => {
-                    expect(response.statusCode).to.eq(401);
+                    expect(response.statusCode).toEqual(401);
                     done();
                 });
         });
@@ -235,7 +230,7 @@ describe('Authenticator Tests', () => {
                     'Authorization': 'Bearer xx'
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(401);
+                expect(response.statusCode).toEqual(401);
                 done();
             });
         });
@@ -245,15 +240,15 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(JSON.parse(body)).to.contain({ username: 'admin' });
+                expect(response.statusCode).toEqual(200);
+                expect(JSON.parse(body)).toMatchObject({ username: 'admin' });
                 done();
             });
         });
         it('should authorize in GET method', (done) => {
             request('http://localhost:5674/authorization/methods/profile', (error, response, body) => {
-                expect(response.statusCode).to.eq(200);
-                expect(body).to.eq('OK');
+                expect(response.statusCode).toEqual(200);
+                expect(body).toEqual('OK');
                 done();
             });
         });
@@ -263,7 +258,7 @@ describe('Authenticator Tests', () => {
                     'Authorization': `Bearer ${generateJwt()}`
                 }
             }, (error, response, body) => {
-                expect(response.statusCode).to.eq(403);
+                expect(response.statusCode).toEqual(403);
                 done();
             });
         });
