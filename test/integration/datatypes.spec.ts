@@ -140,6 +140,12 @@ export class TestParamsService {
         return `limit:${limit}|prefix:${prefix}|expand:${expand}`;
     }
 
+    @GET
+    @Path('array-query')
+    public testArrayQuery(@QueryParam('prefix') prefixes: Array<string>): string {
+        return prefixes === undefined ? 'undefined' : JSON.stringify(prefixes);
+    }
+
     @POST
     @Path('upload')
     public testUploadFile(@FileParam('myFile') file: Express.Multer.File,
@@ -237,7 +243,7 @@ describe('Data Types Tests', () => {
             });
         });
 
-        it('should be able to receive parametes as Objects', (done) => {
+        it('should be able to receive parameters as Objects', (done) => {
             const person = new Person(123, 'Person 123', 35);
             request.put({
                 body: JSON.stringify(person),
@@ -415,6 +421,33 @@ describe('Data Types Tests', () => {
                 url: 'http://localhost:5674/testparams/optional-query?limit=&prefix=&expand='
             }, (error, response, body) => {
                 expect(body).toEqual('limit:NaN|prefix:|expand:false');
+                done();
+            });
+        });
+
+        it('should use undefined as value for missing array query param', (done) => {
+            request({
+                url: 'http://localhost:5674/testparams/array-query'
+            }, (error, response, body) => {
+                expect(body).to.eq('undefined');
+                done();
+            });
+        });
+
+        it('should handle an array of values for duplicate query param names', (done) => {
+            request({
+                url: 'http://localhost:5674/testparams/array-query?&prefix=abc&prefix=123'
+            }, (error, response, body) => {
+                expect(body).to.eq('["abc","123"]');
+                done();
+            });
+        });
+
+        it('should allow an array of one when expected query param type is an array', (done) => {
+            request({
+                url: 'http://localhost:5674/testparams/array-query?&prefix=abc'
+            }, (error, response, body) => {
+                expect(body).to.eq('["abc"]');
                 done();
             });
         });
