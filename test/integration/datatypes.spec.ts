@@ -7,8 +7,8 @@ import * as request from 'request';
 import { Container } from 'typescript-ioc';
 import {
     BodyOptions, BodyType, Context, ContextNext,
-    ContextRequest, ContextResponse, CookieParam, FileParam, FormParam,
-    GET, HeaderParam, Param, ParserType, Path, PathParam, POST, PUT, QueryParam, Return, Server, ServiceContext
+    ContextRequest, ContextRequestProperty, ContextResponse, CookieParam, FileParam, FormParam,
+    GET, HeaderParam, Param, ParserType, Path, PathParam, POST, PreProcessor, PUT, QueryParam, Return, Server, ServiceContext
 } from '../../src/typescript-rest';
 
 export class Person {
@@ -215,6 +215,37 @@ export class TestReturnService {
         const result = new Return.NewResource<Container>(req.url + '/123');
         result.body = new Container();
         return result;
+    }
+}
+
+export function testContextRequestPropertyMiddleware(req: any) {
+    req.userId = '123';
+}
+
+@Path("testcontextrequestproperty")
+export class TestContextRequestPropertyService {
+    @GET
+    @Path('existent')
+    @PreProcessor(testContextRequestPropertyMiddleware)
+    public testSuccessfulInjection(@ContextRequestProperty('userId') userId: string) {
+        if (userId === '123') {
+            return 'OK';
+        }
+        else {
+            return 'NOT OK';
+        }
+    }
+
+    @GET
+    @Path('nonexistent')
+    @PreProcessor(testContextRequestPropertyMiddleware)
+    public testNonexistentInjection(@ContextRequestProperty('otherName') otherName: string) {
+        if (!otherName) {
+            return 'OK';
+        }
+        else {
+            return 'NOT OK';
+        }
     }
 }
 
@@ -520,6 +551,7 @@ describe('Data Types Tests', () => {
             });
         });
     });
+    
 
     describe('Param Converters', () => {
         it('should intercept parameters', (done) => {
@@ -543,7 +575,25 @@ describe('Data Types Tests', () => {
         });
     });
 
+    describe('ContextRequestProperty injection', () => {
+        it('should have injected an existent request property', (done) => {
+            request.get({
+                url: 'http://localhost:5674/testcontextrequestproperty/existent'
+            }, (error, response, body) => {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
 
+        it('should not have injected a non-existent request property', (done) => {
+            request.get({
+                url: 'http://localhost:5674/testcontextrequestproperty/nonexistent'
+            }, (error, response, body) => {
+                expect(body).to.eq('OK');
+                done();
+            });
+        });
+    });
 
 });
 
@@ -553,7 +603,7 @@ export function startApi(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         const app: express.Application = express();
         app.set('env', 'test');
-        Server.buildServices(app, TestParamsService, TestReturnService);
+        Server.buildServices(app, TestParamsService, TestReturnService, TestContextRequestPropertyService);
         app.use('/testreturn', (req, res, next) => {
             if (!res.headersSent) {
                 res.send('handled by middleware');
