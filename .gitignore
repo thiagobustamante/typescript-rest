@@ -1,6 +1,7 @@
 node_modules
 dist
 .vscode
+.idea
 reports
 .nyc_output
 .DS_Store

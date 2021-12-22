@@ -27,7 +27,7 @@ export class ServiceInvoker {
     public async callService(context: ServiceContext) {
         try {
             await this.callTargetEndPoint(context);
-            if (this.mustCallNext()) {
+            if (this.mustCallNext(context)) {
                 context.next();
             } else if (this.debugger.enabled) {
                 this.debugger('Ignoring next middlewares');
@@ -38,8 +38,8 @@ export class ServiceInvoker {
         }
     }
 
-    private mustCallNext() {
-        return !ServerContainer.get().ignoreNextMiddlewares &&
+    private mustCallNext(context: ServiceContext) {
+        return !context.response.headersSent && !ServerContainer.get().ignoreNextMiddlewares &&
             !this.serviceMethod.ignoreNextMiddlewares && !this.serviceClass.ignoreNextMiddlewares;
     }
 
