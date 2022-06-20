@@ -1,6 +1,6 @@
 {
-  "name": "typescript-rest",
-  "version": "3.0.4",
+  "name": "@grandvisionhq/typescript-rest",
+  "version": "3.0.5",
   "description": "A Library to create RESTFul APIs with Typescript",
   "author": "Thiago da Rosa de Bustamante <thiago@cruxframework.org>",
   "keywords": [
@@ -96,7 +96,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thiagobustamante/typescript-rest.git"
+    "url": "https://github.com/GrandVisionHQ/typescript-rest"
   },
   "bugs": {
     "url": "https://github.com/thiagobustamante/typescript-rest/issues"
