@@ -1,4 +1,6 @@
 !dist/
+reports/
+.github/
 .travis.yml
 *.log
 npm-debug.log*
