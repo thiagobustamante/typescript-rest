@@ -80,7 +80,7 @@
     "@types/yamljs": "^0.2.30",
     "cross-env": "^7.0.3",
     "jest": "^27.0.4",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "passport-jwt": "^4.0.0",
     "request": "^2.88.0",
     "rimraf": "^3.0.2",
