@@ -64,7 +64,7 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "require-glob": "^4.0.0",
-    "swagger-ui-express": "^4.1.6",
+    "swagger-ui-express": "^4.2.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
